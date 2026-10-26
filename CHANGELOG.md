@@ -2,6 +2,12 @@
 
 Mudanças materiais do projeto serão registradas neste arquivo.
 
+## 2026-10-26 — correção da auditoria de dependências
+
+- Atualizados Next.js/eslint-config-next para 16.4.2, Zod para 4.6.7 e Vitest/coverage-v8 para 4.1.12.
+- Corrigidas as resoluções transitivas de Vite, Undici e fast-uri sem adicionar overrides permanentes.
+- Auditoria local reduzida de 19 achados a zero; sem mudanças de dados, migrations ou regras do aplicativo.
+
 ## 2026-10-12 — registro retrospectivo de atividades externas em revisão
 
 - Futevôlei e atividades externas aceitam registro em hoje e ontem sem cronômetro, horários reais ou aquecimento obrigatório.
