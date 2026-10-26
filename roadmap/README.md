@@ -96,7 +96,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E06-T17 | DONE      | [Preparar reinício controlado dos dados de treino](epics/E06-training-execution/T17-prepare-training-data-fresh-start.md)                      | E06-T11                               |
 | E06-T18 | PLANNED   | [Guiar a execução dos blocos combinados](epics/E06-training-execution/T18-guide-combined-exercise-blocks.md)                                   | E06-T16                               |
 | E06-T19 | DONE      | [Preencher automaticamente o fim planejado do treino](epics/E06-training-execution/T19-autofill-planned-workout-end.md)                        | E06-T12                               |
-| E06-T20 | PLANNED   | [Remover treino específico das opções de inclusão](epics/E06-training-execution/T20-simplify-activity-type-options.md)                         | E06-T12                               |
+| E06-T20 | CANCELLED | [Remover treino específico das opções de inclusão](epics/E06-training-execution/T20-simplify-activity-type-options.md)                         | E06-T12                               |
 | E06-T21 | PLANNED   | [Projetar importação externa de planos de treino](epics/E06-training-execution/T21-design-external-training-plan-import.md)                    | E06-T16                               |
 | E06-T22 | DONE      | [Permitir organizar a agenda futura sem iniciar treinos](epics/E06-training-execution/T22-allow-future-agenda-editing.md)                      | E06-T12                               |
 | E06-T23 | READY     | [Registrar futevôlei e atividades externas retrospectivamente](epics/E06-training-execution/T23-record-external-activities-retrospectively.md) | E06-T12                               |

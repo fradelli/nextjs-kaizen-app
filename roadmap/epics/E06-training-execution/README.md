@@ -27,7 +27,7 @@ Treino, preparação, mobilidade ou descanso do dia consultáveis e registrávei
 | E06-T17 | E06-T11    | Reinício operacional controlado e recuperável            |
 | E06-T18 | E06-T16    | Condução guiada dos blocos combinados                    |
 | E06-T19 | E06-T12    | Fim planejado calculado pela duração da sessão           |
-| E06-T20 | E06-T12    | Inclusão sem a opção Treino específico                   |
+| E06-T20 | E06-T12    | Cancelada; Treino específico permanece disponível        |
 | E06-T21 | E06-T16    | Contrato de importação externa projetado                 |
 | E06-T22 | E06-T12    | Agenda futura editável sem execução antecipada           |
 | E06-T23 | E06-T12    | Registro retrospectivo de atividades externas em revisão |
@@ -39,10 +39,14 @@ plano e aguardar aprovação antes de implementar.
 
 ## Prioridade para começar a usar a nova programação
 
-Prioridade confirmada em 26/10/2026: **E06-T19**, seguida da **E06-T20**, antes
-de avançar à página de Dieta. A E06-T22 já foi concluída. Reanalisar e aprovar
-cada plano antes da implementação. A validação retrospectiva da E06-T23 e a
-validação em dispositivo real da E06-T14 continuam pendentes.
+A lista curta priorizada em 26/10/2026 está encerrada: E06-T19 concluída e
+E06-T20 cancelada pelo usuário. Não existe uma terceira pequena correção
+explicitamente priorizada nessa lista.
+
+A próxima pendência imediata já registrada é a validação manual retrospectiva
+da E06-T23. E06-T14 continua dependendo de dispositivo real. E06-T04 e E06-T05
+permanecem necessárias para encerrar o épico; blocos combinados e progressão
+não foram promovidos automaticamente a prioridade.
 
 1. E06-T11 decide as regras do dia antes de ampliar a agenda.
 2. Após a revisão das alterações do roadmap pelo usuário, E06-T17 só reinicia
