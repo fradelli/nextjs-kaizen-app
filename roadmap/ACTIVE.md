@@ -1,12 +1,12 @@
 # Tarefa selecionada
 
 - **Tarefa:** E06-T19 — Preencher automaticamente o fim planejado do treino
-- **Status:** READY
+- **Status:** DONE
 - **Entrada principal:** `roadmap/epics/E06-training-execution/T19-autofill-planned-workout-end.md`.
 - **Prioridade:** ajuste do fim planejado, seguido da E06-T20, antes da página de Dieta, conforme solicitação do usuário em 26/10/2026.
-- **Resultado atual:** plano detalhado de interação, falhas, histórico, acessibilidade e testes registrado no arquivo da tarefa.
-- **Próxima ação:** revisar e aprovar o plano detalhado; confirmar o cenário de versão histórica antes de implementar a edição automática.
-- **Implementação:** ainda não iniciada; criar branch de tarefa a partir de `developer` antes de alterar código.
+- **Resultado atual:** cálculo automático e preservação manual implementados; edição histórica, falhas de conexão e ciclo de gravação cobertos por testes e Chrome em banco isolado.
+- **Próxima ação:** tratar a auditoria de dependências em escopo próprio e preparar o diagnóstico da E06-T20; não avançar à Dieta antes dos ajustes priorizados.
+- **Branch:** `codex/E06-T19-autofill-planned-workout-end`. Validações funcionais aprovadas; auditoria de dependências com 19 achados, sem promoção da entrega.
 
 ## Pendências preservadas
 

@@ -2,6 +2,13 @@
 
 Mudanças materiais do projeto serão registradas neste arquivo.
 
+## 2026-10-26 — fim planejado automático do treino
+
+- Treino do plano sugere fim pelo início e duração da sessão; ajustes manuais são preservados e o usuário pode retomar o cálculo explicitamente.
+- Edição mantém horários salvos e a sessão histórica quando não há troca de sessão; envio e falhas preservam consistência do formulário.
+- Cobertos cálculo, limite do dia, conflitos, reset e falta de conexão; integrações PostgreSQL e jornada em Chrome com banco isolado aprovadas.
+- Auditoria de dependências permanece reprovada com 19 achados; nenhuma versão de pacote foi alterada nesta entrega.
+
 ## 2026-10-26 — reauditoria de resíduos e apresentação do produto
 
 - Removidas duas cópias temporárias incompletas de validação, após backup Git verificado e preservação do estado local para recuperação.

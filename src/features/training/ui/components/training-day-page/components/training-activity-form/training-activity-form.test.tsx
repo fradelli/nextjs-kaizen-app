@@ -1,0 +1,265 @@
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import type {
+  AvailablePublicTrainingPlanDto,
+  TrainingActivityDto,
+} from "@/features/training/application/training-dto";
+import type { TrainingFormAction } from "@/features/training/ui/training-action.types";
+import { TrainingActivityForm } from "./training-activity-form";
+
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
+const plan: AvailablePublicTrainingPlanDto = {
+  status: "available",
+  planId: "plan",
+  version: "2",
+  sourceStatus: "active",
+  sessions: [
+    {
+      sessionId: "a",
+      name: "Treino A",
+      targetDurationMinutes: 40,
+      shortDurationMinutes: 20,
+      intensity: null,
+      notes: null,
+      assignmentRole: "main",
+      compatiblePreparationSessionIds: [],
+      exercises: [],
+    },
+    {
+      sessionId: "b",
+      name: "Treino B",
+      targetDurationMinutes: 60,
+      shortDurationMinutes: null,
+      intensity: null,
+      notes: null,
+      assignmentRole: "main",
+      compatiblePreparationSessionIds: [],
+      exercises: [],
+    },
+  ],
+};
+const activity: TrainingActivityDto = {
+  id: "11111111-1111-4111-8111-111111111111",
+  type: "structured_training",
+  source: "manual",
+  role: "primary",
+  name: "Treino antigo",
+  sport: null,
+  status: "scheduled",
+  plannedStartTime: "18:00",
+  plannedEndTime: "18:30",
+  plannedDurationMinutes: 30,
+  actualStartTime: null,
+  actualEndTime: null,
+  actualDurationMinutes: null,
+  startedAt: null,
+  completedAt: null,
+  accumulatedActiveSeconds: 0,
+  currentIntervalStartedAt: null,
+  intervals: [],
+  intensity: null,
+  energy: null,
+  comment: null,
+  revision: 3,
+  preparations: [],
+  structured: {
+    main: {
+      sessionId: "a",
+      name: "Treino antigo",
+      role: "main",
+      targetDurationMinutes: 30,
+      shortDurationMinutes: null,
+      intensity: null,
+      notes: null,
+      exercises: [],
+    },
+    preparation: null,
+  },
+};
+const saved = vi.fn<TrainingFormAction>(async () => ({ status: "saved", revision: 4 }));
+function change(label: string, value: string) {
+  fireEvent.change(screen.getByLabelText(label), { target: { value } });
+}
+function end() {
+  return screen.getByLabelText("Fim planejado");
+}
+function renderForm(
+  action: TrainingFormAction = saved,
+  existing?: TrainingActivityDto,
+  availablePlan = plan,
+) {
+  return render(
+    <TrainingActivityForm
+      civilDate="2026-10-26"
+      action={action}
+      activity={existing}
+      availablePlan={availablePlan}
+    />,
+  );
+}
+function chooseTraining() {
+  change("Tipo de atividade", "structured_training");
+}
+function submit() {
+  fireEvent.submit(
+    screen.getByRole("button", { name: /Adicionar atividade|Salvar alterações/ }).closest("form")!,
+  );
+}
+
+describe("training activity schedule experience", () => {
+  it.each([true, false])("calculates regardless of session/start order (%s)", (startFirst) => {
+    renderForm();
+    if (startFirst) change("Início planejado", "18:00");
+    chooseTraining();
+    if (!startFirst) change("Início planejado", "18:00");
+    expect(end()).toHaveValue("18:40");
+    change("Treino", "b");
+    expect(end()).toHaveValue("19:00");
+    change("Início planejado", "19:00");
+    expect(end()).toHaveValue("20:00");
+  });
+  it("preserves manual and cleared endings until explicitly restored", () => {
+    renderForm();
+    chooseTraining();
+    change("Início planejado", "18:00");
+    change("Fim planejado", "18:50");
+    change("Treino", "b");
+    expect(end()).toHaveValue("18:50");
+    change("Fim planejado", "");
+    change("Início planejado", "19:00");
+    expect(end()).toHaveValue("");
+    fireEvent.click(screen.getByRole("button", { name: "Usar duração do treino" }));
+    expect(end()).toHaveValue("20:00");
+  });
+  it("preserves a manually entered value even when equal to the suggestion", () => {
+    renderForm();
+    chooseTraining();
+    change("Fim planejado", "18:40");
+    change("Início planejado", "18:00");
+    change("Treino", "b");
+    expect(end()).toHaveValue("18:40");
+  });
+  it("freezes the ending when switching to a manual activity type and back", () => {
+    renderForm();
+    chooseTraining();
+    change("Início planejado", "18:00");
+    change("Tipo de atividade", "mobility");
+    change("Início planejado", "19:00");
+    expect(end()).toHaveValue("18:40");
+    chooseTraining();
+    expect(end()).toHaveValue("18:40");
+  });
+  it("clears obsolete automatic suggestions and explains midnight overflow", () => {
+    renderForm();
+    chooseTraining();
+    change("Início planejado", "18:00");
+    change("Início planejado", "");
+    expect(end()).toHaveValue("");
+    change("Início planejado", "23:20");
+    expect(end()).toHaveValue("");
+    expect(screen.getByText(/terminaria no dia seguinte/)).toBeInTheDocument();
+    change("Fim planejado", "23:50");
+    expect(end()).toHaveValue("23:50");
+  });
+  it("does not substitute a missing duration", () => {
+    renderForm(saved, undefined, {
+      ...plan,
+      sessions: [{ ...plan.sessions[0], targetDurationMinutes: 0 }],
+    });
+    chooseTraining();
+    change("Início planejado", "18:00");
+    expect(end()).toHaveValue("");
+    expect(screen.getByText(/Não foi possível calcular/)).toBeInTheDocument();
+  });
+  it("preserves persisted hours and uses the historical session duration, not the active version", () => {
+    renderForm(saved, activity);
+    expect(end()).toHaveValue("18:30");
+    change("Início planejado", "19:00");
+    expect(end()).toHaveValue("18:30");
+    fireEvent.click(screen.getByRole("button", { name: "Usar duração do treino" }));
+    expect(end()).toHaveValue("19:30");
+    expect(saved).not.toHaveBeenCalled();
+  });
+  it("does not replace an absent historical session or revision on refreshed props", () => {
+    const view = renderForm(saved, activity, { ...plan, sessions: [plan.sessions[1]] });
+    change("Fim planejado", "18:55");
+    view.rerender(
+      <TrainingActivityForm
+        civilDate="2026-10-26"
+        action={saved}
+        activity={{ ...activity, revision: 9 }}
+        availablePlan={plan}
+      />,
+    );
+    expect(end()).toHaveValue("18:55");
+    expect(view.container.querySelector('[name="expectedRevision"]')).toHaveValue("3");
+    expect(screen.getByRole("option", { name: "Treino antigo" })).toBeInTheDocument();
+  });
+  it("blocks invalid intervals without dispatching a mutation", () => {
+    const action = vi.fn<TrainingFormAction>();
+    renderForm(action);
+    chooseTraining();
+    change("Início planejado", "18:00");
+    change("Fim planejado", "17:00");
+    submit();
+    expect(action).not.toHaveBeenCalled();
+    expect(end()).toHaveAttribute("aria-invalid", "true");
+  });
+  it.each(["invalid", "conflict"] as const)(
+    "preserves all fields after %s from the actual action state",
+    async (status) => {
+      const action = vi.fn<TrainingFormAction>(async () => ({ status, message: "Não foi salvo." }));
+      renderForm(action);
+      change("Nome", "Jogo");
+      change("Esporte", "Futevôlei");
+      change("Início planejado", "18:00");
+      change("Fim planejado", "18:50");
+      submit();
+      await screen.findByText("Não foi salvo.");
+      expect(screen.getByLabelText("Nome")).toHaveValue("Jogo");
+      expect(end()).toHaveValue("18:50");
+      expect(action.mock.calls[0][1].get("plannedEndTime")).toBe("18:50");
+    },
+  );
+  it("preserves input when the server action rejects because the connection failed", async () => {
+    const action = vi.fn<TrainingFormAction>().mockRejectedValue(new Error("offline"));
+    renderForm(action);
+    chooseTraining();
+    change("Início planejado", "18:00");
+    change("Fim planejado", "18:55");
+    submit();
+    await screen.findByText("Não foi possível salvar. Confira a conexão e tente novamente.");
+    expect(end()).toHaveValue("18:55");
+    expect(end()).not.toBeDisabled();
+  });
+  it("freezes controls while saving and resets a successful addition", async () => {
+    let finish!: () => void;
+    const action: TrainingFormAction = () =>
+      new Promise((resolve) => {
+        finish = () => resolve({ status: "saved", revision: 1 });
+      });
+    renderForm(action);
+    chooseTraining();
+    change("Início planejado", "18:00");
+    submit();
+    await waitFor(() => expect(end()).toBeDisabled());
+    await act(async () => finish());
+    await screen.findByText("Salvo.");
+    expect(end()).toHaveValue("");
+    expect(screen.getByLabelText("Tipo de atividade")).toHaveValue("sport_practice");
+  });
+  it("uses the saved revision and preserves the submitted ending after editing", async () => {
+    const action = vi.fn<TrainingFormAction>(async () => ({ status: "saved", revision: 4 }));
+    const view = renderForm(action, activity);
+    change("Fim planejado", "18:55");
+    submit();
+    await screen.findByText("Salvo.");
+    expect(end()).toHaveValue("18:55");
+    expect(view.container.querySelector('[name="expectedRevision"]')).toHaveValue("4");
+    expect(action.mock.calls[0][1].get("expectedRevision")).toBe("3");
+  });
+});

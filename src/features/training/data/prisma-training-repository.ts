@@ -195,7 +195,23 @@ export class PrismaTrainingRepository implements TrainingRepository {
       const activityData = validateActivitySchedule(input);
       if ("status" in activityData) return activityData;
       return this.client.$transaction(async (transaction) => {
-        const definition = await resolveActivityDefinition(transaction, input);
+        const existing = await transaction.trainingDayActivity.findFirst({
+          where: { ...activityMutationWhere(input), role: "primary" },
+          include: { session: true },
+        });
+        if (!existing) return conflictOrMissingActivity(transaction, input);
+        const preserveSession =
+          input.type === "structured_training" &&
+          existing.type === input.type &&
+          existing.session?.sessionId === input.sessionId;
+        const definition = preserveSession
+          ? {
+              name: existing.name,
+              trainingPlanVersionId: existing.trainingPlanVersionId,
+              sessionDefinitionId: existing.sessionDefinitionId,
+              preparationSessionDefinitionId: existing.preparationSessionDefinitionId,
+            }
+          : await resolveActivityDefinition(transaction, input);
         if ("status" in definition) return definition;
         const result = await transaction.trainingDayActivity.updateMany({
           where: { ...activityMutationWhere(input), role: "primary" },

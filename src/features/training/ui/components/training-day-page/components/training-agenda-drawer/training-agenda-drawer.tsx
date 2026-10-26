@@ -73,6 +73,7 @@ export function TrainingAgendaDrawer({ day, actions }: TrainingAgendaDrawerProps
                   <details className={trainingAgendaDrawerStyles.editor}>
                     <summary className={trainingAgendaDrawerStyles.editorSummary}>Editar</summary>
                     <TrainingActivityForm
+                      key={`${day.civilDate}:${activity.id}`}
                       civilDate={day.civilDate}
                       activity={activity}
                       action={actions.updateActivity}
@@ -96,6 +97,7 @@ export function TrainingAgendaDrawer({ day, actions }: TrainingAgendaDrawerProps
                 Adicionar atividade
               </summary>
               <TrainingActivityForm
+                key={`${day.civilDate}:new`}
                 civilDate={day.civilDate}
                 action={actions.addActivity}
                 availablePlan={availablePlan}

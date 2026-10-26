@@ -28,6 +28,11 @@ informado e da duração da sessão selecionada, sem exigir cálculo manual.
 - `src/features/training/application/mutate-training-day.ts`
 - `tests/integration/training-mutations.test.ts`
 
+- `src/features/training/ui/components/training-day-page/components/training-activity-form/hooks/use-training-activity-schedule.ts`
+- `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.utils.ts`
+- `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.utils.test.ts`
+- `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.test.tsx`
+
 ## Regras confirmadas
 
 - Usar a duração da sessão carregada do plano, nunca um valor fixo na interface.
@@ -45,16 +50,15 @@ informado e da duração da sessão selecionada, sem exigir cálculo manual.
 
 ## Critérios de aceite
 
-- [ ] Fim automático usa a duração real da sessão e não duplica o aquecimento.
-- [ ] Mudança de início ou sessão segue a política aprovada sem sobrescrever silenciosamente alterações manuais.
-- [ ] Entrada em qualquer ordem e duração ausente possuem testes.
-- [ ] Validação no servidor, janela de edição e ownership permanecem preservados.
+- [x] Fim automático usa a duração real da sessão e não duplica o aquecimento.
+- [x] Mudança de início ou sessão segue a política aprovada sem sobrescrever silenciosamente alterações manuais.
+- [x] Entrada em qualquer ordem e duração ausente possuem testes.
+- [x] Validação no servidor, janela de edição e ownership permanecem preservados.
 
 ## Plano detalhado proposto — 26/10/2026
 
-Este plano é uma proposta para aprovação. Não altera código, banco, contrato de
-horários ou estado de conclusão da tarefa. Não é possível prometer ausência de
-bugs; a entrega depende dos cenários e gates descritos abaixo.
+Plano aprovado pelo usuário em 26/10/2026. As seções abaixo preservam o desenho
+usado na implementação; o resultado e as evidências estão no fim deste arquivo.
 
 ### 1. Diagnóstico comprovado
 
@@ -262,6 +266,42 @@ marcado como concluído por este planejamento.
 
 ## Resultado
 
-Planejamento detalhado concluído. As políticas acima continuam propostas e a
-implementação aguarda aprovação. Nenhuma alteração funcional ou no banco foi
-realizada nesta etapa.
+Implementado o cálculo em minutos civis com a duração da sessão, sem duplicar
+aquecimento. O fim permanece editável; alterações e limpezas manuais são
+preservadas até a ação explícita Usar duração do treino. Inclusão reinicia o
+formulário após sucesso; edição preserva horários existentes, revisão de origem
+e duração da sessão histórica. Falhas de conexão, validação e conflito mantêm
+o preenchimento; envio congela controles e impede duplicação.
+
+A inspeção confirmou a resolução indevida pelo plano ativo na atualização.
+Corrigido o caso de sessão inalterada: servidor preserva versão, sessão e
+preparação existentes, com ownership e revisão na consulta e na gravação.
+A seleção explícita de outra sessão continua passando pelas regras existentes.
+Não houve alteração de schema, migration, dependência ou dados pessoais.
+
+### Evidências da implementação
+
+- Suíte unitária completa aprovada com cobertura global de 90,92% das linhas.
+- 34 testes direcionados de cálculo e componente aprovados, usando o ciclo real
+  de `useActionState`; cobrem inclusive rejeição da chamada por falta de conexão.
+- Integrações PostgreSQL: 45 testes aprovados, incluindo versão histórica com
+  mesmo ID textual em outro plano, revisão obsoleta e workspace diferente.
+- Tipos, lint, formato, estrutura e fronteiras, schema Prisma, build e integridade
+  dos dados aprovados; 33 testes dos validadores aprovados.
+- Chrome real em viewport 390×844: cálculo, preservação manual, inclusão e edição
+  persistidas, recálculo explícito, falha de conexão preservando campos e aviso
+  de virada do dia aprovados em banco isolado descartável.
+- Revisão visual da captura em tela estreita concluída. Teclado e safe area de
+  dispositivo físico não foram testados nem considerados comprovados.
+- Revisão semântica: cálculo puro sem datas/fuso, estado local coeso no hook,
+  componente compõe formulário, e preservação histórica ocorre no servidor.
+
+### Limitação de validação
+
+A auditoria de dependências falhou com 19 achados: 3 baixos, 10 moderados,
+4 altos e 2 críticos. Manifesto e lockfile foram preservados; esta tarefa não
+atualiza dependências. Não declarar CI integral ou auditoria aprovada nem
+promover a entrega como se esse gate estivesse verde.
+
+A validação do navegador usou configuração apenas em memória e PostgreSQL
+isolado. O servidor e o banco temporários foram encerrados após o teste.
