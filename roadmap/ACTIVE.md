@@ -4,8 +4,8 @@
 - **Status:** READY
 - **Entrada principal:** `roadmap/epics/E06-training-execution/T19-autofill-planned-workout-end.md`.
 - **Prioridade:** ajuste do fim planejado, seguido da E06-T20, antes da página de Dieta, conforme solicitação do usuário em 26/10/2026.
-- **Resultado atual:** diagnóstico do formulário e do contrato de horários concluído; proposta registrada no arquivo da tarefa.
-- **Próxima ação:** aprovar a política de cálculo automático, edição manual e limite do mesmo dia antes de implementar.
+- **Resultado atual:** plano detalhado de interação, falhas, histórico, acessibilidade e testes registrado no arquivo da tarefa.
+- **Próxima ação:** revisar e aprovar o plano detalhado; confirmar o cenário de versão histórica antes de implementar a edição automática.
 - **Implementação:** ainda não iniciada; criar branch de tarefa a partir de `developer` antes de alterar código.
 
 ## Pendências preservadas

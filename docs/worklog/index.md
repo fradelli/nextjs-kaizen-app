@@ -12,6 +12,7 @@
 
 | ID                                                                                                           | Status    | Início     | Conclusão  | Jira | Horas confirmadas | Grupo | Tarefa                                               |
 | ------------------------------------------------------------------------------------------------------------ | --------- | ---------- | ---------- | ---- | ----------------- | ----- | ---------------------------------------------------- |
+| [WORK-20261026-005](tasks/2026/10/WORK-20261026-005-detalhar-experiencia-e-regressoes-do-fim-planejado.md)   | concluida | 2026-10-26 | 2026-10-26 | —    | não informadas    | —     | Detalhar experiência e regressões do fim planejado   |
 | [WORK-20261026-004](tasks/2026/10/WORK-20261026-004-reauditar-residuos-e-revisar-apresentacao-do-projeto.md) | concluida | 2026-10-26 | 2026-10-26 | —    | não informadas    | —     | Reauditar residuos e revisar apresentacao do projeto |
 | [WORK-20261026-003](tasks/2026/10/WORK-20261026-003-preparar-ajuste-do-fim-planejado-do-treino.md)           | concluida | 2026-10-26 | 2026-10-26 | —    | não informadas    | —     | Preparar ajuste do fim planejado do treino           |
 | [WORK-20261026-002](tasks/2026/10/WORK-20261026-002-apresentar-o-kaizen-com-um-readme-funcional.md)          | concluida | 2026-10-26 | 2026-10-26 | —    | não informadas    | —     | Apresentar o Kaizen com um README funcional          |
