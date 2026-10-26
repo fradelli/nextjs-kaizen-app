@@ -18,6 +18,8 @@ Banco escolhido, migrations versionadas, importação idempotente e workspace fi
 | E05-T06 | E05-T05          | Cancelada; modo público com risco aceito documentado |
 | E05-T07 | E05-T04          | Semântica e fronteiras do código verificadas         |
 
+| E05-T08 | E05-T02 | Auditoria sem vulnerabilidades e compatibilidade validada |
+
 ## Fora de escopo
 
 - Domínios posteriores ao P0.
