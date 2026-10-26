@@ -45,7 +45,7 @@ compatibilidade e integrar a PR antes da E06-T19.
 - [x] Instalação congelada e auditoria sem achados.
 - [x] Formato, lint, estrutura, tipos e integridade de dados aprovados.
 - [x] Testes unitários, PostgreSQL, backup/restore e build aprovados.
-- [ ] PR de segurança com CI aprovada e merge em developer.
+- [x] PR de segurança com CI aprovada e merge em developer.
       A integração da E06-T19 é a etapa seguinte, após o merge desta correção; não
       faz parte dos critérios de encerramento da correção de dependências.
 
@@ -93,4 +93,6 @@ referenciados abaixo. A faixa vulnerável é a informada pelo scanner.
 Correções implementadas. `pnpm run ci` aprovado (291 testes unitários, 44
 integrações e 33 testes de validadores), assim como o teste de backup/restore
 PostgreSQL. Auditoria local sem achados; governança local aprovada.
-CI remota e integração da PR ainda pendentes.
+CI remota aprovada nos sete jobs: Governance, Quality, Test, Data integrity,
+Backup restore, Build e Dependency audit. [PR #68](https://github.com/fradelli/nextjs-kaizen-app/pull/68) integrada por squash
+em developer no commit `410042d`, em 26/10/2026.

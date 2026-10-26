@@ -9,6 +9,83 @@ import { createDatabaseFixture } from "./fixtures/database.fixture";
 import { withImportDatabase } from "./fixtures/import-database.fixture";
 
 describe("training mutations with PostgreSQL", () => {
+  it("preserves the historical session when updating hours after a new plan activation", () =>
+    withImportDatabase(async (client) => {
+      const fixture = await client.$transaction(createDatabaseFixture);
+      await client.trainingSessionDefinition.create({
+        data: {
+          trainingPlanVersionId: fixture.otherTrainingPlan.id,
+          sessionId: fixture.mainSession.sessionId,
+          name: "Sessão nova",
+          targetDurationMinutes: 90,
+          assignmentRole: "main",
+        },
+      });
+      await client.planActivation.create({
+        data: {
+          domain: "training",
+          logicalEnvironment: "local",
+          trainingPlanVersionId: fixture.otherTrainingPlan.id,
+          pointerImportBatchId: fixture.trainingPointer.id,
+          activatedAt: new Date(),
+        },
+      });
+      const activity = await client.trainingDayActivity.create({
+        data: {
+          workspaceId: fixture.workspace.id,
+          civilDate: fixture.date,
+          type: "structured_training",
+          name: "Treino anterior",
+          trainingPlanVersionId: fixture.trainingPlan.id,
+          sessionDefinitionId: fixture.mainSession.id,
+          preparationSessionDefinitionId: fixture.preparationSession.id,
+          plannedStartMinute: 1080,
+          plannedEndMinute: 1110,
+        },
+      });
+      const repository = new PrismaTrainingRepository(client);
+      const command = {
+        workspaceId: fixture.workspace.id,
+        environment: "local" as const,
+        civilDate: "2026-09-13" as CivilDate,
+        activityId: activity.id,
+        expectedRevision: 0,
+        type: "structured_training" as const,
+        name: "Treino do plano",
+        sport: null,
+        sessionId: fixture.mainSession.sessionId,
+        plannedStartTime: "19:00",
+        plannedEndTime: "19:30",
+      };
+      await expect(repository.updateTrainingActivity(command)).resolves.toEqual({
+        status: "saved",
+        revision: 1,
+      });
+      await expect(
+        client.trainingDayActivity.findUniqueOrThrow({ where: { id: activity.id } }),
+      ).resolves.toMatchObject({
+        trainingPlanVersionId: fixture.trainingPlan.id,
+        sessionDefinitionId: fixture.mainSession.id,
+        preparationSessionDefinitionId: fixture.preparationSession.id,
+        name: "Treino anterior",
+        plannedStartMinute: 1140,
+        plannedEndMinute: 1170,
+      });
+      await expect(repository.updateTrainingActivity(command)).resolves.toMatchObject({
+        status: "conflict",
+      });
+      await expect(
+        repository.updateTrainingActivity({ ...command, workspaceId: fixture.anotherWorkspace.id }),
+      ).resolves.toMatchObject({ status: "not_found" });
+      await expect(
+        repository.updateTrainingActivity({
+          ...command,
+          expectedRevision: 1,
+          plannedEndTime: "18:00",
+        }),
+      ).resolves.toMatchObject({ status: "invalid" });
+    }));
+
   it.each(["sport_practice", "specific_training"] as const)(
     "records %s retrospectively without fabricating execution or preparation",
     (type) =>

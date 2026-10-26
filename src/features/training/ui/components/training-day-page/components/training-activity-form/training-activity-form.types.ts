@@ -10,3 +10,8 @@ export type TrainingActivityFormProps = Readonly<{
   activity?: TrainingActivityDto;
   availablePlan: AvailablePublicTrainingPlanDto | null;
 }>;
+
+export type TrainingScheduleSession = Pick<
+  NonNullable<TrainingActivityDto["structured"]>["main"],
+  "sessionId" | "name" | "targetDurationMinutes"
+>;

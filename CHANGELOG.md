@@ -8,6 +8,27 @@ Mudanças materiais do projeto serão registradas neste arquivo.
 - Corrigidas as resoluções transitivas de Vite, Undici e fast-uri sem adicionar overrides permanentes.
 - Auditoria local reduzida de 19 achados a zero; sem mudanças de dados, migrations ou regras do aplicativo.
 
+## 2026-10-26 — fim planejado automático do treino
+
+- Treino do plano sugere fim pelo início e duração da sessão; ajustes manuais são preservados e o usuário pode retomar o cálculo explicitamente.
+- Edição mantém horários salvos e a sessão histórica quando não há troca de sessão; envio e falhas preservam consistência do formulário.
+- Cobertos cálculo, limite do dia, conflitos, reset e falta de conexão; integrações PostgreSQL e jornada em Chrome com banco isolado aprovadas.
+- Auditoria inicial com 19 achados, corrigidos separadamente pela PR #68 antes da integração desta entrega.
+
+## 2026-10-26 — reauditoria de resíduos e apresentação do produto
+
+- Removidas duas cópias temporárias incompletas de validação, após backup Git verificado e preservação do estado local para recuperação.
+- Preservados os commits locais, branches com histórico exclusivo, stashes, configurações privadas e arquivos com consumidores confirmados.
+- Evidências e limitações da verificação registradas no diário operacional; nenhuma alteração funcional ou no banco.
+- README reorganizado por público, recursos disponíveis, jornada, planejamento e limites, com instalação conferida nos scripts e detalhes técnicos recolhíveis.
+
+## 2026-10-26 — organização local e preservação de pendências
+
+- Preservados o plano visual, o contexto histórico e as orientações de acesso local em documentação versionada.
+- Corrigido o resumo desatualizado do README e selecionada a validação pendente da E06-T23, mantendo os estados de conclusão e bloqueio existentes.
+- Removidas cópias auxiliares e arquivos gerados após preservar trabalho antigo em commit e backup Git local verificável.
+- Nenhuma mudança funcional ou alteração dos dados operacionais nesta limpeza.
+
 ## 2026-10-12 — registro retrospectivo de atividades externas em revisão
 
 - Futevôlei e atividades externas aceitam registro em hoje e ontem sem cronômetro, horários reais ou aquecimento obrigatório.
