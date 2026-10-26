@@ -296,7 +296,7 @@ Não houve alteração de schema, migration, dependência ou dados pessoais.
 - Revisão semântica: cálculo puro sem datas/fuso, estado local coeso no hook,
   componente compõe formulário, e preservação histórica ocorre no servidor.
 
-### Limitação de validação
+### Histórico da auditoria antes da PR #68
 
 A auditoria de dependências falhou com 19 achados: 3 baixos, 10 moderados,
 4 altos e 2 críticos. Manifesto e lockfile foram preservados; esta tarefa não
@@ -312,4 +312,5 @@ A [PR #68](https://github.com/fradelli/nextjs-kaizen-app/pull/68) foi integrada 
 `developer` com sete checks aprovados e auditoria sem achados. Esta branch
 incorporou `410042d` por merge, preservando os registros das duas entregas e
 resolvendo conflitos apenas no changelog, índice e ponteiro do roadmap.
-A combinação será revalidada antes da integração da E06-T19.
+A revalidação da combinação está registrada na [PR #69](https://github.com/fradelli/nextjs-kaizen-app/pull/69).
+A integração exige sucesso dos sete checks sobre o commit final, sem bypass.

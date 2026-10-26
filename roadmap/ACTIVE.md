@@ -5,8 +5,8 @@
 - **Entrada principal:** `roadmap/epics/E06-training-execution/T19-autofill-planned-workout-end.md`.
 - **Prioridade:** ajuste do fim planejado, seguido da E06-T20, antes da página de Dieta, conforme solicitação do usuário em 26/10/2026.
 - **Resultado atual:** cálculo automático e preservação manual implementados; edição histórica, falhas de conexão e ciclo de gravação cobertos por testes e Chrome em banco isolado.
-- **Próxima ação:** concluir a CI remota e integrar a PR da E06-T19; depois preparar o diagnóstico da E06-T20 antes da Dieta.
-- **Branch:** `codex/E06-T19-autofill-planned-workout-end`. Segurança integrada pela PR #68, com sete checks aprovados e auditoria sem achados. Revalidar esta branch após a integração.
+- **Próxima ação:** após integrar a PR #69 com todos os checks aprovados, preparar o diagnóstico da E06-T20 antes da Dieta.
+- **Branch:** `codex/E06-T19-autofill-planned-workout-end`. Segurança integrada pela PR #68, com sete checks aprovados e auditoria sem achados. A revalidação desta branch e seu resultado final estão na PR #69.
 
 ## Pendências preservadas
 
