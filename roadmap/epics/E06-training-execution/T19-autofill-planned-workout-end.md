@@ -305,3 +305,11 @@ promover a entrega como se esse gate estivesse verde.
 
 A validação do navegador usou configuração apenas em memória e PostgreSQL
 isolado. O servidor e o banco temporários foram encerrados após o teste.
+
+### Atualização após a correção de segurança
+
+A [PR #68](https://github.com/fradelli/nextjs-kaizen-app/pull/68) foi integrada em
+`developer` com sete checks aprovados e auditoria sem achados. Esta branch
+incorporou `410042d` por merge, preservando os registros das duas entregas e
+resolvendo conflitos apenas no changelog, índice e ponteiro do roadmap.
+A combinação será revalidada antes da integração da E06-T19.

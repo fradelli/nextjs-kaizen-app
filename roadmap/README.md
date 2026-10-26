@@ -76,6 +76,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E05-T05 | DONE      | [Validar backup e restauração](epics/E05-database-and-import/T05-validate-backup-and-restore.md)                                               | E05-T04                               |
 | E05-T06 | CANCELLED | [Implementar acesso pessoal](epics/E05-database-and-import/T06-implement-personal-access.md)                                                   | E05-T05                               |
 | E05-T07 | DONE      | [Aprimorar semântica e fronteiras do código](epics/E05-database-and-import/T07-refine-code-semantics.md)                                       | E05-T04                               |
+| E05-T08 | DONE      | [Corrigir vulnerabilidades de dependências](epics/E05-database-and-import/T08-remediate-dependency-vulnerabilities.md)                         | E05-T02                               |
 | E06-T01 | DONE      | [Projetar treino e execução do dia](epics/E06-training-execution/T01-project-active-training-plan.md)                                          | E05-T05                               |
 | E06-T02 | DONE      | [Criar página de treino do dia](epics/E06-training-execution/T02-create-daily-training-page.md)                                                | E04-T04, E06-T01                      |
 | E06-T03 | DONE      | [Registrar preparação, séries e comentários](epics/E06-training-execution/T03-record-training-execution.md)                                    | E06-T02                               |

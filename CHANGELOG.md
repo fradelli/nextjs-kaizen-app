@@ -2,12 +2,18 @@
 
 Mudanças materiais do projeto serão registradas neste arquivo.
 
+## 2026-10-26 — correção da auditoria de dependências
+
+- Atualizados Next.js/eslint-config-next para 16.4.2, Zod para 4.6.7 e Vitest/coverage-v8 para 4.1.12.
+- Corrigidas as resoluções transitivas de Vite, Undici e fast-uri sem adicionar overrides permanentes.
+- Auditoria local reduzida de 19 achados a zero; sem mudanças de dados, migrations ou regras do aplicativo.
+
 ## 2026-10-26 — fim planejado automático do treino
 
 - Treino do plano sugere fim pelo início e duração da sessão; ajustes manuais são preservados e o usuário pode retomar o cálculo explicitamente.
 - Edição mantém horários salvos e a sessão histórica quando não há troca de sessão; envio e falhas preservam consistência do formulário.
 - Cobertos cálculo, limite do dia, conflitos, reset e falta de conexão; integrações PostgreSQL e jornada em Chrome com banco isolado aprovadas.
-- Auditoria de dependências permanece reprovada com 19 achados; nenhuma versão de pacote foi alterada nesta entrega.
+- Auditoria inicial com 19 achados, corrigidos separadamente pela PR #68 antes da integração desta entrega.
 
 ## 2026-10-26 — reauditoria de resíduos e apresentação do produto
 
