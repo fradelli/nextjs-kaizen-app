@@ -2,6 +2,12 @@
 
 Mudanças materiais do projeto serão registradas neste arquivo.
 
+## 2026-10-26 — reauditoria de resíduos e apresentação do produto
+
+- Removidas duas cópias temporárias incompletas de validação, após backup Git verificado e preservação do estado local para recuperação.
+- Preservados os commits locais, branches com histórico exclusivo, stashes, configurações privadas e arquivos com consumidores confirmados.
+- Evidências e limitações da verificação registradas no diário operacional; nenhuma alteração funcional ou no banco.
+
 ## 2026-10-26 — organização local e preservação de pendências
 
 - Preservados o plano visual, o contexto histórico e as orientações de acesso local em documentação versionada.

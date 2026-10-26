@@ -4,9 +4,9 @@
 
 ## Ativas
 
-| ID  | Status | Início | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa         |
-| --- | ------ | ------ | --------- | ---- | ----------------- | ----- | -------------- |
-| —   | —      | —      | —         | —    | —                 | —     | Nenhuma tarefa |
+| ID                                                                                                           | Status       | Início     | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa                                               |
+| ------------------------------------------------------------------------------------------------------------ | ------------ | ---------- | --------- | ---- | ----------------- | ----- | ---------------------------------------------------- |
+| [WORK-20261026-004](tasks/2026/10/WORK-20261026-004-reauditar-residuos-e-revisar-apresentacao-do-projeto.md) | em-andamento | 2026-10-26 |           | —    | não informadas    | —     | Reauditar residuos e revisar apresentacao do projeto |
 
 ## Concluídas e canceladas
 
