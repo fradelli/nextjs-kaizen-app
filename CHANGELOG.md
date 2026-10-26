@@ -2,6 +2,13 @@
 
 Mudanças materiais do projeto serão registradas neste arquivo.
 
+## 2026-10-26 — organização local e preservação de pendências
+
+- Preservados o plano visual, o contexto histórico e as orientações de acesso local em documentação versionada.
+- Corrigido o resumo desatualizado do README e selecionada a validação pendente da E06-T23, mantendo os estados de conclusão e bloqueio existentes.
+- Removidas cópias auxiliares e arquivos gerados após preservar trabalho antigo em commit e backup Git local verificável.
+- Nenhuma mudança funcional ou alteração dos dados operacionais nesta limpeza.
+
 ## 2026-10-12 — registro retrospectivo de atividades externas em revisão
 
 - Futevôlei e atividades externas aceitam registro em hoje e ontem sem cronômetro, horários reais ou aquecimento obrigatório.
