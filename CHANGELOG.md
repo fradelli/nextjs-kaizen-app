@@ -7,6 +7,7 @@ Mudanças materiais do projeto serão registradas neste arquivo.
 - Removidas duas cópias temporárias incompletas de validação, após backup Git verificado e preservação do estado local para recuperação.
 - Preservados os commits locais, branches com histórico exclusivo, stashes, configurações privadas e arquivos com consumidores confirmados.
 - Evidências e limitações da verificação registradas no diário operacional; nenhuma alteração funcional ou no banco.
+- README reorganizado por público, recursos disponíveis, jornada, planejamento e limites, com instalação conferida nos scripts e detalhes técnicos recolhíveis.
 
 ## 2026-10-26 — organização local e preservação de pendências
 

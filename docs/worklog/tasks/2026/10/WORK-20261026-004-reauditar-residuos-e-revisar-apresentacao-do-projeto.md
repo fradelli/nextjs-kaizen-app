@@ -1,12 +1,12 @@
 ---
 id: WORK-20261026-004
 title: Reauditar residuos e revisar apresentacao do projeto
-status: em-andamento
+status: concluida
 group_id:
 jira_key:
 jira_status: nao-criada
 started_on: 2026-10-26
-completed_on:
+completed_on: 2026-10-26
 due_on:
 repositories: kaizen-app
 jira_scope_limit_hours: 12
@@ -61,6 +61,24 @@ Remover apenas residuos comprovados com recuperacao e documentar uso e limites r
 - Achado: Correção da contagem: 36 branches locais, incluindo developer, staging, master e a branch atual; nenhuma removida nesta rodada.
 - Evidência: Integridade dos dados e 33 testes dos validadores de governanca, dados, estrutura e fronteiras passaram.
 
+### 2026-10-26
+
+- Atividade: README reescrito com publico, recursos, jornada, planejamento, limites, acesso publico e detalhes tecnicos recolhiveis.
+- Achado: Pendencias preservadas: E06-T19 aguarda aprovacao da politica; E06-T20 vem depois; E06-T23 aguarda jornada manual; E06-T14 depende de dispositivo real; plano visual aguarda aprovacao.
+- Decisão: Nenhum arquivo versionado removido: consumidores diretos, contratos de geracao e referencias documentais justificam sua permanencia. Sem capturas reais versionadas, README entregue sem imagens.
+- Evidência: Commit local d640370 registra auditoria e remocao das copias temporarias; README segue em commit separado.
+- Evidência: 31 links e ancoras dos documentos alterados validos; Prettier e git diff --check aprovados; 513 arquivos versionados e diff contra origin/developer sem padroes de tokens ou chaves privadas.
+- Evidência: Validador real do roadmap confirmou IDs, dependencias, ciclos, estados e ponteiro ativo; governanca de PR nao executada por ausencia de evento.
+
+### 2026-10-26
+
+- Tarefa concluída.
+- Evidência: Sem push, merge, deploy, alteracao funcional, acesso a credenciais locais ou mudanca no banco.
+
 ## Resultado final
 
+- Reauditoria concluida, duas copias temporarias removidas com recuperacao por bundle e patches, README funcional revisado e validacoes proporcionais aprovadas.
+
 ## Próximos passos
+
+- Instalacao limpa e CI completa dependem do acesso ao registry; PRs de dependencias e validacoes manuais continuam pendentes.
