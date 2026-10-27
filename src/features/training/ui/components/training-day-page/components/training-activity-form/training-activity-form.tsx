@@ -2,7 +2,7 @@
 
 import { Button } from "@fradelli/ui/button";
 import { Input } from "@fradelli/ui/input";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSameTrainingSport } from "@/features/training/domain/training-sport.rules";
 import { getTrainingAgendaDateWindow } from "@/features/training/domain/training-edit-window";
@@ -21,41 +21,100 @@ export function TrainingActivityForm({
   action,
   activity,
   availablePlan,
+  editor,
+  startedLocally = false,
 }: TrainingActivityFormProps) {
   const router = useRouter();
-  const [targetDate, setTargetDate] = useState(civilDate);
+  const [targetDate, setTargetDate] = useState(editor?.initialValues.targetCivilDate ?? civilDate);
   const [preparationChoice, setPreparationChoice] = useState<string | null>(
-    activity ? "keep" : null,
+    editor ? editor.initialValues.preparationChoice : activity ? "keep" : null,
   );
   const [draftError, setDraftError] = useState<string | null>(null);
   const dateWindow = getTrainingAgendaDateWindow();
   const notStarted =
     !activity ||
-    (activity.status === "scheduled" &&
+    (!startedLocally &&
+      activity.status === "scheduled" &&
       !activity.startedAt &&
       !activity.completedAt &&
       activity.preparations.every((item) => item.status === "scheduled" && !item.startedAt));
-  const schedule = useTrainingActivitySchedule({ civilDate, action, activity, availablePlan });
-  const [name, setName] = useState(activity?.name ?? "");
-  const [sport, setSport] = useState(activity?.sport ?? "");
-  const [validateTimes, setValidateTimes] = useState(false);
-  const submission = useTrainingActionFeedback(async (previous, formData) => {
-    const result = await action(previous, formData).catch(() => ({
-      status: "invalid" as const,
-      message: "Não foi possível salvar. Confira a conexão e tente novamente.",
-    }));
-    if (result.status === "saved") {
-      schedule.acceptSaved(result.revision);
-      setValidateTimes(false);
-      if (!activity) {
-        setName("");
-        setSport("");
-        setPreparationChoice(null);
-      }
-      if (activity && targetDate !== civilDate) router.push(`/treino?date=${targetDate}`);
-    }
-    return result;
+  const schedule = useTrainingActivitySchedule({
+    civilDate,
+    action,
+    activity,
+    availablePlan,
+    editor,
   });
+  const [name, setName] = useState(editor?.initialValues.name ?? activity?.name ?? "");
+  const [sport, setSport] = useState(editor?.initialValues.sport ?? activity?.sport ?? "");
+  const [validateTimes, setValidateTimes] = useState(false);
+  const snapshot = useMemo(
+    () => ({
+      type: schedule.type,
+      name,
+      sport,
+      sessionId: schedule.sessionId,
+      preparationChoice,
+      targetCivilDate: targetDate,
+      plannedStartTime: schedule.startTime,
+      manualEndTime: schedule.manualEnd,
+      automaticEnd: schedule.automatic,
+    }),
+    [
+      schedule.type,
+      name,
+      sport,
+      schedule.sessionId,
+      preparationChoice,
+      targetDate,
+      schedule.startTime,
+      schedule.manualEnd,
+      schedule.automatic,
+    ],
+  );
+  const publishValues = editor?.onValuesChange;
+  useEffect(() => {
+    publishValues?.(snapshot);
+  }, [publishValues, snapshot]);
+  const submitting = useRef(false);
+  const submission = useTrainingActionFeedback(
+    async (previous, formData) => {
+      let savedInEditor = false;
+      try {
+        const result = await action(previous, formData);
+        if (result.status === "conflict" || result.status === "not_found") editor?.onNeedsReload();
+        if (result.status === "saved") {
+          if (editor) {
+            savedInEditor = true;
+            editor.onSaved({ targetCivilDate: targetDate });
+          } else {
+            schedule.acceptSaved(result.revision);
+            setValidateTimes(false);
+            if (!activity) {
+              setName("");
+              setSport("");
+              setPreparationChoice(null);
+            }
+            if (activity && targetDate !== civilDate) router.push(`/treino?date=${targetDate}`);
+          }
+        }
+        return result;
+      } catch {
+        editor?.onNeedsReload();
+        return {
+          status: "invalid" as const,
+          message:
+            "Não foi possível confirmar o salvamento. Confira a agenda antes de tentar novamente.",
+        };
+      } finally {
+        if (!savedInEditor) {
+          submitting.current = false;
+          editor?.onBusyChange(false);
+        }
+      }
+    },
+    { refreshOnSaved: !editor },
+  );
   const { type } = schedule;
   const needsSport = type === "sport_practice" || type === "specific_training";
   const suggestedPreparation = availablePlan?.preparationSuggestions?.find(
@@ -71,6 +130,16 @@ export function TrainingActivityForm({
     (preparationChoice === "keep" && !allowKeepPreparation ? null : preparationChoice) ??
     suggestedPreparation ??
     "automatic";
+  const invalidSession =
+    type === "structured_training" &&
+    !schedule.sessions.some((session) => session.sessionId === schedule.sessionId);
+  const invalidPreparation =
+    needsSport &&
+    !["automatic", "none", "keep"].includes(preparationValue) &&
+    !availablePlan?.sessions.some(
+      (session) =>
+        session.assignmentRole === "preparation" && session.sessionId === preparationValue,
+    );
   const timeError = validateTimes && !isValidPlannedInterval(schedule.startTime, schedule.endTime);
   const hintId = `activity-end-hint-${activity?.id ?? "new"}`;
   const hint = timeError
@@ -89,10 +158,22 @@ export function TrainingActivityForm({
 
   return (
     <form
+      id={editor?.formId}
       action={submission.formAction}
       className={trainingActivityFormStyles.root}
       onReset={(event) => event.preventDefault()}
       onSubmit={(event) => {
+        if (submitting.current || editor?.blocked || editor?.readOnly) {
+          event.preventDefault();
+          return;
+        }
+        if (invalidSession || invalidPreparation) {
+          event.preventDefault();
+          setDraftError(
+            "A sessão recuperada não está disponível. Escolha uma opção válida antes de salvar.",
+          );
+          return;
+        }
         setDraftError(null);
         if (activity && (targetDate !== civilDate || (needsSport && preparationValue !== "keep"))) {
           try {
@@ -114,10 +195,16 @@ export function TrainingActivityForm({
         if (!isValidPlannedInterval(schedule.startTime, schedule.endTime)) {
           event.preventDefault();
           setValidateTimes(true);
+          return;
         }
+        submitting.current = true;
+        editor?.onBusyChange(true);
       }}
     >
-      <fieldset disabled={submission.pending} className="grid min-w-0 gap-3 border-0 p-0 m-0">
+      <fieldset
+        disabled={submission.pending || editor?.readOnly}
+        className="grid min-w-0 gap-3 border-0 p-0 m-0"
+      >
         <input type="hidden" name="civilDate" value={civilDate} />
         {activity ? (
           <>
@@ -192,6 +279,11 @@ export function TrainingActivityForm({
                 className={trainingActivityFormStyles.control}
                 required
               >
+                {invalidSession ? (
+                  <option value={schedule.sessionId} disabled>
+                    Treino indisponível
+                  </option>
+                ) : null}
                 {schedule.sessions.map((session) => (
                   <option key={session.sessionId} value={session.sessionId}>
                     {session.name}
@@ -299,11 +391,13 @@ export function TrainingActivityForm({
             ) : null}
           </div>
         </div>
-        <div className={trainingActivityFormStyles.actions}>
-          <Button type="submit" disabled={submission.pending}>
-            {activity ? "Salvar alterações" : "Adicionar atividade"}
-          </Button>
-        </div>
+        {!editor ? (
+          <div className={trainingActivityFormStyles.actions}>
+            <Button type="submit" disabled={submission.pending}>
+              {activity ? "Salvar alterações" : "Adicionar atividade"}
+            </Button>
+          </div>
+        ) : null}
       </fieldset>
       {draftError ? (
         <p role="alert" className={trainingActivityFormStyles.hint}>

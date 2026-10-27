@@ -5,6 +5,10 @@ export type TrainingActivityDeleteFormProps = Readonly<{
   civilDate: string;
   activity: TrainingActivityDto;
   action: TrainingFormAction;
+  disabled?: boolean;
+  refreshOnSaved?: boolean;
+  onBusyChange?: (busy: boolean) => void;
+  onConfirmationChange?: (open: boolean) => void;
   compact?: boolean;
   startedLocally?: boolean;
   onDeleted?: () => void;

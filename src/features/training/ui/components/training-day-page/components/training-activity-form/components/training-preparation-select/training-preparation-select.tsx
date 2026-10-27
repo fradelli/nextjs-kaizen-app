@@ -26,6 +26,12 @@ export function TrainingPreparationSelect({
         aria-describedby={`${id}-hint`}
         className="min-h-10 w-full min-w-0 rounded-md border border-input bg-background px-3 text-sm"
       >
+        {!["keep", "automatic", "none"].includes(value) &&
+        !sessions.some((session) => session.sessionId === value) ? (
+          <option value={value} disabled>
+            Aquecimento indisponível
+          </option>
+        ) : null}
         {allowKeep ? (
           <option value="keep">
             {current ? `Manter: ${current}` : "Manter configuração atual"}

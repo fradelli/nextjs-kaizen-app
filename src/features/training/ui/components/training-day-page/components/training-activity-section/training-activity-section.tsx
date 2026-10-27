@@ -6,6 +6,7 @@ export function TrainingActivitySection({
   civilDate,
   activities,
   actions,
+  availablePlan = null,
 }: TrainingActivitySectionProps) {
   if (!activities.length || !actions) return null;
   return (
@@ -16,6 +17,7 @@ export function TrainingActivitySection({
           civilDate={civilDate}
           activity={activity}
           actions={actions}
+          availablePlan={availablePlan}
         />
       ))}
     </section>

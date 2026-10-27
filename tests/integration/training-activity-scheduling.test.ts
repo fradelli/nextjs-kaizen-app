@@ -319,7 +319,9 @@ describe("manual preparation and activity rescheduling with PostgreSQL", () => {
     }));
   it("allows only one concurrent move and preserves the original when destination materialization fails", () =>
     withImportDatabase(async (client) => {
-      const f = await client.$transaction(createDatabaseFixture);
+      const f = await client.$transaction((tx) =>
+        createDatabaseFixture(tx, { entries: [{ broken: true }] }),
+      );
       const repo = new PrismaTrainingRepository(client);
       const original = await client.trainingDayActivity.create({
         data: {
@@ -356,10 +358,6 @@ describe("manual preparation and activity rescheduling with PostgreSQL", () => {
       ).toBe(1);
       const current = await client.trainingDayActivity.findUniqueOrThrow({
         where: { id: original.id },
-      });
-      await client.trainingPlanVersion.update({
-        where: { id: f.trainingPlan.id },
-        data: { weeklySchedule: { entries: [{ broken: true }] } },
       });
       await client.planActivation.create({
         data: {

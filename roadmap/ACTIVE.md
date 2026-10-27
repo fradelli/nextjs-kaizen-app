@@ -1,11 +1,11 @@
 # Tarefa selecionada
 
-- **Tarefa:** E06-T24 — Escolher aquecimento e remarcar atividades não iniciadas
-- **Status:** IN_PROGRESS
-- **Entrada principal:** `roadmap/epics/E06-training-execution/T24-select-preparation-and-reschedule-activities.md`.
-- **Branch:** `codex/E06-T24-activity-preparation-and-rescheduling`.
-- **Autorização:** escolhas de aquecimento e limites da remarcação aprovados pelo usuário em 27/10/2026.
-- **Próxima ação:** validar os dois fluxos, regressões de agenda, concorrência e histórico antes da entrega.
+- **Tarefa:** E06-T25 — Modais de inclusão e edição com rascunhos locais
+- **Status:** DONE
+- **Entrada principal:** `roadmap/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md`.
+- **Branch:** `codex/E06-T25-activity-editor-modals`.
+- **Autorização:** plano de modais e rascunhos aprovado para implementação pelo usuário em 27/10/2026.
+- **Próxima ação:** revisar a PR da implementação validada; sem tarefa de implementação ativa.
 
 ## Pendências preservadas
 
@@ -19,4 +19,4 @@ O histórico da limpeza e da revisão do README está no
 
 ## Retomada após reinicialização
 
-E06-T24: validar PostgreSQL descartável e fluxo completo no navegador após o Docker voltar. Os 337 testes da aplicação, 33 testes de scripts e build passaram. Detalhes no documento T24. Não mergear antes da validação final.
+E06-T24: os 50 testes de integração em PostgreSQL descartável passaram em 27/10/2026. Roteiro de navegador concluído junto da E06-T25; detalhes nos documentos das tarefas.

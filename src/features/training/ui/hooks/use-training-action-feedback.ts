@@ -7,13 +7,16 @@ import type { TrainingActionState, TrainingFormAction } from "../training-action
 
 const initialState: TrainingActionState = { status: "idle" };
 
-export function useTrainingActionFeedback(action: TrainingFormAction) {
+export function useTrainingActionFeedback(
+  action: TrainingFormAction,
+  { refreshOnSaved = true }: { refreshOnSaved?: boolean } = {},
+) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(action, initialState);
 
   useEffect(() => {
-    if (state.status === "saved") router.refresh();
-  }, [router, state]);
+    if (refreshOnSaved && state.status === "saved") router.refresh();
+  }, [router, state, refreshOnSaved]);
 
   return { state, formAction, pending };
 }

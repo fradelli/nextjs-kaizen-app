@@ -33,6 +33,7 @@ Treino, preparação, mobilidade ou descanso do dia consultáveis e registrávei
 | E06-T23 | E06-T12    | Registro retrospectivo de atividades externas em revisão |
 
 | E06-T24 | E06-T12, E06-T19 | Aquecimento selecionável e remarcação segura |
+| E06-T25 | E06-T24 | Modais de inclusão e edição com rascunhos locais |
 
 As tarefas E06-T06 a E06-T22 são uma rodada complementar. Nenhuma
 começa automaticamente nem amplia o gate de E06-T05 sem nova priorização. Ao

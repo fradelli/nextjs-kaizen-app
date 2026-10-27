@@ -234,7 +234,9 @@ describe("training activity schedule experience", () => {
     change("Início planejado", "18:00");
     change("Fim planejado", "18:55");
     submit();
-    await screen.findByText("Não foi possível salvar. Confira a conexão e tente novamente.");
+    await screen.findByText(
+      "Não foi possível confirmar o salvamento. Confira a agenda antes de tentar novamente.",
+    );
     expect(end()).toHaveValue("18:55");
     expect(end()).not.toBeDisabled();
   });

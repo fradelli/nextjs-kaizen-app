@@ -62,24 +62,25 @@ alterar a data de atividades não iniciadas, preservando horários e aquecimento
 
 ## Critérios de aceite
 
-- [ ] Aquecimento selecionável e sugestão de futevôlei baseada no plano real.
-- [ ] Escolha manual/sem aquecimento e referência histórica preservadas.
-- [ ] Campo de data com limites e navegação ao destino após sucesso.
-- [ ] Atividade iniciada, aquecimento iniciado e rascunho local bloqueiam remarcação.
-- [ ] Remarcação mantém IDs e horários, preserva agenda de destino e não recria origem.
-- [ ] Concorrência, rollback, ownership e limites de data cobertos por testes.
-- [ ] Qualidade, tipos, testes, build e revisão semântica aprovados.
+- [x] Aquecimento selecionável e sugestão de futevôlei baseada no plano real.
+- [x] Escolha manual/sem aquecimento e referência histórica preservadas.
+- [x] Campo de data com limites e navegação ao destino após sucesso.
+- [x] Atividade iniciada, aquecimento iniciado e rascunho local bloqueiam remarcação.
+- [x] Remarcação mantém IDs e horários, preserva agenda de destino e não recria origem.
+- [x] Concorrência, rollback, ownership e limites de data cobertos por testes.
+- [x] Qualidade, tipos, testes, build e revisão semântica aprovados.
 
 ## Resultado
 
-Implementação concluída na branch; validação final pendente.
+Implementação e validação concluídas em 27/10/2026, integradas à nova interface da E06-T25.
 
-- Formatação, lint, estrutura e tipos aprovados.
-- 337 testes de aplicação aprovados; cobertura de linhas 90,92% e branches 83,98%.
-- 33 testes dos scripts, integridade dos dados canônicos e build aprovados.
-- Testes de integração PostgreSQL e navegador pendentes: Docker Desktop falha ao
-  iniciar por bloqueio de `sailor-ingest.sock`. Usuário reiniciará o computador.
-- A revisão final corrigiu a preservação de Sem aquecimento ao editar horários;
-  esse cenário também foi incluído nos testes de integração pendentes.
-- Nenhum dado operacional pessoal foi alterado para testar. Não mergear antes
-  das validações de banco e navegador.
+- 50 testes de integração PostgreSQL aprovados em sete arquivos, incluindo seleção de
+  preparação, Sem aquecimento, concorrência, rollback e atribuição legada.
+- Chrome com banco isolado confirmou sugestão de futevôlei, remarcação com mesmo ID,
+  horários/aquecimento preservados, origem sem recriação e opção Sem aquecimento
+  mantida após nova edição de horário.
+- Fixture de falha corrigida: criar definição inválida desde a origem, respeitando
+  o trigger de imutabilidade do banco.
+- Testes de aplicação, qualidade, tipos, integridade e build aprovados; resultados
+  agregados da nova UI registrados na E06-T25.
+- Nenhum dado operacional pessoal foi usado para validar mutações.
