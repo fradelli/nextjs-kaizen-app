@@ -1,12 +1,11 @@
 # Tarefa selecionada
 
-- **Tarefa:** E06-T19 — Preencher automaticamente o fim planejado do treino
-- **Status:** DONE
-- **Entrada principal:** `roadmap/epics/E06-training-execution/T19-autofill-planned-workout-end.md`.
-- **Prioridade:** lista curta encerrada: E06-T19 concluída e E06-T20 cancelada pelo usuário em 26/10/2026; Treino específico permanece disponível.
-- **Resultado atual:** cálculo automático e preservação manual implementados; edição histórica, falhas de conexão e ciclo de gravação cobertos por testes e Chrome em banco isolado.
-- **Próxima ação:** concluir a validação manual retrospectiva da E06-T23; conferir a pendência física da E06-T14. E06-T04 e E06-T05 continuam necessárias para encerrar treino antes de avançar à Dieta.
-- **Branch:** `codex/E06-T19-autofill-planned-workout-end`. Segurança integrada pela PR #68, com sete checks aprovados e auditoria sem achados. A revalidação desta branch e seu resultado final estão na PR #69.
+- **Tarefa:** E06-T24 — Escolher aquecimento e remarcar atividades não iniciadas
+- **Status:** IN_PROGRESS
+- **Entrada principal:** `roadmap/epics/E06-training-execution/T24-select-preparation-and-reschedule-activities.md`.
+- **Branch:** `codex/E06-T24-activity-preparation-and-rescheduling`.
+- **Autorização:** escolhas de aquecimento e limites da remarcação aprovados pelo usuário em 27/10/2026.
+- **Próxima ação:** validar os dois fluxos, regressões de agenda, concorrência e histórico antes da entrega.
 
 ## Pendências preservadas
 
@@ -17,3 +16,7 @@
 
 O histórico da limpeza e da revisão do README está no
 [diário operacional](../docs/worklog/index.md).
+
+## Retomada após reinicialização
+
+E06-T24: validar PostgreSQL descartável e fluxo completo no navegador após o Docker voltar. Os 337 testes da aplicação, 33 testes de scripts e build passaram. Detalhes no documento T24. Não mergear antes da validação final.

@@ -21,6 +21,7 @@ describe("getPublicTrainingPlan", () => {
       planId: "plan-v1",
       version: "1",
       sourceStatus: "active",
+      preparationSuggestions: [],
       sessions: [
         expect.objectContaining({
           sessionId: "session-a",

@@ -21,6 +21,7 @@ export type AddTrainingActivityCommand = Readonly<{
   name: string;
   sport: string | null;
   sessionId: string | null;
+  preparationSessionId?: string | null;
   plannedStartTime: string;
   plannedEndTime: string;
 }>;
@@ -91,6 +92,7 @@ export type TrainingActivitySetResultInput = Readonly<{
 
 export type UpdateTrainingActivityCommand = AddTrainingActivityCommand &
   Readonly<{
+    targetCivilDate?: CivilDate;
     activityId: string;
     expectedRevision: number;
   }>;

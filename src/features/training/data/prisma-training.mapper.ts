@@ -25,6 +25,7 @@ export function mapPrismaTrainingPlan(row: PrismaTrainingPlanRow): TrainingPlanS
     planId: row.planId,
     version: row.version,
     sourceStatus: row.sourceStatus,
+    preparationSuggestions: mapPreparationSuggestions(row),
     sessions: Object.freeze(
       [...row.trainingSessionDefinition_plan]
         .sort((left, right) => compareStableIdentifiers(left.sessionId, right.sessionId))
@@ -161,4 +162,35 @@ function compareStableIdentifiers(left: string, right: string): number {
   if (left === right) return 0;
 
   return left < right ? -1 : 1;
+}
+
+function mapPreparationSuggestions(row: PrismaTrainingPlanRow) {
+  const schedule = row.weeklySchedule;
+  if (
+    !schedule ||
+    typeof schedule !== "object" ||
+    Array.isArray(schedule) ||
+    !("entries" in schedule) ||
+    !Array.isArray(schedule.entries)
+  )
+    return [];
+  const suggestions = new Map<string, { sport: string; sessionId: string }>();
+  for (const entry of schedule.entries) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
+    if (typeof entry.sport !== "string" || typeof entry.preparation_session_id !== "string")
+      continue;
+    if (
+      !row.trainingSessionDefinition_plan.some(
+        (session) =>
+          session.sessionId === entry.preparation_session_id &&
+          session.assignmentRole === "preparation",
+      )
+    )
+      continue;
+    suggestions.set(`${entry.sport}:${entry.preparation_session_id}`, {
+      sport: entry.sport,
+      sessionId: entry.preparation_session_id,
+    });
+  }
+  return [...suggestions.values()];
 }

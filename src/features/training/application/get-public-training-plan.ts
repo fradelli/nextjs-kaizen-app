@@ -24,6 +24,7 @@ export function projectAvailablePublicTrainingPlan(
     planId: plan.planId,
     version: plan.version,
     sourceStatus: plan.sourceStatus,
+    preparationSuggestions: plan.preparationSuggestions ?? [],
     sessions: Object.freeze(plan.sessions.map(projectPublicTrainingSession)),
   });
 }

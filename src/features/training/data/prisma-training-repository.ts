@@ -1,3 +1,9 @@
+import { ensureScheduledTrainingDayInTransaction } from "./ensure-scheduled-training-day";
+import {
+  activityScheduleInclude,
+  hasTrainingActivityProgress,
+  recordTrainingActivityReschedule,
+} from "./training-activity-rescheduling";
 import { parseTrainingExerciseBlock } from "./parse-training-exercise-block";
 import "server-only";
 
@@ -166,7 +172,8 @@ export class PrismaTrainingRepository implements TrainingRepository {
         if (
           input.type !== "mobility" &&
           input.type !== "structured_training" &&
-          !definition.preparationSessionDefinitionId
+          !definition.preparationSessionDefinitionId &&
+          input.preparationSessionId === undefined
         ) {
           const preparationEnd = activityData.plannedStartMinute;
           await transaction.trainingDayActivity.create({
@@ -194,78 +201,136 @@ export class PrismaTrainingRepository implements TrainingRepository {
     return executePrismaMutation(async () => {
       const activityData = validateActivitySchedule(input);
       if ("status" in activityData) return activityData;
-      return this.client.$transaction(async (transaction) => {
-        const existing = await transaction.trainingDayActivity.findFirst({
-          where: { ...activityMutationWhere(input), role: "primary" },
-          include: { session: true },
-        });
-        if (!existing) return conflictOrMissingActivity(transaction, input);
-        const preserveSession =
-          input.type === "structured_training" &&
-          existing.type === input.type &&
-          existing.session?.sessionId === input.sessionId;
-        const definition = preserveSession
-          ? {
-              name: existing.name,
-              trainingPlanVersionId: existing.trainingPlanVersionId,
-              sessionDefinitionId: existing.sessionDefinitionId,
-              preparationSessionDefinitionId: existing.preparationSessionDefinitionId,
-            }
-          : await resolveActivityDefinition(transaction, input);
-        if ("status" in definition) return definition;
-        const result = await transaction.trainingDayActivity.updateMany({
-          where: { ...activityMutationWhere(input), role: "primary" },
-          data: { ...activityData, ...definition, revision: { increment: 1 } },
-        });
-        if (!result.count) return conflictOrMissingActivity(transaction, input);
-        const preparationEnd = activityData.plannedStartMinute;
-        if (
-          input.type === "mobility" ||
-          input.type === "structured_training" ||
-          definition.preparationSessionDefinitionId
-        ) {
-          await transaction.trainingDayActivity.updateMany({
-            where: {
-              workspaceId: input.workspaceId,
-              parentActivityId: input.activityId,
-              deletedAt: null,
-            },
-            data: { deletedAt: new Date(), revision: { increment: 1 } },
+      return this.client.$transaction(
+        async (transaction) => {
+          const existing = await transaction.trainingDayActivity.findFirst({
+            where: { ...activityMutationWhere(input), role: "primary" },
+            include: activityScheduleInclude,
           });
-        } else {
-          const preparation = await transaction.trainingDayActivity.findFirst({
-            where: {
+          if (!existing) return conflictOrMissingActivity(transaction, input);
+          const targetDate = input.targetCivilDate ?? input.civilDate;
+          const moving = targetDate !== input.civilDate;
+          if (moving && hasTrainingActivityProgress(existing)) {
+            return invalid(
+              "Só é possível mudar a data de atividades ainda não iniciadas, incluindo o aquecimento.",
+              "targetCivilDate",
+            );
+          }
+          const preservePreparation =
+            input.type === existing.type &&
+            input.type !== "structured_training" &&
+            (input.preparationSessionId === "keep" ||
+              (typeof input.preparationSessionId === "string" &&
+                input.preparationSessionId === existing.preparationSession?.sessionId) ||
+              (input.preparationSessionId === undefined && input.sport === existing.sport));
+          const preserveSession =
+            input.type === "structured_training" &&
+            existing.type === input.type &&
+            existing.session?.sessionId === input.sessionId;
+          const definition = preserveSession
+            ? {
+                name: existing.name,
+                trainingPlanVersionId: existing.trainingPlanVersionId,
+                sessionDefinitionId: existing.sessionDefinitionId,
+                preparationSessionDefinitionId: existing.preparationSessionDefinitionId,
+              }
+            : preservePreparation
+              ? {
+                  trainingPlanVersionId: existing.trainingPlanVersionId,
+                  sessionDefinitionId: existing.sessionDefinitionId,
+                  preparationSessionDefinitionId: existing.preparationSessionDefinitionId,
+                }
+              : await resolveActivityDefinition(transaction, input);
+          if ("status" in definition) return definition;
+          const removingGenericPreparation =
+            input.preparationSessionId === null && existing.preparations.length > 0;
+          if (
+            (definition.preparationSessionDefinitionId !==
+              existing.preparationSessionDefinitionId ||
+              removingGenericPreparation) &&
+            hasTrainingActivityProgress(existing)
+          ) {
+            return invalid(
+              "O aquecimento de uma atividade já iniciada deve ser preservado.",
+              "preparationSessionId",
+            );
+          }
+          if (moving)
+            await ensureScheduledTrainingDayInTransaction(transaction, {
               workspaceId: input.workspaceId,
-              parentActivityId: input.activityId,
-              deletedAt: null,
+              civilDate: targetDate,
+              environment: input.environment,
+            });
+          const result = await transaction.trainingDayActivity.updateMany({
+            where: { ...activityMutationWhere(input), role: "primary" },
+            data: {
+              ...activityData,
+              ...definition,
+              ...(input.preparationSessionId === null &&
+              input.type === existing.type &&
+              (input.type === "specific_training" || input.type === "sport_practice")
+                ? { trainingPlanVersionId: existing.trainingPlanVersionId }
+                : {}),
+              revision: { increment: 1 },
+              ...(moving
+                ? { civilDate: toCivilDateDatabaseValue(targetDate), assignmentId: null }
+                : {}),
             },
           });
-          const preparationData = {
-            name: input.sport ? `Aquecimento de ${input.sport}` : "Mobilidade pré-treino",
-            sport: input.sport,
-            plannedStartMinute: Math.max(0, preparationEnd - 10),
-            plannedEndMinute: preparationEnd,
-          };
-          if (preparation) {
-            await transaction.trainingDayActivity.update({
-              where: { id: preparation.id },
-              data: { ...preparationData, revision: { increment: 1 } },
+          if (!result.count) return conflictOrMissingActivity(transaction, input);
+          const preparationEnd = activityData.plannedStartMinute;
+          if (
+            input.type === "mobility" ||
+            input.type === "structured_training" ||
+            definition.preparationSessionDefinitionId ||
+            input.preparationSessionId === null ||
+            (input.preparationSessionId === "keep" && existing.preparations.length === 0)
+          ) {
+            await transaction.trainingDayActivity.updateMany({
+              where: {
+                workspaceId: input.workspaceId,
+                parentActivityId: input.activityId,
+                deletedAt: null,
+              },
+              data: { deletedAt: new Date(), revision: { increment: 1 } },
             });
           } else {
-            await transaction.trainingDayActivity.create({
-              data: {
+            const preparation = await transaction.trainingDayActivity.findFirst({
+              where: {
                 workspaceId: input.workspaceId,
-                civilDate: toCivilDateDatabaseValue(input.civilDate),
-                type: "mobility",
-                role: "preparation",
                 parentActivityId: input.activityId,
-                ...preparationData,
+                deletedAt: null,
               },
             });
+            const preparationData = {
+              name: input.sport ? `Aquecimento de ${input.sport}` : "Mobilidade pré-treino",
+              sport: input.sport,
+              plannedStartMinute: Math.max(0, preparationEnd - 10),
+              plannedEndMinute: preparationEnd,
+            };
+            if (preparation) {
+              await transaction.trainingDayActivity.update({
+                where: { id: preparation.id },
+                data: { ...preparationData, revision: { increment: 1 } },
+              });
+            } else {
+              await transaction.trainingDayActivity.create({
+                data: {
+                  workspaceId: input.workspaceId,
+                  civilDate: toCivilDateDatabaseValue(input.civilDate),
+                  type: "mobility",
+                  role: "preparation",
+                  parentActivityId: input.activityId,
+                  ...preparationData,
+                },
+              });
+            }
           }
-        }
-        return saved(input.expectedRevision + 1);
-      });
+          if (moving) await recordTrainingActivityReschedule(transaction, existing, targetDate);
+          return saved(input.expectedRevision + 1);
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+      );
     });
   }
 
@@ -1052,6 +1117,29 @@ async function resolveActivityDefinition(
     const sportName = input.sport;
     if (input.sessionId) {
       return invalid("Somente treino estruturado aceita uma sessão do plano.", "sessionId");
+    }
+    if (input.preparationSessionId !== undefined) {
+      if (input.preparationSessionId === null)
+        return {
+          trainingPlanVersionId: null,
+          sessionDefinitionId: null,
+          preparationSessionDefinitionId: null,
+        };
+      if (input.type === "mobility")
+        return invalid("Mobilidade não recebe aquecimento separado.", "preparationSessionId");
+      const selectedPlan = await findActiveTrainingPlanRow(client, input.environment);
+      const selectedPreparation = selectedPlan?.trainingSessionDefinition_plan.find(
+        (session) =>
+          session.sessionId === input.preparationSessionId &&
+          session.assignmentRole === "preparation",
+      );
+      if (!selectedPlan || !selectedPreparation)
+        return invalid("Selecione um aquecimento válido do plano ativo.", "preparationSessionId");
+      return {
+        trainingPlanVersionId: selectedPlan.id,
+        sessionDefinitionId: null,
+        preparationSessionDefinitionId: selectedPreparation.id,
+      };
     }
     const plan =
       sportName && (input.type === "sport_practice" || input.type === "specific_training")

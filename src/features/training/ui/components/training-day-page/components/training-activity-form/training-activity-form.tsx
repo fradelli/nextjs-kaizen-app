@@ -3,6 +3,11 @@
 import { Button } from "@fradelli/ui/button";
 import { Input } from "@fradelli/ui/input";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { isSameTrainingSport } from "@/features/training/domain/training-sport.rules";
+import { getTrainingAgendaDateWindow } from "@/features/training/domain/training-edit-window";
+import { trainingActivityDraftKey } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
+import { TrainingPreparationSelect } from "./components/training-preparation-select/training-preparation-select";
 import { useTrainingActivitySchedule } from "./hooks/use-training-activity-schedule";
 import { isValidPlannedInterval } from "./training-activity-form.utils";
 
@@ -17,6 +22,19 @@ export function TrainingActivityForm({
   activity,
   availablePlan,
 }: TrainingActivityFormProps) {
+  const router = useRouter();
+  const [targetDate, setTargetDate] = useState(civilDate);
+  const [preparationChoice, setPreparationChoice] = useState<string | null>(
+    activity ? "keep" : null,
+  );
+  const [draftError, setDraftError] = useState<string | null>(null);
+  const dateWindow = getTrainingAgendaDateWindow();
+  const notStarted =
+    !activity ||
+    (activity.status === "scheduled" &&
+      !activity.startedAt &&
+      !activity.completedAt &&
+      activity.preparations.every((item) => item.status === "scheduled" && !item.startedAt));
   const schedule = useTrainingActivitySchedule({ civilDate, action, activity, availablePlan });
   const [name, setName] = useState(activity?.name ?? "");
   const [sport, setSport] = useState(activity?.sport ?? "");
@@ -32,12 +50,27 @@ export function TrainingActivityForm({
       if (!activity) {
         setName("");
         setSport("");
+        setPreparationChoice(null);
       }
+      if (activity && targetDate !== civilDate) router.push(`/treino?date=${targetDate}`);
     }
     return result;
   });
   const { type } = schedule;
   const needsSport = type === "sport_practice" || type === "specific_training";
+  const suggestedPreparation = availablePlan?.preparationSuggestions?.find(
+    (item) =>
+      isSameTrainingSport(item.sport, sport) &&
+      availablePlan.sessions.some(
+        (session) =>
+          session.assignmentRole === "preparation" && session.sessionId === item.sessionId,
+      ),
+  )?.sessionId;
+  const allowKeepPreparation = Boolean(activity && activity.type === type);
+  const preparationValue =
+    (preparationChoice === "keep" && !allowKeepPreparation ? null : preparationChoice) ??
+    suggestedPreparation ??
+    "automatic";
   const timeError = validateTimes && !isValidPlannedInterval(schedule.startTime, schedule.endTime);
   const hintId = `activity-end-hint-${activity?.id ?? "new"}`;
   const hint = timeError
@@ -60,6 +93,24 @@ export function TrainingActivityForm({
       className={trainingActivityFormStyles.root}
       onReset={(event) => event.preventDefault()}
       onSubmit={(event) => {
+        setDraftError(null);
+        if (activity && (targetDate !== civilDate || (needsSport && preparationValue !== "keep"))) {
+          try {
+            if (window.localStorage.getItem(trainingActivityDraftKey(civilDate, activity.id))) {
+              event.preventDefault();
+              setDraftError(
+                "Há um treino iniciado neste navegador. Conclua ou descarte o rascunho antes de mudar a data ou o aquecimento.",
+              );
+              return;
+            }
+          } catch {
+            event.preventDefault();
+            setDraftError(
+              "Não foi possível conferir o rascunho local. Tente novamente antes de remarcar.",
+            );
+            return;
+          }
+        }
         if (!isValidPlannedInterval(schedule.startTime, schedule.endTime)) {
           event.preventDefault();
           setValidateTimes(true);
@@ -75,6 +126,36 @@ export function TrainingActivityForm({
           </>
         ) : null}
         <div className={trainingActivityFormStyles.grid}>
+          {activity ? (
+            <div className={trainingActivityFormStyles.field}>
+              <label
+                className={trainingActivityFormStyles.label}
+                htmlFor={`activity-date-${activity.id}`}
+              >
+                Data da atividade
+              </label>
+              <Input
+                id={`activity-date-${activity.id}`}
+                name="targetCivilDate"
+                type="date"
+                value={targetDate}
+                onChange={(event) => setTargetDate(event.target.value)}
+                min={dateWindow.minimumDate}
+                max={dateWindow.maximumDate}
+                disabled={!notStarted}
+                required
+                aria-describedby={`activity-date-hint-${activity.id}`}
+              />
+              <p
+                id={`activity-date-hint-${activity.id}`}
+                className={trainingActivityFormStyles.hint}
+              >
+                {notStarted
+                  ? "Remarque entre ontem e os próximos quatro dias. Horários e aquecimento serão mantidos."
+                  : "Só é possível mudar a data de atividades ainda não iniciadas."}
+              </p>
+            </div>
+          ) : null}
           <div className={trainingActivityFormStyles.field}>
             <label
               className={trainingActivityFormStyles.label}
@@ -162,6 +243,16 @@ export function TrainingActivityForm({
           ) : (
             <input type="hidden" name="sport" value="" />
           )}
+          {needsSport ? (
+            <TrainingPreparationSelect
+              activity={activity}
+              availablePlan={availablePlan}
+              value={preparationValue}
+              onChange={setPreparationChoice}
+              disabled={!notStarted}
+              allowKeep={allowKeepPreparation}
+            />
+          ) : null}
           <div className={trainingActivityFormStyles.field}>
             <label
               className={trainingActivityFormStyles.label}
@@ -214,6 +305,11 @@ export function TrainingActivityForm({
           </Button>
         </div>
       </fieldset>
+      {draftError ? (
+        <p role="alert" className={trainingActivityFormStyles.hint}>
+          {draftError}
+        </p>
+      ) : null}
       <TrainingActionFeedback state={submission.state} pending={submission.pending} />
     </form>
   );

@@ -32,12 +32,17 @@ Treino, preparação, mobilidade ou descanso do dia consultáveis e registrávei
 | E06-T22 | E06-T12    | Agenda futura editável sem execução antecipada           |
 | E06-T23 | E06-T12    | Registro retrospectivo de atividades externas em revisão |
 
+| E06-T24 | E06-T12, E06-T19 | Aquecimento selecionável e remarcação segura |
+
 As tarefas E06-T06 a E06-T22 são uma rodada complementar. Nenhuma
 começa automaticamente nem amplia o gate de E06-T05 sem nova priorização. Ao
 selecionar qualquer uma, reanalisar a base já integrada, apresentar solução e
 plano e aguardar aprovação antes de implementar.
 
 ## Prioridade para começar a usar a nova programação
+
+Em 27/10/2026, o usuário priorizou a E06-T24 para corrigir inclusão de
+aquecimento e remarcação antes da Dieta. A E06-T20 permanece cancelada.
 
 A lista curta priorizada em 26/10/2026 está encerrada: E06-T19 concluída e
 E06-T20 cancelada pelo usuário. Não existe uma terceira pequena correção

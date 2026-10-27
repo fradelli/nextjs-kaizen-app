@@ -26,6 +26,11 @@ const activitySchema = z.object({
   name: z.string().trim().min(1).max(120),
   sport: z.preprocess(nullableFormValue, z.string().trim().max(80).nullable()),
   sessionId: z.preprocess(nullableFormValue, z.string().min(1).nullable()),
+  preparationSessionId: z.preprocess(
+    (value) =>
+      value === "automatic" ? undefined : value === "none" || value === "" ? null : value,
+    z.string().min(1).nullable().optional(),
+  ),
   plannedStartTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
   plannedEndTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
 });
@@ -111,6 +116,7 @@ const activityExerciseSchema = z.object({
   ),
 });
 const existingActivitySchema = activitySchema.extend({
+  targetCivilDate: z.iso.date().optional(),
   activityId: z.uuid(),
   expectedRevision: z.coerce.number().int().nonnegative(),
 });
