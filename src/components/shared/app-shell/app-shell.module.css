@@ -25,12 +25,11 @@
 .header {
   grid-area: 1 / 1;
   border-bottom: 1px solid var(--fd-color-border);
-  background: var(--fd-color-surface);
 }
 
 .headerInner {
   display: flex;
-  width: min(100%, 72rem);
+  width: min(100%, 64rem);
   margin-inline: auto;
   align-items: center;
   justify-content: space-between;
@@ -48,9 +47,9 @@
 
 .content {
   grid-area: 2 / 1;
-  width: min(100%, 72rem);
+  width: min(100%, 64rem);
   margin-inline: auto;
-  padding: var(--fd-space-4);
+  padding: var(--fd-space-6);
 }
 
 @media (width < 48rem) {

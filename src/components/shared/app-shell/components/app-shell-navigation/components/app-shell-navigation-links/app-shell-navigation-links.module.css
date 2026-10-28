@@ -1,7 +1,7 @@
 .navigation {
   display: grid;
   grid-area: 1 / 1;
-  width: min(100%, 72rem);
+  width: min(100%, 64rem);
   margin-inline: auto;
   align-self: center;
   justify-items: end;
@@ -31,14 +31,13 @@
   .navigation {
     position: fixed;
     z-index: 20;
-    inset-inline: var(--fd-space-4);
+    inset-inline: var(--fd-space-6);
     bottom: calc(var(--fd-space-2) + env(safe-area-inset-bottom, 0px));
     width: auto;
     max-width: 24rem;
     padding: var(--fd-space-2);
     border: 1px solid var(--fd-color-border);
-    border-radius: var(--fd-radius-lg);
-    background: var(--fd-color-background);
+    border-radius: var(--fd-radius-xl);
     justify-items: stretch;
     pointer-events: auto;
   }
@@ -63,5 +62,15 @@
   .icon > svg {
     width: 1.5rem;
     height: 1.5rem;
+  }
+}
+
+@media (width >= 48rem) {
+  .navigation {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }

@@ -12,7 +12,7 @@ export function RestTrainingDay({ day }: RestTrainingDayProps) {
         <CardTitle>
           <h2>Descanso hoje</h2>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-base">
           Este dia não possui exercícios prescritos nem campos de execução.
         </CardDescription>
       </CardHeader>

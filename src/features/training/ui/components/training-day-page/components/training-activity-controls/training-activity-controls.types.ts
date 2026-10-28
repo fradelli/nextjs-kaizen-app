@@ -4,10 +4,17 @@ import type { TrainingActivityExecutionDraft } from "@/features/training/ui/hook
 
 export type TrainingActivityControlsProps = Readonly<{
   civilDate: string;
+  executionStorageError?: boolean;
   activity: TrainingActivityDto;
   action: TrainingFormAction;
   draft?: TrainingActivityExecutionDraft | null;
   onStart?: () => void;
+  onPause?: () => void;
+  onResume?: () => void;
+  onPrepareCompletion?: () => {
+    draft: TrainingActivityExecutionDraft;
+    completionRequestedAt: string;
+  } | null;
   onFinalized?: () => void;
   ready?: boolean;
 }>;

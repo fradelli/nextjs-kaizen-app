@@ -9,7 +9,7 @@ export function AppShell({ children }: AppShellProps) {
         Pular para o conteúdo
       </a>
 
-      <header className={styles.header}>
+      <header className={`${styles.header} fd-surface-glass`}>
         <div className={styles.headerInner}>
           <p className={styles.brand} aria-label="Kaizen">
             <span lang="ja">改善</span>

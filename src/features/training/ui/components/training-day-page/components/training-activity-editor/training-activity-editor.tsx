@@ -1,4 +1,7 @@
 "use client";
+
+import { PencilSimpleIcon } from "@fradelli/ui/icons/PencilSimple";
+import { PlusIcon } from "@fradelli/ui/icons/Plus";
 import { useRouter } from "next/navigation";
 import { Button } from "@fradelli/ui/button";
 import { useCallback, useState, useTransition, useRef } from "react";
@@ -30,7 +33,7 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
         type="button"
         size="icon"
         variant={props.activity ? "ghost" : "default"}
-        className="min-h-11 min-w-11"
+        className="min-h-11 min-w-11 [&>svg]:size-5"
         aria-label={
           props.activity ? `Editar atividade: ${props.activity.name}` : "Adicionar atividade"
         }
@@ -39,21 +42,9 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
         onClick={() => setOpen(true)}
       >
         {props.activity ? (
-          <svg
-            aria-hidden="true"
-            width="19"
-            height="19"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="m15 5 4 4M4 20l4-1L20 7a2.8 2.8 0 0 0-4-4L4 15z" />
-          </svg>
+          <PencilSimpleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
         ) : (
-          <span aria-hidden="true">+</span>
+          <PlusIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
         )}
       </Button>
       {open ? (

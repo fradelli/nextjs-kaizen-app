@@ -9,6 +9,166 @@ import { createDatabaseFixture } from "./fixtures/database.fixture";
 import { withImportDatabase } from "./fixtures/import-database.fixture";
 
 describe("training mutations with PostgreSQL", () => {
+  it.each(["same-minute", "midnight"])("preserves real timestamps across %s clock labels", (kind) =>
+    withImportDatabase(async (client) => {
+      const fixture = await client.$transaction(createDatabaseFixture);
+      const activity = await client.trainingDayActivity.create({
+        data: {
+          workspaceId: fixture.workspace.id,
+          civilDate: fixture.date,
+          type: "mobility",
+          name: "Short execution",
+        },
+      });
+      const base = new Date(Date.now() - 86_400_000);
+      base.setUTCHours(3, 0, 0, 0);
+      const start = kind === "midnight" ? base.getTime() - 1000 : base.getTime() + 10_000;
+      const end = start + 1000;
+      const repository = new PrismaTrainingRepository(client);
+      await expect(
+        repository.controlTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          civilDate: "2026-09-13" as CivilDate,
+          activityId: activity.id,
+          action: "complete",
+          intensity: null,
+          energy: null,
+          comment: null,
+          expectedRevision: 0,
+          completionRequestedAt: new Date(end).toISOString(),
+          executionDraft: {
+            version: 1,
+            activityId: activity.id,
+            civilDate: "2026-09-13",
+            expectedRevision: 0,
+            status: "paused",
+            startedAt: new Date(start).toISOString(),
+            intervals: [
+              { startedAt: new Date(start).toISOString(), endedAt: new Date(end).toISOString() },
+            ],
+            exercises: {},
+          },
+        }),
+      ).resolves.toMatchObject({ status: "saved" });
+      const saved = await client.trainingDayActivity.findUniqueOrThrow({
+        where: { id: activity.id },
+      });
+      if (kind === "midnight") {
+        expect(saved.actualStartMinute).toBe(1439);
+        expect(saved.actualEndMinute).toBe(0);
+      } else expect(saved.actualEndMinute).toBe(saved.actualStartMinute);
+      const interval = await client.trainingActivityExecutionInterval.findFirstOrThrow({
+        where: { activityId: activity.id },
+      });
+      expect(interval.endedAt!.getTime() - interval.startedAt.getTime()).toBe(1000);
+    }),
+  );
+
+  it("uses the explicit stop time without counting the modal and rejects invalid stop snapshots atomically", () =>
+    withImportDatabase(async (client) => {
+      const fixture = await client.$transaction(createDatabaseFixture);
+      const repository = new PrismaTrainingRepository(client);
+      const activity = await client.trainingDayActivity.create({
+        data: {
+          workspaceId: fixture.workspace.id,
+          civilDate: fixture.date,
+          type: "mobility",
+          name: "Stop fixture",
+        },
+      });
+      const referenceTime = Date.now();
+      const startedAt = new Date(referenceTime - 600_000).toISOString();
+      const stoppedAt = new Date(referenceTime - 300_000).toISOString();
+      const command = {
+        workspaceId: fixture.workspace.id,
+        civilDate: "2026-09-13" as CivilDate,
+        activityId: activity.id,
+        action: "complete" as const,
+        intensity: null,
+        energy: null,
+        comment: "After stop",
+        expectedRevision: 0,
+        completionRequestedAt: stoppedAt,
+        executionDraft: {
+          version: 1 as const,
+          activityId: activity.id,
+          civilDate: "2026-09-13",
+          expectedRevision: 0,
+          status: "paused" as const,
+          startedAt,
+          intervals: [{ startedAt, endedAt: stoppedAt }],
+          exercises: {},
+        },
+      };
+      for (const completionRequestedAt of [
+        "not-a-date",
+        new Date(Date.parse(startedAt) - 1000).toISOString(),
+        new Date(Date.now() + 180_000).toISOString(),
+        new Date(Date.parse(stoppedAt) - 1000).toISOString(),
+      ]) {
+        await expect(
+          repository.controlTrainingActivity({ ...command, completionRequestedAt }),
+        ).resolves.toMatchObject({ status: "invalid" });
+      }
+      await expect(
+        repository.controlTrainingActivity({
+          ...command,
+          executionDraft: {
+            ...command.executionDraft,
+            status: "in_progress",
+            intervals: [{ startedAt, endedAt: null }],
+          },
+        }),
+      ).resolves.toMatchObject({ status: "invalid" });
+      await expect(
+        repository.controlTrainingActivity({
+          ...command,
+          workspaceId: fixture.anotherWorkspace.id,
+        }),
+      ).resolves.toMatchObject({ status: "not_found" });
+      await expect(
+        repository.controlTrainingActivity({
+          ...command,
+          expectedRevision: 1,
+          executionDraft: { ...command.executionDraft, expectedRevision: 1 },
+        }),
+      ).resolves.toMatchObject({ status: "conflict" });
+      expect(
+        await client.trainingActivityExecutionInterval.count({
+          where: { activityId: activity.id },
+        }),
+      ).toBe(0);
+      expect(
+        (await client.trainingDayActivity.findUniqueOrThrow({ where: { id: activity.id } })).status,
+      ).toBe("scheduled");
+      const beforeSave = Date.now();
+      await expect(repository.controlTrainingActivity(command)).resolves.toMatchObject({
+        status: "saved",
+        revision: 1,
+      });
+      const saved = await client.trainingDayActivity.findUniqueOrThrow({
+        where: { id: activity.id },
+      });
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "America/Sao_Paulo",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      })
+        .format(new Date(stoppedAt))
+        .split(":")
+        .map(Number);
+      expect(saved.actualEndMinute).toBe(parts[0]! * 60 + parts[1]!);
+      expect(saved.completedAt!.getTime()).toBeGreaterThanOrEqual(beforeSave);
+      expect(saved.completedAt!.getTime()).toBeGreaterThan(Date.parse(stoppedAt));
+      const interval = await client.trainingActivityExecutionInterval.findFirstOrThrow({
+        where: { activityId: activity.id },
+      });
+      expect(interval.endedAt!.getTime() - interval.startedAt.getTime()).toBe(300_000);
+      expect(saved.intensity).toBeNull();
+      expect(saved.energy).toBeNull();
+    }));
+
   it("preserves the historical session when updating hours after a new plan activation", () =>
     withImportDatabase(async (client) => {
       const fixture = await client.$transaction(createDatabaseFixture);

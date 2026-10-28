@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-28 — linguagem visual, ícones e registro de treino
+
+- Kaizen alinhado à linguagem estática do portfólio: Inter, vidro, superfícies, bordas, geometria, espaçamento e estados compartilhados, sem estrelas ou animações.
+- Design System 0.6.0 publicado oficialmente e instalado por pin exato; ícones Phosphor consumidos somente pelo pacote, com guard contra SVG de ação e bibliotecas paralelas.
+- Player de treino no cabeçalho com Play/Pausa/Stop. Atividades externas usam conclusão direta, sem cronômetro nem horários inventados.
+- Registro em modal com avaliação recuperável, proteção durante envio, erro preservado e confirmação de exercícios incompletos. Stop captura a pausa antes de abrir o formulário.
+- Dicas com superfície elevada e contorno arredondado em hover/foco; botões usam cursor e hover oficiais do DS.
+- Migration adicional permite minutos reais iguais e virada do dia; timestamps e intervalos preservam a duração exata, sem modificar registros existentes.
+
 Mudanças materiais do projeto serão registradas neste arquivo.
 
 ## 2026-10-26 — correção da auditoria de dependências

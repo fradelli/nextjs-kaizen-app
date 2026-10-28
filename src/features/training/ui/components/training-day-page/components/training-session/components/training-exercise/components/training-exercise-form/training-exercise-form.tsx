@@ -1,7 +1,8 @@
 "use client";
 
-import { Button } from "@fradelli/ui/button";
+import { Field, FieldLabel } from "@fradelli/ui/field";
 import { Input } from "@fradelli/ui/input";
+import { PendingButton } from "@fradelli/ui/pending-button";
 
 import { TrainingActionFeedback } from "../../../../../training-action-feedback/training-action-feedback";
 import { useTrainingActionFeedback } from "@/features/training/ui/hooks/use-training-action-feedback";
@@ -40,23 +41,23 @@ export function TrainingExerciseForm({
           name="completed"
           value={exercise.status === "completed" ? "true" : "false"}
         />
-        <div className={trainingExerciseFormStyles.field}>
-          <label
+        <Field className={trainingExerciseFormStyles.field}>
+          <FieldLabel
             className={trainingExerciseFormStyles.label}
             htmlFor={`${exercise.prescriptionId}-comment`}
           >
             Comentário
-          </label>
+          </FieldLabel>
           <Input
             id={`${exercise.prescriptionId}-comment`}
             name="comment"
             defaultValue={exercise.comment ?? ""}
             maxLength={1000}
           />
-        </div>
-        <Button type="submit" variant="outline" disabled={pending}>
+        </Field>
+        <PendingButton type="submit" variant="outline" pending={pending} pendingLabel="Salvando…">
           Salvar
-        </Button>
+        </PendingButton>
       </div>
       <TrainingActionFeedback state={state} pending={pending} />
     </form>

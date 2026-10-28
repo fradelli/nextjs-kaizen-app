@@ -21,7 +21,7 @@ export function TrainingAgendaBadges({ day }: TrainingAgendaBadgesProps) {
         ))}
       </div>
       {"planId" in day ? (
-        <details className="text-xs text-muted-foreground">
+        <details className="fd-text-interface text-muted-foreground">
           <summary className="cursor-pointer py-2">Detalhes do plano</summary>
           <p>
             Plano {day.planId} · versão {day.planVersion}

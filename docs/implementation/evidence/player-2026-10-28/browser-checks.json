@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-28",
+  "engine": "Chromium",
+  "data": "synthetic disposable database",
+  "checks": [
+    {
+      "width": 320,
+      "expandedOverflow": false,
+      "touchTargets": 4,
+      "seriesLabel": "one line"
+    },
+    {
+      "width": 390,
+      "expandedOverflow": false,
+      "touchTargets": 4,
+      "seriesLabel": "one line"
+    },
+    {
+      "width": 768,
+      "expandedOverflow": false,
+      "touchTargets": 4,
+      "seriesLabel": "one line"
+    },
+    {
+      "width": 1440,
+      "expandedOverflow": false,
+      "touchTargets": 4,
+      "seriesLabel": "one line"
+    },
+    {
+      "tips": {
+        "border": "rgb(242, 207, 99)",
+        "radius": "16px",
+        "bg": "rgb(28, 28, 31)"
+      },
+      "focus": {
+        "width": "2px",
+        "style": "solid"
+      },
+      "buttonHover": {
+        "cursor": "pointer",
+        "alpha": 250,
+        "opacity": "1"
+      }
+    },
+    {
+      "guided": "play/pause/resume/stop, frozen clock, Escape/focus, reload/cache, partial confirmation and save passed"
+    },
+    {
+      "external": "direct record, no clock/draft, network failure preserved feedback, successful recovery"
+    },
+    {
+      "mobility": "comment-only rule preserved",
+      "pageErrors": [],
+      "motion": "none"
+    }
+  ]
+}

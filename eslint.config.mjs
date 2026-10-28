@@ -11,6 +11,34 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "error",
     },
   },
+  {
+    files: [
+      "src/app/**/*.{ts,tsx}",
+      "src/components/**/*.{ts,tsx}",
+      "src/features/*/ui/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "@phosphor-icons/*",
+                "@phosphor-icons/**",
+                "lucide-react",
+                "lucide-react/**",
+                "react-icons",
+                "react-icons/**",
+                "@radix-ui/react-icons",
+              ],
+              message: "Use os ícones públicos de @fradelli/ui/icons/<Nome>.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   globalIgnores([
     ".next/**",
     "coverage/**",

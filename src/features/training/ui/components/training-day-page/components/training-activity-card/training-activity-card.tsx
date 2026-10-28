@@ -1,5 +1,8 @@
 "use client";
 
+import { CaretUpIcon } from "@fradelli/ui/icons/CaretUp";
+import { CaretDownIcon } from "@fradelli/ui/icons/CaretDown";
+
 import { Badge } from "@fradelli/ui/badge";
 import { Button } from "@fradelli/ui/button";
 import { useState } from "react";
@@ -74,7 +77,7 @@ export function TrainingActivityCard({
     <article className={`${trainingActivityCardStyles.root} ${rootState}`}>
       <header className={trainingActivityCardStyles.header}>
         <div className={trainingActivityCardStyles.top}>
-          <div>
+          <div className="min-w-0 flex-1">
             <h2 className={trainingActivityCardStyles.title}>
               <Button
                 type="button"
@@ -83,7 +86,12 @@ export function TrainingActivityCard({
                 aria-expanded={expanded}
                 onClick={() => setExpandedOverride(!expanded)}
               >
-                {activity.name} <span aria-hidden="true">{expanded ? "▴" : "▾"}</span>
+                <span className="fd-text-card">{activity.name}</span>
+                {expanded ? (
+                  <CaretUpIcon size={16} weight="regular" aria-hidden="true" focusable="false" />
+                ) : (
+                  <CaretDownIcon size={16} weight="regular" aria-hidden="true" focusable="false" />
+                )}
               </Button>
             </h2>
             <p className={trainingActivityCardStyles.metadata}>
@@ -91,22 +99,19 @@ export function TrainingActivityCard({
             </p>
           </div>
           <div className={trainingActivityCardStyles.tools}>
-            {!retrospective && status !== "scheduled" ? (
-              <TrainingActivityTimer activity={activity} draft={activeDraft} />
-            ) : null}
-            {activeDraft && executionEditable ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={activeDraft.status === "paused" ? execution.resume : execution.pause}
-                aria-label={
-                  activeDraft.status === "paused" ? "Retomar atividade" : "Pausar atividade"
-                }
-              >
-                {activeDraft.status === "paused" ? "▶" : "⏸"}
-              </Button>
-            ) : null}
+            <TrainingActivityControls
+              civilDate={civilDate}
+              activity={activity}
+              action={actions.controlActivity}
+              draft={activeDraft}
+              onStart={startActivity}
+              onPause={execution.pause}
+              onResume={execution.resume}
+              onPrepareCompletion={execution.prepareCompletion}
+              executionStorageError={execution.storageError}
+              onFinalized={execution.clear}
+              ready={execution.ready && executionEditable}
+            />
             {status !== "completed" && agendaEditable ? (
               <TrainingActivityEditor
                 civilDate={civilDate}
@@ -128,6 +133,9 @@ export function TrainingActivityCard({
             ) : null}
           </div>
         </div>
+        {!retrospective && status !== "scheduled" ? (
+          <TrainingActivityTimer activity={activity} draft={activeDraft} />
+        ) : null}
       </header>
 
       {!retrospective && execution.storageError ? (
@@ -141,17 +149,6 @@ export function TrainingActivityCard({
         <p role="alert" className={trainingActivityCardStyles.guidance}>
           Não foi possível recuperar esta execução. Recarregue a página antes de continuar.
         </p>
-      ) : null}
-
-      {status === "scheduled" && !retrospective ? (
-        <TrainingActivityControls
-          civilDate={civilDate}
-          activity={activity}
-          action={actions.controlActivity}
-          onStart={startActivity}
-          onFinalized={execution.clear}
-          ready={execution.ready && executionEditable}
-        />
       ) : null}
 
       {expanded ? (
@@ -274,15 +271,6 @@ export function TrainingActivityCard({
             <Button type="button" variant="outline" onClick={() => setPhase("preparation")}>
               Voltar ao aquecimento
             </Button>
-          ) : null}
-          {(status !== "scheduled" || retrospective) && executionEditable ? (
-            <TrainingActivityControls
-              civilDate={civilDate}
-              activity={activity}
-              action={actions.controlActivity}
-              draft={activeDraft}
-              onFinalized={execution.clear}
-            />
           ) : null}
         </div>
       ) : null}

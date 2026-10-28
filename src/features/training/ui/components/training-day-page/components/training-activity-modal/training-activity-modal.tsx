@@ -1,4 +1,6 @@
 "use client";
+
+import { XIcon } from "@fradelli/ui/icons/X";
 import { Button } from "@fradelli/ui/button";
 import { useEffect, useId, useRef } from "react";
 import type { TrainingActivityModalProps } from "./training-activity-modal.types";
@@ -109,12 +111,12 @@ export function TrainingActivityModal({
             type="button"
             variant="ghost"
             size="icon"
-            className="min-h-11 min-w-11"
+            className="min-h-11 min-w-11 [&>svg]:size-5"
             aria-label="Fechar formulário"
             disabled={busy}
             onClick={onRequestClose}
           >
-            <span aria-hidden="true">×</span>
+            <XIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
           </Button>
         </header>
         <div className={s.body}>{children}</div>

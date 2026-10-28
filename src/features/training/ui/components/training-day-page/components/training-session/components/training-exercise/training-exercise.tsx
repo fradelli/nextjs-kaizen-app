@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@fradelli/ui/alert";
 import { Input } from "@fradelli/ui/input";
 import { Switch } from "@fradelli/ui/switch";
 
+import styles from "./training-exercise.module.css";
 import { trainingExerciseStyles } from "./training-exercise.styles";
 import type { TrainingExerciseProps } from "./training-exercise.types";
 import { TrainingExerciseForm } from "./components/training-exercise-form/training-exercise-form";
@@ -115,7 +116,7 @@ export function TrainingExercise({
         exercise.risks ||
         exercise.notes ||
         (role === "preparation" && saveExerciseAction) ? (
-          <details className={trainingExerciseStyles.disclosure}>
+          <details className={`${trainingExerciseStyles.disclosure} ${styles.disclosure}`}>
             <summary className={trainingExerciseStyles.disclosureSummary}>
               Ver dicas de execução
             </summary>

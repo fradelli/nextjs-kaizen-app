@@ -36,6 +36,7 @@ export type ControlTrainingActivityCommand = Readonly<{
   comment: string | null;
   expectedRevision: number;
   executionDraft?: TrainingActivityExecutionInput | null;
+  completionRequestedAt?: string;
 }>;
 
 export type TrainingActivityExecutionInput = Readonly<{
