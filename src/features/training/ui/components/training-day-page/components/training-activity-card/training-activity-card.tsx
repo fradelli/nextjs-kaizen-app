@@ -14,6 +14,7 @@ import { trainingExerciseDraftKey } from "@/features/training/ui/hooks/use-train
 import { TrainingExercise } from "../training-session/components/training-exercise/training-exercise";
 import { TrainingActivityControls } from "../training-activity-controls/training-activity-controls";
 import { TrainingActivityDeleteForm } from "../training-activity-delete-form/training-activity-delete-form";
+import { TrainingActivityEditor } from "../training-activity-editor/training-activity-editor";
 import { TrainingActivityTimer } from "../training-activity-timer/training-activity-timer";
 import { trainingActivityCardStyles } from "./training-activity-card.styles";
 import type { TrainingActivityCardProps } from "./training-activity-card.types";
@@ -26,7 +27,12 @@ const statusLabels = {
   skipped: "Não realizado",
 } as const;
 
-export function TrainingActivityCard({ civilDate, activity, actions }: TrainingActivityCardProps) {
+export function TrainingActivityCard({
+  civilDate,
+  activity,
+  actions,
+  availablePlan = null,
+}: TrainingActivityCardProps) {
   const execution = useTrainingActivityDraft({ activity, civilDate });
   const retrospective = supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt;
   const agendaEditable = isTrainingAgendaDateEditable(civilDate);
@@ -100,6 +106,15 @@ export function TrainingActivityCard({ civilDate, activity, actions }: TrainingA
               >
                 {activeDraft.status === "paused" ? "▶" : "⏸"}
               </Button>
+            ) : null}
+            {status !== "completed" && agendaEditable ? (
+              <TrainingActivityEditor
+                civilDate={civilDate}
+                activity={activity}
+                availablePlan={availablePlan}
+                actions={actions}
+                startedLocally={Boolean(activeDraft)}
+              />
             ) : null}
             {status !== "completed" && agendaEditable ? (
               <TrainingActivityDeleteForm

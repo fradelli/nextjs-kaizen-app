@@ -34,3 +34,8 @@ function isCivilDate(value: string): boolean {
   const parsed = new Date(`${value}T00:00:00.000Z`);
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 }
+
+export function getTrainingAgendaDateWindow(now = new Date()) {
+  const today = getTodayCivilDate(now);
+  return { minimumDate: shiftCivilDate(today, -1), maximumDate: shiftCivilDate(today, 4) };
+}

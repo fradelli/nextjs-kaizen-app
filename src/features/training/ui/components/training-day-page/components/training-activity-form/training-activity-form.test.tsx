@@ -7,10 +7,12 @@ import type {
 import type { TrainingFormAction } from "@/features/training/ui/training-action.types";
 import { TrainingActivityForm } from "./training-activity-form";
 
-vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
+const navigation = vi.hoisted(() => ({ refresh: vi.fn(), push: vi.fn() }));
+vi.mock("next/navigation", () => ({ useRouter: () => navigation }));
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  window.localStorage.clear();
 });
 const plan: AvailablePublicTrainingPlanDto = {
   status: "available",
@@ -232,7 +234,9 @@ describe("training activity schedule experience", () => {
     change("Início planejado", "18:00");
     change("Fim planejado", "18:55");
     submit();
-    await screen.findByText("Não foi possível salvar. Confira a conexão e tente novamente.");
+    await screen.findByText(
+      "Não foi possível confirmar o salvamento. Confira a agenda antes de tentar novamente.",
+    );
     expect(end()).toHaveValue("18:55");
     expect(end()).not.toBeDisabled();
   });
@@ -261,5 +265,92 @@ describe("training activity schedule experience", () => {
     expect(end()).toHaveValue("18:55");
     expect(view.container.querySelector('[name="expectedRevision"]')).toHaveValue("4");
     expect(action.mock.calls[0][1].get("expectedRevision")).toBe("3");
+  });
+});
+
+describe("preparation choice and rescheduling", () => {
+  const preparedPlan: AvailablePublicTrainingPlanDto = {
+    ...plan,
+    preparationSuggestions: [{ sport: "Footvolley", sessionId: "warmup" }],
+    sessions: [
+      ...plan.sessions,
+      {
+        ...plan.sessions[0],
+        sessionId: "warmup",
+        name: "Aquecimento futevôlei",
+        assignmentRole: "preparation",
+      },
+      {
+        ...plan.sessions[0],
+        sessionId: "other_warmup",
+        name: "Outro aquecimento",
+        assignmentRole: "preparation",
+      },
+    ],
+  };
+  it("suggests the real plan warmup for Portuguese sport and preserves a manual choice", () => {
+    renderForm(saved, undefined, preparedPlan);
+    change("Tipo de atividade", "specific_training");
+    change("Esporte", "Futevôlei");
+    expect(screen.getByLabelText("Aquecimento")).toHaveValue("warmup");
+    change("Aquecimento", "other_warmup");
+    change("Esporte", "Outro esporte");
+    expect(screen.getByLabelText("Aquecimento")).toHaveValue("other_warmup");
+    expect(
+      screen.getByLabelText("Aquecimento").querySelector('[value="a"]'),
+    ).not.toBeInTheDocument();
+  });
+  it("submits an explicit no-warmup choice and preserves it after failure", async () => {
+    const action = vi.fn<TrainingFormAction>(async () => ({
+      status: "invalid",
+      message: "Não salvo",
+    }));
+    renderForm(action, undefined, preparedPlan);
+    change("Tipo de atividade", "specific_training");
+    change("Nome", "Treino extra");
+    change("Esporte", "Futevôlei");
+    change("Aquecimento", "none");
+    change("Início planejado", "18:00");
+    change("Fim planejado", "19:00");
+    submit();
+    await screen.findByText("Não salvo");
+    expect(action.mock.calls[0][1].get("preparationSessionId")).toBe("none");
+    expect(screen.getByLabelText("Aquecimento")).toHaveValue("none");
+  });
+  it("submits original and destination dates separately and navigates only after success", async () => {
+    const action = vi.fn<TrainingFormAction>(async () => ({ status: "saved", revision: 4 }));
+    renderForm(action, activity);
+    change("Data da atividade", "2026-10-28");
+    submit();
+    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/treino?date=2026-10-28"));
+    expect(action.mock.calls[0][1].get("civilDate")).toBe("2026-10-26");
+    expect(action.mock.calls[0][1].get("targetCivilDate")).toBe("2026-10-28");
+    expect(action.mock.calls[0][1].get("plannedEndTime")).toBe("18:30");
+  });
+  it("keeps destination and hours after a rescheduling conflict without navigating", async () => {
+    const action = vi.fn<TrainingFormAction>(async () => ({
+      status: "conflict",
+      message: "Conflito",
+    }));
+    renderForm(action, activity);
+    change("Data da atividade", "2026-10-28");
+    submit();
+    await screen.findByText("Conflito");
+    expect(navigation.push).not.toHaveBeenCalled();
+    expect(screen.getByLabelText("Data da atividade")).toHaveValue("2026-10-28");
+    expect(end()).toHaveValue("18:30");
+  });
+  it("blocks rescheduling if a draft exists only in the browser", () => {
+    const action = vi.fn<TrainingFormAction>();
+    renderForm(action, activity);
+    window.localStorage.setItem(`kaizen:training-draft:v1:2026-10-26:${activity.id}`, "draft");
+    change("Data da atividade", "2026-10-28");
+    submit();
+    expect(screen.getByRole("alert")).toHaveTextContent("treino iniciado neste navegador");
+    expect(action).not.toHaveBeenCalled();
+  });
+  it("disables rescheduling for already started activities", () => {
+    renderForm(saved, { ...activity, status: "paused", startedAt: "2026-10-26T21:00:00Z" });
+    expect(screen.getByLabelText("Data da atividade")).toBeDisabled();
   });
 });

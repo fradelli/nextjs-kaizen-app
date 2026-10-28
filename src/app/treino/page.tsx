@@ -5,7 +5,8 @@ import { queryFixedWorkspaceTrainingDayPage } from "@/features/training/data/tra
 import { InvalidTrainingDate } from "@/features/training/ui/components/training-day-page/components/invalid-training-date/invalid-training-date";
 import { TrainingDayContent } from "@/features/training/ui/components/training-day-page/components/training-day-content/training-day-content";
 import { TrainingAgendaBadges } from "@/features/training/ui/components/training-day-page/components/training-agenda-badges/training-agenda-badges";
-import { TrainingAgendaDrawer } from "@/features/training/ui/components/training-day-page/components/training-agenda-drawer/training-agenda-drawer";
+import { TrainingActivityEditor } from "@/features/training/ui/components/training-day-page/components/training-activity-editor/training-activity-editor";
+import { TrainingActivityEditorNotice } from "@/features/training/ui/components/training-day-page/components/training-activity-editor-notice/training-activity-editor-notice";
 import { TrainingDayPage } from "@/features/training/ui/components/training-day-page/training-day-page";
 import {
   addTrainingActivityAction,
@@ -52,8 +53,23 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
   return (
     <TrainingDayPage
       dateResolution={dateResolution}
-      controls={day ? <TrainingAgendaDrawer day={day} actions={actions} /> : null}
-      summary={day ? <TrainingAgendaBadges day={day} /> : null}
+      controls={
+        day ? (
+          <TrainingActivityEditor
+            civilDate={day.civilDate}
+            availablePlan={"availablePlan" in day ? day.availablePlan : null}
+            actions={actions}
+          />
+        ) : null
+      }
+      summary={
+        day ? (
+          <>
+            <TrainingAgendaBadges day={day} />
+            <TrainingActivityEditorNotice />
+          </>
+        ) : null
+      }
     >
       <TrainingDayContent result={Promise.resolve(trainingDayResult)} actions={actions} />
     </TrainingDayPage>

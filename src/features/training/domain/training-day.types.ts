@@ -72,6 +72,7 @@ export type TrainingPlanSnapshot = Readonly<{
   planId: string;
   version: string;
   sourceStatus: string;
+  preparationSuggestions?: readonly Readonly<{ sport: string; sessionId: string }>[];
   sessions: readonly TrainingSessionSnapshot[];
 }>;
 

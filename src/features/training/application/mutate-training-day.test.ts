@@ -105,3 +105,40 @@ describe("training mutation date boundary", () => {
     },
   );
 });
+
+describe("activity rescheduling date boundary", () => {
+  it.each(["2026-09-24", "2026-10-01", "2026-02-30"])(
+    "rejects invalid destination %s before accessing the repository",
+    async (targetCivilDate) => {
+      const d = dependencies();
+      await expect(
+        updateTrainingActivity(d, { civilDate: "2026-09-26", targetCivilDate } as Parameters<
+          typeof updateTrainingActivity
+        >[1]),
+      ).resolves.toMatchObject({ status: "invalid", field: "targetCivilDate" });
+      expect(d.repository.updateTrainingActivity).not.toHaveBeenCalled();
+    },
+  );
+  it.each(["2026-09-25", "2026-09-30"])(
+    "passes an allowed destination %s with server workspace",
+    async (targetCivilDate) => {
+      const d = dependencies();
+      await updateTrainingActivity(d, { civilDate: "2026-09-26", targetCivilDate } as Parameters<
+        typeof updateTrainingActivity
+      >[1]);
+      expect(d.repository.updateTrainingActivity).toHaveBeenCalledWith(
+        expect.objectContaining({ civilDate: "2026-09-26", targetCivilDate, workspaceId: "fixed" }),
+      );
+    },
+  );
+  it("does not move an activity whose source date is locked even if destination is allowed", async () => {
+    const d = dependencies();
+    await expect(
+      updateTrainingActivity(d, {
+        civilDate: "2026-09-24",
+        targetCivilDate: "2026-09-26",
+      } as Parameters<typeof updateTrainingActivity>[1]),
+    ).resolves.toMatchObject({ status: "invalid", field: "civilDate" });
+    expect(d.repository.updateTrainingActivity).not.toHaveBeenCalled();
+  });
+});

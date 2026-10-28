@@ -6,6 +6,13 @@ depends_on: [E06-T12]
 
 # Remover treino específico das opções de inclusão
 
+## Cancelamento em 26/10/2026
+
+O usuário decidiu manter a opção Treino específico. A remoção deixou de ser
+necessária e a tarefa foi retirada das pendências. O ID é preservado apenas
+como histórico; nenhuma alteração de interface, servidor ou dados foi feita.
+O escopo abaixo registra a proposta anterior e não autoriza implementação.
+
 ## Objetivo
 
 Simplificar a lista de tipos de atividade, retirando a opção Treino específico
@@ -49,4 +56,5 @@ por decisão do usuário, sem eliminar dados históricos ou atividades da agenda
 
 ## Resultado
 
-Registrada para correção futura; nenhuma mudança de código nesta rodada.
+Cancelada por decisão do usuário em 26/10/2026. Treino específico permanece
+disponível; nenhuma mudança funcional deve ser realizada por esta tarefa.

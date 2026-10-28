@@ -64,15 +64,27 @@ export function saveTrainingActivityExercise(
 
 export function updateTrainingActivity(
   dependencies: MutationDependencies,
-  input: Omit<UpdateTrainingActivityCommand, "workspaceId" | "civilDate"> & {
+  input: Omit<UpdateTrainingActivityCommand, "workspaceId" | "civilDate" | "targetCivilDate"> & {
     civilDate: string;
+    targetCivilDate?: string;
   },
 ): Promise<TrainingMutationResult> {
   if (!isTrainingAgendaDateEditable(input.civilDate, dependencies.now?.()))
     return agendaDateLocked();
+  if (
+    input.targetCivilDate &&
+    !isTrainingAgendaDateEditable(input.targetCivilDate, dependencies.now?.())
+  ) {
+    return Promise.resolve({
+      status: "invalid",
+      field: "targetCivilDate",
+      message: "A nova data deve ficar entre ontem e quatro dias no futuro.",
+    });
+  }
   return dependencies.repository.updateTrainingActivity({
     ...input,
     civilDate: parseCivilDate(input.civilDate),
+    targetCivilDate: input.targetCivilDate ? parseCivilDate(input.targetCivilDate) : undefined,
     workspaceId: dependencies.resolveWorkspace().workspaceId,
   });
 }

@@ -63,6 +63,7 @@ export async function TrainingDayContent({ result, actions }: TrainingDayContent
       <TrainingActivitySection
         civilDate={day.civilDate}
         activities={day.activities}
+        availablePlan={"availablePlan" in day ? day.availablePlan : null}
         actions={actions}
       />
     </>

@@ -73,120 +73,119 @@ export async function ensureScheduledTrainingDay(
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       await client.$transaction(
-        async (transaction) => {
-          const civilDate = toCivilDateDatabaseValue(input.civilDate);
-          const existingAssignment = await transaction.dailyTrainingAssignment.findUnique({
-            where: { workspaceId_civilDate: { workspaceId: input.workspaceId, civilDate } },
-            select: { id: true },
-          });
-          if (existingAssignment) return;
-
-          // Include logically deleted rows: an intentional deletion must not recreate the plan.
-          const existingActivity = await transaction.trainingDayActivity.findFirst({
-            where: { workspaceId: input.workspaceId, civilDate },
-            select: { id: true },
-          });
-          if (existingActivity) return;
-
-          const plan = await loadActiveTrainingPlanForSchedule(transaction, input.environment);
-          if (!plan) return;
-          if (!plan.weeklySchedule) return;
-
-          const parsed = persistedScheduleSchema.safeParse(plan.weeklySchedule);
-          if (!parsed.success) {
-            throw new TrainingProjectionError(
-              "TRAINING_DEFINITION_INVALID",
-              "A agenda semanal importada está inválida.",
-            );
-          }
-          const weeklySchedule = "entries" in parsed.data ? parsed.data : null;
-          const legacySchedule = "models" in parsed.data ? parsed.data : null;
-          const modern = Boolean(weeklySchedule);
-          const entries = weeklySchedule
-            ? scheduledEntriesForDate(weeklySchedule, input.civilDate)
-            : legacyScheduledEntriesForDate(legacySchedule!, input.civilDate);
-          if (!entries) return;
-          if (!entries.length) {
-            if (modern) return;
-            throw new TrainingProjectionError(
-              "TRAINING_DEFINITION_INVALID",
-              "A agenda semanal não define esta data.",
-            );
-          }
-          const restEntry = entries.find((entry) =>
-            "type" in entry ? entry.type === "rest" : isRestEntry(entry.session),
-          );
-          if (restEntry && entries.length !== 1) {
-            throw new TrainingProjectionError(
-              "TRAINING_DEFINITION_INVALID",
-              "Descanso não pode coexistir com treino programado.",
-            );
-          }
-          const plannedActivities = restEntry
-            ? []
-            : weeklySchedule
-              ? scheduledEntriesForDate(weeklySchedule, input.civilDate).map((entry) =>
-                  buildWeeklyActivity(input.workspaceId, civilDate, plan, entry),
-                )
-              : (legacyScheduledEntriesForDate(legacySchedule!, input.civilDate) ?? []).map(
-                  (entry) =>
-                    buildPlannedActivity(
-                      input.workspaceId,
-                      civilDate,
-                      plan,
-                      entry,
-                      legacySchedule!.planning_defaults.footvolley_duration_minutes,
-                    ),
-                );
-
-          await transaction.dailyTrainingAssignment.create({
-            data: {
-              workspaceId: input.workspaceId,
-              civilDate,
-              kind: restEntry ? "rest" : "unassigned",
-              reason:
-                restEntry &&
-                "session" in restEntry &&
-                restEntry.session === "rest_or_light_mobility"
-                  ? "Descanso ou mobilidade leve"
-                  : restEntry
-                    ? "Descanso previsto no plano semanal"
-                    : null,
-            },
-          });
-          for (const activity of plannedActivities) {
-            const created = await transaction.trainingDayActivity.create({ data: activity });
-            if (
-              (activity.type === "specific_training" || activity.type === "sport_practice") &&
-              !modern
-            ) {
-              await transaction.trainingDayActivity.create({
-                data: {
-                  workspaceId: input.workspaceId,
-                  civilDate,
-                  type: "mobility",
-                  source: "plan",
-                  role: "preparation",
-                  parentActivityId: created.id,
-                  name: "Aquecimento de futevôlei",
-                  sport: "Futevôlei",
-                  plannedStartMinute:
-                    typeof activity.plannedStartMinute !== "number"
-                      ? null
-                      : Math.max(0, activity.plannedStartMinute - 10),
-                  plannedEndMinute: activity.plannedStartMinute ?? null,
-                  trainingPlanVersionId: plan.id,
-                },
-              });
-            }
-          }
-        },
+        (transaction) => ensureScheduledTrainingDayInTransaction(transaction, input),
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
       return;
     } catch (error) {
       if (isConcurrentMaterialization(error) && attempt < 2) continue;
       throw error;
+    }
+  }
+}
+
+export async function ensureScheduledTrainingDayInTransaction(
+  transaction: Prisma.TransactionClient,
+  input: FindTrainingDayInput,
+): Promise<void> {
+  const civilDate = toCivilDateDatabaseValue(input.civilDate);
+  const existingAssignment = await transaction.dailyTrainingAssignment.findUnique({
+    where: { workspaceId_civilDate: { workspaceId: input.workspaceId, civilDate } },
+    select: { id: true },
+  });
+  if (existingAssignment) return;
+
+  // Include logically deleted rows: an intentional deletion must not recreate the plan.
+  const existingActivity = await transaction.trainingDayActivity.findFirst({
+    where: { workspaceId: input.workspaceId, civilDate },
+    select: { id: true },
+  });
+  if (existingActivity) return;
+
+  const plan = await loadActiveTrainingPlanForSchedule(transaction, input.environment);
+  if (!plan) return;
+  if (!plan.weeklySchedule) return;
+
+  const parsed = persistedScheduleSchema.safeParse(plan.weeklySchedule);
+  if (!parsed.success) {
+    throw new TrainingProjectionError(
+      "TRAINING_DEFINITION_INVALID",
+      "A agenda semanal importada está inválida.",
+    );
+  }
+  const weeklySchedule = "entries" in parsed.data ? parsed.data : null;
+  const legacySchedule = "models" in parsed.data ? parsed.data : null;
+  const modern = Boolean(weeklySchedule);
+  const entries = weeklySchedule
+    ? scheduledEntriesForDate(weeklySchedule, input.civilDate)
+    : legacyScheduledEntriesForDate(legacySchedule!, input.civilDate);
+  if (!entries) return;
+  if (!entries.length) {
+    if (modern) return;
+    throw new TrainingProjectionError(
+      "TRAINING_DEFINITION_INVALID",
+      "A agenda semanal não define esta data.",
+    );
+  }
+  const restEntry = entries.find((entry) =>
+    "type" in entry ? entry.type === "rest" : isRestEntry(entry.session),
+  );
+  if (restEntry && entries.length !== 1) {
+    throw new TrainingProjectionError(
+      "TRAINING_DEFINITION_INVALID",
+      "Descanso não pode coexistir com treino programado.",
+    );
+  }
+  const plannedActivities = restEntry
+    ? []
+    : weeklySchedule
+      ? scheduledEntriesForDate(weeklySchedule, input.civilDate).map((entry) =>
+          buildWeeklyActivity(input.workspaceId, civilDate, plan, entry),
+        )
+      : (legacyScheduledEntriesForDate(legacySchedule!, input.civilDate) ?? []).map((entry) =>
+          buildPlannedActivity(
+            input.workspaceId,
+            civilDate,
+            plan,
+            entry,
+            legacySchedule!.planning_defaults.footvolley_duration_minutes,
+          ),
+        );
+
+  await transaction.dailyTrainingAssignment.create({
+    data: {
+      workspaceId: input.workspaceId,
+      civilDate,
+      kind: restEntry ? "rest" : "unassigned",
+      reason:
+        restEntry && "session" in restEntry && restEntry.session === "rest_or_light_mobility"
+          ? "Descanso ou mobilidade leve"
+          : restEntry
+            ? "Descanso previsto no plano semanal"
+            : null,
+    },
+  });
+  for (const activity of plannedActivities) {
+    const created = await transaction.trainingDayActivity.create({ data: activity });
+    if ((activity.type === "specific_training" || activity.type === "sport_practice") && !modern) {
+      await transaction.trainingDayActivity.create({
+        data: {
+          workspaceId: input.workspaceId,
+          civilDate,
+          type: "mobility",
+          source: "plan",
+          role: "preparation",
+          parentActivityId: created.id,
+          name: "Aquecimento de futevôlei",
+          sport: "Futevôlei",
+          plannedStartMinute:
+            typeof activity.plannedStartMinute !== "number"
+              ? null
+              : Math.max(0, activity.plannedStartMinute - 10),
+          plannedEndMinute: activity.plannedStartMinute ?? null,
+          trainingPlanVersionId: plan.id,
+        },
+      });
     }
   }
 }

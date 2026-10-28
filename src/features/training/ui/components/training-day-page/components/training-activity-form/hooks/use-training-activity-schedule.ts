@@ -8,8 +8,11 @@ import { suggestPlannedEnd } from "../training-activity-form.utils";
 export function useTrainingActivitySchedule({
   activity,
   availablePlan,
+  editor,
 }: TrainingActivityFormProps) {
-  const [type, setType] = useState(activity?.type ?? "sport_practice");
+  const [type, setType] = useState(
+    editor?.initialValues.type ?? activity?.type ?? "sport_practice",
+  );
   const [originalSession, setOriginalSession] = useState<TrainingScheduleSession | null>(
     activity?.structured?.main ?? null,
   );
@@ -22,11 +25,15 @@ export function useTrainingActivitySchedule({
       ]
     : planSessions;
   const [sessionId, setSessionId] = useState(
-    originalSession?.sessionId ?? sessions[0]?.sessionId ?? "",
+    editor?.initialValues.sessionId ?? originalSession?.sessionId ?? sessions[0]?.sessionId ?? "",
   );
-  const [startTime, setStartTime] = useState(activity?.plannedStartTime ?? "");
-  const [manualEnd, setManualEnd] = useState(activity?.plannedEndTime ?? "");
-  const [automatic, setAutomatic] = useState(!activity);
+  const [startTime, setStartTime] = useState(
+    editor?.initialValues.plannedStartTime ?? activity?.plannedStartTime ?? "",
+  );
+  const [manualEnd, setManualEnd] = useState(
+    editor?.initialValues.manualEndTime ?? activity?.plannedEndTime ?? "",
+  );
+  const [automatic, setAutomatic] = useState(editor?.initialValues.automaticEnd ?? !activity);
   const [expectedRevision, setExpectedRevision] = useState(activity?.revision ?? 0);
   const selectedSession = sessions.find((session) => session.sessionId === sessionId);
   const suggestion = suggestPlannedEnd(startTime, selectedSession?.targetDurationMinutes);
@@ -71,6 +78,7 @@ export function useTrainingActivitySchedule({
     startTime,
     setStartTime,
     endTime,
+    manualEnd,
     changeEnd,
     automatic,
     enableAutomatic: () => setAutomatic(true),
