@@ -10,13 +10,12 @@ import { TrainingActivityModal } from "../training-activity-modal/training-activ
 import { TrainingActivityCompletionForm } from "../training-activity-completion-form/training-activity-completion-form";
 import { TrainingActionFeedback } from "../training-action-feedback/training-action-feedback";
 import { hasUnfinishedTrainingExercises } from "../training-activity-controls/training-activity-controls.utils";
-import { trainingActivityControlsStyles as styles } from "../training-activity-controls/training-activity-controls.styles";
 import type { TrainingActivityCompletionDialogProps } from "./training-activity-completion-dialog.types";
 
 const draftMessages = {
   loading: "Carregando avaliação…",
   clean: "O registro será salvo ao confirmar.",
-  stored: "Rascunho salvo neste navegador.",
+  stored: "Rascunho salvo nesta sessão.",
   restored: "Avaliação recuperada. O registro ainda não foi salvo.",
   storage_error:
     "Não foi possível guardar o rascunho neste navegador. Você ainda pode salvar o registro.",
@@ -49,7 +48,8 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
   const [closeError, setCloseError] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const confirmed = useRef(false);
-  const confirmation = useRef<HTMLDialogElement>(null);
+  const confirmationTrigger = useRef<HTMLButtonElement>(null);
+  const backButton = useRef<HTMLButtonElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const changed = activity.revision !== revision || executionChanged || needsReload;
   const [state, formAction, pending] = useActionState<TrainingActionState, FormData>(
@@ -77,11 +77,6 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
     { status: "idle" },
   );
 
-  useEffect(() => {
-    if (confirming && !confirmation.current?.open) confirmation.current?.showModal();
-    if (!confirming && confirmation.current?.open) confirmation.current.close();
-  }, [confirming]);
-
   function requestClose() {
     if (busy.current || confirming) return;
     if (draft.flush() === "failed" || props.executionStorageError) {
@@ -104,15 +99,28 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
 
   return (
     <TrainingActivityModal
-      title="Registrar atividade realizada"
-      description={`${activity.name} · ${civilDate.split("-").reverse().join("/")}. ${mode === "update_feedback" ? "Corrija a avaliação sem alterar a execução registrada." : snapshot ? "O cronômetro está pausado. Revise sua avaliação para concluir." : "Registre como foi a atividade, sem iniciar um cronômetro."}`}
+      title="Finalizar atividade"
+      description={`${activity.name} · ${civilDate.split("-").reverse().join("/")}. ${mode === "update_feedback" ? "Corrija a avaliação sem alterar a execução registrada." : snapshot ? "O cronômetro está pausado. Revise sua avaliação para concluir." : ""}`}
       busy={locked || confirming}
       onRequestClose={requestClose}
       restoreFocusRef={triggerRef}
       footer={
         <>
-          <span />
+          {draft.status !== "clean" && draft.ready ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className="min-h-11 text-status-destructive"
+              disabled={locked || draft.status === "external_change"}
+              onClick={() => draft.discard()}
+            >
+              Excluir rascunho
+            </Button>
+          ) : (
+            <span />
+          )}
           <PendingButton
+            ref={confirmationTrigger}
             type="submit"
             form={id}
             className="min-h-11"
@@ -130,16 +138,6 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
           ? "A execução ou a agenda mudou. Feche e confira os dados atuais antes de salvar."
           : draftMessages[draft.status]}
       </p>
-      {draft.blocked && draft.status !== "external_change" ? (
-        <Button
-          type="button"
-          variant="outline"
-          className="mb-3 h-auto min-h-11 whitespace-normal"
-          onClick={() => draft.discard()}
-        >
-          Descartar avaliação e carregar dados atuais
-        </Button>
-      ) : null}
       {closeError ? (
         <div role="alert" className="grid gap-3 py-3">
           <p>
@@ -147,13 +145,11 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
               ? "A pausa não pôde ser guardada neste navegador. Salve o registro antes de sair da página ou libere espaço. Ao fechar apenas o modal, o treino continuará pausado nesta aba."
               : "Não foi possível guardar a avaliação. Continue preenchendo ou feche descartando apenas estes campos. O treino continuará pausado."}
           </p>
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" onClick={() => setCloseError(false)}>
-              Continuar preenchendo
-            </Button>
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
+              className="min-h-11 text-status-destructive"
               onClick={() => {
                 draft.release();
                 onClose();
@@ -162,6 +158,14 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
               {props.executionStorageError
                 ? "Fechar e manter pausa nesta aba"
                 : "Fechar sem guardar avaliação"}
+            </Button>
+            <Button
+              type="button"
+              variant="default"
+              className="ml-auto"
+              onClick={() => setCloseError(false)}
+            >
+              Continuar preenchendo
             </Button>
           </div>
         </div>
@@ -223,43 +227,48 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
         />
         <TrainingActionFeedback state={state} pending={pending} />
       </form>
-      <dialog
-        ref={confirmation}
-        className={styles.confirmation}
-        aria-labelledby={`${id}-confirm-title`}
-        aria-describedby={`${id}-confirm-message`}
-        onCancel={(event) => {
-          event.preventDefault();
-          setConfirming(false);
-        }}
-        onClose={() => setConfirming(false)}
-      >
-        <div className="grid gap-4">
-          <h2 id={`${id}-confirm-title`} className="fd-text-card">
-            Finalizar treino?
-          </h2>
-          <p id={`${id}-confirm-message`}>
+      {confirming ? (
+        <TrainingActivityModal
+          title="Finalizar treino?"
+          size="confirmation"
+          closeLabel="Fechar confirmação de finalização"
+          initialFocusRef={backButton}
+          restoreFocusRef={confirmationTrigger}
+          busy={locked}
+          onRequestClose={() => {
+            if (!busy.current) setConfirming(false);
+          }}
+          footer={
+            <>
+              <Button
+                ref={backButton}
+                type="button"
+                variant="outline"
+                className="min-h-11"
+                onClick={() => setConfirming(false)}
+              >
+                Voltar
+              </Button>
+              <Button
+                type="button"
+                className="min-h-11"
+                disabled={locked}
+                onClick={() => {
+                  confirmed.current = true;
+                  setConfirming(false);
+                  form.current?.requestSubmit();
+                }}
+              >
+                Finalizar
+              </Button>
+            </>
+          }
+        >
+          <p className="fd-text-interface py-2 text-muted-foreground">
             Há exercícios ou séries incompletos. Deseja voltar ou finalizar com os dados atuais?
           </p>
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" onClick={() => setConfirming(false)}>
-              Voltar
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={locked}
-              onClick={() => {
-                confirmed.current = true;
-                setConfirming(false);
-                form.current?.requestSubmit();
-              }}
-            >
-              Finalizar
-            </Button>
-          </div>
-        </div>
-      </dialog>
+        </TrainingActivityModal>
+      ) : null}
     </TrainingActivityModal>
   );
 }

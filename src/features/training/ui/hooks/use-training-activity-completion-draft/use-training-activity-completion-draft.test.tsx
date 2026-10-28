@@ -14,7 +14,7 @@ const input: CompletionDraftInput = {
   executionSignature: "paused-one",
   completionRequestedAt: "2026-10-27T15:00:00.000Z",
 };
-beforeEach(() => window.localStorage.clear());
+beforeEach(() => window.sessionStorage.clear());
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
@@ -25,6 +25,22 @@ async function ready(overrides: Partial<CompletionDraftInput> = {}) {
   return view;
 }
 describe("completion recovery", () => {
+  it("does not recreate an excluded draft until the user changes a field", async () => {
+    const view = await ready();
+    act(() => {
+      view.result.current.update({ ...input.initialValues, comment: "Draft" });
+      view.result.current.flush();
+    });
+    act(() => expect(view.result.current.discard()).toBe(true));
+    act(() => view.result.current.flush());
+    expect(sessionStorage.getItem(input.key)).toBeNull();
+    act(() => {
+      view.result.current.update({ ...input.initialValues, comment: "New draft" });
+      view.result.current.flush();
+    });
+    expect(sessionStorage.getItem(input.key)).toContain("New draft");
+  });
+
   it("debounces feedback, restores the matching stop, and clears only after success", async () => {
     const first = await ready();
     act(() =>
@@ -36,7 +52,7 @@ describe("completion recovery", () => {
     expect(second.result.current.values.comment).toBe("Keep");
     expect(second.result.current.completionRequestedAt).toBe(input.completionRequestedAt);
     act(() => second.result.current.finish());
-    expect(localStorage.getItem(input.key)).toBeNull();
+    expect(sessionStorage.getItem(input.key)).toBeNull();
   });
   it("keeps feedback after resume but replaces the stop instant", async () => {
     const first = await ready();
@@ -61,16 +77,22 @@ describe("completion recovery", () => {
   it("never overwrites or removes another writer's cache", async () => {
     const view = await ready();
     act(() => view.result.current.flush());
-    localStorage.setItem(input.key, "another writer");
+    sessionStorage.setItem(input.key, "another writer");
     act(() => expect(view.result.current.flush()).toBe("external_change"));
     act(() => view.result.current.finish());
-    expect(localStorage.getItem(input.key)).toBe("another writer");
+    expect(sessionStorage.getItem(input.key)).toBe("another writer");
   });
   it("blocks storage events immediately while keeping the local values visible", async () => {
     const view = await ready();
     act(() => view.result.current.update({ ...input.initialValues, comment: "Local" }));
     act(() =>
-      window.dispatchEvent(new StorageEvent("storage", { key: input.key, newValue: "new" })),
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          storageArea: sessionStorage,
+          key: input.key,
+          newValue: "new",
+        }),
+      ),
     );
     expect(view.result.current.blocked).toBe(true);
     expect(view.result.current.values.comment).toBe("Local");

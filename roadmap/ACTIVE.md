@@ -1,11 +1,11 @@
 # Tarefa selecionada
 
-- **Tarefa:** E10-T02 — Player e registro de atividade em modal
+- **Tarefa:** E10-T07 — Corrigir achados da revisão de rascunhos
 - **Status:** DONE
-- **Entrada principal:** `roadmap/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md`.
-- **Branch:** `codex/E10-T02-player-portfolio-icons`.
+- **Entrada principal:** `roadmap/epics/E10-portfolio-visual-alignment/T07-fix-draft-review.md`.
+- **Branch:** `codex/E10-T03-dialog-actions`.
 - **Autorização:** implementação aprovada pelo usuário em 27/10/2026.
-- **Próxima ação:** entrega validada; concluir integração por PR em developer. A validação em dispositivo físico da E06-T14 continua pendente.
+- **Próxima ação:** entrega das tarefas E10-T03 a E10-T07 autorizada por PR para developer; nenhuma implementação restante.
 
 ## Pendências preservadas
 

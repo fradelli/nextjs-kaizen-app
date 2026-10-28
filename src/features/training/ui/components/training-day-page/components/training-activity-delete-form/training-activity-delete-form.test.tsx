@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { TrainingActivityDto } from "@/features/training/application/training-dto";
@@ -24,6 +24,12 @@ describe("TrainingActivityDeleteForm", () => {
     fireEvent.click(screen.getByRole("button", { name: "Excluir atividade" }));
     expect(screen.getByRole("dialog", { name: "Excluir atividade?" })).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent("Ela será removida da agenda deste dia.");
+    const buttons = within(screen.getByRole("dialog"))
+      .getAllByRole("button")
+      .filter((button) => !button.getAttribute("aria-label")?.startsWith("Fechar"));
+    expect(buttons[0]).toHaveAccessibleName("Excluir atividade");
+    expect(buttons[1]).toHaveAccessibleName("Manter atividade");
+    expect(screen.getByRole("button", { name: "Manter atividade" })).toHaveFocus();
     fireEvent.click(screen.getByRole("button", { name: "Manter atividade" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();

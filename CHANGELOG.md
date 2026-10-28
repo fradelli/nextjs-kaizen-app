@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-10-28 — correções da revisão de rascunhos
+
+- Descarte da avaliação preserva o horário de stop recuperado; eventos de armazenamento são isolados e falhas de limpeza legada não impedem a recuperação da sessão.
+- Edição não agenda persistência; superfícies dos diálogos usam composição base única. Três regressões permanentes adicionadas.
+
+## 2026-10-28 — rascunhos de formulário por sessão
+
+- Criação/finalização usam sessionStorage; edição fica em memória e descarta alterações ao fechar, sem confirmação adicional. Execução permanece separada.
+- Finalizar atividade usa formulário sem card interno, mensagem da sessão e exclusão de rascunho no rodapé.
+
+## 2026-10-28 — ações consistentes nos diálogos
+
+- Exclusão e descarte à esquerda em vermelho; ação principal à direita, inclusive em 320px.
+- Confirmações reutilizam o modal compartilhado: X, clique fora, Escape, foco seguro e proteção durante envio; removida duplicação de comportamento e estilos.
+- Diálogos compartilham divisórias de conteúdo/rodapé, tipografia e espaçamento; edição dispensa descrição redundante.
+- Confirmação de exclusão abre com foco em Manter atividade. Navegação permanece acima do vidro do cabeçalho.
+
 ## 2026-10-28 — linguagem visual, ícones e registro de treino
 
 - Kaizen alinhado à linguagem estática do portfólio: Inter, vidro, superfícies, bordas, geometria, espaçamento e estados compartilhados, sem estrelas ou animações.

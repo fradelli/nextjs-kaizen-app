@@ -20,6 +20,7 @@ beforeEach(() => {
   };
   vi.setSystemTime(new Date("2026-09-17T15:00:00Z"));
   window.localStorage.clear();
+  window.sessionStorage.clear();
   action.mockClear();
 });
 afterEach(() => {
@@ -44,9 +45,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Fechar formul\u00e1rio" }));
     expect(screen.getByText(/A pausa n\u00e3o p\u00f4de ser guardada/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Fechar e manter pausa nesta aba" }));
-    expect(
-      screen.queryByRole("dialog", { name: "Registrar atividade realizada" }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("dialog", { name: "Finalizar atividade" })).not.toBeInTheDocument();
     expect(screen.getByText(/Pausado/)).toBeInTheDocument();
     const unload = new Event("beforeunload", { cancelable: true });
     window.dispatchEvent(unload);
@@ -66,7 +65,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
     fireEvent.change(screen.getByLabelText(/Disposi/), { target: { value: "normal" } });
     fireEvent.change(
-      within(screen.getByRole("dialog", { name: "Registrar atividade realizada" })).getByLabelText(
+      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
         "Coment\u00e1rio",
       ),
       { target: { value: "Preserve" } },
@@ -76,9 +75,9 @@ describe("TrainingActivityCard", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
     await waitFor(() =>
       expect(
-        within(
-          screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
-        ).getByLabelText("Coment\u00e1rio"),
+        within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
+          "Coment\u00e1rio",
+        ),
       ).toHaveValue("Preserve"),
     );
     action.mockResolvedValueOnce({ status: "invalid", message: "Try again" });
@@ -88,13 +87,11 @@ describe("TrainingActivityCard", () => {
     expect(screen.getByLabelText("Intensidade")).toHaveValue("high");
     expect(screen.getByLabelText(/Disposi/)).toHaveValue("normal");
     expect(
-      within(screen.getByRole("dialog", { name: "Registrar atividade realizada" })).getByLabelText(
+      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
         "Coment\u00e1rio",
       ),
     ).toHaveValue("Preserve");
-    expect(
-      screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Finalizar atividade" })).toBeInTheDocument();
   });
   it("locks duplicate submits and accidental closure until the server confirms success", async () => {
     let resolveSave!: (value: { status: "saved"; revision: number }) => void;
@@ -124,17 +121,13 @@ describe("TrainingActivityCard", () => {
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
     expect(screen.getByRole("button", { name: "Fechar formul\u00e1rio" })).toBeDisabled();
     fireEvent(
-      screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
+      screen.getByRole("dialog", { name: "Finalizar atividade" }),
       new Event("cancel", { cancelable: true }),
     );
-    expect(
-      screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Finalizar atividade" })).toBeInTheDocument();
     resolveSave({ status: "saved", revision: 1 });
     await waitFor(() =>
-      expect(
-        screen.queryByRole("dialog", { name: "Registrar atividade realizada" }),
-      ).not.toBeInTheDocument(),
+      expect(screen.queryByRole("dialog", { name: "Finalizar atividade" })).not.toBeInTheDocument(),
     );
     expect(localStorage.length).toBe(0);
   });
@@ -151,7 +144,7 @@ describe("TrainingActivityCard", () => {
         currentIntervalStartedAt: null,
         intervals: [],
       });
-      expect(screen.queryByText("Registrar atividade realizada")).not.toBeInTheDocument();
+      expect(screen.queryByText("Finalizar atividade")).not.toBeInTheDocument();
       expect(screen.queryByRole("button", { name: "Iniciar atividade" })).not.toBeInTheDocument();
       expect(screen.queryByLabelText("Tempo ativo")).not.toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: /^Jogo de futevôlei/ }));
@@ -159,7 +152,7 @@ describe("TrainingActivityCard", () => {
         expect(screen.getByRole("button", { name: /^Finalizar atividade:/ })).toBeEnabled(),
       );
       fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
-      const registration = screen.getByRole("dialog", { name: "Registrar atividade realizada" });
+      const registration = screen.getByRole("dialog", { name: "Finalizar atividade" });
       expect(registration).toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
       expect(screen.getByRole("button", { name: "Aquecimento" })).toBeInTheDocument();
@@ -184,12 +177,12 @@ describe("TrainingActivityCard", () => {
       expect(screen.queryByRole("dialog", { name: "Finalizar treino?" })).not.toBeInTheDocument();
       await waitFor(() =>
         expect(
-          screen.queryByRole("dialog", { name: "Registrar atividade realizada" }),
+          screen.queryByRole("dialog", { name: "Finalizar atividade" }),
         ).not.toBeInTheDocument(),
       );
       expect(window.localStorage.length).toBe(0);
       fireEvent.click(screen.getByRole("button", { name: /^Jogo de futevôlei/ }));
-      expect(screen.queryByText("Registrar atividade realizada")).not.toBeInTheDocument();
+      expect(screen.queryByText("Finalizar atividade")).not.toBeInTheDocument();
     },
   );
 
@@ -220,7 +213,7 @@ describe("TrainingActivityCard", () => {
       currentIntervalStartedAt: null,
       intervals: [],
     });
-    expect(screen.queryByText("Registrar atividade realizada")).not.toBeInTheDocument();
+    expect(screen.queryByText("Finalizar atividade")).not.toBeInTheDocument();
   });
   it("previews and collapses a scheduled workout without starting it", async () => {
     renderCard(createStructuredActivity({ status: "scheduled" }));
