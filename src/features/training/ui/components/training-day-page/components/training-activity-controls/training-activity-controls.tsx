@@ -1,207 +1,152 @@
 "use client";
-
 import { Button } from "@fradelli/ui/button";
-import { Input } from "@fradelli/ui/input";
-import { useEffect, useRef, useState } from "react";
+import { PlayIcon } from "@fradelli/ui/icons/Play";
+import { PauseIcon } from "@fradelli/ui/icons/Pause";
+import { StopIcon } from "@fradelli/ui/icons/Stop";
+import { CheckCircleIcon } from "@fradelli/ui/icons/CheckCircle";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supportsRetrospectiveTrainingRecord } from "@/features/training/domain/training-retrospective-record.rules";
 import { isTrainingExecutionDateEditable } from "@/features/training/domain/training-edit-window";
-import { hasUnfinishedTrainingExercises } from "./training-activity-controls.utils";
-
-import { useTrainingActionFeedback } from "@/features/training/ui/hooks/use-training-action-feedback";
-import { TrainingActionFeedback } from "../training-action-feedback/training-action-feedback";
-import { trainingActivityControlsStyles } from "./training-activity-controls.styles";
+import type { TrainingActivityExecutionDraft } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.types";
+import { TrainingActivityCompletionDialog } from "../training-activity-completion-dialog/training-activity-completion-dialog";
 import type { TrainingActivityControlsProps } from "./training-activity-controls.types";
 
 export function TrainingActivityControls({
   civilDate,
   activity,
   action,
-  draft,
+  draft = null,
   onStart,
+  onPause,
+  onResume,
+  onPrepareCompletion,
   onFinalized,
   ready = true,
+  executionStorageError = false,
 }: TrainingActivityControlsProps) {
-  const submission = useTrainingActionFeedback(action);
-  const [confirming, setConfirming] = useState(false);
-  const dialog = useRef<HTMLDialogElement>(null);
-  const form = useRef<HTMLFormElement>(null);
-  const confirmed = useRef(false);
-  const finalized = useRef(false);
-  const retrospective = supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt;
-
-  useEffect(() => {
-    if (confirming && !dialog.current?.open) dialog.current?.showModal();
-    if (!confirming && dialog.current?.open) dialog.current?.close();
-  }, [confirming]);
-
-  useEffect(() => {
-    if (submission.state.status === "saved" && !finalized.current && (draft || retrospective)) {
-      finalized.current = true;
-      onFinalized?.();
-    }
-  }, [draft, onFinalized, retrospective, submission.state.status]);
-
-  if (!isTrainingExecutionDateEditable(civilDate)) return null;
-  if (activity.status === "scheduled" && !draft && !retrospective) {
-    return (
-      <div className={trainingActivityControlsStyles.root}>
-        <Button type="button" onClick={onStart} disabled={!ready}>
-          {activity.type === "structured_training" ? "Iniciar treino" : "Iniciar atividade"}
-        </Button>
-      </div>
-    );
-  }
-
-  if (activity.status === "skipped") return null;
-
+  const router = useRouter();
+  const trigger = useRef<HTMLButtonElement>(null);
+  const [completion, setCompletion] = useState<{
+    draft: TrainingActivityExecutionDraft | null;
+    completionRequestedAt: string | null;
+  } | null>(null);
+  const [notice, setNotice] = useState("");
   const completed = activity.status === "completed";
+  const direct =
+    supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt && !draft;
+  const status = draft?.status ?? activity.status;
+  if (!isTrainingExecutionDateEditable(civilDate) || activity.status === "skipped") return null;
+  function openCompletion() {
+    if (completed || direct) setCompletion({ draft: null, completionRequestedAt: null });
+    else {
+      const snapshot = onPrepareCompletion?.();
+      if (snapshot) setCompletion(snapshot);
+    }
+  }
   return (
-    <details className={trainingActivityControlsStyles.completion}>
-      <summary>
-        {completed
-          ? "Corrigir avaliação"
-          : retrospective
-            ? "Registrar atividade realizada"
-            : "Finalizar atividade"}
-      </summary>
-      <form
-        ref={form}
-        action={submission.formAction}
-        className={trainingActivityControlsStyles.grid}
-        onSubmit={(event) => {
-          if (
-            !completed &&
-            !retrospective &&
-            !confirmed.current &&
-            hasUnfinishedTrainingExercises(activity, draft)
-          ) {
-            event.preventDefault();
-            setConfirming(true);
-          }
-          confirmed.current = false;
-        }}
-      >
-        <input type="hidden" name="civilDate" value={civilDate} />
-        <input type="hidden" name="activityId" value={activity.id} />
-        <input
-          type="hidden"
-          name="expectedRevision"
-          value={draft?.expectedRevision ?? activity.revision}
-        />
-        <input
-          type="hidden"
-          name="action"
-          value={completed ? "update_feedback" : retrospective ? "record_completed" : "complete"}
-        />
-        {draft && !retrospective ? (
-          <input type="hidden" name="executionDraft" value={JSON.stringify(draft)} />
-        ) : null}
-        {activity.type !== "mobility" ? (
-          <>
-            <Field label="Intensidade" id={`${activity.id}-intensity`}>
-              <select
-                id={`${activity.id}-intensity`}
-                name="intensity"
-                defaultValue={activity.intensity ?? (retrospective ? "" : "moderate")}
-                required
-                className={trainingActivityControlsStyles.control}
-              >
-                {retrospective ? <option value="">Selecione</option> : null}
-                <option value="low">Leve</option>
-                <option value="moderate">Moderada</option>
-                <option value="high">Alta</option>
-              </select>
-            </Field>
-            <Field label="Disposição durante a atividade" id={`${activity.id}-energy`}>
-              <select
-                id={`${activity.id}-energy`}
-                name="energy"
-                defaultValue={activity.energy ?? (retrospective ? "" : "normal")}
-                required
-                className={trainingActivityControlsStyles.control}
-              >
-                {retrospective ? <option value="">Selecione</option> : null}
-                <option value="tired">Cansado</option>
-                <option value="normal">Normal</option>
-                <option value="energized">Disposto</option>
-              </select>
-            </Field>
-          </>
-        ) : (
-          <>
-            <input type="hidden" name="intensity" value="" />
-            <input type="hidden" name="energy" value="" />
-          </>
-        )}
-        <div className={trainingActivityControlsStyles.comment}>
-          <Field label="Comentário" id={`${activity.id}-activity-comment`}>
-            <Input
-              id={`${activity.id}-activity-comment`}
-              name="comment"
-              defaultValue={activity.comment ?? ""}
-              maxLength={1000}
-            />
-          </Field>
-        </div>
-        <Button type="submit" disabled={submission.pending}>
-          {completed
-            ? "Salvar avaliação"
-            : retrospective
-              ? "Salvar registro"
-              : "Finalizar atividade"}
+    <>
+      {completed ? (
+        <Button
+          ref={trigger}
+          type="button"
+          variant="outline"
+          size="sm"
+          className="min-h-11"
+          onClick={openCompletion}
+        >
+          Corrigir avaliação
         </Button>
-        {submission.state.status !== "saved" && !submission.pending ? (
-          <TrainingActionFeedback state={submission.state} pending={false} />
-        ) : null}
-      </form>
-      <dialog
-        ref={dialog}
-        className={trainingActivityControlsStyles.confirmation}
-        aria-labelledby={`${activity.id}-completion-title`}
-        aria-describedby={`${activity.id}-completion-message`}
-        onClose={() => setConfirming(false)}
-      >
-        <div className="grid gap-4">
-          <h2 id={`${activity.id}-completion-title`} className="text-lg font-semibold">
-            Finalizar treino?
-          </h2>
-          <p id={`${activity.id}-completion-message`}>
-            Há exercícios ou séries incompletos. Deseja voltar ou finalizar com os dados atuais?
-          </p>
-          <div className="flex gap-2">
-            <Button type="button" onClick={() => setConfirming(false)}>
-              Voltar
-            </Button>
+      ) : direct ? (
+        <Button
+          ref={trigger}
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="min-h-11 min-w-11 [&>svg]:size-5"
+          disabled={!ready}
+          aria-label={`Finalizar atividade: ${activity.name}`}
+          title="Registrar atividade realizada"
+          onClick={openCompletion}
+        >
+          <CheckCircleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+        </Button>
+      ) : (
+        <>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="min-h-11 min-w-11 [&>svg]:size-5"
+            disabled={!ready || (!draft && status !== "scheduled")}
+            aria-label={
+              status === "in_progress"
+                ? "Pausar atividade"
+                : status === "paused"
+                  ? "Retomar atividade"
+                  : activity.type === "structured_training"
+                    ? "Iniciar treino"
+                    : "Iniciar atividade"
+            }
+            title={
+              status === "in_progress"
+                ? "Pausar atividade"
+                : status === "paused"
+                  ? "Retomar atividade"
+                  : "Iniciar atividade"
+            }
+            onClick={status === "in_progress" ? onPause : status === "paused" ? onResume : onStart}
+          >
+            {status === "in_progress" ? (
+              <PauseIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+            ) : (
+              <PlayIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+            )}
+          </Button>
+          {draft ? (
             <Button
+              ref={trigger}
               type="button"
-              variant="outline"
-              disabled={submission.pending}
-              onClick={() => {
-                confirmed.current = true;
-                setConfirming(false);
-                form.current?.requestSubmit();
-              }}
+              variant="ghost"
+              size="icon"
+              className="min-h-11 min-w-11 [&>svg]:size-5"
+              aria-label={`Finalizar atividade: ${activity.name}`}
+              title="Finalizar atividade"
+              onClick={openCompletion}
             >
-              Finalizar
+              <StopIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
             </Button>
-          </div>
-        </div>
-      </dialog>
-    </details>
-  );
-}
-
-function Field({
-  label,
-  id,
-  children,
-}: Readonly<{ label: string; id: string; children: React.ReactNode }>) {
-  return (
-    <div className={trainingActivityControlsStyles.field}>
-      <label htmlFor={id} className={trainingActivityControlsStyles.label}>
-        {label}
-      </label>
-      {children}
-    </div>
+          ) : null}
+        </>
+      )}
+      {notice ? (
+        <span role="status" className="basis-full text-sm text-muted-foreground">
+          {notice}
+        </span>
+      ) : null}
+      {completion ? (
+        <TrainingActivityCompletionDialog
+          civilDate={civilDate}
+          activity={activity}
+          action={action}
+          mode={completed ? "update_feedback" : direct ? "record_completed" : "complete"}
+          snapshot={completion.draft}
+          completionRequestedAt={completion.completionRequestedAt}
+          executionStorageError={executionStorageError}
+          executionChanged={
+            completion.draft !== null && JSON.stringify(draft) !== JSON.stringify(completion.draft)
+          }
+          triggerRef={trigger}
+          onClose={() => setCompletion(null)}
+          onSaved={(cacheCleared) => {
+            if (!completed) onFinalized?.();
+            setCompletion(null);
+            if (!cacheCleared)
+              setNotice("Registro salvo. Não foi possível limpar o rascunho deste navegador.");
+            router.refresh();
+          }}
+        />
+      ) : null}
+    </>
   );
 }

@@ -1,454 +1,633 @@
-# Plano de adoção visual do Fradelli Design System no Kaizen
-
-## Estado e limites
-
-Nota de preservação em 26/10/2026: proposta registrada em commit por solicitação
-do usuário durante a limpeza local. O registro não autoriza sua implementação;
-os limites abaixo descrevem a investigação original de 22/10/2026.
-
-- Data da investigação: 22/10/2026.
-- Estado: **proposta para aprovação; implementação não autorizada**.
-- Base consultada do Kaizen: `d56219f`, com alterações locais preexistentes. Revalidar o inventário contra a base integrada antes de implementar.
-- Resultado desta etapa: planejamento documental. Nenhuma instalação, alteração da aplicação, commit, push, merge ou deploy.
-- Não é um guia de código pronto para copiar. O contrato de movimento proposto ainda não existe no pacote e sua versão de entrega é `unknown`.
-- A tarefa selecionada em [ACTIVE](../../roadmap/ACTIVE.md), E06-T22, está DONE e não corresponde a esta investigação. Não reabri-la, reutilizar seu ID ou alterar sua aprovação. O novo trabalho precisa de registro próprio antes das PRs futuras.
-- Alterações preexistentes em `README.md`, `next-env.d.ts` e `kaizen-project-context.md` foram preservadas. Este documento fica como rascunho no checkout atual; não representa entrega na branch da tarefa anterior.
-
-**Decisões do usuário:** mesma identidade visual do portfólio; fundo sólido, uniforme e opaco; nenhum movimento decorativo ou transição; vidro estático permitido; preservar funcionalidades; referências externas somente para leitura.
-
-**Recomendações deste plano:** evolução compartilhada para movimento desativado; cards externos em vidro e conteúdo denso em superfícies sólidas; migração em seis etapas dependentes, com validação integral antes da promoção.
-
-## Entradas e evidências
-
-A solicitação amplia a rota mínima de contexto para auditar a aplicação inteira. Foram consultados os caminhos abaixo, sem leitura recursiva de dados ou documentos de outros épicos:
-
-- [AGENTS.md](../../AGENTS.md), [instruções de documentação](../AGENTS.md), ACTIVE e a tarefa E06-T22 apontada por ele.
-- [Arquitetura alvo](../architecture/TARGET-ARCHITECTURE.md), especialmente semântica, organização React, Server/Client, segurança e ownership visual.
-- [Decisão de adoção compartilhada](../decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md). Seu inventário de `0.1.0` é histórico; não descreve a instalação atual.
-- [Manifesto](../../package.json), [lockfile](../../pnpm-lock.yaml), `.node-version`, `next.config.ts`, `.npmrc` somente quanto ao mapeamento de registry, [CI](../../.github/workflows/ci.yml), [template de PR](../../.github/pull_request_template.md) e `vitest.setup.ts`.
-- Rotas em `src/app`, shell em `src/components/shared/app-shell`, placeholder em `src/components/shared/feature-placeholder`, componentes de `src/features/foundations/components/foundations-page`, UI de treino em `src/features/training/ui` e dependências diretas mencionadas neste plano. O inventário de alteração ao final explicita os caminhos.
-- `src/features/training/domain/training-edit-window.ts`, `src/app/treino/training-actions.ts`, hooks de rascunho e cronômetro, testes de UI relacionados e `tests/integration/training-mutations.test.ts` e `training-projections.test.ts`.
-- Artefato instalado `node_modules/@fradelli/ui/package.json` e `dist`: versão e contratos realmente disponíveis no Kaizen.
-- Referência de leitura **dev-lucas-lima-web**: `AGENTS.md`, `package.json`, `node_modules/@fradelli/ui/package.json`, componentes e CSS públicos do pacote instalado, `src/app/layout.tsx`, `globals.css`, `portfolio-theme.css`, `src/components/shared/animated-card/*` e estilos/componentes de About, Products, Journey, Skills e navegação em `src/features/portfolio/ui/components`.
-- Referência de leitura **design-system**: `AGENTS.md`, `package.json`, `CHANGELOG.md`, `src/styles/styles.css`, `tokens.generated.css`, componentes públicos pertinentes em `src/components/<família>/index.tsx`, ADRs 0001–0005 e `docs/governance/glass-migration.md`.
-
-Referências normativas externas: [ADR 0001](https://github.com/fradelli/design-system/blob/main/docs/decisions/0001-shared-design-system-foundation.md), [ADR 0002: primitives nativas](https://github.com/fradelli/design-system/blob/main/docs/decisions/0002-native-accessible-primitives.md), [ADR 0003: vidro](https://github.com/fradelli/design-system/blob/main/docs/decisions/0003-shared-glass-visual-language.md), [ADR 0004: composição](https://github.com/fradelli/design-system/blob/main/docs/decisions/0004-consistent-component-composition.md), [ADR 0005: adoção por etapas](https://github.com/fradelli/design-system/blob/main/docs/decisions/0005-staged-glass-release.md) e [guia de migração](https://github.com/fradelli/design-system/blob/main/docs/governance/glass-migration.md). Links em `main` são mutáveis; a implementação deve registrar o release exato consumido.
-
-### Comparação com a apresentação publicada
-
-O [portfólio publicado](https://devlucaslima.com/) foi aberto no navegador e comparado com as fontes locais. Foram observados hero, About, Projects, cards de experiência, navegação, expansão de contribuições e foco por teclado. O [catálogo publicado, Card/Surfaces](https://fradelli.github.io/design-system/?path=/story/components-card--surfaces) foi aberto e observado com variantes glass e solid. A navegação do catálogo expõe também as famílias de formulários, overlays e estados. Isso não equivale a testar todos os seus estados.
-
-Valores computados no portfólio, em uma amostra real de Card:
-
-| Aspecto          | Evidência observada                                                                                      | Destino no Kaizen                                                            |
-| ---------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Fundo do body    | `rgb(11,11,12)`, correspondente a `#0B0B0C`                                                              | `--fd-color-background`, opaco, incluindo a área de overscroll               |
-| Texto e primária | `#F4F4F5` e `#F2CF63`                                                                                    | Tokens foreground e primary, sem redefinição local                           |
-| Fonte            | Inter e fallback de `next/font`                                                                          | Manter o carregamento único já existente                                     |
-| Card             | superfície `#141416` a 80%, blur 12 px, borda derivada do neutro a 24%                                   | Card glass ou classe pública de superfície                                   |
-| Geometria        | padding 24 px, gap 16 px, raio 16 px                                                                     | Contrato da raiz de Card default                                             |
-| Sombra           | deslocamento 0/8 px, blur 32 px, background a 25%                                                        | Token compartilhado, sem copiar a fórmula                                    |
-| Hierarquia       | seções 24/32, títulos de painel 20/28, corpo 16/24 nas fontes locais                                     | Papéis públicos correspondentes                                              |
-| Estados          | primária na seleção, foco amarelo em disclosure, expansão funcional; wrapper AnimatedCard desloca/escala | Preservar aparência e significado dos estados; mudança instantânea no Kaizen |
-
-Os números acima são evidências, **não uma nova especificação de tokens**. O pacote continua sendo a fonte normativa. No fundo sólido, o vidro terá profundidade mais sutil que sobre as estrelas do portfólio. Não aumentar transparência, adicionar gradientes ou decoração para simular a cena original.
-
-Limites: o formulário público não foi enviado; hover e todos os estados de falha/carregamento não foram exercitados no site. Seus estilos foram inspecionados em código. Não foi possível consultar o estado Git dos dois repositórios de referência por restrição de acesso; seus commits e a correspondência exata do deploy são `unknown`. A versão local do portfólio foi confirmada no manifesto e no artefato instalado, sem atribuir essa versão ao deploy apenas pela aparência. As páginas públicas não estavam acessíveis pela ferramenta textual de web; a inspeção foi concluída pelo navegador.
-
-## 1. Diagnóstico do Kaizen
-
-### Stack, tema e distribuição
-
-| Item                   | Fato encontrado                                                                                                       | Implicação                                                                                                       |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Aplicação              | Next.js 16.3.8 App Router, React/React DOM 19.3.0, TypeScript 6.0.3                                                   | Manter aplicação full-stack e Server Components por padrão                                                       |
-| Runtime e pacotes      | Node pinado em 24.20.0; pnpm 11.25.0                                                                                  | Satisfaz engines declarados do pacote de referência                                                              |
-| Design System          | `@fradelli/ui` **0.3.0**, pinado no manifesto, lockfile e node_modules                                                | Não é uma primeira adoção; é atualização de contrato e remoção de concorrência local                             |
-| Referências            | Portfólio e fonte do DS em **0.5.0**; portfólio também tem o artefato 0.5.0 instalado                                 | Base visual conhecida; não presumir que 0.5.0 cumpre ausência de movimento                                       |
-| CSS                    | Tailwind 4.3.3, PostCSS 8.5.28; `globals.css` importa Tailwind e CSS público uma vez, com `@source` para dist         | Preservar importação e detecção de classes; validar CSS gerado após atualizar                                    |
-| Fonte e tema           | `Inter` em `next/font/google`, variável `--font-inter`; `html.dark`, `lang=pt-BR`                                     | Já alinhados; nenhum ThemeProvider adicional é necessário                                                        |
-| Biblioteca concorrente | Nenhuma outra biblioteca de UI direta no manifesto do Kaizen                                                          | Há duplicação em código local; Radix é transitivo do DS 0.3.0                                                    |
-| Segurança              | Server Actions validam entradas e origem e resolvem workspace no servidor                                             | Migração visual não muda fronteiras, ownership, revisão ou payloads                                              |
-| Acesso ao pacote       | Scope público aponta a GitHub Packages; CI declara `packages: read`, setup de registry e referência a segredo efêmero | Não ler credenciais locais nem seus valores; instalação limpa futura ainda precisa provar autorização ao release |
-
-Peers de 0.5.0: React e React DOM `>=19.2.7 <20`, Tailwind opcional `>=4.3.0 <5`; Node `>=24.20.0 <25`. As versões declaradas pelo Kaizen estão dentro desses intervalos. Isso comprova compatibilidade declarativa, não um build já validado com o upgrade.
-
-A passagem por 0.4.0 importa: Radix foi substituído por primitives nativas; Sheet passa a usar `<dialog>.showModal()`, backdrop e top layer nativos. Mudar só a versão sem validar foco, fechamento, testes e composição é insuficiente.
-
-### Rotas e funcionalidades realmente presentes
-
-| Rota/área                 | Estado atual                                                                                                             | Proposta visual e preservação                                                                       |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| `/`                       | Redireciona para `/dieta`                                                                                                | Preservar destino; não criar dashboard                                                              |
-| `/dieta`                  | `FeaturePlaceholder` com Card, título, descrição e Badge; promete implementação futura E07                               | Mesmo vidro e hierarquia do portfólio; não criar refeições, formulários ou registros                |
-| `/treino?date=YYYY-MM-DD` | Rota servidor resolve data, consulta workspace e compõe ações, agenda e conteúdo                                         | Toolbar legível, resumo e navegação estáveis; preservar query, canonicalização e `prefetch={false}` |
-| Treino/agenda             | Sheet para adicionar, editar e excluir; quatro tipos: treino do plano, prática esportiva, treino específico e mobilidade | Sheet sólido; itens compactos sólidos; controles comuns; sem animar abertura                        |
-| Treino/atividade          | Expandir, preparar/treinar, iniciar, pausar, retomar, concluir, avaliar e corrigir                                       | Card glass externo; título sem tornar todo painel clicável; manter badges e ações explícitas        |
-| Treino/exercícios         | Prescrição, dicas, prioridade, medidas, séries por lado/direção, carga aplicável, comentários e correções                | Cards sólidos compactos e campos legíveis; preservar unidades, sequência e condições de habilitação |
-| Treino/retrospectivo      | Atividades elegíveis sem início podem ser registradas como realizadas sem cronômetro                                     | Identidade comum, sem exigir horários reais ou inventar timer nesse fluxo                           |
-| Treino/feedback           | Descanso, sem atividade, plano indisponível, dado inválido, data inválida e erro inesperado com retry                    | Alertas semânticos e ações no slot adequado; nenhum estado fica oculto por remover movimento        |
-| `/foundations`            | Página real de demonstração de tokens, tipografia, formulário, ações, alertas, Skeleton e Sheet                          | Transformar em prova do contrato estático usado no Kaizen; corrigir badge desatualizado `0.1.0`     |
-
-Não foram encontradas telas operacionais de alimentação, hábitos, rotina, tarefas, tabelas, menus dropdown, popovers, toasts ou central de notificações. Não há rota de API no inventário atual de `src/app`. Não implementar essas famílias por inferência a partir da arquitetura alvo. Listas existentes são de atividades, exercícios, dicas e amostras de foundations.
-
-Idioma da interface: **pt-BR**. A marca contém `改善` com `lang=ja`; há conteúdo importado e identificadores técnicos em inglês. `en-US`/`en-CA` usados para decompor datas não representam suporte a idioma inglês na UI. O portfólio é bilíngue; não copiar seu provider de i18n.
-
-`TrainingDayLoading` existe, mas a busca de referências encontrou apenas sua definição; não há `src/app/treino/loading.tsx` nem consumidor atual identificado. Tratar como componente sem uso, não como fallback já funcionando. Não adicionar uma rota de loading apenas para justificar o componente.
-
-## 2. Contrato público e mapeamento de componentes
-
-Exports comuns aos manifestos 0.3.0 e 0.5.0: raiz, `alert`, `badge`, `button`, `card`, `cn`, `field`, `input`, `label`, `separator`, `sheet`, `skeleton`, `switch`, `navigation-item`, `icons`, `styles.css` e `package.json`.
-
-Exports adicionais no manifesto 0.5.0 consultado: `alert-dialog`, `loading-region`, `status-badge`, `pending-button`, `popover` e `radio-group`. Usar subpaths públicos; nunca `dist/...` como import da aplicação. A leitura do artefato interno nesta investigação não autoriza dependência de sua estrutura privada.
-
-| Elemento local                                                       | Recurso público proposto                                                                                         | O que continua no Kaizen                                                                                    |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| AppShell e navegação                                                 | NavigationItem, icons; `fd-surface-glass-elevated` apenas se a leitura da navegação permanecer estável           | Logo, skip link, rotas ativas, query da data, posição desktop/mobile, safe area e largura                   |
-| FeaturePlaceholder e RestTrainingDay                                 | Card e slots; títulos nos papéis públicos                                                                        | Copy, semântica do estado e composição                                                                      |
-| TrainingActivityCard                                                 | Card glass e slots; manter `article` externo quando necessário, pois Card renderiza `div` e não possui `asChild` | Regras de expansão, status, etapas e composição de exercício/cronômetro                                     |
-| TrainingExercise                                                     | Card `surface="solid" size="sm"`, dentro de `article`, ou superfície por tokens se composição não exigir Card    | Prescrição, `h3`, prioridades, detalhes e editores; sem blur interno                                        |
-| TrainingActivityForm e campos de avaliação                           | Field, FieldLabel, FieldDescription, FieldError e Input                                                          | Nomes e valores FormData, condicionais de atividade, validação do produto e selects nativos sem equivalente |
-| Função local `Field` dentro de TrainingActivityControls              | Field/FieldLabel públicos                                                                                        | Eliminar wrapper genérico concorrente; manter grid local                                                    |
-| Confirmações de excluir e finalizar com pendências                   | AlertDialog com título, descrição, cancel e action públicos                                                      | Intenção, formulário, revisão, resultado e regra de confirmação                                             |
-| `window.confirm` ao iniciar/retomar outra atividade e ao zerar série | AlertDialog na UI, com intenção pendente no hook/estado do consumidor                                            | Momento da pausa, timestamps, cancelamento e limpeza condicional; não mover storage para o DS               |
-| TrainingAgendaDrawer e FoundationsSheetExample                       | Sheet público existente                                                                                          | Conteúdo, edição da agenda e labels em português                                                            |
-| TrainingActionFeedback e feedbacks de página                         | Alert/AlertTitle/AlertDescription/AlertAction, ou texto com papel status para mensagens curtas                   | Mapeamento dos resultados e mensagens; evitar alertas assertivos repetidos                                  |
-| Botões que enviam formulários                                        | PendingButton após contrato estático, com pendingLabel visível; Button para ações instantâneas                   | `pending`, `disabled`, submit, sucesso/erro e proteção contra envio duplicado                               |
-| Badges de status                                                     | StatusBadge onde houver status e tone; Badge para categorias e metadados                                         | Dicionários de status e significado das cores no domínio                                                    |
-| Skeletons de foundations                                             | Skeleton estático + LoadingRegion quando houver operação real                                                    | Explicação de demonstração, sem anunciar operação fictícia indefinida                                       |
-| Temporizador e indicador de prioridade                               | Tokens de texto, `tabular-nums`; sem equivalente composto público                                                | Cálculos, intervalos e semântica de prioridade                                                              |
-| `details`/`summary`, listas e `dl`                                   | HTML semântico e papéis/tokens públicos                                                                          | Conteúdo e comportamento nativo; não criar Accordion ou Table sem necessidade                               |
-
-O Card tem padding **somente na raiz**: default 24 px/gap 16 px; sm 16 px/gap 12 px. Header/Content/Footer não adicionam insets horizontais. Glass e solid compartilham geometria. Não acrescentar `px-6` aos slots, compensações negativas ou `p-0` para restaurar a composição antiga. Não adicionar tabIndex ou role de botão ao Card informacional. Títulos continuam sendo headings reais; CardTitle isoladamente é `div`.
-
-Os tamanhos de botões agora permitem quebra de texto e usam altura mínima para variantes de texto. Revisar `h-auto`, `p-0`, larguras de campos e alinhamentos; não restaurar altura fixa se cortar rótulos. AlertAction ocupa linha própria; remover `col-start-2` herdado onde a composição de Alert não o requer.
-
-## 3. Inventário de estilos: remover, substituir e manter
-
-| Evidência atual                                                                                                                              | Ação futura e justificativa                                                                                                                                                     |
-| -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `training-activity-card.styles.ts`: `rounded-xl`, `border-warning/50`, `bg-background`, `p-4`; conclusão `border-info/60`                    | Substituir material/geometria por Card. Status usa tokens `status-*` e texto; a borda de hover não pode apagar o único sinal de status                                          |
-| `training-exercise.styles.ts`: painel manual com raio/borda/padding, `bg-background/60` em dicas                                             | Substituir superfície por solid compacto; manter borda de prioridade/status se necessária, definida por token público, além de rótulo                                           |
-| Mesmo arquivo: `transition-colors` no summary                                                                                                | Remover transição; manter hover/foco instantâneos                                                                                                                               |
-| `training-activity-controls.styles.ts` e `training-activity-delete-form.styles.ts`: mesma fórmula de dialog, sombra e `backdrop:bg-black/70` | Remover após migração a AlertDialog; não duplicar backdrop ou portal                                                                                                            |
-| `training-activity-form.styles.ts`, controls e exercise-form: `control`, `label`, field e fundos manuais                                     | Substituir wrappers/labels por Field e controles públicos disponíveis. Select fica explícito como lacuna; eliminar entradas de estilo sem consumidor após confirmar referências |
-| `training-action-feedback.styles.ts`: `text-success`, `text-destructive`                                                                     | Substituir por variantes semânticas públicas ou `text-status-*` válidos; preservar texto e anúncio acessível                                                                    |
-| `training-agenda-drawer.styles.ts`: `bg-muted/20`, editor/add com bordas locais; `body` com `px-4 pb-6`                                      | Itens sólidos; revisar padding real de Sheet 0.5.0 (Content já usa `p-6`) e remover inset acumulado no corpo                                                                    |
-| `training-local-exercise-editor.styles.ts`: painéis de campos/comentário manuais                                                             | Manter layout de medidas e sequência; substituir material pelo sólido compartilhado, sem aninhar blur                                                                           |
-| `training-day-loading.styles.ts`: `bg-card`, `p-5` e Skeleton pulsante no componente sem consumidor                                          | Propor remoção do par de arquivos após confirmar ausência de imports. Não criar carregamento artificial                                                                         |
-| `feature-placeholder.styles.ts`: título `text-2xl font-bold` dentro de CardTitle                                                             | Declarar papel section para título de página ou usar papel card quando for painel; evitar escala acidental herdada                                                              |
-| Foundations typography/actions/colors/header                                                                                                 | Usar papéis públicos em títulos/corpo e demonstrar glass/solid com a mesma geometria; manter grid e amostras categóricas                                                        |
-| Shell CSS Modules                                                                                                                            | Manter grid, breakpoint de 48rem, larguras 72rem/24rem, safe-area, posicionamento e foco do skip link; revisar brand usando papel compartilhado                                 |
-| DateNavigation, AgendaBadges, ActivitySection, Timer                                                                                         | Manter composição, gaps, tabular-nums e quebra responsiva; não mover regras de data ou duração para estilos                                                                     |
-| ExercisePriorityIndicator                                                                                                                    | Manter barras/contrato e nome acessível; tokens existentes, sem recriar uma primitive genérica                                                                                  |
-
-A busca encontrou classes locais **sem alias no CSS público consultado**, já em 0.3.0: `border-warning/50`, `border-info/60`, `text-success`, `text-destructive`, `bg-muted/*` e `bg-card`. Confirmar a emissão no CSS compilado; a hipótese é de estilos ausentes, não uma regressão exclusivamente de 0.5.0. Corrigir os consumidores para recursos públicos; não criar aliases globais para perpetuar a nomenclatura antiga.
-
-Não foram encontrados hexadecimais, fórmulas de vidro ou keyframes próprios no código visual do Kaizen. Há números de layout legítimos, como 72rem, 5rem para compensar navegação, larguras de medidas e breakpoints. Não transformar todo número em token novo. Substituir valores quando competem com papel visual compartilhado; manter dimensões específicas do consumidor quando necessárias e verificadas.
-
-## 4. Política de fundo, transparência e movimento
-
-### Fundo e superfícies
-
-1. Garantir background de `html` e `body` por `--fd-color-background`, sem opacidade, gradiente, imagem, canvas ou camada decorativa. O body já recebe fundo pelo pacote; revisar a cobertura da raiz/overscroll sem redefinir a paleta.
-2. Inter permanece uma única vez no root; tema dark estático, sem importar o provider do portfólio.
-3. Card glass para agrupamento principal de atividade, descanso, placeholder e demonstrações. Uma camada de blur por painel. Sem vidro individual para cada série, campo, Badge ou linha.
-4. Card solid para exercícios e editores dentro de atividade; Sheet e AlertDialog mantêm superfície opaca pública. Navegação fixa pode usar elevada por token/classe pública, com teste sobre conteúdo rolando; usar sólida se houver perda de leitura ou custo.
-5. Preservar fallbacks do pacote: ausência de suporte a blur/color-mix, `prefers-reduced-transparency`, `forced-colors` e `html[data-fd-transparency="reduce"]`. O atributo de transparência existe; não equivale a desligar movimento.
-
-### Inventário de movimento
-
-| Origem                       | Movimento encontrado                                                                                                            | Plano                                                                                 |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Kaizen                       | `transition-colors` no summary de dicas                                                                                         | Remover                                                                               |
-| Kaizen                       | Skeleton em foundations; Skeleton no loading sem consumidor                                                                     | Demonstração estática; remover loading morto se confirmado                            |
-| DS 0.5.0 CSS                 | animações de dialog, quatro lados de Sheet, backdrop e Popover                                                                  | Contrato compartilhado de movimento desativado, abrangendo top layer e portal em body |
-| DS 0.5.0 componentes         | transições em Button, Badge, Input, NavigationItem, RadioGroup, Switch e fechar Sheet; thumb do Switch com transition-transform | Mudança instantânea, preservando posição final e aparência dos estados                |
-| DS 0.5.0 CSS                 | transição de borda e sombra de `.fd-card`                                                                                       | Hover instantâneo, sem remover a borda de estado/foco                                 |
-| DS 0.5.0                     | Skeleton pulse e spinner de PendingButton                                                                                       | Indicador estático e texto; manter `aria-busy`, nome acessível e disabled             |
-| Portfólio, apenas referência | AnimatedCard desloca/escala, estrelas e estrelas cadentes, revelação, digitação e física/gravidade                              | Não importar wrappers, keyframes, tw-animate-css ou bibliotecas de animação           |
-| Funcional do Kaizen          | intervalo de 1 segundo no timer, timeout de hidratação de draft, efeitos de storage e eventos entre cards                       | Preservar; atualização de informação não é animação decorativa                        |
-| Funcional do Kaizen          | transform estático para ocultar/exibir skip link; posição final do thumb                                                        | Preservar posição funcional instantânea; não proibir todo `transform`                 |
-
-### Lacuna obrigatória do Design System
-
-0.5.0 respeita `prefers-reduced-motion`, mas sem preferência do sistema continua animando. A regra genérica reduz durações para 0.01 ms e uma iteração; isso não equivale à política de zero movimento solicitada. Zerar só os tokens de duração tampouco cobre utilities de spin/pulse. Não há API pública por aplicação para desligar todos esses efeitos.
-
-**Proposta de evolução separada, ainda inexistente:** contrato declarativo, por exemplo `html[data-fd-motion="none"]`, pertencente ao DS e independente da preferência de transparência. O nome final depende da revisão pública do pacote. Não documentá-lo como export disponível nem introduzir um provider global só para aplicar um atributo estático.
-
-Requisitos do contrato compartilhado:
-
-- Desativar animações/transições nos próprios componentes, descendants internos e pseudo-elementos/backdrops; overlays portados em body também herdam a política do documento.
-- Preservar estados finais, visibilidade, abertura/fechamento, geometria, foco e semântica. Não remover o transform final do Switch nem manter overlay transparente por keyframe interrompido.
-- PendingButton deve oferecer apresentação estática inequívoca; preferir texto visível como “Salvando…”. Rótulo acessível obrigatório em variantes só com ícone. Skeleton estático continua oculto para tecnologia assistiva; LoadingRegion comunica uma operação real.
-- Testar a política com e sem preferência do sistema, em todos os estados e no CSS compilado; cobrir Card, Switch thumb, spinner, Skeleton, overlays e `::backdrop`.
-- Manter o comportamento padrão dos demais consumidores; sem flag Kaizen, `!important` universal do consumidor ou CSS global que neutralize toda a página indiscriminadamente.
-- Publicar release imutável, documentar impacto SemVer e migração. Versão exata futura: `unknown`; não presumir `0.5.1` ou `0.6.0`.
-
-Consumidores concretos: agenda Sheet e demo, Switches de exercícios, Cards, todos os botões/campos e carregamento do Kaizen; futuros AlertDialogs e PendingButtons da migração. A mudança não será feita no repositório de referência nesta tarefa. **O aceite integral fica bloqueado até existir um release com esse contrato.** 0.5.0 é referência visual, não destino final automaticamente suficiente. Etapas podem ser revisadas antes, mas não liberar uma migração declarada completa com movimento residual.
-
-### Lacuna de controles de seleção
-
-Não há export Select nos manifestos consultados. Existem quatro selects nativos em dois componentes: tipo e sessão na agenda, intensidade e disposição na avaliação. Mantê-los nativos com Field e tokens públicos é a opção inicial de menor risco; não substituir um seletor potencialmente longo por lista de RadioGroup sem estudar densidade e teclado.
-
-Propor separadamente ao DS um controle nativo Select ou contrato público de aparência de controle, com esses quatro consumidores e required/disabled/invalid/long labels como justificativa. Não copiar a fórmula visual do Input em cada arquivo. Enquanto não houver equivalente, uma composição local junto dos consumidores é exceção documentada, com tokens públicos e foco nativo; nenhum headless concorrente. A escolha de API é responsabilidade técnica do pacote, não dúvida obrigatória do usuário.
-
-## 5. Legibilidade, contraste e custo de composição
-
-Avaliação preliminar calculada em sRGB a partir dos tokens consultados, sem simular um viewport aprovado:
-
-| Par                                                  | Contraste aproximado |
-| ---------------------------------------------------- | -------------------: |
-| foreground / background                              |              17,90:1 |
-| muted-foreground / vidro 80% sobre background sólido |               6,77:1 |
-| muted-foreground / surface-elevated                  |               6,16:1 |
-| primary-foreground / primary                         |              12,29:1 |
-| status-info sólido / surface                         |               7,61:1 |
-| border / surface-elevated                            |               1,21:1 |
-
-As combinações básicas de texto acima têm margem para leitura; isso não aprova textos com opacidade, campos desabilitados ou todas as cores semânticas. A borda fraca é um **risco para identificação de controles**, dependendo dos demais sinais disponíveis. Verificar limite de 3:1 onde o contorno for necessário para identificar o componente, e 4,5:1 para texto normal/3:1 para texto grande. Se a combinação pública falhar, corrigir no pacote, sem aumentar apenas a borda local. Bordas decorativas de Card não equivalem automaticamente a contorno essencial de Input.
-
-Medir cor efetivamente composta nos estados padrão, hover, foco, inválido, selecionado e disabled, incluindo `text-foreground/80`, Input elevado a 60%, vidro sobre sólido, cores semânticas e fallback opaco. Não usar apenas a cor do token sem a composição. Informações de status, erro e prioridade precisam de texto/ícone além da cor.
-
-Em treino denso, o custo maior esperado é blur de vários painéis sobre elementos rolando ou atualizando. É uma inferência, não uma medição de desempenho concluída. Manter uma camada por atividade, exercícios sólidos, editores sem blur e cronômetro com largura estável. Não adicionar `will-change`, GPU hints ou virtualização sem perfil e consumidor comprovados.
-
-Comparar antes/depois no mesmo navegador, viewport e cenário sanitizado: dia com maior quantidade de atividades/exercícios disponível na fixture, todos os detalhes abertos, agenda aberta e timer ativo. Registrar quantidade de superfícies com backdrop-filter, tempo de rolagem/frames e atualização do timer por 30 segundos. Proposta de gate: investigar regressão reproduzível superior a 10% no p95 do tempo de frame em três repetições; não aprovar apenas por média ou por desktop potente. Dados de baseline e aprovação real de performance: `unknown`. Se houver regressão, tornar superfícies densas sólidas usando o contrato público e repetir a medição.
-
-## 6. Arquivos e configurações envolvidos
-
-Os caminhos abaixo são relativos à raiz do Kaizen. “Alterar” significa plano futuro, não mudança realizada. Os stems abreviados nesta seção são definidos com caminhos exatos no inventário complementar ao final.
-
-| Ordem | Ação                       | Caminho exato                                                                                                                                                                                                                             | Mudança, motivo e verificação                                                                                                                                 |
-| ----- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0     | Criar                      | `docs/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md`                                                                                                                                                                             | Este plano, evidências e decisões; revisar links e consistência                                                                                               |
-| 1     | Alterar após aprovação     | `docs/architecture/TARGET-ARCHITECTURE.md`                                                                                                                                                                                                | Registrar política estática por referência a nova decisão, sem reescrever ADR antigo; preservar regras estruturais                                            |
-| 1     | Criar após aprovação       | `docs/decisions/STATIC-VISUAL-POLICY.md`                                                                                                                                                                                                  | Formalizar fundo opaco e zero movimento como decisão do Kaizen; depende de aprovação e contrato publicado                                                     |
-| 1     | Planejar no roadmap        | `roadmap/ACTIVE.md`                                                                                                                                                                                                                       | Selecionar tarefa nova e entradas explícitas; ler `roadmap/AGENTS.md` e atribuir ID válido antes de criar arquivos de tarefa. Caminho/ID da tarefa: `unknown` |
-| 2     | Alterar                    | `package.json`                                                                                                                                                                                                                            | Pin exato do release aprovado; manter peers atuais se compatíveis                                                                                             |
-| 2     | Alterar por gerenciador    | `pnpm-lock.yaml`                                                                                                                                                                                                                          | Resolver release e transitivas, verificar React único e remoção de Radix só quando não houver consumidor; nunca editar lock manualmente                       |
-| 2     | Alterar                    | `src/app/layout.tsx`                                                                                                                                                                                                                      | Declarar política estática SSR quando existir API; manter Inter, lang e limites de servidor                                                                   |
-| 2     | Alterar se necessário      | `src/app/globals.css`                                                                                                                                                                                                                     | Garantir fundo de html/body por token; manter import único e @source, sem kill switch universal                                                               |
-| 3     | Alterar                    | `src/components/shared/app-shell/app-shell.module.css`                                                                                                                                                                                    | Hierarquia e superfície de navegação/cabeçalho; preservar estrutura, skip link e safe area                                                                    |
-| 3     | Alterar                    | `src/components/shared/app-shell/components/app-shell-navigation/components/app-shell-navigation-links/app-shell-navigation-links.module.css`                                                                                             | Composição da navegação sobre contratos comuns; avaliar elevada/sólida                                                                                        |
-| 3–5   | Alterar                    | Arquivos visuais enumerados no inventário complementar                                                                                                                                                                                    | Trocar primitives e estilos, preservar props de negócio; validação por família abaixo                                                                         |
-| 4     | Alterar                    | `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.ts`                                                                                                                                               | Substituir confirmação síncrona por intenção pendente exposta à UI; nenhuma pausa/escrita antes de aceitar                                                    |
-| 4     | Alterar se contrato exigir | `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.types.ts`                                                                                                                                         | Tipar intenção/continuação e cancelamento; sem mudar versão/chave/estrutura persistida do draft                                                               |
-| 4     | Criar                      | `src/features/training/ui/components/training-day-page/components/training-activity-card/components/training-activity-switch-confirmation/training-activity-switch-confirmation.tsx`                                                      | Folha privada de renderização do AlertDialog ao pausar outra atividade; não introduzir modal genérico global                                                  |
-| 4     | Criar                      | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/components/training-set-reset-confirmation/training-set-reset-confirmation.tsx` | Confirmação privada da limpeza de séries; manter o cálculo em utilitário do consumidor e estado no hook quando extraído                                       |
-| 5     | Remover condicionalmente   | `src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.tsx`                                                                                                                          | Apenas se a busca na base integrada reconfirmar nenhum consumidor; caso contrário, adaptar ao LoadingRegion estático                                          |
-| 5     | Remover junto              | `src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.styles.ts`                                                                                                                    | Só com a remoção do componente, sem deixar import órfão                                                                                                       |
-| 6     | Alterar/criar              | Testes exatos abaixo                                                                                                                                                                                                                      | Evidência funcional e acessível das trocas e confirmação assíncrona                                                                                           |
-
-Não prever diretórios vazios. Tipos/estilos/hooks auxiliares novos só serão extraídos junto do componente que os consumir, conforme responsabilidade real. A implementação detalhará esses arquivos ao estabilizar o contrato; não há conteúdo final copiável nesta etapa.
-
-Configurações sem mudança proposta: `.npmrc`, `.github/workflows/ci.yml`, `next.config.ts`, `postcss.config.mjs`, `.node-version`, Prisma, banco, schemas, dados e variáveis de ambiente. Se o release exigir nova configuração, revisar explicitamente antes de ampliar o plano. Não importar ThemeProvider, I18nClientProvider, StarField ou AnimatedCard do portfólio.
-
-## 7. Etapas revisáveis e dependências
-
-| Etapa/PR futura                    | Depende de                                   | Escopo e saída verificável                                                                                                                                     |
-| ---------------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1. Registrar decisão e baseline    | Aprovação deste plano e ID novo              | Tarefa(s) com arquitetura nas Entradas; capturas e cenários sintéticos antes da mudança; decisões de fundo/movimento formalizadas                              |
-| 2. Resolver contrato compartilhado | Etapa 1 e trabalho separado autorizado no DS | API de zero movimento, testes de catálogo/artefato e publicação; versão exata documentada. Avaliar Select em entrega separada, sem bloquear por API imaginária |
-| 3. Atualizar fundação e shell      | Release da etapa 2                           | Manifesto/lock, política SSR, fundo, typography, foundations, placeholder e navegação; provar CSS e overlay nativo no app                                      |
-| 4. Migrar agenda e formulários     | Etapa 3                                      | Sheet, Field, Input, pending estático, itens sólidos e feedback; manter payloads, edição e permissões                                                          |
-| 5. Migrar execução e confirmações  | Etapa 4                                      | Atividades glass, exercícios solid, todos os diálogos e confirms, sequência de séries, cronômetro e rascunhos preservados                                      |
-| 6. Auditar conjunto e promover     | Etapas 3–5 completas e validações            | Remover estilos/arquivos sem uso, executar matriz integral, comparar com referência e obter aprovação visual. Nenhuma área é deixada sem sequência definida    |
-
-Cada etapa pode ser revisada em PR própria; não usar releases parciais para declarar migração integral. Repetir baseline contra `developer` atualizado. Não carregar mudanças não relacionadas da branch atual. O período entre PRs deve ser curto e sem novos componentes que reproduzam o contrato anterior.
-
-### Cuidados de implementação que condicionam a preservação funcional
-
-- Substituir `window.confirm` por UI assíncrona altera a forma de orquestrar, não a decisão de negócio. A intenção guarda o mínimo necessário; cancelar não pausa outra atividade, não inicia relógio e não limpa séries. Ao confirmar, revalidar draft/revisão/data atual antes de aplicar; timestamps são obtidos na execução confirmada.
-- Não permitir que callbacks obsoletos sobrescrevam edição mais recente; testar confirmação pendente durante troca de data, desmontagem e outra atualização de draft.
-- AlertDialogAction fecha por padrão; ao excluir, manter confirmação e erro legíveis enquanto a resposta está pendente/falha. Controlar `open` e impedir fechamento automático quando necessário, sem disparar submit duas vezes. Cancel é a ação inicialmente segura.
-- Ao finalizar com pendências, preservar `requestSubmit`, flag de confirmação e FormData. Não usar um botão sem `type` ou uma action visual que contorne a validação nativa.
-- Card não pode adicionar remounts por nova key nem transformar expansão em seleção que perca estado. Preservar chave de exercício e revisão de correção.
-- Migração de label/Field mantém `id`, `htmlFor`, `name`, `required`, limites, inputMode, step, valores controlled/defaultValue e campos hidden. Dados de unidade/direção não são reinterpretados visualmente.
-- A atualização do cronômetro por segundo e o timeout de recuperação de draft continuam existindo. Evitar anunciar cada segundo em live region; anunciar início/pausa/retomada/conclusão quando apropriado.
-
-## 8. Validação futura
-
-### Gates disponíveis e ordem
-
-Executar somente após autorização para implementar, na base da respectiva PR:
-
-1. `git diff --check` e revisão de segredos nos arquivos alterados, incluindo documentação e lockfile.
-2. `pnpm format:check`, `pnpm lint`, `pnpm structure:check`.
-3. `pnpm typecheck` e testes focados pelo runner já instalado; depois `pnpm test:coverage`.
-4. `pnpm test:integration` em PostgreSQL descartável configurado para testes; não usar os dados operacionais do usuário como fixture.
-5. `pnpm test:ci-scripts`, `pnpm data:check`, `pnpm build` e `pnpm audit --audit-level=moderate` conforme o agregado existente.
-6. `pnpm run ci` é o agregado local desses gates, incluindo `db:validate`. Se já executado com sucesso na mesma revisão, não repetir todos os subcomandos sem motivo.
-7. `pnpm governance <arquivo-do-evento>` ou o evento real da PR valida ID, título, direção, corpo e estado do roadmap. Não fingir evento aprovado nesta investigação.
-8. Na atualização autorizada, provar instalação congelada com acesso ao registry e `pnpm list react react-dom @fradelli/ui --depth 10`; conferir uma única versão compatível de React, exports e CSS compilado. Nenhuma instalação foi feita no planejamento.
-
-`typecheck`, testes e build chamam Prisma generate. `pnpm dev` também executa `workspace:ensure`, que pode gravar no banco; não foi usado para uma simples inspeção visual. Não há script E2E ou diretório `tests/e2e` no checkout, apesar de Playwright constar na arquitetura alvo. A matriz de navegador deve ser manual ou usar infraestrutura já aprovada; não inventar `pnpm test:e2e` nem instalar uma ferramenta nesta etapa.
-
-### Regressões funcionais a verificar
-
-| Cenário                                                                     | Resultado esperado                                                                                         |
-| --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Ontem, hoje, amanhã, hoje +4, hoje +5, datas inválidas e anteriores a ontem | Mesmos limites: agenda editável de ontem até +4; execução só ontem/hoje; bloqueio também no servidor       |
-| Navegar Dieta/Treino e entre datas                                          | Query, rota ativa, canonicalização, back/forward e marcação acessível preservados                          |
-| Agenda com cada tipo de atividade                                           | Adicionar/editar/excluir sem iniciar execução; horários, sessão e esporte corretos; concluídas preservadas |
-| Dia materializado e atividade removida                                      | Consulta repetida não recria exclusão intencional; não duplica atividades                                  |
-| Iniciar, pausar, retomar; outra atividade em curso                          | Mesmos intervalos ativos, sem contar pausa; cancelar troca não escreve nem altera outra atividade          |
-| Atualização do timer e recarga                                              | Continua por segundo; cálculo pelo relógio e recuperação do draft preservados, sem texto saltando          |
-| Série total, cada lado, por direção, segundos, contatos e carga decimal     | Mesmas unidades, sequência, precisão e habilitação da próxima série; carga só quando aplicável             |
-| Zerar série anterior com posteriores realizadas                             | Cancelar preserva todas; confirmar limpa somente o que a regra atual limpa                                 |
-| Aquecimento e treino                                                        | Alternância não reinicia cronômetro nem perde resultados/comentários; toggles mantêm semântica             |
-| Concluir com pendências, corrigir exercício/avaliação                       | Confirmação e payload corretos; versão/revisão preservadas; draft limpo só após sucesso                    |
-| Retrospectivo elegível e modalidade guiada não elegível                     | Salvar registro sem timer onde permitido; servidor rejeita o restante como antes                           |
-| Erro de validação, conflito de revisão, falha de storage e falha inesperada | Mensagem legível, rascunho preservado, retry sem duplicação; sem sucesso otimista indevido                 |
-| Ownership/origem                                                            | Chamadas diretas continuam rejeitando origem/identidade inválida; workspace não vem do cliente             |
-
-Reaproveitar regressões existentes nos testes de mutação/projeção e UI. Acrescentar testes apenas para comportamentos novos com risco: confirmação assíncrona, submit/fechamento de overlay, foco e retenção de estado. Não criar testes que apenas espelham strings de classes.
-
-### Matriz visual e acessível
-
-- Rotas: `/dieta`, `/treino` nos cenários acima e `/foundations`; verificar também redirect de `/` e erro de rota do treino.
-- Idioma existente pt-BR, nome japonês, textos técnicos/importados em inglês, nomes de atividade no limite 120, esporte 80 e comentários 1000 caracteres. Não introduzir inglês como idioma novo.
-- Larguras 320, 375, 768, 1024 e 1440 px; retrato/paisagem; zoom real 200% e reflow equivalente a 320 CSS px em zoom alto. Sem rolagem horizontal de página, cortes de botão, títulos, campos ou Sheet. Testar teclado virtual, safe area e navegação inferior sem cobrir ação ou foco.
-- Teclado: skip link, ordem Tab/Shift+Tab, Enter/Space, summary, Switch, selects, Escape, foco inicial seguro e retorno ao acionador em Sheet/AlertDialog; conferir quando o acionador foi removido por exclusão. Sem duplo ring de wrapper e controle.
-- Leitor de tela: headings e landmarks, rótulos/campos de erro associados, sucesso e carregamento anunciados sem spam; ícones decorativos ocultos; estado expandido/selecionado exposto.
-- Estados: padrão, hover, foco, ativo/selecionado, disabled, pending, sucesso, erro, vazio e indisponível. Nenhum estado distinguido só por cor.
-- Movimento: política da aplicação ativa com `prefers-reduced-motion` tanto reduce como no-preference. Inspecionar computed animation/transition em componentes, filhos e `::backdrop` durante abertura e mudança de estado. Nenhuma animação executando; duração de transição zero. Inspecionar também portais no body. Não exigir ausência de todo keyframe no CSS do pacote, pois o contrato pode ser desativado por seletor.
-- Transparência: padrão, atributo de redução, preferência do sistema quando suportada, forced colors e ausência de suporte a backdrop-filter/color-mix. Mesma composição e conteúdo em todos os modos.
-- Comparação lado a lado com portfólio e Storybook: paleta, Inter, títulos, cards, borda/sombra/raio, foco, campos e espaçamentos. Comparar o material sem importar a cena espacial nem o tamanho de hero para uma tela operacional.
-- Navegadores: Chromium, Firefox e Safari/WebKit disponíveis na validação; registrar versões. A mudança de Radix para dialog nativo exige teste de top layer, foco, backdrop e nested dialogs. Na ausência de navegador/plataforma, registrar `não validado`, sem generalizar aprovação.
-
-## 9. Critérios objetivos de aceite
-
-- [ ] Todo o inventário atual de rotas e famílias acima foi migrado, mantido com justificativa ou removido por ausência de consumidor confirmada; não há etapa indefinida.
-- [ ] html/body e overscroll usam o mesmo background opaco do portfólio, derivado do token compartilhado; sem estrelas, partículas, imagens de fundo ou gradientes decorativos.
-- [ ] Inter carregada uma vez, papéis públicos coerentes e sem cópia local de paleta, sombra ou fórmula de vidro.
-- [ ] Card default/sm e glass/solid têm padding de raiz e slots sem duplicação; headings reais e sem Card informacional focável.
-- [ ] Release exato publicado inclui contrato de movimento desativado; zero animação e transição nos cenários reais, independentemente da preferência do sistema, incluindo overlays/filhos/backdrop.
-- [ ] Carregamento continua visível e acessível sem spinner girando ou Skeleton pulsando; não há operações fictícias ou estados ocultos.
-- [ ] Temporizadores, intervalos, cálculos, atualizações, séries, rascunhos, retrospectivo, permissões, dados e integrações passam pelas regressões descritas.
-- [ ] Todas as confirmações da UI usam a primitive pública ou possuem exceção aprovada; cancelar não aplica alteração e falha não perde dados.
-- [ ] Contraste e navegação por teclado aprovados, sem overflow nos viewports/zoom; exceções de selects documentadas e verificadas.
-- [ ] No máximo uma camada de blur por painel operacional; perfil comparativo sem regressão relevante não resolvida; fallback sólido aprovado.
-- [ ] Gates aplicáveis passam na mesma revisão e a revisão semântica foi registrada conforme arquitetura; limites de validação permanecem explícitos.
-- [ ] Diff sem segredos e sem alterações não relacionadas; fluxo de PR e rollback documentados; conjunto aprovado visualmente antes da promoção.
-
-## 10. Reversão e entrega
-
-Trabalho novo parte de `developer` em `codex/<ID>-descricao-curta` após definir ID real e entradas. PRs de tarefa apontam para `developer`, seguem [.github/pull_request_template.md](../../.github/pull_request_template.md) e título `[<ID>] tipo(escopo): resumo curto`; squash para tarefas. Promoções `developer -> staging -> master` usam merge commit. Não presumir que aprovação deste plano autoriza merge, promoção ou deploy.
-
-Manter cada PR coesa. Reverter a PR visual restaura componentes/CSS, manifesto e lockfile juntos ao último conjunto validado; não fazer downgrade isolado preservando imports novos. Não reescrever histórico nem sobrescrever release publicado. Etapas dependentes são revertidas da mais recente para a mais antiga, ou em uma PR coordenada que mantenha o conjunto compilável.
-
-Não há migração de banco/draft planejada: preservar schema, chaves de storage e dados. Portanto o rollback visual não apaga treino ou alimentação. Se surgir necessidade de mudar formato persistido, retirar da migração visual e exigir migração e rollback explícitos. Testar reversão com draft em andamento e registros existentes; não limpar storage para “corrigir” incompatibilidade.
-
-## 11. Riscos, pendências e decisões do usuário
-
-| Natureza                | Item                                                                                         | Encaminhamento                                                                                        |
-| ----------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Bloqueio real           | DS 0.5.0 não oferece zero movimento por aplicação                                            | Evolução separada e release antes do aceite final; versão `unknown`                                   |
-| Risco funcional         | Troca Radix/nativo e confirmações síncronas/assíncronas                                      | Testar foco, cancelamento, submit, pending e erro antes de migrar o restante                          |
-| Risco visual            | Padding de raiz, altura flexível e AlertAction mudam composição                              | Rever todas as famílias, inclusive placeholder e foundations                                          |
-| Risco existente         | Classes sem alias público e selects com estilo concorrente                                   | Corrigir consumidores; propor evolução de controle com justificativa real                             |
-| Risco de legibilidade   | Borda de controle fraca e camadas transparentes                                              | Medir composição real; resolver no DS quando o problema for compartilhado                             |
-| Limitação de evidência  | App não executado nesta investigação; performance e screenshots atuais do Kaizen não medidos | Baseline sanitizado como primeira etapa autorizada, sem usar dev que assegura workspace por acidente  |
-| Limitação de acesso     | Sem instalação limpa/teste de credencial e sem estado Git dos repositórios de referência     | Reconferir artefato publicado e acesso na futura atualização; não solicitar segredos                  |
-| Limitação de testes     | Não há E2E configurado; validação completa em navegador ainda pendente                       | Matriz manual explícita e testes do runner existente; ferramenta nova apenas com consumidor e decisão |
-| Dependência de processo | ID e tarefa de implementação ainda não atribuídos                                            | Registrar conforme roadmap após aprovação; não reutilizar E06-T22                                     |
-
-**A única decisão necessária do usuário agora é aprovar ou ajustar este plano**, incluindo a dependência de evolução compartilhada para movimento desativado e a proposta de vidro externo/sólido interno. Fundo, fonte e ausência de movimento já foram decididos e não precisam de nova escolha. Não há dúvida funcional que exija inventar telas ou regras. A aprovação de implementação no Kaizen não será presumida como autorização para alterar os repositórios de referência.
-
-## 12. Validação executada nesta etapa
-
-Investigação estática, comparação publicada no navegador, inspeção de manifestos/exports/guia e cálculos preliminares de contraste. Verificados links locais (nenhum quebrado), caminhos existentes versus criações propostas, coerência das etapas, ausência de padrões de segredo/caminhos pessoais e whitespace. `git diff --check` aprovado; o documento novo também foi verificado separadamente como arquivo não rastreado. Formatação verificada com o Prettier instalado, usando `.gitignore` como lista de exclusão porque `.prettierignore` exclui `docs/`. Nenhuma suite da aplicação, build, teste de banco, instalação ou CI foi executada: a aplicação não mudou. Resultados antigos não são apresentados como validação desta migração.
-
-## Inventário complementar por arquivo visual
-
-O inventário abaixo explicita os arquivos existentes que passam pela revisão de apresentação, distinguindo alteração de manutenção. Não inclui tipos/constantes/utilitários sem mudança necessária. Todos preservam suas responsabilidades; estilos continuam em `*.styles.ts`/CSS Modules, hooks mantêm estado/efeitos, utilitários cálculos puros e componentes renderização. As etapas referem-se à sequência da seção 7.
-
-| Etapa | Ação                           | Caminho exato                                                                                                                                                                                                 | Finalidade e verificação                                                      |
-| ----- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-actions-section/foundations-actions-section.styles.ts`                                                                           | Papéis e exemplos dos estados estáticos; conferir teclado e disabled.         |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-actions-section/foundations-actions-section.tsx`                                                                                 | Papéis e exemplos dos estados estáticos; conferir teclado e disabled.         |
-| 3     | Revisar; alterar se necessário | `src/features/foundations/components/foundations-page/components/foundations-alerts-section/foundations-alerts-section.styles.ts`                                                                             | Composição de Alert na versão nova; sem colisão e sem deslocamento de coluna. |
-| 3     | Revisar; alterar se necessário | `src/features/foundations/components/foundations-page/components/foundations-alerts-section/foundations-alerts-section.tsx`                                                                                   | Composição de Alert na versão nova; sem colisão e sem deslocamento de coluna. |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-colors-section/foundations-colors-section.styles.ts`                                                                             | Título por papel section; preservar amostras categóricas.                     |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-colors-section/foundations-colors-section.tsx`                                                                                   | Título por papel section; preservar amostras categóricas.                     |
-| 3     | Revisar; alterar se necessário | `src/features/foundations/components/foundations-page/components/foundations-form-section/foundations-form-section.styles.ts`                                                                                 | Field e Input existentes; conferir invalid, descrição e foco único.           |
-| 3     | Revisar; alterar se necessário | `src/features/foundations/components/foundations-page/components/foundations-form-section/foundations-form-section.tsx`                                                                                       | Field e Input existentes; conferir invalid, descrição e foco único.           |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-motion-section/foundations-motion-section.styles.ts`                                                                             | Copy e Skeleton estático; sem anunciar uma operação fictícia.                 |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-motion-section/foundations-motion-section.tsx`                                                                                   | Copy e Skeleton estático; sem anunciar uma operação fictícia.                 |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-page-header/foundations-page-header.styles.ts`                                                                                   | Badge da versão e papel display/section; conferir versão e quebra.            |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-page-header/foundations-page-header.tsx`                                                                                         | Badge da versão e papel display/section; conferir versão e quebra.            |
-| 3     | Revisar; alterar se necessário | `src/features/foundations/components/foundations-page/components/foundations-sheet-example/foundations-sheet-example.tsx`                                                                                     | Contrato nativo e estático; foco inicial, Escape e retorno.                   |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-typography-section/foundations-typography-section.styles.ts`                                                                     | Demonstrar papéis e superfícies comuns; verificar tamanhos computados.        |
-| 3     | Alterar                        | `src/features/foundations/components/foundations-page/components/foundations-typography-section/foundations-typography-section.tsx`                                                                           | Demonstrar papéis e superfícies comuns; verificar tamanhos computados.        |
-| 3     | Manter                         | `src/features/foundations/components/foundations-page/foundations-page.styles.ts`                                                                                                                             | Composição das seções; sem nova lógica.                                       |
-| 3     | Manter                         | `src/features/foundations/components/foundations-page/foundations-page.tsx`                                                                                                                                   | Composição das seções; sem nova lógica.                                       |
-| 3     | Alterar                        | `src/components/shared/feature-placeholder/feature-placeholder.styles.ts`                                                                                                                                     | Hierarquia do título e Card sem duplicação de padding.                        |
-| 3     | Alterar                        | `src/components/shared/feature-placeholder/feature-placeholder.tsx`                                                                                                                                           | Hierarquia do título e Card sem duplicação de padding.                        |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/invalid-training-date/invalid-training-date.tsx`                                                                                            | Navegação/feedback existente; verificar links e data limite.                  |
-| 5     | Revisar; alterar se necessário | `src/features/training/ui/components/training-day-page/components/rest-training-day/rest-training-day.styles.ts`                                                                                              | Card atualizado; preservar motivo, estado e ações.                            |
-| 5     | Revisar; alterar se necessário | `src/features/training/ui/components/training-day-page/components/rest-training-day/rest-training-day.tsx`                                                                                                    | Card atualizado; preservar motivo, estado e ações.                            |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-action-feedback/training-action-feedback.styles.ts`                                                                                | Feedback semântico público e anúncios; remover classes sem alias.             |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-action-feedback/training-action-feedback.tsx`                                                                                      | Feedback semântico público e anúncios; remover classes sem alias.             |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts`                                                                                    | Card glass externo, status e diálogo de troca; preservar execução.            |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.tsx`                                                                                          | Card glass externo, status e diálogo de troca; preservar execução.            |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.styles.ts`                                                                            | Field, AlertDialog e pending; preservar confirmação e submit.                 |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.tsx`                                                                                  | Field, AlertDialog e pending; preservar confirmação e submit.                 |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.styles.ts`                                                                      | AlertDialog e pending; não fechar/limpar draft antes do resultado correto.    |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.tsx`                                                                            | AlertDialog e pending; não fechar/limpar draft antes do resultado correto.    |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.styles.ts`                                                                                    | Field, labels, pending estático e exceção Select; mesmo FormData.             |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.tsx`                                                                                          | Field, labels, pending estático e exceção Select; mesmo FormData.             |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-activity-section/training-activity-section.styles.ts`                                                                              | Lista e keys; sem remount de drafts.                                          |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-activity-section/training-activity-section.tsx`                                                                                    | Lista e keys; sem remount de drafts.                                          |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-activity-timer/training-activity-timer.styles.ts`                                                                                  | Tabular-nums, atualização de 1 segundo; sem anúncio a cada tick.              |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-activity-timer/training-activity-timer.tsx`                                                                                        | Tabular-nums, atualização de 1 segundo; sem anúncio a cada tick.              |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-agenda-badges/training-agenda-badges.styles.ts`                                                                                    | StatusBadge só para estado; preservar Badge de categoria e totais.            |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-agenda-badges/training-agenda-badges.tsx`                                                                                          | StatusBadge só para estado; preservar Badge de categoria e totais.            |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-agenda-drawer/training-agenda-drawer.styles.ts`                                                                                    | Sheet opaco, itens sólidos e padding; sem overflow nem inset duplicado.       |
-| 4     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-agenda-drawer/training-agenda-drawer.tsx`                                                                                          | Sheet opaco, itens sólidos e padding; sem overflow nem inset duplicado.       |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-date-navigation/training-date-navigation.styles.ts`                                                                                | Layout responsivo e asChild/Link; testar limites e textos longos.             |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-date-navigation/training-date-navigation.tsx`                                                                                      | Layout responsivo e asChild/Link; testar limites e textos longos.             |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-day-content/training-day-content.tsx`                                                                                              | Estados de consulta; verificar vazio, indisponível e inválido.                |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.styles.ts`                                                                                      | AlertTitle/AlertAction sem compensação de coluna; conferir todos os tons.     |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.tsx`                                                                                            | AlertTitle/AlertAction sem compensação de coluna; conferir todos os tons.     |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/exercise-priority-indicator/exercise-priority-indicator.styles.ts`                 | Indicador próprio do domínio, tokens e rótulo acessível.                      |
-| 5     | Manter                         | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/exercise-priority-indicator/exercise-priority-indicator.tsx`                       | Indicador próprio do domínio, tokens e rótulo acessível.                      |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-completed-exercise-correction/training-completed-exercise-correction.tsx` | Pending e composição compartilhada; preservar revisão e valores.              |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-exercise-form/training-exercise-form.styles.ts`                           | Field/pending e fundo sólido; remover controles/classes sem consumidor.       |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-exercise-form/training-exercise-form.tsx`                                 | Field/pending e fundo sólido; remover controles/classes sem consumidor.       |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.styles.ts`           | Field, superfície sólida e confirmação de reset; manter sequência/unidades.   |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.tsx`                 | Field, superfície sólida e confirmação de reset; manter sequência/unidades.   |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/training-exercise.styles.ts`                                                                  | Solid compacto, papéis e Alert sem compensações; retirar transition-colors.   |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/training-exercise.tsx`                                                                        | Solid compacto, papéis e Alert sem compensações; retirar transition-colors.   |
-| 5     | Revisar; alterar se necessário | `src/features/training/ui/components/training-day-page/components/training-warmup-toggle/training-warmup-toggle.styles.ts`                                                                                    | Switch instantâneo e rótulo; preservar envio e estado.                        |
-| 5     | Revisar; alterar se necessário | `src/features/training/ui/components/training-day-page/components/training-warmup-toggle/training-warmup-toggle.tsx`                                                                                          | Switch instantâneo e rótulo; preservar envio e estado.                        |
-| 5     | Revisar; alterar se necessário | `src/features/training/ui/components/training-day-page/training-day-page.styles.ts`                                                                                                                           | Hierarquia de página e toolbar; preservar slots e query da data.              |
-| 5     | Revisar; alterar se necessário | `src/features/training/ui/components/training-day-page/training-day-page.tsx`                                                                                                                                 | Hierarquia de página e toolbar; preservar slots e query da data.              |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-unexpected-error/training-day-unexpected-error.styles.ts`                                                                                                   | Retirar col-start-2 incompatível quando sem ícone; ação pública e retry.      |
-| 5     | Alterar                        | `src/features/training/ui/components/training-day-unexpected-error/training-day-unexpected-error.tsx`                                                                                                         | Retirar col-start-2 incompatível quando sem ícone; ação pública e retry.      |
-
-### Testes existentes a revisar na etapa correspondente
-
-Alterar somente quando a troca afeta comportamento ou o contrato público, sem atualizar expectativa cegamente para esconder regressão:
-
-- `src/components/shared/app-shell/app-shell.test.tsx`.
-- `src/components/shared/app-shell/components/app-shell-navigation/app-shell-navigation.test.tsx`.
-- `src/components/shared/feature-placeholder/feature-placeholder.test.tsx`.
-- `src/features/training/ui/components/training-day-page/training-day-page.test.tsx`.
-- `src/features/training/ui/components/training-day-page/components/training-day-content/training-day-content.test.tsx`.
-- `src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.test.tsx`.
-- `src/features/training/ui/components/training-day-page/components/training-action-feedback/training-action-feedback.test.tsx`.
-- `src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.test.tsx`.
-- `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.test.tsx`.
-- `src/features/training/ui/components/training-day-unexpected-error/training-day-unexpected-error.test.tsx`.
-- `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.test.tsx`.
-- `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/exercise-priority-indicator/exercise-priority-indicator.test.tsx`.
-- `tests/integration/training-mutations.test.ts`.
-- `tests/integration/training-projections.test.ts`.
-
-Criar na etapa 5, junto dos consumidores, para os riscos novos identificados:
-
-- `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.test.tsx`: finalizar com pendências, cancelar, submit único, retenção de erro e foco.
-- `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.test.tsx`: reset confirmado/cancelado e preservação das séries.
-- `src/features/training/ui/hooks/use-training-activity-timer/use-training-activity-timer.test.tsx`: relógio controlado, pausa, retomada e desmontagem sem parar a funcionalidade por política de movimento.
-
-`vitest.setup.ts` só deve mudar se o ambiente jsdom precisar de suporte mínimo às APIs nativas de dialog. Esse suporte verifica integração, não substitui foco e top layer no navegador real. Não reintroduzir Radix para manter mocks antigos.
+# Diagnóstico e plano de integração visual do Kaizen com o portfólio
+
+## 1. Resultado e limites desta etapa
+
+**Diagnóstico na base auditada: integração parcial.** A implementação da E10-T01
+integrou superfícies de vidro, geometria, tipografia, espaçamentos, foco, campos,
+mensagens e navegação seguindo o portfólio. O fundo permanece uniforme, sem estrelas,
+partículas ou animações. O conteúdo e as jornadas continuam próprios do Kaizen.
+
+A versão publicada **@fradelli/ui@0.6.0** foi instalada por pin exato após as PRs
+[19](https://github.com/fradelli/design-system/pull/19) e
+[20](https://github.com/fradelli/design-system/pull/20) do DS. Os ícones individuais
+vêm do catálogo oficial de 1.512 desenhos; cursor e hover dos botões vêm do pacote.
+A exceção de idade mínima no pnpm autoriza especificamente esse release validado.
+
+A PR anterior [71](https://github.com/fradelli/nextjs-kaizen-app/pull/71) foi integrada
+em developer (193dd03). Esta entrega parte dessa base, na branch
+`codex/E10-T02-player-portfolio-icons`. A etapa de implementação foi autorizada pelo
+usuário; a restrição anterior de somente investigar e planejar foi substituída.
+
+A fundação passou em lint, estrutura, tipos, 377 testes, build e verificação de dieta/
+treino em 320, 390, 768 e 1440px com banco sintético. A E10-T02 acrescenta os controles
+e o modal; sua validação e a migration de horários curtos são registradas na tarefa.
+As demais seções preservam o diagnóstico de 27/10/2026 e suas referências de linha
+na base auditada, não um inventário de defeitos ainda abertos.
+
+## 2. Fontes, versões e verificação do contrato
+
+### 2.1 Fontes consultadas
+
+- [Instruções do Kaizen](../../AGENTS.md), [instruções de documentação](../AGENTS.md),
+  [tarefa ativa](../../roadmap/ACTIVE.md) e [E06-T25](../../roadmap/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md).
+- [Arquitetura e ownership](../architecture/TARGET-ARCHITECTURE.md),
+  [adoção do DS](../decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md), manifests, lockfiles,
+  CSS público instalado e componentes efetivamente consumidos.
+- Portfólio: [site publicado](https://devlucaslima.com/) e checkout de leitura
+  `dev-lucas-lima-web`, commit `8f7768717e38cb4db5a47503ea95a87d36795f79`.
+- DS: checkout de leitura `fradelli/design-system`, commit
+  `dc724ba1e28e607405530b94e100ebd6e2be0323`, e [Storybook público](https://fradelli.github.io/design-system/).
+- Documentação correspondente à referência: [guia de migração em v0.5.0](https://github.com/fradelli/design-system/blob/v0.5.0/docs/governance/glass-migration.md),
+  tag resolvida para `13e69b2db98a81f600ca049c26b53e111a500a98`;
+  changelog do **artefato 0.5.0 instalado no portfólio**, não só o README do checkout atual.
+- Export maps, declarações e código emitido de Card, Input, Button, Field, Alert,
+  StatusBadge e PendingButton. A inspeção de dist é evidência, não autorização de deep import.
+
+Os caminhos antigos informados para portfólio e DS não existem nesta máquina. Foram
+localizados os checkouts correspondentes nos grupos personal e fradelli da árvore de
+projetos. Não houve escrita nesses checkouts. O estado Git dos dois estava limpo.
+Não inferir o SHA de um deploy pela aparência ou pelo SHA local.
+
+### 2.2 Versões na base auditada e na implementação
+
+| Área | Declarada | Lockfile | Artefato/fonte local | Conclusão |
+|---|---|---|---|---|
+| Kaizen na base auditada | @fradelli/ui 0.3.0 exato | 0.3.0 | node_modules 0.3.0 | Integração anterior ao vidro |
+| Kaizen implementado | @fradelli/ui 0.6.0 exato | 0.6.0 | node_modules 0.6.0 | Catálogo publicado e integrado |
+| Portfólio | @fradelli/ui 0.5.0 exato | package-lock 0.5.0 | node_modules 0.5.0 | Referência executável disponível para leitura |
+| Repositório DS | package 0.5.1 | Não usado como dependência do Kaizen | Fonte local 0.5.1 | Não confundir com versão instalada/publicada em cada consumidor |
+| Deploy do portfólio/Storybook | Não identificado por metadata verificável | Não aplicável | Estilos computados compatíveis com material 0.5.x | Versão/SHA do deploy: **unknown** |
+
+Na investigação, o Kaizen e o portfólio tinham versões distintas. A branch de implementação
+atualizou primeiro de 0.3.0 para 0.5.0 e depois para 0.5.1 exato, conforme pedido de
+usar a última versão publicada. O upgrade final para 0.6.0 ocorreu após a publicação oficial do catálogo. A patch
+0.5.1 registra tradução de metadata/documentação. A comparação das tags em
+src/tokens não mostrou alteração visual de componentes/tokens: as mudanças em src
+foram traduções de testes. Ainda assim, a referência desta auditoria é **0.5.0**, com
+seu artefato e guia; um upgrade posterior precisa de escolha explícita e changelog próprio.
+
+Kaizen: Next 16.4.2, React/React DOM 19.3.0, Tailwind 4.3.3, Node 24.20.0 e pnpm 11.25.0.
+Os peers declarados de 0.5.0 aceitam essas versões. Isso comprova compatibilidade
+**declarativa**, não um build futuro do Kaizen com o pacote novo já aprovado.
+
+### 2.3 Exports públicos e diferenças relevantes
+
+Comuns a 0.3.0 e 0.5.0: raiz, alert, badge, button, card, cn, field, input, label,
+separator, sheet, skeleton, switch, navigation-item, icons, styles.css e package.json.
+
+Adicionados até 0.5.0: **alert-dialog, loading-region, status-badge, pending-button,
+popover e radio-group**. Não existem Dialog genérico, Select ou Textarea públicos
+nessa versão. O portfólio mantém seu Textarea local; isso não é um export do pacote.
+
+0.4.0 trocou primitives Radix por implementações nativas e acrescentou contratos.
+0.5.0 é uma mudança visual incompatível em 0.x: Card fica glass por padrão, padding
+vai para a raiz e os slots deixam de acrescentar inset lateral. Instalar sem revisar
+composição, overrides, eventos de fechamento e estilos computados não é migração completa.
+
+## 3. Apresentação observada e o que já está adequado
+
+### 3.1 Medidas atuais no navegador
+
+Chrome headless: desktop 1440×900 e celular 390×844. Capturas/JSON estão em
+[evidências desta auditoria](evidence/visual-audit-2026-10-27/browser-observations.json).
+Os valores são **observações**, não novos tokens a copiar para o app.
+
+| Propriedade | Portfólio publicado | Kaizen /dieta | Referência a conservar |
+|---|---|---|---|
+| Body | #0B0B0C | #0B0B0C | Background opaco comum |
+| Texto | #F4F4F5 | #F4F4F5 | Foreground comum |
+| Primária | #F2CF63 | #F2CF63 | Amarelo do mesmo token |
+| Fonte | Inter e fallback de next/font | Inter e fallback de next/font | Carregamento único já adequado |
+| Card | #141416 com alpha 80% | #141416 opaco | Material glass compartilhado |
+| Blur/sombra | 12px; 0/8/32px, background a 25% | Sem blur e sem sombra | Tokens/classes públicos do DS |
+| Raio | 16px | 16px | Já coincide |
+| Padding/gap | 24px em toda a raiz; gap 16px | Raiz 24px vertical/0 lateral; gap 24px; slots têm inset próprio | Migrar geometria, não somar paddings |
+| Títulos de painel | 20/28px, peso 700 | Papel depende de classe local/filho | Aplicar papéis explícitos |
+
+No Storybook, glass e solid default têm padding 24/gap 16 e raio 16. Solid sm usa
+padding 16/gap 12, mantendo seu material opaco. Os botões xs/sm/default/lg mantiveram
+fundo amarelo e texto escuro; tamanho alterou apenas a geometria esperada.
+
+### 3.2 Aspectos que não precisam ser reconstruídos
+
+- [globals.css](../../src/app/globals.css#L1) já importa Tailwind e styles.css uma vez,
+  com @source do dist. Não há motivo para duplicar CSS ou introduzir outra biblioteca.
+- [layout.tsx](../../src/app/layout.tsx#L8) carrega Inter via next/font, expõe --font-inter,
+  usa html.dark e lang pt-BR. O DS aplica a fonte ao body; não ter className no body
+  não é, sozinho, um defeito. A fonte foi confirmada no CSS computado.
+- O shell já usa tokens em espaçamentos, bordas e tipografia; possui skip link,
+  main identificável e proteção de safe area na navegação inferior.
+- NavigationItem mantém estado ativo, nome acessível e alvos de 44px. Os ícones de
+  Treino/Dieta já vêm do pacote. Outros ícones são tratados no plano próprio adiante.
+- Várias telas já usam Card, Badge, Alert, Input, Field e Skeleton. A integração
+  **não está ausente**; o trabalho é atualizar contrato e tirar concorrência local.
+- Não houve overflow horizontal nas páginas/capturas atuais inspecionadas em 390px.
+  Isso não prova todos os textos longos, cards reais ou teclado físico.
+- Prefers-reduced-motion já reduz as transições dos controles atuais do Kaizen.
+- /dieta é um placeholder da E07 e / redireciona para /dieta. Não criar funcionalidades
+  de alimentação, dashboard ou novas rotas para justificar a migração visual.
+
+### 3.3 Portfólio como referência final; DS como base
+
+A origem de um estilo não determina sua inclusão: uma composição própria do portfólio
+pode ser necessária no Kaizen mesmo sem export no pacote. Primeiro reutilizar o contrato
+público do DS; depois reproduzir localmente a composição estática que faltar, com tokens
+oficiais e responsabilidades claras. Não considerar o trabalho concluído apenas porque
+os componentes usam o pacote.
+
+| Referência | Direção para o Kaizen |
+|---|---|
+| Paleta, Inter, glass, bordas, sombras e controles do DS | Reutilizar os exports e tokens públicos correspondentes |
+| Composição estática do portfólio: alinhamentos, hierarquia, espaçamento entre blocos, largura de leitura e tratamento de links | Reproduzir a linguagem visual, ajustando a densidade às tarefas do Kaizen e às larguras de tela |
+| Estilos locais do portfólio ausentes no pacote | Incorporar no Kaizen quando necessários à semelhança; documentar origem, função e motivo de não usar um recurso público existente |
+| Hover com borda primária e demais cores de interação | Reproduzir a aparência imediatamente, sem animação, escala ou deslocamento |
+| AnimatedCard, GSAP, ScrollReveal, estrelas e partículas | Excluir; o estado estático do card continua sendo referência |
+| Hero editorial, logos, ilustrações, conteúdo e seções do portfólio | Preservar a identidade e o conteúdo do Kaizen; adaptar a hierarquia visual sem transformar telas operacionais em landing page |
+
+O Kaizen não precisa instalar next-themes: já é dark fixo. Nem deve instalar Lucide,
+React Icons ou bibliotecas de animação apenas para reproduzir a aparência. O plano de
+Phosphor permanece válido. A exclusão dessas dependências não exclui estilos visuais
+próprios do portfólio.
+
+| Elemento | Referência concreta no portfólio | Recurso do DS | Aplicação no Kaizen |
+|---|---|---|---|
+| Container e ritmo | Products/Professional Summary: `max-w-5xl`, `px-6`, `py-16` | Tokens Tailwind de largura/espaço | Shell e Treino usam 64rem/5xl e 24px horizontais; espaçamento vertical mantém o conteúdo operacional |
+| Card externo | Products usa Card default, raiz 24px/gap16, raio16 e hover de borda primária | `Card`, `fd-card`, `fd-surface-glass` | Placeholder usa Card; atividades preservam semântica `<article>` com mesma geometria/material e hover estático |
+| Exercício interno | Cards do portfólio conservam superfície e espaçamento sem duplicar blur | `Card surface=solid size=sm` / `bg-surface` | Exercícios e formulários densos usam superfície opaca, 16px e 12px de gap |
+| Títulos e corpo | Products: `fd-text-section`, `fd-text-card`, `fd-text-body` | Papéis tipográficos públicos e tokens Tailwind | Kaizen usa papéis por hierarquia, sem trazer o hero de landing page |
+| Navegação | Portfolio Navigation: `max-w-5xl`, `px-6`; links do DS | `NavigationItem`, `fd-surface-glass` | Mesmas proporções de largura; dock móvel usa glass elevado com margem de 24px e safe area |
+| Botões, campos e badges | Products/Contact: primitives e estados do DS | Button, Input, Field, Badge, PendingButton | Primitives públicos; selects nativos reproduzem o contrato visual do Input porque não há Select no pacote |
+| Alertas e mensagens | Contact e estados do portfolio usando material/cores semânticas | Alert, AlertAction, StatusBadge | Erros e estados mantêm conteúdo do Kaizen e usam o layout público de ação |
+| Modal de edição | Sem equivalente direto no fluxo editorial do portfólio | Superfície glass elevada e primitivas públicas de confirmação | Modal local mantém foco, Escape, busy, formulário e rodapé; AlertDialog não substitui o formulário |
+| Movimento | AnimatedCard adiciona scale/translate, fora do pedido | `fd-card` fornece borda de hover | Hover altera borda imediatamente; sem transição, escala, deslocamento, estrelas ou partículas |
+
+Para elementos sem equivalente no portfólio, como o editor de treino, a aplicação
+estende os mesmos materiais, proporções e estados sem alterar as regras do produto.
+
+## 4. Problemas e diferenças por impacto
+
+A tabela descreve os achados na base auditada antes da implementação. Os ajustes
+indicados estão em andamento nesta branch; o estado de implementação e os checks atuais
+constam na seção 9. Legenda: **C** = confirmado em código/artefato; **V** = medido no
+navegador na investigação; **H** = captura histórica da E06-T25, sem reexecutar a operação.
+Hipótese de risco não é falha visual confirmada. P0 é bloqueador de uso/legibilidade;
+P1 organiza o núcleo da integração; P2 compõe a migração e seus gates.
+
+| ID | Prioridade | Evidência | Arquivo e linha | Problema concreto | Correção recomendada | Responsabilidade |
+|---|---|---|---|---|---|---|
+| F01 | P0 | C + H | [src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.tsx:89](../../src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.tsx#L89) | Excluir usa text-status-destructive-foreground sobre fundo quase preto. O token resolve para #19080B; contraste calculado com #0B0B0C é 1,01:1. A captura anterior do modal mostra o rótulo quase invisível. | Usar texto destrutivo apropriado para fundo escuro (text-status-destructive) no botão ghost, ou variante pública com seu par correto. Não mudar o token foreground global: ele serve a fundos coloridos. | Kaizen |
+| F02 | P1 | C | [src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts:2](../../src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts#L2) | border-warning/50 e border-info/60 não têm aliases no tema instalado. text-destructive/text-success, bg-card e bg-muted também aparecem na UI sem os aliases correspondentes. Estado visual pode depender da herança em vez da semântica desejada. | Migrar para famílias status/category/surface oficiais e manter o significado de cada estado. Não criar aliases globais antigos para esconder todos os usos. | Kaizen |
+| F03 | P1 | V + C | [package.json:37](../../package.json#L37) | Kaizen usa 0.3.0; no Card real da dieta não há blur/sombra e o inset pertence aos slots. Portfólio e Storybook já usam o contrato glass 0.5.0. | Upgrade controlado de artefato e revisão completa da composição; não basta trocar o pin. | Kaizen |
+| F04 | P1 | C + H | [src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts:2](../../src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts#L2) | Atividades e exercícios constroem superfícies próprias com bg-background, bordas, padding e títulos. O painel operacional principal não herda o Card/material compartilhado. | Painel externo em Card glass ou composição com classe pública; exercícios/editores internos solid para evitar blur aninhado. Preservar article, headings e status. | Kaizen |
+| F05 | P1 | V + C | [src/components/shared/feature-placeholder/feature-placeholder.styles.ts:4](../../src/components/shared/feature-placeholder/feature-placeholder.styles.ts#L4) | Tipografia resulta de classes locais/filhos: títulos de painel do treino são 16px/600, exercícios 18px/600, enquanto o papel card compartilhado é 20/28px/700. Há também títulos de página com papel não explicitado. | Adotar fd-text-card/section/interface/label/body por função. Manter h1/h2/h3 sem copiar o hero gigante; não reduzir informação crítica para caber. | Kaizen |
+| F06 | P1 | C + H | [src/features/training/ui/components/training-day-page/components/training-activity-modal/training-activity-modal.styles.ts:2](../../src/features/training/ui/components/training-day-page/components/training-activity-modal/training-activity-modal.styles.ts#L2) | Editor e confirmações usam bg-background, shadow-xl e backdrop preto definidos localmente; material, elevação e títulos não seguem a referência glass. | Reusar superfície pública elevada com geometria/tokens; preservar cabeçalho, corpo rolável, rodapé fixo e guards do editor. Confirmar AlertDialog só onde a semântica de confirmação se aplica. | Kaizen; ausência de Dialog genérico é limite da API, não justificativa para usar drawer |
+| F07 | P1 | C | [src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.styles.ts:11](../../src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.styles.ts#L11) | Selects de avaliação usam appearance-none com espaço reservado à seta, sem pictograma substituto. Há estilos repetidos de campos e função Field local, embora Field público já exista. | Manter selects nativos com affordance visível; alinhar fundo/erro/labels/ajuda por tokens e Field/FieldLabel/FieldError públicos. Não trocar select por RadioGroup só para ocupar um export. | Kaizen |
+| F08 | P2 | V | [src/app/globals.css:2](../../src/app/globals.css#L2) | No foco por teclado em /foundations coexistem outline branco de 2px e ring amarelo. O controle já fica focado, mas a aparência duplica tratamentos. | Adotar contrato 0.5.0 com fd-focus-managed nos controles públicos; conservar fallback para nativos. Não remover foco global indiscriminadamente. | Upgrade do DS corrige o contrato; Kaizen revisa wrappers locais |
+| F09 | P2 | C: risco de upgrade | [src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.tsx:14](../../src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.tsx#L14) | Feedbacks impõem col-start-2 e aninham ação na descrição com mt-4. Em 0.5.0, Alert e AlertAction reorganizam conteúdo/ação. Não foi observado desalinhamento atual na tela de data inválida. | Retirar compensações só após verificar o novo contrato e usar AlertAction para a ação. Manter título/descrição/ação em fluxo, com e sem ícone e textos longos. | Kaizen |
+| F10 | P2 | C + referência V | [src/features/training/ui/components/training-day-page/components/training-activity-editor-content/training-activity-editor-content.tsx:135](../../src/features/training/ui/components/training-day-page/components/training-activity-editor-content/training-activity-editor-content.tsx#L135) | Botão alterna rótulos sem reserva de largura. A mensagem Salvando existe, mas o formulário não usa a primitive PendingButton disponível no alvo. | Migrar apresentação pendente para PendingButton quando disponível, preservando formId externo e o controlador de busy. Não alterar o ponto de conclusão/refresh. | Kaizen |
+| F11 | P2 | C | [src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.styles.ts:3](../../src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.styles.ts#L3) | Skeleton externo usa bg-card, sem alias válido. TrainingDayLoading não tem consumidor encontrado; não há loading.tsx em treino. Não foi comprovada falha visual de loading no fluxo real. | Auditar a necessidade de boundary real antes de ligá-lo. Quando usado, LoadingRegion + superfície consistente. Não criar atraso artificial ou spinner só para demonstrar primitive. | Kaizen |
+| F12 | P2 | C | [src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts:6](../../src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts#L6) | Cabeçalho flex com ferramentas shrink-0 e sem min-w-0 explícito no bloco do título. Nomes muito longos e cronômetro + ações podem disputar largura. Não reproduzido com dados operacionais nesta etapa. | Validar fixtures longas em 320px; corrigir min-width/wrapping somente se o cenário demonstrar problema. Preservar alvos e a ordem das ações. | Kaizen |
+| F13 | P2 | C + H | [src/features/training/ui/components/training-day-page/components/training-activity-editor/training-activity-editor.tsx:42](../../src/features/training/ui/components/training-day-page/components/training-activity-editor/training-activity-editor.tsx#L42) | Há SVG próprio, emojis e caracteres de ação misturados à Phosphor. Não é necessário adotar os outros pacotes de ícone do portfólio. | Executar o plano de iconografia já separado; sua ampliação de catálogo depende de API/release próprios. Não presumir que 0.5.0 expõe ícones que não existem. | Kaizen + evolução planejada do DS |
+| F14 | P2 | C | [src/components/shared/app-shell/app-shell.module.css:25](../../src/components/shared/app-shell/app-shell.module.css#L25) | Cabeçalho e navegação têm materiais sólidos locais. A navegação já funciona e respeita safe area, mas a elevação visual difere do ecossistema glass. | Avaliar material elevado na navegação/cabeçalho sem mudar rotas, skip link, posição ou safe area. Não transformar o app numa landing page. | Kaizen |
+
+### 4.1 Tokens: corrigir o nome sem alterar o significado do produto
+
+Referências adicionais: [feedback](../../src/features/training/ui/components/training-day-page/components/training-action-feedback/training-action-feedback.styles.ts#L3),
+[loading](../../src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.styles.ts#L3),
+[form de exercício](../../src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-exercise-form/training-exercise-form.styles.ts#L2).
+
+| Uso atual | Direção de migração |
+|---|---|
+| text-destructive / text-success | text-status-destructive / text-status-success em texto sobre fundo escuro |
+| text-status-destructive-foreground em ghost | Texto destrutivo solid/variante apropriada; foreground escuro é para fundo colorido |
+| border-warning/50 | Família status-warning-border conforme estado existente |
+| border-info/60 | Família status-info-border conforme estado existente |
+| bg-card | Card/surface explícito; não introduzir alias legado |
+| bg-muted/40 ou /60 | Surface-interactive/elevated ou fundo de campo, conforme função |
+| border-input | **Já existe e é válido**; não substituir indiscriminadamente |
+| text-muted-foreground / bg-muted-foreground | **Válidos**; não confundir com bg-muted inexistente |
+
+Cor de conclusão, pausa, prioridade e erro carrega semântica do Kaizen. Migrar para
+a família oficial equivalente preservando a regra aprovada. Não trocar azul por
+verde, ou uma categoria por outra, apenas porque o nome parece mais conveniente.
+A condição deve continuar explicada por texto/ícone, não só por borda/color.
+
+Contraste calculado de F01: #19080B sobre #0B0B0C = **1,01:1**; #FF6673 no mesmo fundo
+= **6,93:1**. Foreground normal #F4F4F5 no background = 17,90:1; muted #9B9BA3 em
+surface #141416 = 6,67:1. Esses pares não comprovam todos os estados de vidro, blur,
+backdrop, disabled ou imagens: a migração precisa medir o resultado composto.
+
+### 4.2 O que não constitui defeito por si só
+
+- rem, calc de viewport, max-width e safe-area são composição responsiva local legítima.
+  Não converter todos os números em abstrações novas. Padronizar onde há contrato real.
+- O shell de 72rem e conteúdo do treino de 64rem não obrigam copiar todas as seções
+  editoriais do portfólio. Conservar uma largura de leitura coerente por função.
+- A borda informativa de prioridade e o layout das séries são domínio; não pertencem ao DS.
+- Card informativo não deve ganhar onClick, tabIndex ou role=button apenas por ter hover.
+- Native date/time e setas de select pertencem ao navegador. Substituí-los por pickers
+  customizados só por estética amplia escopo e risco sem benefício demonstrado.
+- /foundations tem função de demonstração; precisa refletir o contrato instalado,
+  sem virar uma segunda fonte de verdade para tokens e regras do Storybook.
+
+## 5. Comportamento: observado, previsto e não exercitado
+
+[Registro dos estados medidos](evidence/visual-audit-2026-10-27/interaction-observations.json).
+
+| Área | Resultado desta etapa | Consequência para o plano |
+|---|---|---|
+| Hover de card do portfólio | Borda muda para primária; wrapper aumenta a largura em 2%. Superfície/padding permanecem | Reusar o hover compartilhado; não confundir o wrapper AnimatedCard com Card padrão |
+| Expansão no portfólio | Disclosure passou de fechado para aberto com clique, sem envio | Manter disclosure sem mudar semântica para simular uma captura |
+| Redução de movimento | Transições caíram de 0,15s para aproximadamente 0,00001s no portfólio e no Kaizen | Conservar preferência; duração quase zero não prova ausência de todo deslocamento estático |
+| Botões do Storybook | xs/sm/default/lg amarelos, texto escuro e geometria distinta esperada | Não há bug de material por size confirmado; testar combinações com variant, pending e overrides no consumidor |
+| PendingButton | Largura ficou em 154,27px em idle e pending; pending desabilita e expõe aria-busy | Recurso já existe no alvo, sem necessidade de wrapper genérico concorrente |
+| Transparência | data-fd-transparency=reduce e media prefers-reduced-transparency trocaram blur 12px por none e fundo opaco | Fallback de preferência confirmado no Storybook; conferir nas telas do app após upgrade |
+| Foco do Kaizen | Outline branco + ring amarelo no controle focado por Tab | Remover duplicação pela integração do contrato correto, não por esconder todos os indicadores |
+| Data inválida | Feedback e link de retorno legíveis em 390px, sem overflow | Preservar estado e navegação; não seguir o link para hoje durante esta auditoria |
+| Treino histórico | Tela sem atividades operacionais exibidas, sem overflow | Não generalizar para cards reais, execução e edição |
+
+### Política de movimento confirmada
+
+A orientação atual do usuário mantém animações e fundo de estrelas fora da referência
+a reproduzir. A semelhança deve vir de cores, materiais, geometria, tipografia,
+espaçamentos e aparência dos estados, sem animações, partículas, scroll reveal,
+scale/translate de hover ou transições animadas nos componentes abrangidos pela migração.
+Hover, foco, abertura e feedback continuam funcionando, com mudanças visuais imediatas.
+
+A implementação deve verificar transições e keyframes dos componentes públicos realmente
+usados e definir sua desativação no escopo apropriado, preservando visibilidade, eventos,
+fechamento e estados pendentes. A versão 0.5.0 não expõe data-fd-motion=off: não consumir
+atributo fictício nem ocultar estado funcional para retirar movimento. Registrar qualquer
+limitação concreta do pacote e validar também prefers-reduced-motion.
+
+## 6. Etapas de implementação e gates pendentes
+
+A implementação foi autorizada e está sendo executada na E10-T01, em branch separada.
+As etapas descrevem o escopo completo; gates não executados permanecem pendentes. A base
+contém a E06-T25 já integrada pela PR #71.
+
+### Etapa 0 — Fechar referência e criar baseline reproduzível
+
+- Confirmar se a referência de instalação será 0.5.0 exata, ou uma patch posterior
+  explicitamente escolhida após comparar changelog e API. Não usar latest/range.
+- Aplicar a política confirmada: sem animações ou fundo de estrelas. Montar a matriz
+  de correspondência da seção 3.3, incluindo os estilos locais do portfólio necessários.
+- Revisar [arquitetura](../architecture/TARGET-ARCHITECTURE.md), guia de migração do
+  release escolhido, export map, peers e estado atual dos três projetos.
+- Preparar fixtures e banco descartável **na etapa autorizada de implementação** para
+  cards, execução, modais e falhas, sem usar registros pessoais.
+- Capturar baseline 320/390/768/1440px de dieta, treino e todos os estados reais.
+
+**Arquivos:** package.json/pnpm-lock.yaml apenas para comparação; documento de evidência
+futuro no Kaizen. **Gate:** referência/versionamento e matriz de correspondência definidos; nenhum dado
+pessoal necessário. **Risco:** tomar código local mais recente por deploy exato.
+
+### Etapa 1 — Corrigir contraste e aliases com a versão atual
+
+| Arquivo | Alteração recomendada | Aceite |
+|---|---|---|
+| training-activity-delete-form.tsx, linha 89 | Corrigir a cor de Excluir no modo textual sem mudar action/confirmação | Texto legível em ghost, hover, foco e disabled; teste de contraste |
+| training-activity-card.styles.ts | Trocar aliases inexistentes pelas famílias oficiais, preservando mapeamento do produto | Bordas dos estados existem no CSS gerado e mantêm significado |
+| training-action-feedback.styles.ts e testes | Corrigir texto de erro/sucesso sem usar foreground de sólido em fundo escuro | Resultado identificado por texto e semântica, não só pela cor |
+| training-exercise-form.styles.ts | Substituir bg-muted inválido por superfície/estilo apropriado | Campos não dependem de classe sem CSS |
+
+Os nomes curtos nesta tabela correspondem aos caminhos completos da seção 4 e do
+inventário da seção 7. **Dependência:** Etapa 0. **Risco:** trocar semântica operacional
+junto com a aparência. **Gate:** testes existentes e contraste passam antes de ampliar o escopo.
+
+### Etapa 2 — Atualizar o pacote e provar a fundação
+
+**Arquivos:** package.json, pnpm-lock.yaml, src/app/globals.css e src/app/layout.tsx;
+`src/features/foundations/components/foundations-page` e seus componentes/testes.
+
+- Atualizado o pin pelo pnpm sem editar lock manualmente, copiar dist ou consumir tarball local.
+- Preservar importação única, @source e Inter. Não adicionar ThemeProvider desnecessário.
+- Validar exports/declarações instalados. Executar fixtures de Card, Button, Input,
+  Field, Alert e preferência de movimento/transparência em /foundations.
+- Não adicionar fallback com tokens copiados se a instalação falhar. Registrar o bloqueio.
+- Provar Button variant × size: default/secondary/outline/ghost/destructive/link e os
+  tamanhos usados, com disabled/pending/erro e texto longo. Material deve depender de
+  variant; size altera geometria, não pode apagar cor/semântica da variante.
+
+**Dependência:** Etapa 1. **Gate:** fonte/paleta idênticas, contrato público resolvido,
+CSS gerado correto, tipo/build/testes passam. **Risco:** 0.3→0.5 atravessa mudanças visuais
+incompatíveis e a troca de primitives em 0.4; não tratar como bump trivial.
+
+### Etapa 3 — Material, geometria e tipografia nas telas reais
+
+**Arquivos:** FeaturePlaceholder; AppShell/CSS; AppShellNavigationLinks/CSS;
+TrainingActivityCard e styles; TrainingExercise e styles; RestTrainingDay;
+TrainingDayPage/styles; editores locais de exercício.
+
+- Painéis principais em Card glass. Preservar article/heading sem usar Card asChild
+  inexistente: composição externa ou classe de superfície pública quando fizer sentido.
+- Formulários densos, séries e cards internos: solid, geralmente size=sm. Não empilhar
+  blur em cada campo, exercício e painel. Material deve degradar para opaco sem perder hierarquia.
+- Card default: raiz controla 24px/gap16; compact: 16px/gap12. Remover compensações nos
+  slots para não somar padding. Não usar size=sm para mudar glass em solid silenciosamente.
+- Adotar papéis: card 20/28, seção 24/32, corpo editorial 16/24, interface 14/20 e label
+  14/20. Preservar heading semântico e densidade de metadados; não copiar o hero do site.
+- Cabeçalho e navegação podem usar material elevado, com fallback opaco, sem mudar
+  posição, rotas, rótulos acessíveis ou safe area.
+- Conferir título longo, cronômetro e ações em 320px antes de mudar wrapping/min-width.
+  Nenhum layout novo de dashboard nem página de dieta funcional entra nesta migração.
+
+**Dependência:** Etapa 2. **Gate:** comparação visual em reais e estados mostra mesma
+família de superfícies/controles, sem inset duplicado ou overflow. **Risco:** perda de
+leitura/fluidez com blur aninhado; não compensar falta de estrelas aumentando transparência.
+
+### Etapa 4 — Campos, feedback e estados de espera
+
+**Arquivos:** TrainingActivityForm/styles/PreparationSelect; TrainingActivityControls;
+TrainingExerciseForm; TrainingActionFeedback; TrainingDayFeedback;
+TrainingDayUnexpectedError; TrainingActivityEditorContent; TrainingActivityEditorNotice.
+
+- Reusar Field, FieldLabel, FieldDescription e FieldError. Remover a função Field
+  genérica local de TrainingActivityControls em vez de criar outro wrapper concorrente.
+- Selects nativos continuam nativos, com seta/affordance visível e estilo por tokens.
+  O pacote não tem Select nem Textarea público em 0.5.0; não inventar imports.
+- Usar AlertAction e retirar offsets legados depois de verificar o contrato 0.5.0.
+  Testar mensagens longas, com/sem ícone e ação em linha própria.
+- Usar PendingButton nos fluxos adequados, preservando type, formId externo, busy,
+  guards e labels. Manter texto de erro/rascunho no corpo onde ele já é compreendido.
+- LoadingRegion só quando houver operação e boundary real. O TrainingDayLoading
+  encontrado está sem consumidor; decidir integração pelo fluxo, não por disponibilidade
+  de componente. Não adicionar atraso artificial ou skeleton isolado sem efeito no app.
+
+**Dependência:** Etapa 3. **Gate:** nomes/valores de FormData, revisão, mensagens, foco e
+estados conservados; ausência de layout shift relevante em pending. **Risco:** mexer no
+momento de conclusão/refresh da E06-T25 ou perder dados ao substituir um botão/form.
+
+### Etapa 5 — Overlays e confirmações com comportamento preservado
+
+**Arquivos:** TrainingActivityModal/types/styles; TrainingActivityDeleteForm;
+TrainingActivityControls; hooks de rascunho e editor de séries apenas onde existir confirm.
+
+- Editor de inclusão/edição continua modal, não drawer. Não trocar por Sheet para usar
+  um componente disponível. Não usar AlertDialog como formulário genérico de edição.
+- Aplicar superfície elevada/título/elevação públicos ao modal local, preservando
+  cabeçalho/corpo/rodapé, Tab/Escape, retorno de foco e fechamento guardado por busy/cache.
+- Confirmações de excluir/finalizar podem usar AlertDialog público, com testes de
+  controlled open/onOpenChange e de cancelamento pendente. Não trocar primitivas às cegas.
+- window.confirm ao trocar atividade ativa/zerar série é diferença visual e de UX.
+  Migrá-lo só com uma intenção pendente explícita e confirmação antes de alterar
+  timestamps/rascunho. Não substituir função síncrona por Promise sem redesenhar o fluxo.
+- A decisão de quando pausar, excluir ou limpar séries permanece no Kaizen, nunca no DS.
+
+**Dependência:** Etapa 4. **Gate:** reabrir/fechar/erro/confirmar/descartar não muda dados
+indevidamente; modais não somem nem enviam duas vezes. **Risco:** regressão operacional
+maior que a diferença estética; essa etapa deve ter PR/revisão própria se necessário.
+
+### Etapa 6 — Regressão e adoção
+
+- Executar a matriz de aceite da seção 8, check de CSS computado e comparação com
+  portfólio/Storybook da mesma referência, sem aprovar por screenshot isolada.
+- Testar aparelhos reais, preferências de movimento/transparência, foco/zoom e textos longos.
+- Benchmark com lista realista de atividades e relógio ativo; observar custo de blur,
+  scroll e layout sem alterar tempo ativo, persistência ou regras de negócio.
+- Atualizar evidências e registrar limites. PRs, merge e deploy somente com autorização
+  correspondente em uma etapa futura; esta auditoria não os executa.
+
+**Dependência:** etapas anteriores. **Gate:** requisitos observáveis aprovados e sem
+regressões de negócio. **Rollback futuro:** reverter conjuntamente código/CSS/pin/lockfile
+do consumidor. Não alterar dados pessoais, migrations ou versão publicada do pacote.
+
+## 7. Inventário de arquivos e limites de ownership
+
+O inventário lista os arquivos principais da migração; alguns já foram atualizados nesta
+branch e os demais ainda precisam de revisão. Review indica preservar quando já atende ao
+contrato. Conditional Edit depende de cenário/gate comprovado. Alterar testes somente quando
+o comportamento observado exigir; não comparar strings de classes.
+
+| Etapa | Arquivo exato no Kaizen | Ação | Motivo/verificação |
+|---|---|---|---|
+| 2 | `package.json` | Edit | Pin exato e peers do artefato escolhido |
+| 2 | `pnpm-lock.yaml` | Generate | Gerado pelo pnpm quando instalação for autorizada |
+| 2 | `src/app/globals.css` | Review/Edit | Import único, @source e regras públicas; sem copiar estrelas |
+| 2 | `src/app/layout.tsx` | Review | Preservar Inter, dark fixo, viewport e metadata |
+| 3 | `src/components/shared/feature-placeholder/feature-placeholder.tsx` | Edit | Card/slots sem dupla compensação e heading semântico |
+| 3 | `src/components/shared/feature-placeholder/feature-placeholder.styles.ts` | Edit | Papel tipográfico explícito |
+| 3 | `src/components/shared/app-shell/app-shell.module.css` | Edit | Material do cabeçalho e ritmo por tokens, sem mudar estrutura |
+| 3 | `src/components/shared/app-shell/components/app-shell-navigation/components/app-shell-navigation-links/app-shell-navigation-links.module.css` | Edit | Material elevado, contraste/safe area |
+| 3 | `src/features/training/ui/components/training-day-page/training-day-page.styles.ts` | Edit | Ritmo de página preservando cabeçalho/data |
+| 1/3 | `src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.tsx` | Edit | Compor Card mantendo article, ações e expansão |
+| 1/3 | `src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.styles.ts` | Edit | Aliases, material e título |
+| 3 | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/training-exercise.tsx` | Edit | Composição sem blur aninhado |
+| 3 | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/training-exercise.styles.ts` | Edit | Surface solid, tipografia e detalhes |
+| 3 | `src/features/training/ui/components/training-day-page/components/rest-training-day/rest-training-day.tsx` | Edit | Revisar inset e papel do título |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.tsx` | Edit | Field/labels/ajuda preservando valores e integração do editor |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.styles.ts` | Edit | Estilo de campos nativos alinhado |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-activity-form/components/training-preparation-select/training-preparation-select.tsx` | Edit | Select/label/ajuda sem alterar escolha |
+| 4/5 | `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.tsx` | Edit | Eliminar Field genérico local e revisar confirmação |
+| 4/5 | `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.styles.ts` | Edit | Campos, superfície e confirmação |
+| 1/4 | `src/features/training/ui/components/training-day-page/components/training-action-feedback/training-action-feedback.styles.ts` | Edit | Cores válidas de texto |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-action-feedback/training-action-feedback.tsx` | Review/Edit | Mensagens, pending e papel acessível |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.tsx` | Edit | Compor AlertAction |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-day-feedback/training-day-feedback.styles.ts` | Edit | Remover offsets legados conforme alvo |
+| 4 | `src/features/training/ui/components/training-day-unexpected-error/training-day-unexpected-error.tsx` | Edit | Erro com ação e título/descrição coerentes |
+| 4 | `src/features/training/ui/components/training-day-unexpected-error/training-day-unexpected-error.styles.ts` | Edit | Alinhamento sem compensações antigas |
+| 5 | `src/features/training/ui/components/training-day-page/components/training-activity-modal/training-activity-modal.styles.ts` | Edit | Superfície elevada, sombra e título com footer preservado |
+| 5 | `src/features/training/ui/components/training-day-page/components/training-activity-modal/training-activity-modal.tsx` | Review/Edit | Preservar guards, foco e Tab; alteração só por contrato real |
+| 1/5 | `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.tsx` | Edit | Contraste e composição de confirmação |
+| 5 | `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.styles.ts` | Edit | Superfície da confirmação |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-activity-editor-content/training-activity-editor-content.tsx` | Edit | PendingButton no footer externo, sem alterar controlador |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-activity-editor-notice/training-activity-editor-notice.tsx` | Review/Edit | Mensagem transitória consistente mantendo evento e role |
+| 1/4 | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-exercise-form/training-exercise-form.styles.ts` | Edit | Campos e aliases válidos |
+| 3/5 | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.styles.ts` | Edit | Legibilidade das séries sem trocar domínio |
+| 5 | `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.tsx` | Conditional Edit | Confirmar intenção de zerar antes de mudar rascunho |
+| 5 | `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.ts` | Conditional Edit | Alterar somente se migrar confirm síncrono para intenção pendente |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.tsx` | Conditional Edit | Somente quando existir boundary real |
+| 4 | `src/features/training/ui/components/training-day-page/components/training-day-loading/training-day-loading.styles.ts` | Conditional Edit | Surface/token do loading se integrado |
+
+A pasta `src/features/foundations/components/foundations-page` permanece em componentes
+por família. Revisar actions/form/alerts/typography/motion existentes para demonstrar
+os contratos do alvo. Não criar catálogo paralelo de todos os componentes do pacote.
+
+Não criar arquivos em data/domain/application/Prisma para esta migração visual. Caso
+um teste mostre que isso parece necessário, separar o problema e justificar antes.
+Não mover copy, status, datas, DTOs, rascunhos ou regras para o Design System.
+
+### 7.1 Limites do Design System versus ajustes do Kaizen
+
+| Situação | Classificação | Encaminhamento |
+|---|---|---|
+| Glass/Card/papéis tipográficos já entregues em 0.5.0 | Capacidade existente, não falta de componente | Migrar consumidor, sem duplicar materiais |
+| Texto Excluir com token foreground errado | Bug no consumo | Corrigir no Kaizen, não escurecer/clarear globalmente o token |
+| Aliases antigos em classes locais | Bug no consumo | Migrar para nomes públicos corretos |
+| Select/Textarea/Modal de edição genérico ausentes | Limite da API | Compor localmente com tokens e primitives existentes; avaliar nova admissão só com necessidade real |
+| Confirmações nativas do navegador | Decisão/fluxo local | Migrar intenção na UI mantendo o domínio, não criar serviço de treino no pacote |
+| PendingButton e AlertAction disponíveis | Recurso não adotado onde é útil | Usar com integração de estado já existente |
+| Card size variar fundo sem pedir surface | Não observado no contrato testado | Não abrir correção no DS baseada em suposição |
+| Desligamento absoluto de movimento por atributo | API não presente em 0.5.0 | Desativar movimento no escopo dos componentes usados, com regressão de funcionamento; não consumir atributo fictício |
+| Catálogo Phosphor completo | Evolução separada já planejada | Seguir [plano de iconografia](ICONOGRAPHY-STANDARDIZATION-PLAN.md); não presumir export por atualizar para 0.5.0 |
+
+## 8. Critérios de aceite verificáveis
+
+### Aparência e composição
+
+- [ ] Comparação lado a lado confirma o Kaizen como extensão visual do portfólio,
+  inclusive nas composições estáticas próprias da aplicação de referência; usar o DS
+  sozinho não basta para aceitar a entrega. Divergências necessárias à usabilidade
+  operacional têm justificativa registrada na matriz da seção 3.3.
+- [ ] Fundo opaco e uniforme, cores base/primária/semânticas dos tokens oficiais.
+- [ ] Inter carregada uma vez; h1/h2/h3 e papéis tipográficos coerentes, sem copiar o hero.
+- [ ] Painéis usam o material do portfólio; 12px blur, borda e sombra vêm do contrato
+  público escolhido. As medidas observadas da seção 3 não viram tokens locais duplicados.
+- [ ] Card default e sm mantêm inset/gap do release; slots não somam padding antigo.
+- [ ] Size modifica a geometria esperada, sem apagar o material/variant. Validar
+  glass/solid × default/sm e Button variant × size.
+- [ ] Cards densos e aninhados continuam legíveis no modo sólido e no fallback opaco.
+- [ ] Não há estrelas, partículas ou animações; hover/foco/abertura/pending mantêm
+  estados visíveis imediatos, sem scale, translate ou transição animada.
+
+### Comportamento e negócio
+
+- [ ] Hover/foco/disabled/erro/pending coerentes em todos os controles reais.
+- [ ] Pending não causa salto de largura que mova ações; nome acessível reflete o estado.
+- [ ] + abre só inclusão; lápis só edição; footer e formulários externos permanecem.
+- [ ] Fechar, descartar, recuperar e salvar rascunho conservam valores e bloqueios.
+- [ ] Remarcar só após saved, com mesmo ID, horários/aquecimento e regras da janela.
+- [ ] Excluir/finalizar têm confirmação adequada e não aceitam envio duplicado.
+- [ ] Timer, pausa, retomada, séries, medição e avaliação não mudam pela migração.
+- [ ] Dieta continua placeholder até a tarefa funcional correspondente.
+
+### Acessibilidade e responsividade
+
+- [ ] Tab/Shift+Tab/Esc, retorno de foco, foco único visível, labels e descrições testados.
+- [ ] Contraste AA dos pares efetivamente compostos: 4,5:1 texto normal, 3:1 texto
+  grande e indicadores aplicáveis. Verificar sem depender de blur ou apenas da cor.
+- [ ] Aviso, vazio, erro e loading real mantêm região/role apropriados, sem anunciar
+  repetidamente relógio/rascunho a cada render.
+- [ ] 320/390/768/1440px, zoom 200%, texto longo e landscape sem overflow/corte de ação.
+- [ ] Teclado virtual, safe area e scroll de modais em aparelho real; emulação não basta.
+- [ ] Prefers-reduced-motion, prefers-reduced-transparency, opt-out documentado e forced
+  colors têm resultado legível; validar ausência de animações e preservação dos estados funcionais.
+- [ ] Sem suporte a blur/color-mix, fallback é opaco e continua utilizável.
+
+### Qualidade e evidência da implementação futura
+
+- [ ] Manifesto/lock/artefato concordam na versão escolhida; imports só de subpaths públicos.
+- [ ] Lint, estrutura, tipos, testes, dados, build e integrações relevantes passam.
+- [ ] Comparação visual apresenta mesmos cenários antes/depois, incluindo falhas.
+- [ ] Nenhum resultado antigo foi atribuído ao pacote novo sem executar a validação.
+- [ ] Sem regressão de desempenho perceptível em lista longa, scroll e relógio ativo;
+  medir cenário e ambiente, não impor um orçamento de FPS inventado.
+
+## 9. Verificações da implementação nesta branch
+
+Implementado até o momento: pin exato `@fradelli/ui@0.5.1`; superfícies glass no shell,
+atividades, modais e cartões; materiais sólidos nos cartões internos; papéis tipográficos;
+Field, FieldLabel e FieldDescription públicos; AlertAction; PendingButton; aliases semânticos;
+foco dos selects nativos; layout estático sem transições/animações; alinhamento responsivo
+do modal, container 5xl/px6 e navegação existente. As regras, nomes/valores de formulário e ações de negócio
+foram preservadas no código editado.
+
+Os checks abaixo pertencem à etapa visual anterior ao último pin 0.5.1; não certificam
+o catálogo novo nem o player planejado.
+
+| Verificação após as mudanças visuais iniciais | Resultado |
+|---|---|
+| `pnpm format:check` | Passou |
+| `pnpm lint` | Passou |
+| `pnpm structure:check` | Passou |
+| `pnpm exec tsc --noEmit --incremental false` | Passou |
+| Testes unitários/integração, build e comparação visual pós-migração | Ainda não executados |
+| `git diff --check` | Passou |
+
+A tabela seguinte registra as verificações da investigação de referência **antes da
+implementação**; suas capturas não demonstram a aparência do código atualizado.
+
+
+| Verificação | Resultado | Escrita evitada |
+|---|---|---|
+| pnpm format:check | Passou | Sem --write |
+| pnpm lint | Passou | Sem --fix/cache explícito |
+| pnpm structure:check | Passou | Validadores de estrutura/camadas |
+| pnpm exec tsc --noEmit --incremental false | Passou, exit code 0 | Sem db:generate, emissão ou atualização incremental |
+| pnpm data:check | Passou | Validação estática dos dados versionados |
+| pnpm exec vitest run --coverage.enabled=false | **52 arquivos, 377 testes passaram** | Sem generate, cobertura em disco ou integração operacional |
+| git diff --check | Passou antes e será repetido após o documento | Sem alterar conteúdo |
+| Estado Git dos projetos de referência | Limpo nas leituras antes/depois | Referências não foram editadas |
+| HTTP das referências públicas | 200 para portfólio e Storybook via navegador/HTTP | Ferramenta textual de web falhou; não foi presumida indisponibilidade do site |
+
+Não executados: instalação, upgrade, prisma generate, build, test:integration,
+importação de plano, migrations, publicação ou operações de treino. O build não foi
+usado como check nesta etapa porque pode regenerar artefatos/configuração do Next.
+Esses testes pertenciam à base da investigação, antes de atualizar o consumidor para 0.5.0.
+
+### Navegador: referência visual acessada antes da implementação
+
+- Portfólio publicado em 1440×900 e 390×844, com material, tipografia, hover,
+  disclosure e redução de movimento inspecionados.
+- Storybook público: Card/Surfaces, Button/Sizes, Input/States e PendingButton/Interactive.
+  Transparência reduzida por atributo e media foi testada na própria página pública.
+- Kaizen local em /dieta (desktop/mobile), /foundations (mobile), /treino com data
+  inválida e /treino com data histórica fora da janela operacional (mobile).
+- Navegador isolado bloqueou requisições POST/PUT/PATCH/DELETE. Nenhum formulário foi
+  enviado, nenhuma ação de treino foi disparada e nenhum conteúdo de usuário foi editado.
+- A data histórica foi escolhida porque ensureScheduledTrainingDay retorna antes da
+  materialização fora da janela passada editável. **Não foi aberto o treino atual/futuro:**
+  seu GET pode materializar a agenda. A restrição de escrita prevaleceu sobre essa inspeção.
+- O primeiro seletor da captura inválida esperava role=alert e expirou; a página foi
+  inspecionada novamente pelo main e capturada corretamente. Isso é erro de seletor
+  do teste, não defeito confirmado da aplicação; consta no JSON bruto para rastreabilidade.
+
+## 11. Limitações e pontos que ainda precisam de validação
+
+1. SHA/versão exatos dos deploys públicos não são expostos de forma verificável na
+   evidência coletada. Código local + CSS computado não bastam para atribuí-los ao deploy.
+2. Os caminhos antigos do portfólio/DS precisaram de localização. Nenhum checkout foi
+   modificado; não se presume que o diretório informado e o deploy sejam o mesmo estado.
+3. O treino operacional principal, inclusão/edição/exclusão, erro inesperado e finalização
+   foram auditados em código. A captura histórica E06-T25 foi apenas consultada para
+   contraste; não foi reproduzida nesta etapa nem promovida a evidência atual de fluxo.
+4. Não foram feitos testes em aparelho físico, Safari, Firefox, leitores de tela reais,
+   baixa GPU, modo sem suporte a backdrop-filter, forced colors ou zoom 200% nesta etapa.
+5. O fallback por redução de transparência foi confirmado no Storybook, não num Kaizen
+   já atualizado. Ausência de suporte a blur foi verificada em CSS, não em outro navegador.
+6. Não houve envio do formulário de contato, requisição operacional ou simulação de
+   falha real de banco. Estados de servidor e persistência exigem fixtures na implementação.
+7. Contraste foi calculado em pares conhecidos e medido indiretamente por estilos;
+   isso não é auditoria WCAG completa nem cobre todos os fundos/transparências.
+8. O artefato 0.5.1 foi instalado nesta branch; uma instalação congelada limpa em CI
+   e o build do consumidor ainda não foram executados nesta etapa.
+9. A exclusão de animações e estrelas foi implementada por uma regra global no escopo
+   do Kaizen; estados hover/foco/pending foram conferidos no código, mas ainda precisam
+   de validação visual e manual após a migração.
+10. Catálogo completo de ícones e evolução do Design System têm plano próprio; não
+    misturar silenciosamente essa API futura com o contrato 0.5.0 analisado.
+
+### Evidências documentais
+
+- [Métricas computadas e capturas](evidence/visual-audit-2026-10-27/browser-observations.json).
+- [Interações e preferências](evidence/visual-audit-2026-10-27/interaction-observations.json).
+- [Portfólio desktop](evidence/visual-audit-2026-10-27/portfolio-desktop.png) e
+  [mobile](evidence/visual-audit-2026-10-27/portfolio-mobile.png).
+- [Kaizen dieta desktop](evidence/visual-audit-2026-10-27/kaizen-dieta-desktop.png) e
+  [mobile](evidence/visual-audit-2026-10-27/kaizen-dieta-mobile.png).
+- [Foundations mobile](evidence/visual-audit-2026-10-27/kaizen-foundations-mobile.png),
+  [data inválida](evidence/visual-audit-2026-10-27/kaizen-treino-invalid-mobile.png) e
+  [treino histórico](evidence/visual-audit-2026-10-27/kaizen-treino-historical-mobile.png).
+- [Storybook superfícies](evidence/visual-audit-2026-10-27/storybook-cards.png),
+  [tamanhos de botão](evidence/visual-audit-2026-10-27/storybook-button-sizes.png) e
+  [campos](evidence/visual-audit-2026-10-27/storybook-inputs.png).
+
+Todo material novo desta etapa permanece na documentação do Kaizen. A auditoria não
+altera a arquitetura aprovada, não agenda trabalho externo e não constitui aprovação
+para implementar, publicar ou promover a aplicação.
+
+## 12. Ampliação solicitada: ícones, hover, dicas e player
+
+O usuário solicitou a última versão publicada, o catálogo completo Phosphor e, em
+seguida, pediu planejar também o player e o modal de registro. A ordem passa a ser
+**DS → release oficial → upgrade exato → ícones/hover/dicas → player/modal → regressão**.
+Não restringir a implementação à referência histórica 0.5.0. Essa referência continua
+válida como evidência da auditoria e da linguagem visual, não como teto de versão.
+
+O [plano de player e registro](TRAINING-ACTIVITY-PLAYER-AND-FEEDBACK-PLAN.md) é a fonte
+para estados, cronômetro, cache de avaliação, decisão de Mobilidade pendente,
+inventário por arquivo e aceite dos novos ajustes. O [plano de ícones](ICONOGRAPHY-STANDARDIZATION-PLAN.md)
+continua sendo a fonte do catálogo e da proteção de imports. Não implementar a nova
+regra de Mobilidade antes de responder a decisão indicada nesse plano. A orientação mais recente reserva o
+player à execução guiada e mantém futevôlei/atividades externas em registro direto, sem
+cronômetro; ela substitui a resposta anterior que ampliava o player a todos os tipos.

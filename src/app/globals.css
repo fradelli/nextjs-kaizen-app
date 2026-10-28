@@ -2,3 +2,14 @@
 @import "@fradelli/ui/styles.css";
 
 @source "../../node_modules/@fradelli/ui/dist";
+
+/* O Kaizen usa os estados visuais da família sem movimento animado. */
+html.kaizen-static-motion,
+html.kaizen-static-motion *,
+html.kaizen-static-motion *::before,
+html.kaizen-static-motion *::after,
+html.kaizen-static-motion dialog::backdrop {
+  animation: none !important;
+  scroll-behavior: auto !important;
+  transition: none !important;
+}

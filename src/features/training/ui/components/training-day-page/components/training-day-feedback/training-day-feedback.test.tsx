@@ -4,18 +4,22 @@ import { describe, expect, it } from "vitest";
 import { TrainingDayFeedback } from "./training-day-feedback";
 
 describe("TrainingDayFeedback", () => {
-  it("places the title and description in the same content column without an icon", () => {
-    const { container } = render(
+  it("provides the day message and a named action without duplicating either", () => {
+    render(
       <TrainingDayFeedback
         title="Nenhuma atividade programada"
         description="Use o botão + para adicionar um treino ou outra atividade."
+        action={<a href="/treino?date=2026-10-27">Conferir agenda</a>}
       />,
     );
 
-    const title = screen.getByText("Nenhuma atividade programada");
-    const description = container.querySelector('[data-slot="alert-description"]');
-
-    expect(title).toHaveClass("col-start-2");
-    expect(description).toHaveClass("col-start-2");
+    expect(screen.getAllByText("Nenhuma atividade programada")).toHaveLength(1);
+    expect(
+      screen.getByText("Use o botão + para adicionar um treino ou outra atividade."),
+    ).toBeVisible();
+    expect(screen.getByRole("link", { name: "Conferir agenda" })).toHaveAttribute(
+      "href",
+      "/treino?date=2026-10-27",
+    );
   });
 });

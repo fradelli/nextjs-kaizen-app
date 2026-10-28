@@ -13,7 +13,7 @@ const colorSampleStyles = {
 
 export const foundationsColorsSectionStyles = {
   root: "space-y-4",
-  title: "text-2xl font-bold",
+  title: "fd-text-section",
   description: "text-muted-foreground",
   grid: "grid grid-cols-2 gap-3 sm:grid-cols-4",
   sample: colorSampleStyles,

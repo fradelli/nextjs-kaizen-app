@@ -35,6 +35,10 @@ const activitySchema = z.object({
   plannedEndTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
 });
 const activityControlSchema = z.object({
+  completionRequestedAt: z.preprocess(
+    (value) => (value === undefined || value === null || value === "" ? undefined : value),
+    z.iso.datetime({ offset: true }).optional(),
+  ),
   civilDate: z.iso.date(),
   activityId: z.uuid(),
   action: z.enum(["complete", "record_completed", "update_feedback"]),

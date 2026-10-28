@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} dark`}>
+    <html lang="pt-BR" className={`${inter.variable} dark kaizen-static-motion`}>
       <body>
         <AppShell>{children}</AppShell>
       </body>

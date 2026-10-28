@@ -1,6 +1,6 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@fradelli/ui/alert";
+import { Alert, AlertAction, AlertDescription, AlertTitle } from "@fradelli/ui/alert";
 import { Button } from "@fradelli/ui/button";
 
 import { trainingDayUnexpectedErrorStyles } from "./training-day-unexpected-error.styles";
@@ -20,13 +20,13 @@ export function TrainingDayUnexpectedError({ reset }: TrainingDayUnexpectedError
           Não foi possível carregar o treino
         </AlertTitle>
         <AlertDescription>
-          <p>Ocorreu uma falha inesperada. A data selecionada foi preservada.</p>
-          <div className={trainingDayUnexpectedErrorStyles.action}>
-            <Button type="button" onClick={reset}>
-              Tentar novamente
-            </Button>
-          </div>
+          Ocorreu uma falha inesperada. A data selecionada foi preservada.
         </AlertDescription>
+        <AlertAction>
+          <Button type="button" onClick={reset}>
+            Tentar novamente
+          </Button>
+        </AlertAction>
       </Alert>
     </section>
   );

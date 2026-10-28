@@ -649,6 +649,19 @@ async function completeTrainingActivityFromDraft(
     return invalid("O início ou estado do cronômetro é inválido.");
   }
 
+  const completionInstant =
+    input.completionRequestedAt === undefined ? now : new Date(input.completionRequestedAt);
+  if (
+    input.completionRequestedAt !== undefined &&
+    (!Number.isFinite(completionInstant.getTime()) ||
+      completionInstant.getTime() < start ||
+      completionInstant.getTime() < previousEnd ||
+      completionInstant.getTime() > limit ||
+      draft.status !== "paused" ||
+      draft.intervals.some((interval) => interval.endedAt === null))
+  )
+    return invalid("O horário de encerramento do treino é inválido.");
+
   const prescriptions = [
     ...(activity.preparationSession?.trainingExerciseDefinition_session.map((prescription) => ({
       prescription,
@@ -813,7 +826,7 @@ async function completeTrainingActivityFromDraft(
       startedAt: new Date(start),
       completedAt: now,
       actualStartMinute: saoPauloClockMinute(new Date(start)),
-      actualEndMinute: saoPauloClockMinute(now),
+      actualEndMinute: saoPauloClockMinute(completionInstant),
       intensity: activity.type === "mobility" ? null : input.intensity,
       energy: activity.type === "mobility" ? null : input.energy,
       comment: normalizeComment(input.comment),

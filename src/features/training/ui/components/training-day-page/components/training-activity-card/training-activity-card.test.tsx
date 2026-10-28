@@ -24,10 +24,121 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
   vi.useRealTimers();
 });
 
 describe("TrainingActivityCard", () => {
+  it("requires an explicit choice before closing when the paused execution cannot be stored", async () => {
+    renderCard(createStructuredActivity({ status: "scheduled" }));
+    await waitFor(
+      () => expect(screen.getByRole("button", { name: "Iniciar treino" })).toBeEnabled(),
+      { timeout: 5000 },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar treino" }));
+    const storage = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw Error("full");
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+    await waitFor(() => expect(screen.getByLabelText("Intensidade")).toBeEnabled());
+    fireEvent.click(screen.getByRole("button", { name: "Fechar formul\u00e1rio" }));
+    expect(screen.getByText(/A pausa n\u00e3o p\u00f4de ser guardada/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar e manter pausa nesta aba" }));
+    expect(
+      screen.queryByRole("dialog", { name: "Registrar atividade realizada" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText(/Pausado/)).toBeInTheDocument();
+    const unload = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(unload);
+    expect(unload.defaultPrevented).toBe(true);
+    storage.mockRestore();
+  });
+
+  it("keeps the paused execution and feedback when closing, reopening and retrying an error", async () => {
+    renderCard(createStructuredActivity({ status: "scheduled" }));
+    await waitFor(
+      () => expect(screen.getByRole("button", { name: "Iniciar treino" })).toBeEnabled(),
+      { timeout: 5000 },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar treino" }));
+    fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+    await waitFor(() => expect(screen.getByLabelText("Intensidade")).toBeEnabled());
+    fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
+    fireEvent.change(screen.getByLabelText(/Disposi/), { target: { value: "normal" } });
+    fireEvent.change(
+      within(screen.getByRole("dialog", { name: "Registrar atividade realizada" })).getByLabelText(
+        "Coment\u00e1rio",
+      ),
+      { target: { value: "Preserve" } },
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Fechar formul\u00e1rio" }));
+    expect(screen.getByText(/Pausado/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+    await waitFor(() =>
+      expect(
+        within(
+          screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
+        ).getByLabelText("Coment\u00e1rio"),
+      ).toHaveValue("Preserve"),
+    );
+    action.mockResolvedValueOnce({ status: "invalid", message: "Try again" });
+    fireEvent.click(screen.getByRole("button", { name: "Salvar registro" }));
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar" }));
+    await waitFor(() => expect(screen.getByText("Try again")).toBeInTheDocument());
+    expect(screen.getByLabelText("Intensidade")).toHaveValue("high");
+    expect(screen.getByLabelText(/Disposi/)).toHaveValue("normal");
+    expect(
+      within(screen.getByRole("dialog", { name: "Registrar atividade realizada" })).getByLabelText(
+        "Coment\u00e1rio",
+      ),
+    ).toHaveValue("Preserve");
+    expect(
+      screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
+    ).toBeInTheDocument();
+  });
+  it("locks duplicate submits and accidental closure until the server confirms success", async () => {
+    let resolveSave!: (value: { status: "saved"; revision: number }) => void;
+    action.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveSave = resolve;
+        }),
+    );
+    renderCard({
+      ...createSportActivity(),
+      status: "scheduled",
+      startedAt: null,
+      intervals: [],
+      currentIntervalStartedAt: null,
+    });
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /^Finalizar atividade:/ })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+    await waitFor(() => expect(screen.getByLabelText("Intensidade")).toBeEnabled());
+    fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "low" } });
+    fireEvent.change(screen.getByLabelText(/Disposi/), { target: { value: "normal" } });
+    const save = screen.getByRole("button", { name: "Salvar registro" });
+    fireEvent.click(save);
+    fireEvent.click(save);
+    await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
+    expect(screen.getByRole("button", { name: "Fechar formul\u00e1rio" })).toBeDisabled();
+    fireEvent(
+      screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
+      new Event("cancel", { cancelable: true }),
+    );
+    expect(
+      screen.getByRole("dialog", { name: "Registrar atividade realizada" }),
+    ).toBeInTheDocument();
+    resolveSave({ status: "saved", revision: 1 });
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Registrar atividade realizada" }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(localStorage.length).toBe(0);
+  });
+
   it.each(["sport_practice", "specific_training"] as const)(
     "records scheduled %s without starting a timer or requiring warmup",
     async (type) => {
@@ -44,15 +155,21 @@ describe("TrainingActivityCard", () => {
       expect(screen.queryByRole("button", { name: "Iniciar atividade" })).not.toBeInTheDocument();
       expect(screen.queryByLabelText("Tempo ativo")).not.toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: /^Jogo de futevôlei/ }));
-      const registration = screen.getByText("Registrar atividade realizada").closest("details");
+      await waitFor(() =>
+        expect(screen.getByRole("button", { name: /^Finalizar atividade:/ })).toBeEnabled(),
+      );
+      fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+      const registration = screen.getByRole("dialog", { name: "Registrar atividade realizada" });
       expect(registration).toBeInTheDocument();
-      expect(registration?.parentElement?.lastElementChild).toBe(registration);
+      fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
       expect(screen.getByRole("button", { name: "Aquecimento" })).toBeInTheDocument();
       expect(screen.getByText("Futevôlei · 120 min planejados")).toBeInTheDocument();
       fireEvent.click(screen.getByRole("button", { name: "Aquecimento" }));
       expect(screen.getByText("Aquecimento de Jogo de futevôlei")).toBeInTheDocument();
       expect(screen.getByText(/Esta preparação é opcional/)).toBeInTheDocument();
       expect(screen.queryByLabelText("Tempo ativo")).not.toBeInTheDocument();
+      fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+      await waitFor(() => expect(screen.getByLabelText("Intensidade")).toBeEnabled());
       fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
       fireEvent.change(screen.getByLabelText("Disposição durante a atividade"), {
         target: { value: "energized" },
@@ -61,8 +178,15 @@ describe("TrainingActivityCard", () => {
       await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
       const formData = action.mock.calls[0]![1] as FormData;
       expect(formData.get("action")).toBe("record_completed");
+      expect(formData.get("intensity")).toBe("high");
+      expect(formData.get("energy")).toBe("energized");
       expect(formData.has("executionDraft")).toBe(false);
       expect(screen.queryByRole("dialog", { name: "Finalizar treino?" })).not.toBeInTheDocument();
+      await waitFor(() =>
+        expect(
+          screen.queryByRole("dialog", { name: "Registrar atividade realizada" }),
+        ).not.toBeInTheDocument(),
+      );
       expect(window.localStorage.length).toBe(0);
       fireEvent.click(screen.getByRole("button", { name: /^Jogo de futevôlei/ }));
       expect(screen.queryByText("Registrar atividade realizada")).not.toBeInTheDocument();
@@ -122,14 +246,24 @@ describe("TrainingActivityCard", () => {
       expect(screen.getByRole("button", { name: "Iniciar treino" })).toBeEnabled(),
     );
     fireEvent.click(screen.getByRole("button", { name: "Iniciar treino" }));
-    fireEvent.click(screen.getByRole("button", { name: "Finalizar atividade" }));
+    fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+    expect(screen.getByText(/Pausado/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByLabelText("Intensidade")).toBeEnabled());
+    fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
+    fireEvent.change(screen.getByLabelText("Disposição durante a atividade"), {
+      target: { value: "normal" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Salvar registro" }));
     expect(screen.getByRole("dialog", { name: "Finalizar treino?" })).toBeInTheDocument();
     expect(action).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
-    expect(window.localStorage.length).toBe(1);
-    fireEvent.click(screen.getByRole("button", { name: "Finalizar atividade" }));
+    expect(screen.getByLabelText("Intensidade")).toHaveValue("high");
+    fireEvent.click(screen.getByRole("button", { name: "Salvar registro" }));
     fireEvent.click(screen.getByRole("button", { name: "Finalizar" }));
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
+    const submitted = action.mock.calls[0]![1] as FormData;
+    expect(submitted.get("completionRequestedAt")).toBeTruthy();
+    expect(JSON.parse(submitted.get("executionDraft") as string).status).toBe("paused");
   });
   it("starts expanded, keeps pause and warmup locally, and restores the draft after remount", async () => {
     const planned = createStructuredActivity({ status: "scheduled" });
@@ -305,7 +439,7 @@ describe("TrainingActivityCard", () => {
     const { rerender } = renderCard(paused);
     expect(screen.getByLabelText("Tempo ativo")).toHaveTextContent("00:02:05");
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Retomar atividade" })).toBeInTheDocument(),
+      expect(screen.getByRole("button", { name: "Retomar atividade" })).toBeEnabled(),
     );
     fireEvent.click(screen.getByRole("button", { expanded: true }));
     fireEvent.click(screen.getByRole("button", { expanded: false }));

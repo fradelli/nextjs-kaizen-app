@@ -1,6 +1,9 @@
 "use client";
+
+import { TrashIcon } from "@fradelli/ui/icons/Trash";
 import { useRouter } from "next/navigation";
 import { Button } from "@fradelli/ui/button";
+import { PendingButton } from "@fradelli/ui/pending-button";
 import { useEffect, useId, useRef, useState } from "react";
 import { useTrainingActionFeedback } from "@/features/training/ui/hooks/use-training-action-feedback";
 import { trainingActivityDraftKey } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
@@ -86,7 +89,9 @@ export function TrainingActivityDeleteForm({
         type="button"
         variant="ghost"
         size={compact ? "icon" : "sm"}
-        className={compact ? "min-h-11 min-w-11" : "min-h-11 text-status-destructive-foreground"}
+        className={
+          compact ? "min-h-11 min-w-11 [&>svg]:size-5" : "min-h-11 text-status-destructive"
+        }
         disabled={disabled || submission.pending}
         aria-label="Excluir atividade"
         onClick={() => {
@@ -100,7 +105,11 @@ export function TrainingActivityDeleteForm({
           setConfirmation(true);
         }}
       >
-        {compact ? "🗑" : "Excluir atividade"}
+        {compact ? (
+          <TrashIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+        ) : (
+          "Excluir atividade"
+        )}
       </Button>
       <dialog
         ref={dialog}
@@ -153,9 +162,15 @@ export function TrainingActivityDeleteForm({
             >
               Manter atividade
             </Button>
-            <Button type="submit" variant="outline" size="sm" disabled={submission.pending}>
+            <PendingButton
+              type="submit"
+              variant="outline"
+              size="sm"
+              pending={submission.pending}
+              pendingLabel="Excluindo…"
+            >
               Excluir atividade
-            </Button>
+            </PendingButton>
           </div>
           <TrainingActionFeedback state={submission.state} pending={submission.pending} />
         </form>

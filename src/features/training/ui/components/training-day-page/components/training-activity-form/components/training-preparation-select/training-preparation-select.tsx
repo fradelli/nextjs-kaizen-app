@@ -1,3 +1,5 @@
+import { Field, FieldDescription, FieldLabel } from "@fradelli/ui/field";
+import { trainingNativeSelectStyles } from "@/features/training/ui/training-native-select.styles";
 import type { TrainingPreparationSelectProps } from "./training-preparation-select.types";
 
 export function TrainingPreparationSelect({
@@ -13,10 +15,10 @@ export function TrainingPreparationSelect({
   const id = `activity-preparation-${activity?.id ?? "new"}`;
   const current = activity?.preparationSession?.name ?? activity?.preparations[0]?.name;
   return (
-    <div className="grid min-w-0 gap-1.5">
-      <label className="text-sm font-medium text-foreground" htmlFor={id}>
+    <Field className="grid min-w-0 gap-2">
+      <FieldLabel htmlFor={id} className="fd-text-label text-foreground">
         Aquecimento
-      </label>
+      </FieldLabel>
       <select
         id={id}
         name="preparationSessionId"
@@ -24,7 +26,7 @@ export function TrainingPreparationSelect({
         disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
         aria-describedby={`${id}-hint`}
-        className="min-h-10 w-full min-w-0 rounded-md border border-input bg-background px-3 text-sm"
+        className={trainingNativeSelectStyles.control}
       >
         {!["keep", "automatic", "none"].includes(value) &&
         !sessions.some((session) => session.sessionId === value) ? (
@@ -45,7 +47,7 @@ export function TrainingPreparationSelect({
           </option>
         ))}
       </select>
-      <p id={`${id}-hint`} className="text-xs text-muted-foreground">
+      <FieldDescription id={`${id}-hint`} className="fd-text-interface text-muted-foreground">
         {disabled
           ? "O aquecimento de uma atividade já iniciada será preservado."
           : value === "automatic"
@@ -53,7 +55,7 @@ export function TrainingPreparationSelect({
             : value === "none"
               ? "Esta atividade será salva sem aquecimento."
               : "O aquecimento é opcional e não inicia nem conclui a atividade."}
-      </p>
-    </div>
+      </FieldDescription>
+    </Field>
   );
 }

@@ -1,5 +1,10 @@
 "use client";
 
+import { ArrowLeftIcon } from "@fradelli/ui/icons/ArrowLeft";
+import { ArrowRightIcon } from "@fradelli/ui/icons/ArrowRight";
+import { XIcon } from "@fradelli/ui/icons/X";
+import { ChatCircleIcon } from "@fradelli/ui/icons/ChatCircle";
+
 import { Button } from "@fradelli/ui/button";
 import { Input } from "@fradelli/ui/input";
 import { useState } from "react";
@@ -107,17 +112,18 @@ export function TrainingLocalExerciseEditor({
   return (
     <div className={styles.root}>
       <div className={styles.seriesHeader}>
-        <strong>Série {currentSet.setNumber}</strong>
+        <strong className="shrink-0 whitespace-nowrap">Série {currentSet.setNumber}</strong>
         <nav className={styles.navigation} aria-label="Navegação entre séries">
           <Button
             type="button"
             variant="outline"
-            size="icon-sm"
+            size="icon"
+            className="min-h-11 min-w-11"
             aria-label="Abrir série anterior"
             disabled={currentIndex === 0}
             onClick={() => setCurrentIndex(currentIndex - 1)}
           >
-            ←
+            <ArrowLeftIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
           </Button>
           <span className={styles.counter} aria-live="polite">
             {currentIndex + 1} de {draft.sets.length}
@@ -125,12 +131,13 @@ export function TrainingLocalExerciseEditor({
           <Button
             type="button"
             variant="outline"
-            size="icon-sm"
+            size="icon"
+            className="min-h-11 min-w-11"
             aria-label="Abrir próxima série"
             disabled={!nextEnabled}
             onClick={() => setCurrentIndex(currentIndex + 1)}
           >
-            →
+            <ArrowRightIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
           </Button>
         </nav>
       </div>
@@ -163,11 +170,12 @@ export function TrainingLocalExerciseEditor({
             <Button
               type="button"
               variant="ghost"
-              size="icon-sm"
+              size="icon"
+              className="min-h-11 min-w-11"
               aria-label="Fechar comentário"
               onClick={() => setCommentOpen(false)}
             >
-              ×
+              <XIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
             </Button>
           </div>
           <Input
@@ -186,7 +194,8 @@ export function TrainingLocalExerciseEditor({
         aria-expanded={commentOpen}
         onClick={() => setCommentOpen(!commentOpen)}
       >
-        <span aria-hidden="true">💬</span> Comentário
+        <ChatCircleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />{" "}
+        Comentário
       </Button>
     </div>
   );

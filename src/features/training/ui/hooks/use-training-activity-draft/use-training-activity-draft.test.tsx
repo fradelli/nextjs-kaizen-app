@@ -47,6 +47,51 @@ afterEach(() => {
 });
 
 describe("useTrainingActivityDraft", () => {
+  it("captures the latest exercise and one stop instant synchronously under rapid clicks", async () => {
+    const { result } = renderHook(() => useTrainingActivityDraft({ activity, civilDate }));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    act(() => result.current.start());
+    vi.setSystemTime(new Date("2026-09-17T15:01:00Z"));
+    let snapshot: ReturnType<typeof result.current.prepareCompletion> = null;
+    act(() => {
+      result.current.updateExercise("main:one", {
+        sessionId: "one",
+        exerciseId: "one",
+        role: "main",
+        completed: true,
+        comment: "Latest",
+        sets: [],
+      });
+      snapshot = result.current.prepareCompletion();
+    });
+    expect(snapshot!.draft.exercises["main:one"]?.comment).toBe("Latest");
+    expect(snapshot!.draft.intervals[0]?.endedAt).toBe(snapshot!.completionRequestedAt);
+    act(() => {
+      result.current.resume();
+      result.current.resume();
+    });
+    expect(result.current.draft?.intervals).toHaveLength(2);
+    act(() => {
+      result.current.pause();
+      result.current.pause();
+    });
+    expect(result.current.draft?.intervals).toHaveLength(2);
+    expect(result.current.draft?.status).toBe("paused");
+  });
+  it("freezes an existing clock even if storage fails at stop", async () => {
+    const { result } = renderHook(() => useTrainingActivityDraft({ activity, civilDate }));
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    act(() => result.current.start());
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw Error("full");
+    });
+    act(() => {
+      expect(result.current.prepareCompletion()?.draft.status).toBe("paused");
+    });
+    expect(result.current.storageError).toBe(true);
+    expect(result.current.draft?.intervals[0]?.endedAt).toBeTruthy();
+  });
+
   it("starts without modifying a running draft outside the editable window", async () => {
     const oldDate = "2026-09-15";
     const oldActivityId = "22222222-2222-4222-8222-222222222222";

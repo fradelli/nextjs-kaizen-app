@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@fradelli/ui/button";
+import { PendingButton } from "@fradelli/ui/pending-button";
 import { useRouter } from "next/navigation";
 import { useCallback, useId, useRef, useState } from "react";
 import {
@@ -130,22 +131,20 @@ export function TrainingActivityEditorContent({
           ) : (
             <span />
           )}
-          <Button
+          <PendingButton
             type="submit"
             form={formId}
             className="min-h-11"
+            pending={busyKind === "save"}
+            pendingLabel="Salvando…"
             disabled={!draft.ready || lock || blocked || closeError}
           >
-            {busyKind === "save"
-              ? "Salvando…"
-              : activity
-                ? "Salvar alterações"
-                : "Adicionar atividade"}
-          </Button>
+            {activity ? "Salvar alterações" : "Adicionar atividade"}
+          </PendingButton>
         </>
       }
     >
-      <div role="status" className="pt-2 text-xs text-muted-foreground">
+      <div role="status" className="pt-2 fd-text-interface text-muted-foreground">
         {changed
           ? messages.stale
           : needsReload

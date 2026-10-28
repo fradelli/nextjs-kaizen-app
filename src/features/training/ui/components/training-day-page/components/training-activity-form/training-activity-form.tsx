@@ -1,7 +1,9 @@
 "use client";
 
 import { Button } from "@fradelli/ui/button";
+import { Field, FieldDescription, FieldLabel } from "@fradelli/ui/field";
 import { Input } from "@fradelli/ui/input";
+import { PendingButton } from "@fradelli/ui/pending-button";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSameTrainingSport } from "@/features/training/domain/training-sport.rules";
@@ -214,13 +216,13 @@ export function TrainingActivityForm({
         ) : null}
         <div className={trainingActivityFormStyles.grid}>
           {activity ? (
-            <div className={trainingActivityFormStyles.field}>
-              <label
+            <Field className={trainingActivityFormStyles.field}>
+              <FieldLabel
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-date-${activity.id}`}
               >
                 Data da atividade
-              </label>
+              </FieldLabel>
               <Input
                 id={`activity-date-${activity.id}`}
                 name="targetCivilDate"
@@ -233,23 +235,23 @@ export function TrainingActivityForm({
                 required
                 aria-describedby={`activity-date-hint-${activity.id}`}
               />
-              <p
+              <FieldDescription
                 id={`activity-date-hint-${activity.id}`}
                 className={trainingActivityFormStyles.hint}
               >
                 {notStarted
                   ? "Remarque entre ontem e os próximos quatro dias. Horários e aquecimento serão mantidos."
                   : "Só é possível mudar a data de atividades ainda não iniciadas."}
-              </p>
-            </div>
+              </FieldDescription>
+            </Field>
           ) : null}
-          <div className={trainingActivityFormStyles.field}>
-            <label
+          <Field className={trainingActivityFormStyles.field}>
+            <FieldLabel
               className={trainingActivityFormStyles.label}
               htmlFor={`activity-type-${activity?.id ?? "new"}`}
             >
               Tipo de atividade
-            </label>
+            </FieldLabel>
             <select
               id={`activity-type-${activity?.id ?? "new"}`}
               name="type"
@@ -262,15 +264,15 @@ export function TrainingActivityForm({
               <option value="specific_training">Treino específico</option>
               <option value="mobility">Mobilidade</option>
             </select>
-          </div>
+          </Field>
           {type === "structured_training" ? (
-            <div className={trainingActivityFormStyles.field}>
-              <label
+            <Field className={trainingActivityFormStyles.field}>
+              <FieldLabel
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-session-${activity?.id ?? "new"}`}
               >
                 Treino
-              </label>
+              </FieldLabel>
               <select
                 id={`activity-session-${activity?.id ?? "new"}`}
                 name="sessionId"
@@ -291,18 +293,18 @@ export function TrainingActivityForm({
                 ))}
               </select>
               <input type="hidden" name="name" value="Treino do plano" />
-            </div>
+            </Field>
           ) : (
             <input type="hidden" name="sessionId" value="" />
           )}
           {type !== "structured_training" ? (
-            <div className={trainingActivityFormStyles.field}>
-              <label
+            <Field className={trainingActivityFormStyles.field}>
+              <FieldLabel
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-name-${activity?.id ?? "new"}`}
               >
                 Nome
-              </label>
+              </FieldLabel>
               <Input
                 id={`activity-name-${activity?.id ?? "new"}`}
                 name="name"
@@ -312,16 +314,16 @@ export function TrainingActivityForm({
                 placeholder="Ex.: Jogo de sábado"
                 required
               />
-            </div>
+            </Field>
           ) : null}
           {needsSport ? (
-            <div className={trainingActivityFormStyles.field}>
-              <label
+            <Field className={trainingActivityFormStyles.field}>
+              <FieldLabel
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-sport-${activity?.id ?? "new"}`}
               >
                 Esporte
-              </label>
+              </FieldLabel>
               <Input
                 id={`activity-sport-${activity?.id ?? "new"}`}
                 name="sport"
@@ -331,7 +333,7 @@ export function TrainingActivityForm({
                 placeholder="Ex.: Futevôlei"
                 required
               />
-            </div>
+            </Field>
           ) : (
             <input type="hidden" name="sport" value="" />
           )}
@@ -345,13 +347,13 @@ export function TrainingActivityForm({
               allowKeep={allowKeepPreparation}
             />
           ) : null}
-          <div className={trainingActivityFormStyles.field}>
-            <label
+          <Field className={trainingActivityFormStyles.field}>
+            <FieldLabel
               className={trainingActivityFormStyles.label}
               htmlFor={`activity-start-time-${activity?.id ?? "new"}`}
             >
               Início planejado
-            </label>
+            </FieldLabel>
             <Input
               id={`activity-start-time-${activity?.id ?? "new"}`}
               name="plannedStartTime"
@@ -360,14 +362,14 @@ export function TrainingActivityForm({
               onChange={(event) => schedule.setStartTime(event.target.value)}
               required
             />
-          </div>
-          <div className={trainingActivityFormStyles.field}>
-            <label
+          </Field>
+          <Field className={trainingActivityFormStyles.field}>
+            <FieldLabel
               className={trainingActivityFormStyles.label}
               htmlFor={`activity-end-time-${activity?.id ?? "new"}`}
             >
               Fim planejado
-            </label>
+            </FieldLabel>
             <Input
               id={`activity-end-time-${activity?.id ?? "new"}`}
               name="plannedEndTime"
@@ -380,27 +382,31 @@ export function TrainingActivityForm({
               required
             />
             {hint ? (
-              <p id={hintId} className={trainingActivityFormStyles.hint} aria-live="polite">
+              <FieldDescription
+                id={hintId}
+                className={trainingActivityFormStyles.hint}
+                aria-live="polite"
+              >
                 {hint}
-              </p>
+              </FieldDescription>
             ) : null}
             {type === "structured_training" && !schedule.automatic ? (
               <Button type="button" variant="outline" onClick={schedule.enableAutomatic}>
                 Usar duração do treino
               </Button>
             ) : null}
-          </div>
+          </Field>
         </div>
         {!editor ? (
           <div className={trainingActivityFormStyles.actions}>
-            <Button type="submit" disabled={submission.pending}>
+            <PendingButton type="submit" pending={submission.pending} pendingLabel="Salvando…">
               {activity ? "Salvar alterações" : "Adicionar atividade"}
-            </Button>
+            </PendingButton>
           </div>
         ) : null}
       </fieldset>
       {draftError ? (
-        <p role="alert" className={trainingActivityFormStyles.hint}>
+        <p role="alert" className={trainingActivityFormStyles.error}>
           {draftError}
         </p>
       ) : null}

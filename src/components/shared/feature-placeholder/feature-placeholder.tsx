@@ -16,7 +16,7 @@ export function FeaturePlaceholder({ description, headingId, title }: FeaturePla
               {title}
             </h1>
           </CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardDescription className="text-base">{description}</CardDescription>
         </CardHeader>
       </Card>
     </section>
