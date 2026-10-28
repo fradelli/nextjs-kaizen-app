@@ -48,16 +48,18 @@ export function useTrainingActivityEditorDraft(
     timer.current = null;
   }, []);
   const matchesStorage = useCallback(() => {
-    const raw = window.localStorage.getItem(key);
+    if (base.context.mode === "edit") return true;
+    const raw = window.sessionStorage.getItem(key);
     if (knownRaw.current === undefined && raw === null) knownRaw.current = null;
     if (raw !== knownRaw.current) {
       publish("external_change");
       return false;
     }
     return true;
-  }, [key, publish]);
+  }, [base, key, publish]);
   const flush = useCallback((): TrainingActivityEditorStorageResult => {
     cancel();
+    if (base.context.mode === "edit") return { status: "ok" };
     if (finished.current) return { status: "ok" };
     if (!loaded.current) return { status: "failed" };
     if (blockedStatuses.has(currentStatus.current)) {
@@ -77,7 +79,7 @@ export function useTrainingActivityEditorDraft(
     try {
       if (!matchesStorage()) return { status: "failed" };
       if (sameActivityEditorValues(values.current, base.baseValues)) {
-        if (knownRaw.current !== null) window.localStorage.removeItem(key);
+        if (knownRaw.current !== null) window.sessionStorage.removeItem(key);
         knownRaw.current = null;
         storedValues.current = null;
         publish("clean");
@@ -87,7 +89,7 @@ export function useTrainingActivityEditorDraft(
       ) {
         const draft = createActivityEditorDraft(base.context, values.current, writerId.current);
         const raw = JSON.stringify(draft);
-        window.localStorage.setItem(key, raw);
+        window.sessionStorage.setItem(key, raw);
         knownRaw.current = raw;
         storedValues.current = values.current;
         publish("stored");
@@ -111,7 +113,7 @@ export function useTrainingActivityEditorDraft(
       setDirty(!sameActivityEditorValues(next, base.baseValues));
       if (currentStatus.current !== "storage_error") publish("dirty");
       cancel();
-      timer.current = setTimeout(flush, 400);
+      if (base.context.mode !== "edit") timer.current = setTimeout(flush, 400);
     },
     [base, cancel, flush, publish],
   );
@@ -119,7 +121,7 @@ export function useTrainingActivityEditorDraft(
     cancel();
     try {
       if (!matchesStorage()) return { status: "failed" };
-      window.localStorage.removeItem(key);
+      if (base.context.mode !== "edit") window.sessionStorage.removeItem(key);
       knownRaw.current = null;
       storedValues.current = null;
       values.current = base.baseValues;
@@ -137,13 +139,13 @@ export function useTrainingActivityEditorDraft(
     cancel();
     try {
       if (!matchesStorage()) return { status: "failed" };
-      window.localStorage.removeItem(key);
+      if (base.context.mode !== "edit") window.sessionStorage.removeItem(key);
       knownRaw.current = null;
       return { status: "ok" };
     } catch {
       return { status: "failed" };
     }
-  }, [cancel, key, matchesStorage]);
+  }, [base.context.mode, cancel, key, matchesStorage]);
   useEffect(() => {
     active.current = true;
     let cancelled = false;
@@ -151,7 +153,23 @@ export function useTrainingActivityEditorDraft(
       if (cancelled) return;
       writerId.current = crypto.randomUUID();
       try {
-        const raw = window.localStorage.getItem(key);
+        window.localStorage.removeItem(key);
+      } catch {
+        /* Legacy cleanup is independent of session recovery. */
+      }
+      if (base.context.mode === "edit") {
+        try {
+          window.sessionStorage.removeItem(key);
+        } catch {
+          /* Editing does not depend on storage. */
+        }
+        publish("clean");
+        loaded.current = true;
+        setReady(true);
+        return;
+      }
+      try {
+        const raw = window.sessionStorage.getItem(key);
         knownRaw.current = raw;
         const result = parseActivityEditorDraft(raw, base.context);
         if (result.status === "restored" || result.status === "stale") {
@@ -184,16 +202,24 @@ export function useTrainingActivityEditorDraft(
       }
     };
     const storage = (event: StorageEvent) => {
-      if (finished.current || !loaded.current) return;
+      if (
+        base.context.mode === "edit" ||
+        finished.current ||
+        !loaded.current ||
+        event.storageArea !== window.sessionStorage
+      )
+        return;
       if ((event.key === key || event.key === null) && event.newValue !== knownRaw.current) {
         cancel();
         publish("external_change");
       }
     };
-    document.addEventListener("visibilitychange", visibility);
-    window.addEventListener("pagehide", pagehide);
-    window.addEventListener("beforeunload", unload);
-    window.addEventListener("storage", storage);
+    if (base.context.mode !== "edit") {
+      document.addEventListener("visibilitychange", visibility);
+      window.addEventListener("pagehide", pagehide);
+      window.addEventListener("beforeunload", unload);
+      window.addEventListener("storage", storage);
+    }
     return () => {
       cancelled = true;
       active.current = false;

@@ -22,12 +22,14 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
   const stopInstant = useRef(base.completionRequestedAt);
   const writer = useRef("");
   const finished = useRef(false);
+  const discarded = useRef(false);
 
   const flush = useCallback((): "ok" | "failed" | "external_change" => {
     if (finished.current) return "ok";
     if (blockedRef.current || !readyRef.current) return "external_change";
+    if (discarded.current) return "ok";
     try {
-      const stored = window.localStorage.getItem(base.key);
+      const stored = window.sessionStorage.getItem(base.key);
       if (observedRaw.current === undefined ? stored !== null : stored !== observedRaw.current) {
         blockedRef.current = true;
         setStatus("external_change");
@@ -43,7 +45,7 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
         expiresAt: Date.now() + 7 * 86_400_000,
         writerId: writer.current,
       });
-      window.localStorage.setItem(base.key, raw);
+      window.sessionStorage.setItem(base.key, raw);
       observedRaw.current = raw;
       setStatus("stored");
       return "ok";
@@ -57,7 +59,12 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
     const timer = window.setTimeout(() => {
       writer.current = crypto.randomUUID();
       try {
-        const raw = window.localStorage.getItem(base.key);
+        window.localStorage.removeItem(base.key);
+      } catch {
+        /* Legacy cleanup must not prevent recovery of the current session. */
+      }
+      try {
+        const raw = window.sessionStorage.getItem(base.key);
         observedRaw.current = raw;
         if (raw) {
           const restored = readCompletionDraft(raw, base.revision, base.action, Date.now());
@@ -83,6 +90,7 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
       setReady(true);
     }, 0);
     function external(event: StorageEvent) {
+      if (event.storageArea !== window.sessionStorage) return;
       if (
         (event.key === base.key || event.key === null) &&
         event.newValue !== observedRaw.current
@@ -121,22 +129,23 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
   }, [flush]);
 
   function update(next: CompletionValues) {
+    discarded.current = false;
     currentValues.current = next;
     setValues(next);
   }
   function discard() {
     try {
-      if (window.localStorage.getItem(base.key) !== observedRaw.current) {
+      if (window.sessionStorage.getItem(base.key) !== observedRaw.current) {
         blockedRef.current = true;
         setStatus("external_change");
         return false;
       }
-      window.localStorage.removeItem(base.key);
+      window.sessionStorage.removeItem(base.key);
       observedRaw.current = null;
       blockedRef.current = false;
       update(base.initialValues);
-      stopInstant.current = base.completionRequestedAt;
-      setCompletionRequestedAt(base.completionRequestedAt);
+      discarded.current = true;
+
       setStatus("clean");
       return true;
     } catch {
@@ -149,9 +158,9 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
     try {
       if (
         observedRaw.current !== undefined &&
-        window.localStorage.getItem(base.key) === observedRaw.current
+        window.sessionStorage.getItem(base.key) === observedRaw.current
       )
-        window.localStorage.removeItem(base.key);
+        window.sessionStorage.removeItem(base.key);
       return true;
     } catch {
       return false;

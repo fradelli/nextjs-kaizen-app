@@ -37,7 +37,7 @@ beforeEach(() => {
 });
 afterEach(() => {
   cleanup();
-  localStorage.clear();
+  sessionStorage.clear();
   vi.restoreAllMocks();
   vi.clearAllMocks();
   vi.useRealTimers();
@@ -90,7 +90,7 @@ describe("activity editor workflows", () => {
     renderEditor();
     await open();
     fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
-    expect(localStorage.length).toBe(0);
+    expect(sessionStorage.length).toBe(0);
   });
   it("saves once, clears the draft and refreshes before closing", async () => {
     renderEditor();
@@ -100,7 +100,7 @@ describe("activity editor workflows", () => {
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     expect(action).toHaveBeenCalledTimes(1);
     expect(navigation.refresh).toHaveBeenCalledTimes(1);
-    expect(localStorage.length).toBe(0);
+    expect(sessionStorage.length).toBe(0);
   });
   it("preserves errors without closing or erasing fields", async () => {
     action.mockResolvedValue({ status: "invalid", message: "Horário inválido" });
@@ -145,9 +145,9 @@ describe("activity editor workflows", () => {
     expect(data.get("civilDate")).toBe(date);
     expect(data.get("targetCivilDate")).toBe("2026-09-18");
   });
-  it("blocks stale cache rather than upgrading its revision", async () => {
+  it("ignores and removes an old edit cache instead of restoring it", async () => {
     const c = activityEditorContext(date, activity, null);
-    localStorage.setItem(
+    sessionStorage.setItem(
       activityEditorDraftKey(c),
       JSON.stringify(
         createActivityEditorDraft(
@@ -159,15 +159,10 @@ describe("activity editor workflows", () => {
     );
     renderEditor(true);
     await open(true);
-    expect(screen.getByRole("button", { name: "Salvar alterações" })).toBeDisabled();
-    expect(screen.getByLabelText("Nome")).toBeDisabled();
-    fireEvent.click(
-      screen.getByRole("button", { name: "Descartar rascunho e carregar dados atuais" }),
-    );
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Salvar alterações" })).toBeEnabled(),
-    );
-    expect(localStorage.length).toBe(0);
+    expect(screen.getByRole("button", { name: "Salvar alterações" })).toBeEnabled();
+    expect(screen.getByLabelText("Nome")).toBeEnabled();
+    expect(screen.queryByRole("button", { name: "Excluir rascunho" })).not.toBeInTheDocument();
+    expect(sessionStorage.length).toBe(0);
   });
   it("asks explicitly before closing when storage is full", async () => {
     renderEditor();
@@ -249,7 +244,7 @@ describe("activity editor workflows", () => {
       plannedStartTime: "18:00",
       automaticEnd: true,
     };
-    localStorage.setItem(
+    sessionStorage.setItem(
       activityEditorDraftKey(context),
       JSON.stringify(createActivityEditorDraft(context, values, crypto.randomUUID())),
     );
@@ -327,7 +322,7 @@ describe("editor additional safeguards", () => {
     expect(confirmation).toHaveAttribute("open");
     await act(async () => resolve({ status: "saved", revision: 1 }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    expect(localStorage.length).toBe(0);
+    expect(sessionStorage.length).toBe(0);
   });
   it("keeps both dialogs and draft when deletion is rejected", async () => {
     action.mockResolvedValue({ status: "conflict", message: "Exclusão não confirmada" });

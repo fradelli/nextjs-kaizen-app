@@ -6,6 +6,9 @@ import { useEffect, useId, useRef } from "react";
 import type { TrainingActivityModalProps } from "./training-activity-modal.types";
 import { trainingActivityModalStyles as s } from "./training-activity-modal.styles";
 export function TrainingActivityModal({
+  initialFocusRef,
+  size = "form",
+  closeLabel = "Fechar formulário",
   title,
   description,
   children,
@@ -26,7 +29,7 @@ export function TrainingActivityModal({
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     if (element && !element.open) element.showModal();
-    heading.current?.focus();
+    (initialFocusRef?.current ?? heading.current)?.focus();
     return () => {
       if (element?.open) element.close();
       document.body.style.overflow = overflow;
@@ -41,7 +44,7 @@ export function TrainingActivityModal({
         if (!had) target.removeAttribute("tabindex");
       }
     };
-  }, [restoreFocusRef]);
+  }, [restoreFocusRef, initialFocusRef]);
   function outside(x: number, y: number) {
     const bounds = dialog.current?.getBoundingClientRect();
     return Boolean(
@@ -51,9 +54,9 @@ export function TrainingActivityModal({
   return (
     <dialog
       ref={dialog}
-      className={s.root}
+      className={size === "confirmation" ? s.confirmation : s.root}
       aria-labelledby={`${id}-title`}
-      aria-describedby={`${id}-description`}
+      aria-describedby={description ? `${id}-description` : undefined}
       onKeyDown={(event) => {
         if (
           event.key !== "Tab" ||
@@ -67,7 +70,10 @@ export function TrainingActivityModal({
           ),
         ].filter(
           (item) =>
-            item.tabIndex >= 0 && !item.matches(":disabled") && item.getClientRects().length > 0,
+            item.closest("dialog") === event.currentTarget &&
+            item.tabIndex >= 0 &&
+            !item.matches(":disabled") &&
+            item.getClientRects().length > 0,
         );
         const first = items[0],
           last = items.at(-1),
@@ -85,6 +91,7 @@ export function TrainingActivityModal({
       }}
       onCancel={(event) => {
         event.preventDefault();
+        event.stopPropagation();
         if (!busy) onRequestClose();
       }}
       onPointerDown={(event) => {
@@ -103,16 +110,18 @@ export function TrainingActivityModal({
             <h2 id={`${id}-title`} ref={heading} tabIndex={-1} className={s.title}>
               {title}
             </h2>
-            <p id={`${id}-description`} className={s.description}>
-              {description}
-            </p>
+            {description ? (
+              <p id={`${id}-description`} className={s.description}>
+                {description}
+              </p>
+            ) : null}
           </div>
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="min-h-11 min-w-11 [&>svg]:size-5"
-            aria-label="Fechar formulário"
+            className={s.close}
+            aria-label={closeLabel}
             disabled={busy}
             onClick={onRequestClose}
           >

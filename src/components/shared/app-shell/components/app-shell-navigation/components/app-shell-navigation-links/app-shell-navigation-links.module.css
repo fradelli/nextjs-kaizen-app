@@ -1,4 +1,7 @@
 .navigation {
+  /* Keep links above the glass header stacking context. */
+  position: relative;
+  z-index: 10;
   display: grid;
   grid-area: 1 / 1;
   width: min(100%, 64rem);

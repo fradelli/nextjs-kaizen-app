@@ -20,9 +20,27 @@ afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
   vi.useRealTimers();
-  localStorage.clear();
+  sessionStorage.clear();
 });
 describe("activity editor local persistence", () => {
+  it("keeps edit values in memory only and starts from saved values after reopening", async () => {
+    const input = {
+      context: { ...context, mode: "edit" as const, activityId: "existing" },
+      baseValues,
+    };
+    const view = renderHook(() => useTrainingActivityEditorDraft(input));
+    await waitFor(() => expect(view.result.current.ready).toBe(true));
+    act(() => {
+      view.result.current.update(next);
+      view.result.current.flush();
+    });
+    expect(sessionStorage.getItem(activityEditorDraftKey(input.context))).toBeNull();
+    view.unmount();
+    const reopened = renderHook(() => useTrainingActivityEditorDraft(input));
+    await waitFor(() => expect(reopened.result.current.ready).toBe(true));
+    expect(reopened.result.current.initialValues).toEqual(baseValues);
+  });
+
   it("closes an unchanged stale draft without overwriting or making it editable", async () => {
     const d = createActivityEditorDraft(
       { ...context, baseFingerprint: "old" },
@@ -30,32 +48,32 @@ describe("activity editor local persistence", () => {
       crypto.randomUUID(),
     );
     const raw = JSON.stringify(d);
-    localStorage.setItem(key, raw);
+    sessionStorage.setItem(key, raw);
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));
     expect(result.current.blocked).toBe(true);
     act(() => expect(result.current.flush().status).toBe("ok"));
-    expect(localStorage.getItem(key)).toBe(raw);
+    expect(sessionStorage.getItem(key)).toBe(raw);
     expect(result.current.blocked).toBe(true);
   });
 
   it("does not create empty drafts on mount and flushes the last input before debounce", async () => {
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));
-    expect(localStorage.getItem(key)).toBeNull();
+    expect(sessionStorage.getItem(key)).toBeNull();
     act(() => result.current.update(next));
     act(() => expect(result.current.flush().status).toBe("ok"));
-    expect(JSON.parse(localStorage.getItem(key)!).values).toEqual(next);
+    expect(JSON.parse(sessionStorage.getItem(key)!).values).toEqual(next);
   });
   it("restores before any initial form emission and keeps expiration", async () => {
     const d = createActivityEditorDraft(context, next, crypto.randomUUID());
-    localStorage.setItem(key, JSON.stringify(d));
+    sessionStorage.setItem(key, JSON.stringify(d));
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));
     expect(result.current.initialValues).toEqual(next);
     act(() => result.current.update(next));
     act(() => result.current.flush());
-    expect(JSON.parse(localStorage.getItem(key)!).expiresAt).toBe(d.expiresAt);
+    expect(JSON.parse(sessionStorage.getItem(key)!).expiresAt).toBe(d.expiresAt);
   });
   it("debounces changes and removes a draft reverted to baseline", async () => {
     const { result } = open();
@@ -63,23 +81,27 @@ describe("activity editor local persistence", () => {
     vi.useFakeTimers();
     act(() => result.current.update(next));
     act(() => vi.advanceTimersByTime(399));
-    expect(localStorage.getItem(key)).toBeNull();
+    expect(sessionStorage.getItem(key)).toBeNull();
     act(() => vi.advanceTimersByTime(1));
-    expect(localStorage.getItem(key)).not.toBeNull();
+    expect(sessionStorage.getItem(key)).not.toBeNull();
     act(() => result.current.update(baseValues));
     act(() => result.current.flush());
-    expect(localStorage.getItem(key)).toBeNull();
+    expect(sessionStorage.getItem(key)).toBeNull();
   });
   it("pauses when another tab writes and never deletes its version", async () => {
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));
     const remote = JSON.stringify(createActivityEditorDraft(context, next, crypto.randomUUID()));
-    localStorage.setItem(key, remote);
-    act(() => window.dispatchEvent(new StorageEvent("storage", { key, newValue: remote })));
+    sessionStorage.setItem(key, remote);
+    act(() =>
+      window.dispatchEvent(
+        new StorageEvent("storage", { storageArea: sessionStorage, key, newValue: remote }),
+      ),
+    );
     expect(result.current.status).toBe("external_change");
     act(() => expect(result.current.flush().status).toBe("failed"));
     act(() => expect(result.current.finish().status).toBe("failed"));
-    expect(localStorage.getItem(key)).toBe(remote);
+    expect(sessionStorage.getItem(key)).toBe(remote);
   });
   it("keeps values in memory when browser writes fail", async () => {
     const { result } = open();
@@ -100,17 +122,17 @@ describe("activity editor local persistence", () => {
     act(() => result.current.finish());
     act(() => vi.advanceTimersByTime(1000));
     act(() => window.dispatchEvent(new Event("pagehide")));
-    expect(localStorage.getItem(key)).toBeNull();
+    expect(sessionStorage.getItem(key)).toBeNull();
   });
   it("blocks corrupted and stale records until explicitly discarded", async () => {
-    localStorage.setItem(key, "invalid");
+    sessionStorage.setItem(key, "invalid");
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));
     expect(result.current.blocked).toBe(true);
     act(() => result.current.update(next));
-    expect(localStorage.getItem(key)).toBe("invalid");
+    expect(sessionStorage.getItem(key)).toBe("invalid");
     act(() => result.current.discard());
     expect(result.current.blocked).toBe(false);
-    expect(localStorage.getItem(key)).toBeNull();
+    expect(sessionStorage.getItem(key)).toBeNull();
   });
 });

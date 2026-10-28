@@ -18,7 +18,7 @@ const messages = {
   loading: "Carregando formulário…",
   clean: "",
   dirty: "Guardando rascunho…",
-  stored: "Rascunho salvo neste navegador.",
+  stored: "Rascunho salvo nesta sessão.",
   restored: "Rascunho recuperado neste navegador. As alterações ainda não foram aplicadas.",
   storage_error:
     "Não foi possível guardar o rascunho neste navegador. Você pode salvar a atividade ou tentar guardar novamente antes de fechar.",
@@ -86,6 +86,10 @@ export function TrainingActivityEditorContent({
   }, [finishDraft, onCommitted, civilDate]);
   function requestClose() {
     if (busy.current || confirmation.current) return;
+    if (activity) {
+      onClose();
+      return;
+    }
     if (!draft.dirty) {
       onClose();
       return;
@@ -110,7 +114,11 @@ export function TrainingActivityEditorContent({
   return (
     <TrainingActivityModal
       title={activity ? "Editar atividade" : "Adicionar atividade"}
-      description={`Atividade de ${civilDate.split("-").reverse().join("/")}. ${activity ? "As alterações serão aplicadas ao salvar." : "Preencha os dados para incluir na agenda."}`}
+      description={
+        activity
+          ? undefined
+          : `Atividade de ${civilDate.split("-").reverse().join("/")}. Preencha os dados para incluir na agenda.`
+      }
       busy={lock}
       restoreFocusRef={triggerRef}
       onRequestClose={requestClose}
@@ -128,6 +136,16 @@ export function TrainingActivityEditorContent({
               onConfirmationChange={deleteConfirmation}
               onDeleted={deleted}
             />
+          ) : draft.dirty || draft.blocked ? (
+            <Button
+              type="button"
+              variant="ghost"
+              className="min-h-11 text-status-destructive"
+              disabled={lock || draft.status === "external_change"}
+              onClick={discard}
+            >
+              Excluir rascunho
+            </Button>
           ) : (
             <span />
           )}
@@ -144,20 +162,17 @@ export function TrainingActivityEditorContent({
         </>
       }
     >
-      <div role="status" className="pt-2 fd-text-interface text-muted-foreground">
-        {changed
-          ? messages.stale
-          : needsReload
-            ? "Confira a agenda atual antes de tentar salvar novamente."
-            : messages[draft.status]}
-      </div>
+      {!activity && (messages[draft.status] || changed || needsReload) ? (
+        <div role="status" className="pt-2 fd-text-interface text-muted-foreground">
+          {changed
+            ? messages.stale
+            : needsReload
+              ? "Confira a agenda atual antes de tentar salvar novamente."
+              : messages[draft.status]}
+        </div>
+      ) : null}
       {blocked ? (
         <div className="flex flex-wrap gap-2 py-3">
-          {draft.status !== "external_change" ? (
-            <Button type="button" variant="outline" size="sm" onClick={discard}>
-              Descartar rascunho e carregar dados atuais
-            </Button>
-          ) : null}
           <Button
             type="button"
             variant="outline"
@@ -170,10 +185,6 @@ export function TrainingActivityEditorContent({
             Conferir agenda
           </Button>
         </div>
-      ) : draft.dirty ? (
-        <Button type="button" variant="ghost" size="sm" disabled={lock} onClick={discard}>
-          Descartar rascunho
-        </Button>
       ) : null}
       {closeError ? (
         <section
@@ -184,23 +195,36 @@ export function TrainingActivityEditorContent({
             Não foi possível guardar este preenchimento. Fechar sem guardar pode perder as últimas
             alterações.
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
+              className="text-status-destructive"
               size="sm"
-              onClick={() => {
-                if (draft.flush().status === "ok") onClose();
-              }}
+              onClick={onClose}
             >
-              Tentar guardar novamente
-            </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={onClose}>
               Fechar sem guardar
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => setCloseError(false)}>
-              Continuar preenchendo
-            </Button>
+            <div className="ml-auto flex flex-wrap justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (draft.flush().status === "ok") onClose();
+                }}
+              >
+                Tentar guardar novamente
+              </Button>
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                onClick={() => setCloseError(false)}
+              >
+                Continuar preenchendo
+              </Button>
+            </div>
           </div>
         </section>
       ) : null}
