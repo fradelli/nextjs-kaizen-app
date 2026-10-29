@@ -1,9 +1,9 @@
 import type { TrainingItemStatus } from "@/features/training/domain/training-day.types";
 
 export const TRAINING_EXERCISE_STATUS_LABELS = {
-  pending: "Pendente",
-  completed: "Concluído",
-  skipped: "Pulado",
+  pending: "pending",
+  completed: "completed",
+  skipped: "exerciseSkipped",
 } satisfies Record<TrainingItemStatus, string>;
 
 export const TRAINING_EXERCISE_STATUS_VARIANTS = {

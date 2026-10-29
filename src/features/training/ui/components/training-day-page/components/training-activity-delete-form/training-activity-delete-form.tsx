@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { TrashIcon } from "@fradelli/ui/icons/Trash";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,8 @@ export function TrainingActivityDeleteForm({
   onBusyChange,
   onConfirmationChange,
 }: TrainingActivityDeleteFormProps) {
+  const t = useTranslations("training");
+
   const id = useId();
   const router = useRouter();
   const [confirming, setConfirming] = useState(false),
@@ -47,10 +50,7 @@ export function TrainingActivityDeleteForm({
             cleared = false;
           }
           if (!removeActivityEditorDraft(activity.id)) cleared = false;
-          if (!cleared)
-            announceEditorNotice(
-              "A atividade foi excluída. Não foi possível limpar o rascunho deste navegador.",
-            );
+          if (!cleared) announceEditorNotice(t("deletedCleanupFailed"));
           busy.current = false;
           onBusyChange?.(false);
           onConfirmationChange?.(false);
@@ -62,8 +62,7 @@ export function TrainingActivityDeleteForm({
       } catch {
         return {
           status: "invalid" as const,
-          message:
-            "Não foi possível confirmar a exclusão. Confira a agenda antes de tentar novamente.",
+          message: t("deleteUnconfirmed"),
         };
       } finally {
         if (!saved) {
@@ -90,7 +89,7 @@ export function TrainingActivityDeleteForm({
           compact ? "min-h-11 min-w-11 [&>svg]:size-5" : "min-h-11 text-status-destructive"
         }
         disabled={disabled || submission.pending}
-        aria-label="Excluir atividade"
+        aria-label={t("deleteActivity")}
         onClick={() => {
           try {
             setFoundLocalDraft(
@@ -105,14 +104,14 @@ export function TrainingActivityDeleteForm({
         {compact ? (
           <TrashIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
         ) : (
-          "Excluir atividade"
+          t("deleteActivity")
         )}
       </Button>
       {confirming ? (
         <TrainingActivityModal
-          title="Excluir atividade?"
+          title={t("deleteActivityQuestion")}
           size="confirmation"
-          closeLabel="Fechar confirmação de exclusão"
+          closeLabel={t("closeDeleteConfirmation")}
           initialFocusRef={keepButton}
           restoreFocusRef={triggerRef}
           busy={submission.pending}
@@ -127,9 +126,9 @@ export function TrainingActivityDeleteForm({
                 variant="ghost"
                 className="min-h-11 text-status-destructive"
                 pending={submission.pending}
-                pendingLabel="Excluindo…"
+                pendingLabel={t("deleting")}
               >
-                Excluir atividade
+                {t("deleteActivity")}
               </PendingButton>
               <Button
                 ref={keepButton}
@@ -140,7 +139,7 @@ export function TrainingActivityDeleteForm({
                   if (!busy.current) setConfirmation(false);
                 }}
               >
-                Manter atividade
+                {t("keepActivity")}
               </Button>
             </>
           }
@@ -165,8 +164,8 @@ export function TrainingActivityDeleteForm({
               <strong>{activity.name}</strong> · {civilDate}
               <br />
               {activity.status === "scheduled" && !startedLocally && !foundLocalDraft
-                ? "Ela será removida da agenda deste dia."
-                : "A atividade já começou. Excluí-la descarta o rascunho e a remove da agenda."}
+                ? t("removeFromSchedule")
+                : t("deleteStartedActivity")}
             </p>
             <TrainingActionFeedback state={submission.state} pending={submission.pending} />
           </form>

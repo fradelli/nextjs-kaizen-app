@@ -63,7 +63,9 @@ export function serializeTrainingSetDrafts(drafts: readonly TrainingSetDraft[]):
   );
 }
 
-export function requiredDirections(scope: string): readonly string[] {
+export function requiredDirections(
+  scope: string,
+): readonly ("forward" | "backward" | "flexion" | "extension" | "left" | "right")[] {
   if (scope === "two_directions") return ["forward", "backward"];
   if (scope === "four_directions") return ["flexion", "extension", "left", "right"];
   return [];

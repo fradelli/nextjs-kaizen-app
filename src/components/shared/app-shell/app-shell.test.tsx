@@ -1,4 +1,6 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import messages from "../../../../messages/pt-BR.json";
+import { cleanup, render, screen } from "../../../../tests/support/render-localized";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { AppShell } from "./app-shell";
@@ -15,14 +17,16 @@ afterEach(() => {
 describe("AppShell", () => {
   it("organiza landmarks e salto de conteúdo em torno da composição recebida", () => {
     render(
-      <AppShell>
-        <h1>Dieta</h1>
-      </AppShell>,
+      <NextIntlClientProvider locale="pt-BR" messages={messages}>
+        <AppShell>
+          <h1>Dieta</h1>
+        </AppShell>
+      </NextIntlClientProvider>,
     );
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByText("改善")).toHaveAttribute("lang", "ja");
-    expect(screen.getByLabelText("Kaizen")).toHaveTextContent("改善");
+    expect(screen.getByRole("link", { name: "Kaizen — início" })).toHaveAttribute("href", "/");
     expect(screen.queryByText(/- kaizen/i)).not.toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Pular para o conteúdo" })).toHaveAttribute(

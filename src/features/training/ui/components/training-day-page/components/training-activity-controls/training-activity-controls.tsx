@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 import { Button } from "@fradelli/ui/button";
 import { PlayIcon } from "@fradelli/ui/icons/Play";
 import { PauseIcon } from "@fradelli/ui/icons/Pause";
@@ -25,6 +27,8 @@ export function TrainingActivityControls({
   ready = true,
   executionStorageError = false,
 }: TrainingActivityControlsProps) {
+  const t = useTranslations("training");
+
   const router = useRouter();
   const trigger = useRef<HTMLButtonElement>(null);
   const [completion, setCompletion] = useState<{
@@ -55,7 +59,7 @@ export function TrainingActivityControls({
           className="min-h-11"
           onClick={openCompletion}
         >
-          Corrigir avaliação
+          {t("correctFeedback")}
         </Button>
       ) : direct ? (
         <Button
@@ -65,8 +69,8 @@ export function TrainingActivityControls({
           size="icon"
           className="min-h-11 min-w-11 [&>svg]:size-5"
           disabled={!ready}
-          aria-label={`Finalizar atividade: ${activity.name}`}
-          title="Registrar atividade realizada"
+          aria-label={t("finishNamedActivity", { name: activity.name })}
+          title={t("recordPerformedActivity")}
           onClick={openCompletion}
         >
           <CheckCircleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
@@ -81,19 +85,19 @@ export function TrainingActivityControls({
             disabled={!ready || (!draft && status !== "scheduled")}
             aria-label={
               status === "in_progress"
-                ? "Pausar atividade"
+                ? t("pauseActivity")
                 : status === "paused"
-                  ? "Retomar atividade"
+                  ? t("resumeActivity")
                   : activity.type === "structured_training"
-                    ? "Iniciar treino"
-                    : "Iniciar atividade"
+                    ? t("startTraining")
+                    : t("startActivity")
             }
             title={
               status === "in_progress"
-                ? "Pausar atividade"
+                ? t("pauseActivity")
                 : status === "paused"
-                  ? "Retomar atividade"
-                  : "Iniciar atividade"
+                  ? t("resumeActivity")
+                  : t("startActivity")
             }
             onClick={status === "in_progress" ? onPause : status === "paused" ? onResume : onStart}
           >
@@ -110,8 +114,8 @@ export function TrainingActivityControls({
               variant="ghost"
               size="icon"
               className="min-h-11 min-w-11 [&>svg]:size-5"
-              aria-label={`Finalizar atividade: ${activity.name}`}
-              title="Finalizar atividade"
+              aria-label={t("finishNamedActivity", { name: activity.name })}
+              title={t("finishActivity")}
               onClick={openCompletion}
             >
               <StopIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
@@ -141,8 +145,7 @@ export function TrainingActivityControls({
           onSaved={(cacheCleared) => {
             if (!completed) onFinalized?.();
             setCompletion(null);
-            if (!cacheCleared)
-              setNotice("Registro salvo. Não foi possível limpar o rascunho deste navegador.");
+            if (!cacheCleared) setNotice(t("recordSavedCleanupFailed"));
             router.refresh();
           }}
         />

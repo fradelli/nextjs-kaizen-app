@@ -1,8 +1,12 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 import { useEffect, useState } from "react";
 import { Button } from "@fradelli/ui/button";
 import { EDITOR_NOTICE_EVENT } from "@/features/training/ui/lib/training-activity-editor-draft/training-activity-editor-draft.utils";
 export function TrainingActivityEditorNotice() {
+  const t = useTranslations("training");
+
   const [message, setMessage] = useState("");
   useEffect(() => {
     const receive = (event: Event) => {
@@ -26,7 +30,7 @@ export function TrainingActivityEditorNotice() {
     >
       <p>{message}</p>
       <Button type="button" variant="ghost" size="sm" onClick={() => setMessage("")}>
-        Fechar aviso
+        {t("closeNotice")}
       </Button>
     </div>
   ) : null;

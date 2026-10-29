@@ -1,20 +1,23 @@
+import { getTranslations } from "next-intl/server";
 import { RestTrainingDay } from "../rest-training-day/rest-training-day";
 import { TrainingDayFeedback } from "../training-day-feedback/training-day-feedback";
 import { TrainingActivitySection } from "../training-activity-section/training-activity-section";
 import type { TrainingDayContentProps } from "./training-day-content.types";
 
 export async function TrainingDayContent({ result, actions }: TrainingDayContentProps) {
+  const t = await getTranslations("training");
+
   const queryResult = await result;
 
   if (queryResult.status === "invalid_data") {
     return (
       <TrainingDayFeedback
         variant="destructive"
-        title="Não foi possível resolver o treino"
+        title={t("resolveFailed")}
         description={
           queryResult.reason === "reference_invalid"
-            ? "Uma referência necessária do plano não foi encontrada. Nenhum dado parcial foi exibido."
-            : "A definição ativa do treino está inconsistente. Nenhum dado parcial foi exibido."
+            ? t("missingPlanReference")
+            : t("inconsistentPlan")
         }
       />
     );
@@ -28,8 +31,8 @@ export async function TrainingDayContent({ result, actions }: TrainingDayContent
       content = (
         <TrainingDayFeedback
           variant="warning"
-          title="Plano de treino indisponível"
-          description="O plano ativo não pôde ser carregado para esta data. Tente novamente mais tarde."
+          title={t("planUnavailable")}
+          description={t("planUnavailableDescription")}
         />
       );
       break;
@@ -37,8 +40,8 @@ export async function TrainingDayContent({ result, actions }: TrainingDayContent
       content = day.activities.length ? null : (
         <TrainingDayFeedback
           variant="info"
-          title="Nenhuma atividade programada"
-          description="Use o botão + para adicionar um treino ou outra atividade."
+          title={t("noActivities")}
+          description={t("addActivityGuidance")}
         />
       );
       break;
@@ -50,8 +53,8 @@ export async function TrainingDayContent({ result, actions }: TrainingDayContent
       content = day.activities.length ? null : (
         <TrainingDayFeedback
           variant="info"
-          title="Nenhuma atividade programada"
-          description="Use o botão + para adicionar um treino ou outra atividade."
+          title={t("noActivities")}
+          description={t("addActivityGuidance")}
         />
       );
       break;

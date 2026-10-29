@@ -4,6 +4,10 @@
 
 Backlog posterior ao MVP mantido separado do caminho crítico atual.
 
+## Antecipação aprovada em 29/10/2026
+
+O usuário autorizou antecipar [E09-T09](T09-localize-current-interface.md), limitada à interface atual em português e inglês com detecção automática. O catálogo novo será integrado separadamente. Espanhol e a política English-first ampla permanecem no backlog. Essa autorização substitui a restrição temporal abaixo somente para E09-T09.
+
 ## Regra de criação
 
 As tarefas permanecem `PLANNED` até a validação do MVP pessoal. Antes de uma
@@ -36,7 +40,7 @@ de localização desde a migração, sem criar uma segunda rodada imediata.
 ## Fora de escopo agora
 
 Idiomas iniciais de i18n confirmados em 26/09: português, espanhol e inglês.
-A arquitetura e a implementação continuam futuras.
+A arquitetura e a implementação amplas continuam futuras; a interface atual foi antecipada pela E09-T09.
 
 - Implementar qualquer tarefa antes do encerramento de E08.
 - Iniciar i18n antes da validação de treino, alimentação, sono e atividades gerais.

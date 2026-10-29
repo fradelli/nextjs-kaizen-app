@@ -1,4 +1,7 @@
 "use client";
+import { useLocale, useTranslations } from "next-intl";
+import { formatTrainingShortDate } from "@/features/training/ui/components/training-day-page/training-day-page.utils";
+
 import { useRouter } from "next/navigation";
 import { Button } from "@fradelli/ui/button";
 import { PendingButton } from "@fradelli/ui/pending-button";
@@ -13,18 +16,20 @@ import { hasUnfinishedTrainingExercises } from "../training-activity-controls/tr
 import type { TrainingActivityCompletionDialogProps } from "./training-activity-completion-dialog.types";
 
 const draftMessages = {
-  loading: "Carregando avaliação…",
-  clean: "O registro será salvo ao confirmar.",
-  stored: "Rascunho salvo nesta sessão.",
-  restored: "Avaliação recuperada. O registro ainda não foi salvo.",
-  storage_error:
-    "Não foi possível guardar o rascunho neste navegador. Você ainda pode salvar o registro.",
-  stale: "A atividade mudou desde este rascunho. Confira os dados atuais antes de salvar.",
-  expired: "Este rascunho expirou. Descarte-o para continuar.",
-  invalid: "Não foi possível recuperar este rascunho. Descarte-o para continuar.",
-  external_change: "A avaliação mudou em outra aba. Feche e reabra para conferir os dados.",
-};
+  loading: "loadingFeedback",
+  clean: "saveOnConfirmation",
+  stored: "draftStored",
+  restored: "feedbackRestored",
+  storage_error: "feedbackStorageFailed",
+  stale: "activityChanged",
+  expired: "draftExpired",
+  invalid: "draftInvalid",
+  external_change: "feedbackChangedElsewhere",
+} as const;
 export function TrainingActivityCompletionDialog(props: TrainingActivityCompletionDialogProps) {
+  const t = useTranslations("training");
+  const locale = useLocale();
+
   const { activity, civilDate, mode, snapshot, triggerRef, executionChanged, onClose, onSaved } =
     props;
   const router = useRouter();
@@ -66,8 +71,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
         setNeedsReload(true);
         return {
           status: "invalid",
-          message:
-            "Não foi possível confirmar o salvamento. Os campos foram preservados. Confira a agenda antes de tentar novamente.",
+          message: t("saveUnconfirmedPreserved"),
         };
       } finally {
         busy.current = false;
@@ -99,8 +103,8 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
 
   return (
     <TrainingActivityModal
-      title="Finalizar atividade"
-      description={`${activity.name} · ${civilDate.split("-").reverse().join("/")}. ${mode === "update_feedback" ? "Corrija a avaliação sem alterar a execução registrada." : snapshot ? "O cronômetro está pausado. Revise sua avaliação para concluir." : ""}`}
+      title={t("finishActivity")}
+      description={`${activity.name} · ${formatTrainingShortDate(civilDate, locale)}. ${mode === "update_feedback" ? t("correctFeedbackDescription") : snapshot ? t("pausedFeedbackDescription") : ""}`}
       busy={locked || confirming}
       onRequestClose={requestClose}
       restoreFocusRef={triggerRef}
@@ -114,7 +118,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
               disabled={locked || draft.status === "external_change"}
               onClick={() => draft.discard()}
             >
-              Excluir rascunho
+              {t("deleteDraft")}
             </Button>
           ) : (
             <span />
@@ -125,25 +129,21 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
             form={id}
             className="min-h-11"
             pending={locked}
-            pendingLabel="Salvando…"
+            pendingLabel={t("saving")}
             disabled={!draft.ready || blocked || confirming || closeError}
           >
-            Salvar registro
+            {t("saveRecord")}
           </PendingButton>
         </>
       }
     >
       <p role="status" className="py-2 fd-text-interface text-muted-foreground">
-        {changed
-          ? "A execução ou a agenda mudou. Feche e confira os dados atuais antes de salvar."
-          : draftMessages[draft.status]}
+        {changed ? t("executionChanged") : t(draftMessages[draft.status])}
       </p>
       {closeError ? (
         <div role="alert" className="grid gap-3 py-3">
           <p>
-            {props.executionStorageError
-              ? "A pausa não pôde ser guardada neste navegador. Salve o registro antes de sair da página ou libere espaço. Ao fechar apenas o modal, o treino continuará pausado nesta aba."
-              : "Não foi possível guardar a avaliação. Continue preenchendo ou feche descartando apenas estes campos. O treino continuará pausado."}
+            {props.executionStorageError ? t("pauseStorageFailed") : t("feedbackStorageGuidance")}
           </p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Button
@@ -155,9 +155,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
                 onClose();
               }}
             >
-              {props.executionStorageError
-                ? "Fechar e manter pausa nesta aba"
-                : "Fechar sem guardar avaliação"}
+              {props.executionStorageError ? t("closeKeepPaused") : t("closeDiscardFeedback")}
             </Button>
             <Button
               type="button"
@@ -165,7 +163,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
               className="ml-auto"
               onClick={() => setCloseError(false)}
             >
-              Continuar preenchendo
+              {t("continueEditing")}
             </Button>
           </div>
         </div>
@@ -229,9 +227,9 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
       </form>
       {confirming ? (
         <TrainingActivityModal
-          title="Finalizar treino?"
+          title={t("finishTrainingQuestion")}
           size="confirmation"
-          closeLabel="Fechar confirmação de finalização"
+          closeLabel={t("closeFinishConfirmation")}
           initialFocusRef={backButton}
           restoreFocusRef={confirmationTrigger}
           busy={locked}
@@ -247,7 +245,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
                 className="min-h-11"
                 onClick={() => setConfirming(false)}
               >
-                Voltar
+                {t("back")}
               </Button>
               <Button
                 type="button"
@@ -259,14 +257,12 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
                   form.current?.requestSubmit();
                 }}
               >
-                Finalizar
+                {t("finish")}
               </Button>
             </>
           }
         >
-          <p className="fd-text-interface py-2 text-muted-foreground">
-            Há exercícios ou séries incompletos. Deseja voltar ou finalizar com os dados atuais?
-          </p>
+          <p className="fd-text-interface py-2 text-muted-foreground">{t("unfinishedExercises")}</p>
         </TrainingActivityModal>
       ) : null}
     </TrainingActivityModal>

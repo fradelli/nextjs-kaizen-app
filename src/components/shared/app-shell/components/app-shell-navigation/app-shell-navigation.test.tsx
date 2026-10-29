@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, within } from "../../../../../../tests/support/render-localized";
 import { usePathname, useSearchParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 

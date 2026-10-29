@@ -314,6 +314,7 @@ function projectTrainingDayExercise(
     prescribedSets: prescription.sets,
     prescribedText: prescription.prescribedText,
     blockLabel: formatTrainingExerciseBlockLabel(prescription.block),
+    block: prescription.block,
     restSeconds: prescription.restSeconds,
     priorityLevel: resolveTrainingExercisePriorityLevel(prescription.priority),
     notes: prescription.notes,

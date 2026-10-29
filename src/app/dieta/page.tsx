@@ -1,11 +1,9 @@
+import { useTranslations } from "next-intl";
 import { FeaturePlaceholder } from "@/components/shared/feature-placeholder/feature-placeholder";
 
 export default function DietPage() {
+  const t = useTranslations("nutrition");
   return (
-    <FeaturePlaceholder
-      description="A estrutura desta área está pronta. Os dados e registros de alimentação serão implementados na E07."
-      headingId="diet-title"
-      title="Dieta"
-    />
+    <FeaturePlaceholder description={t("description")} headingId="diet-title" title={t("title")} />
   );
 }

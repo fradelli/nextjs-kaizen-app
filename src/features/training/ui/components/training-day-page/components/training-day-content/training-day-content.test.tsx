@@ -1,5 +1,5 @@
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, render, screen } from "../../../../../../../../tests/support/render-localized";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type {
   PublicTrainingExerciseDto,
@@ -11,6 +11,15 @@ import type {
 import type { CivilDate } from "@/features/training/domain/training-day.types";
 
 import { TrainingDayContent } from "./training-day-content";
+
+vi.mock("next-intl/server", async () => {
+  const { createTranslator } = await import("next-intl");
+  const { default: messages } = await import("../../../../../../../../messages/pt-BR.json");
+  return {
+    getTranslations: async (namespace: "training") =>
+      createTranslator({ locale: "pt-BR", messages, namespace }),
+  };
+});
 
 const civilDate = "2026-09-16" as CivilDate;
 

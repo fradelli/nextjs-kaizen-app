@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Field, FieldLabel } from "@fradelli/ui/field";
 import { Input } from "@fradelli/ui/input";
@@ -21,6 +22,8 @@ export function TrainingExerciseForm({
   exercise,
   action,
 }: TrainingExerciseFormProps) {
+  const t = useTranslations("training");
+
   const { state, formAction, pending } = useTrainingActionFeedback(action);
   return (
     <form action={formAction} className={trainingExerciseFormStyles.root}>
@@ -46,7 +49,7 @@ export function TrainingExerciseForm({
             className={trainingExerciseFormStyles.label}
             htmlFor={`${exercise.prescriptionId}-comment`}
           >
-            Comentário
+            {t("comment")}
           </FieldLabel>
           <Input
             id={`${exercise.prescriptionId}-comment`}
@@ -55,8 +58,8 @@ export function TrainingExerciseForm({
             maxLength={1000}
           />
         </Field>
-        <PendingButton type="submit" variant="outline" pending={pending} pendingLabel="Salvando…">
-          Salvar
+        <PendingButton type="submit" variant="outline" pending={pending} pendingLabel={t("saving")}>
+          {t("save")}
         </PendingButton>
       </div>
       <TrainingActionFeedback state={state} pending={pending} />

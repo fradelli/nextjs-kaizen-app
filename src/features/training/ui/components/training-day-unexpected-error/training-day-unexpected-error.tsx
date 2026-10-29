@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "@fradelli/ui/alert";
 import { Button } from "@fradelli/ui/button";
@@ -7,6 +8,8 @@ import { trainingDayUnexpectedErrorStyles } from "./training-day-unexpected-erro
 import type { TrainingDayUnexpectedErrorProps } from "./training-day-unexpected-error.types";
 
 export function TrainingDayUnexpectedError({ reset }: TrainingDayUnexpectedErrorProps) {
+  const t = useTranslations("training");
+
   return (
     <section
       className={trainingDayUnexpectedErrorStyles.root}
@@ -17,14 +20,12 @@ export function TrainingDayUnexpectedError({ reset }: TrainingDayUnexpectedError
           id="training-unexpected-error-title"
           className={trainingDayUnexpectedErrorStyles.title}
         >
-          Não foi possível carregar o treino
+          {t("loadFailed")}
         </AlertTitle>
-        <AlertDescription>
-          Ocorreu uma falha inesperada. A data selecionada foi preservada.
-        </AlertDescription>
+        <AlertDescription>{t("unexpectedError")}</AlertDescription>
         <AlertAction>
           <Button type="button" onClick={reset}>
-            Tentar novamente
+            {t("retry")}
           </Button>
         </AlertAction>
       </Alert>

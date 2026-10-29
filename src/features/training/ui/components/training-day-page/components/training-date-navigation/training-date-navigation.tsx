@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Button } from "@fradelli/ui/button";
 import Link from "next/link";
 
@@ -6,66 +7,72 @@ import type { TrainingDateNavigationProps } from "./training-date-navigation.typ
 import { createTrainingDateHref } from "./training-date-navigation.utils";
 
 export function TrainingDateNavigation({ dateResolution }: TrainingDateNavigationProps) {
+  const t = useTranslations("training");
+
   if (dateResolution.status === "invalid") {
     return (
-      <nav className={trainingDateNavigationStyles.root} aria-label="Navegação entre datas">
+      <nav className={trainingDateNavigationStyles.root} aria-label={t("dateNavigation")}>
         <Button className={trainingDateNavigationStyles.button} variant="outline" disabled>
-          Anterior
+          {t("previous")}
         </Button>
-        <Button className={trainingDateNavigationStyles.button} asChild>
+        <Button className={trainingDateNavigationStyles.todayLink} variant="secondary" asChild>
           <Link prefetch={false} href={createTrainingDateHref(dateResolution.todayDate)}>
-            Hoje
+            {t("today")}
           </Link>
         </Button>
         <Button className={trainingDateNavigationStyles.button} variant="outline" disabled>
-          Seguinte
+          {t("next")}
         </Button>
       </nav>
     );
   }
 
   return (
-    <nav className={trainingDateNavigationStyles.root} aria-label="Navegação entre datas">
+    <nav className={trainingDateNavigationStyles.root} aria-label={t("dateNavigation")}>
       <Button className={trainingDateNavigationStyles.button} variant="outline" asChild>
         <Link
           prefetch={false}
           href={createTrainingDateHref(dateResolution.previousDate)}
-          aria-label="Abrir dia anterior"
+          aria-label={t("openPreviousDay")}
         >
-          Anterior
+          {t("previous")}
         </Link>
       </Button>
-      <Button
-        className={trainingDateNavigationStyles.button}
-        variant={dateResolution.isToday ? "secondary" : "default"}
-        asChild
-      >
-        <Link
-          prefetch={false}
-          href={createTrainingDateHref(dateResolution.todayDate)}
-          aria-current={dateResolution.isToday ? "date" : undefined}
+      {dateResolution.isToday ? (
+        <Button
+          type="button"
+          className={trainingDateNavigationStyles.todayCurrent}
+          variant="default"
+          disabled
+          aria-current="date"
         >
-          Hoje
-        </Link>
-      </Button>
+          {t("today")}
+        </Button>
+      ) : (
+        <Button className={trainingDateNavigationStyles.todayLink} variant="secondary" asChild>
+          <Link prefetch={false} href={createTrainingDateHref(dateResolution.todayDate)}>
+            {t("today")}
+          </Link>
+        </Button>
+      )}
       {dateResolution.canNavigateNext ? (
         <Button className={trainingDateNavigationStyles.button} variant="outline" asChild>
           <Link
             prefetch={false}
             href={createTrainingDateHref(dateResolution.nextDate)}
-            aria-label="Abrir dia seguinte"
+            aria-label={t("openNextDay")}
           >
-            Seguinte
+            {t("next")}
           </Link>
         </Button>
       ) : (
         <Button
           className={trainingDateNavigationStyles.button}
           variant="outline"
-          aria-label="Dia seguinte indisponível"
+          aria-label={t("nextDayUnavailable")}
           disabled
         >
-          Seguinte
+          {t("next")}
         </Button>
       )}
     </nav>

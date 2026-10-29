@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@fradelli/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@fradelli/ui/field";
@@ -26,6 +27,8 @@ export function TrainingActivityForm({
   editor,
   startedLocally = false,
 }: TrainingActivityFormProps) {
+  const t = useTranslations("training");
+
   const router = useRouter();
   const [targetDate, setTargetDate] = useState(editor?.initialValues.targetCivilDate ?? civilDate);
   const [preparationChoice, setPreparationChoice] = useState<string | null>(
@@ -105,8 +108,7 @@ export function TrainingActivityForm({
         editor?.onNeedsReload();
         return {
           status: "invalid" as const,
-          message:
-            "Não foi possível confirmar o salvamento. Confira a agenda antes de tentar novamente.",
+          message: t("saveUnconfirmed"),
         };
       } finally {
         if (!savedInEditor) {
@@ -145,18 +147,18 @@ export function TrainingActivityForm({
   const timeError = validateTimes && !isValidPlannedInterval(schedule.startTime, schedule.endTime);
   const hintId = `activity-end-hint-${activity?.id ?? "new"}`;
   const hint = timeError
-    ? "O fim planejado deve ser posterior ao início, no mesmo dia."
+    ? t("endAfterStart")
     : type !== "structured_training"
       ? null
       : !schedule.automatic
-        ? "Horário ajustado por você."
+        ? t("timeManuallyAdjusted")
         : schedule.suggestion.status === "ready"
-          ? `Calculado pela duração do treino: ${schedule.suggestion.durationMinutes} min.`
+          ? t("calculatedDuration", { minutes: schedule.suggestion.durationMinutes })
           : schedule.suggestion.status === "next_day"
-            ? "Esse treino terminaria no dia seguinte. Ajuste o início ou informe um fim no mesmo dia."
+            ? t("endsNextDay")
             : schedule.suggestion.status === "duration_unavailable"
-              ? "Não foi possível calcular a duração. Informe o fim planejado."
-              : "Informe o início para calcular o fim pela duração do treino.";
+              ? t("durationCalculationFailed")
+              : t("startRequiredForDuration");
 
   return (
     <form
@@ -171,9 +173,7 @@ export function TrainingActivityForm({
         }
         if (invalidSession || invalidPreparation) {
           event.preventDefault();
-          setDraftError(
-            "A sessão recuperada não está disponível. Escolha uma opção válida antes de salvar.",
-          );
+          setDraftError(t("restoredSessionUnavailable"));
           return;
         }
         setDraftError(null);
@@ -181,16 +181,12 @@ export function TrainingActivityForm({
           try {
             if (window.localStorage.getItem(trainingActivityDraftKey(civilDate, activity.id))) {
               event.preventDefault();
-              setDraftError(
-                "Há um treino iniciado neste navegador. Conclua ou descarte o rascunho antes de mudar a data ou o aquecimento.",
-              );
+              setDraftError(t("localSessionBlocksReschedule"));
               return;
             }
           } catch {
             event.preventDefault();
-            setDraftError(
-              "Não foi possível conferir o rascunho local. Tente novamente antes de remarcar.",
-            );
+            setDraftError(t("draftCheckFailed"));
             return;
           }
         }
@@ -221,7 +217,7 @@ export function TrainingActivityForm({
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-date-${activity.id}`}
               >
-                Data da atividade
+                {t("activityDate")}
               </FieldLabel>
               <Input
                 id={`activity-date-${activity.id}`}
@@ -239,9 +235,7 @@ export function TrainingActivityForm({
                 id={`activity-date-hint-${activity.id}`}
                 className={trainingActivityFormStyles.hint}
               >
-                {notStarted
-                  ? "Remarque entre ontem e os próximos quatro dias. Horários e aquecimento serão mantidos."
-                  : "Só é possível mudar a data de atividades ainda não iniciadas."}
+                {notStarted ? t("rescheduleRange") : t("rescheduleNotStartedOnly")}
               </FieldDescription>
             </Field>
           ) : null}
@@ -250,7 +244,7 @@ export function TrainingActivityForm({
               className={trainingActivityFormStyles.label}
               htmlFor={`activity-type-${activity?.id ?? "new"}`}
             >
-              Tipo de atividade
+              {t("activityType")}
             </FieldLabel>
             <select
               id={`activity-type-${activity?.id ?? "new"}`}
@@ -259,10 +253,10 @@ export function TrainingActivityForm({
               value={type}
               onChange={(event) => schedule.changeType(event.target.value as typeof type)}
             >
-              <option value="structured_training">Treino do plano</option>
-              <option value="sport_practice">Prática esportiva</option>
-              <option value="specific_training">Treino específico</option>
-              <option value="mobility">Mobilidade</option>
+              <option value="structured_training">{t("planTraining")}</option>
+              <option value="sport_practice">{t("sportPractice")}</option>
+              <option value="specific_training">{t("specificTraining")}</option>
+              <option value="mobility">{t("mobility")}</option>
             </select>
           </Field>
           {type === "structured_training" ? (
@@ -271,7 +265,7 @@ export function TrainingActivityForm({
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-session-${activity?.id ?? "new"}`}
               >
-                Treino
+                {t("training")}
               </FieldLabel>
               <select
                 id={`activity-session-${activity?.id ?? "new"}`}
@@ -283,7 +277,7 @@ export function TrainingActivityForm({
               >
                 {invalidSession ? (
                   <option value={schedule.sessionId} disabled>
-                    Treino indisponível
+                    {t("trainingUnavailable")}
                   </option>
                 ) : null}
                 {schedule.sessions.map((session) => (
@@ -303,7 +297,7 @@ export function TrainingActivityForm({
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-name-${activity?.id ?? "new"}`}
               >
-                Nome
+                {t("name")}
               </FieldLabel>
               <Input
                 id={`activity-name-${activity?.id ?? "new"}`}
@@ -311,7 +305,7 @@ export function TrainingActivityForm({
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 maxLength={120}
-                placeholder="Ex.: Jogo de sábado"
+                placeholder={t("activityNamePlaceholder")}
                 required
               />
             </Field>
@@ -322,7 +316,7 @@ export function TrainingActivityForm({
                 className={trainingActivityFormStyles.label}
                 htmlFor={`activity-sport-${activity?.id ?? "new"}`}
               >
-                Esporte
+                {t("sport")}
               </FieldLabel>
               <Input
                 id={`activity-sport-${activity?.id ?? "new"}`}
@@ -330,7 +324,7 @@ export function TrainingActivityForm({
                 value={sport}
                 onChange={(event) => setSport(event.target.value)}
                 maxLength={80}
-                placeholder="Ex.: Futevôlei"
+                placeholder={t("sportPlaceholder")}
                 required
               />
             </Field>
@@ -352,7 +346,7 @@ export function TrainingActivityForm({
               className={trainingActivityFormStyles.label}
               htmlFor={`activity-start-time-${activity?.id ?? "new"}`}
             >
-              Início planejado
+              {t("plannedStart")}
             </FieldLabel>
             <Input
               id={`activity-start-time-${activity?.id ?? "new"}`}
@@ -368,7 +362,7 @@ export function TrainingActivityForm({
               className={trainingActivityFormStyles.label}
               htmlFor={`activity-end-time-${activity?.id ?? "new"}`}
             >
-              Fim planejado
+              {t("plannedEnd")}
             </FieldLabel>
             <Input
               id={`activity-end-time-${activity?.id ?? "new"}`}
@@ -392,15 +386,15 @@ export function TrainingActivityForm({
             ) : null}
             {type === "structured_training" && !schedule.automatic ? (
               <Button type="button" variant="outline" onClick={schedule.enableAutomatic}>
-                Usar duração do treino
+                {t("useTrainingDuration")}
               </Button>
             ) : null}
           </Field>
         </div>
         {!editor ? (
           <div className={trainingActivityFormStyles.actions}>
-            <PendingButton type="submit" pending={submission.pending} pendingLabel="Salvando…">
-              {activity ? "Salvar alterações" : "Adicionar atividade"}
+            <PendingButton type="submit" pending={submission.pending} pendingLabel={t("saving")}>
+              {activity ? t("saveChanges") : t("addActivity")}
             </PendingButton>
           </div>
         ) : null}

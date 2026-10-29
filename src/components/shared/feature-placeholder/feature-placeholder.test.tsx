@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "../../../../tests/support/render-localized";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { FEATURE_PLACEHOLDER_BADGE_LABEL } from "./feature-placeholder.constants";

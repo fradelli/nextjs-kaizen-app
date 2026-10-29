@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { CaretUpIcon } from "@fradelli/ui/icons/CaretUp";
 import { CaretDownIcon } from "@fradelli/ui/icons/CaretDown";
@@ -23,11 +24,11 @@ import { trainingActivityCardStyles } from "./training-activity-card.styles";
 import type { TrainingActivityCardProps } from "./training-activity-card.types";
 
 const statusLabels = {
-  scheduled: "Não iniciado",
-  in_progress: "Em andamento",
-  paused: "Pausado",
-  completed: "Concluído",
-  skipped: "Não realizado",
+  scheduled: "notStarted",
+  in_progress: "inProgress",
+  paused: "paused",
+  completed: "completed",
+  skipped: "skipped",
 } as const;
 
 export function TrainingActivityCard({
@@ -36,6 +37,8 @@ export function TrainingActivityCard({
   actions,
   availablePlan = null,
 }: TrainingActivityCardProps) {
+  const t = useTranslations("training");
+
   const execution = useTrainingActivityDraft({ activity, civilDate });
   const retrospective = supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt;
   const agendaEditable = isTrainingAgendaDateEditable(civilDate);
@@ -95,7 +98,7 @@ export function TrainingActivityCard({
               </Button>
             </h2>
             <p className={trainingActivityCardStyles.metadata}>
-              {activitySummary(activity, status)}
+              {activitySummary(activity, status, t)}
             </p>
           </div>
           <div className={trainingActivityCardStyles.tools}>
@@ -140,20 +143,20 @@ export function TrainingActivityCard({
 
       {!retrospective && execution.storageError ? (
         <p role="alert" className={trainingActivityCardStyles.guidance}>
-          Não foi possível guardar o rascunho neste navegador. Libere espaço antes de continuar.
+          {t("storageFull")}
         </p>
       ) : null}
       {execution.ready &&
       !activeDraft &&
       (activity.status === "in_progress" || activity.status === "paused") ? (
         <p role="alert" className={trainingActivityCardStyles.guidance}>
-          Não foi possível recuperar esta execução. Recarregue a página antes de continuar.
+          {t("executionRecoveryFailed")}
         </p>
       ) : null}
 
       {expanded ? (
         <div className={trainingActivityCardStyles.body}>
-          <nav className={trainingActivityCardStyles.navigation} aria-label="Etapa do treino">
+          <nav className={trainingActivityCardStyles.navigation} aria-label={t("trainingStage")}>
             {hasPreparation ? (
               <Button
                 type="button"
@@ -161,7 +164,7 @@ export function TrainingActivityCard({
                 variant={phase === "preparation" ? "default" : "outline"}
                 onClick={() => setPhase("preparation")}
               >
-                Aquecimento
+                {t("warmup")}
               </Button>
             ) : null}
             <Button
@@ -170,7 +173,7 @@ export function TrainingActivityCard({
               variant={phase === "main" ? "default" : "outline"}
               onClick={() => setPhase("main")}
             >
-              {structured ? "Treino" : "Atividade"}
+              {structured ? t("training") : t("activity")}
             </Button>
           </nav>
           {activeSession ? (
@@ -179,12 +182,12 @@ export function TrainingActivityCard({
                 <div>
                   <h3 className={trainingActivityCardStyles.sessionTitle}>{activeSession.name}</h3>
                   <p className={trainingActivityCardStyles.sessionMetadata}>
-                    {activeSession.targetDurationMinutes} min
+                    {activeSession.targetDurationMinutes} {t("minutes")}
                     {activeSession.intensity ? ` · ${humanize(activeSession.intensity)}` : ""}
                   </p>
                 </div>
                 <Badge variant={phase === "preparation" ? "info" : "warning"}>
-                  {phase === "preparation" ? "Preparação" : "Treino"}
+                  {phase === "preparation" ? t("preparation") : t("training")}
                 </Badge>
               </div>
               <div className={trainingActivityCardStyles.exercises}>
@@ -234,17 +237,15 @@ export function TrainingActivityCard({
                   </h3>
                   <p className={trainingActivityCardStyles.sessionMetadata}>
                     {genericPreparation.plannedDurationMinutes === null
-                      ? "Duração a definir"
+                      ? t("durationUnknown")
                       : `${genericPreparation.plannedDurationMinutes} min`}{" "}
-                    · preparação opcional
+                    {t("optionalPreparation")}
                   </p>
                 </div>
-                <Badge variant="info">Preparação</Badge>
+                <Badge variant="info">{t("preparation")}</Badge>
               </div>
               <p className={trainingActivityCardStyles.guidance}>
-                {retrospective
-                  ? "Esta preparação é opcional. Você pode registrar a atividade realizada sem concluir o aquecimento ou informar horários reais."
-                  : "Faça o aquecimento adequado à atividade. O cronômetro principal continua registrando apenas o tempo ativo, mesmo ao alternar entre as etapas."}
+                {retrospective ? t("retrospectivePreparation") : t("preparationGuidance")}
               </p>
             </section>
           ) : (
@@ -255,21 +256,21 @@ export function TrainingActivityCard({
                   <p className={trainingActivityCardStyles.sessionMetadata}>
                     {activity.sport ? `${activity.sport} · ` : ""}
                     {activity.plannedDurationMinutes === null
-                      ? "Duração a definir"
-                      : `${activity.plannedDurationMinutes} min planejados`}
+                      ? t("durationUnknown")
+                      : t("plannedMinutes", { minutes: activity.plannedDurationMinutes })}
                   </p>
                 </div>
-                <Badge variant="secondary">{typeLabels[activity.type]}</Badge>
+                <Badge variant="secondary">{t(typeLabels[activity.type])}</Badge>
               </div>
             </section>
           )}
           {phase === "preparation" ? (
             <Button type="button" onClick={() => setPhase("main")}>
-              {structured ? "Ir para o treino" : "Ir para a atividade"}
+              {structured ? t("goToTraining") : t("goToActivity")}
             </Button>
           ) : hasPreparation ? (
             <Button type="button" variant="outline" onClick={() => setPhase("preparation")}>
-              Voltar ao aquecimento
+              {t("backToWarmup")}
             </Button>
           ) : null}
         </div>
@@ -281,6 +282,7 @@ export function TrainingActivityCard({
 function activitySummary(
   activity: TrainingActivityCardProps["activity"],
   status: keyof typeof statusLabels,
+  t: ReturnType<typeof useTranslations<"training">>,
 ): string {
   const preparationMinutes =
     supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt
@@ -292,18 +294,18 @@ function activitySummary(
     activity.plannedDurationMinutes ?? activity.structured?.main.targetDurationMinutes;
   const durations =
     totalMinutes === null || totalMinutes === undefined
-      ? "Duração a definir"
+      ? t("durationUnknown")
       : preparationMinutes
-        ? `${totalMinutes} min (inclui ${preparationMinutes} min de aquecimento)`
+        ? t("minutesWithWarmup", { minutes: totalMinutes, warmup: preparationMinutes })
         : `${totalMinutes} min`;
-  return `${activity.plannedStartTime ?? "Horário a definir"} · ${durations} · ${statusLabels[status]}`;
+  return `${activity.plannedStartTime ?? t("timeUnknown")} · ${durations} · ${t(statusLabels[status])}`;
 }
 
 const typeLabels = {
-  structured_training: "Treino do plano",
-  sport_practice: "Prática esportiva",
-  specific_training: "Treino específico",
-  mobility: "Mobilidade",
+  structured_training: "planTraining",
+  sport_practice: "sportPractice",
+  specific_training: "specificTraining",
+  mobility: "mobility",
 } as const;
 
 function humanize(value: string): string {

@@ -119,6 +119,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E09-T06 | PLANNED     | [Internacionalizar produto e conteúdo canônico](epics/E09-future-evolution/T06-internationalize-product-content.md)                            | E09-T05                               |
 | E09-T07 | PLANNED     | [Migrar documentação e entrega para inglês](epics/E09-future-evolution/T07-migrate-documentation-to-english.md)                                | E09-T05                               |
 | E09-T08 | PLANNED     | [Validar experiência multilíngue](epics/E09-future-evolution/T08-validate-multilingual-experience.md)                                          | E09-T06, E09-T07                      |
+| E09-T09 | DONE | [Internacionalizar interface atual em português e inglês](epics/E09-future-evolution/T09-localize-current-interface.md) | — |
 | E10-T01 | DONE | [Integrar a linguagem visual do portfólio no Kaizen](epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md) | E06-T25 |
 | E10-T02 | DONE | [Player e registro de atividade em modal](epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md) | E10-T01 |
 
@@ -131,6 +132,8 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E10-T06 | DONE | [Rascunhos de formulário por sessão](epics/E10-portfolio-visual-alignment/T06-session-form-drafts.md) | E10-T05 |
 
 | E10-T07 | DONE | [Corrigir achados da revisão de rascunhos](epics/E10-portfolio-visual-alignment/T07-fix-draft-review.md) | E10-T06 |
+
+| E10-T08 | DONE | [Ajustar Hoje e entrada do aplicativo](epics/E10-portfolio-visual-alignment/T08-today-navigation.md) | E10-T07 |
 
 ## Regra de atualização
 
