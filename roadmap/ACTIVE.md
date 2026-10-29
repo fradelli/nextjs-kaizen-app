@@ -5,7 +5,7 @@
 - **Entrada principal:** `roadmap/epics/E06-training-execution/T26-set-execution.md`.
 - **Branch:** `codex/E06-T26-set-execution`.
 - **Autorização:** implementação aprovada em 29/10/2026.
-- **Próxima ação:** revisão final aprovada; commit, push e PR para developer autorizados pelo usuário.
+- **Próxima ação:** PR #76 aberta para developer; aguardar CI e revisão. Merge não realizado.
 
 ## Pendências preservadas
 

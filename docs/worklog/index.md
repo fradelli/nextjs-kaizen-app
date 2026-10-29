@@ -6,13 +6,13 @@
 
 | ID | Status | Início | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa |
 |---|---|---|---|---|---|---|---|
-| [WORK-20261029-008](tasks/2026/10/WORK-20261029-008-revisar-e-publicar-pr-da-execucao-independente-de-series.md) | em-andamento | 2026-10-29 |  | — | não informadas | — | Revisar e publicar PR da execucao independente de series |
 | [WORK-20261028-001](tasks/2026/10/WORK-20261028-001-investigar-execucao-de-series-e-referencias-do-hevy.md) | em-andamento | 2026-10-28 |  | — | não informadas | — | Investigar execução de séries e referências do Hevy |
 
 ## Concluídas e canceladas
 
 | ID | Status | Início | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa |
 |---|---|---|---|---|---|---|---|
+| [WORK-20261029-008](tasks/2026/10/WORK-20261029-008-revisar-e-publicar-pr-da-execucao-independente-de-series.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Revisar e publicar PR da execucao independente de series |
 | [WORK-20261029-007](tasks/2026/10/WORK-20261029-007-compactar-descanso-flutuante-e-adicionar-favicon-kaizen.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Compactar descanso flutuante e adicionar favicon Kaizen |
 | [WORK-20261029-006](tasks/2026/10/WORK-20261029-006-revisar-qualidade-da-execucao-de-treino-e-criar-skill-gl.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Revisar qualidade da execucao de treino e criar skill global |
 | [WORK-20261029-005](tasks/2026/10/WORK-20261029-005-refinar-tabela-e-cabecalho-da-execucao-de-treino.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Refinar tabela e cabecalho da execucao de treino |
