@@ -377,6 +377,8 @@ model TrainingActivityExerciseExecution {
 }
 
 model TrainingActivitySetExecution {
+  kind                String                            @default("work")
+  confirmed           Boolean?
   id                  String                            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   workspaceId         String                            @map("workspace_id") @db.Uuid
   exerciseExecutionId String                            @map("exercise_execution_id") @db.Uuid

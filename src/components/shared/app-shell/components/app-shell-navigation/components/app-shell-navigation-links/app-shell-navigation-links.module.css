@@ -35,7 +35,8 @@
     position: fixed;
     z-index: 20;
     inset-inline: var(--fd-space-6);
-    bottom: calc(var(--fd-space-2) + env(safe-area-inset-bottom, 0px));
+    bottom: var(--kaizen-mobile-nav-bottom);
+    min-height: var(--kaizen-mobile-nav-height);
     width: auto;
     max-width: 24rem;
     padding: var(--fd-space-2);
@@ -51,6 +52,7 @@
 
   .navigationLink {
     min-width: 3rem;
+    min-height: 2.75rem;
   }
   .navigationList > li {
     display: flex;

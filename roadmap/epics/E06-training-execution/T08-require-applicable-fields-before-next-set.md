@@ -51,4 +51,4 @@ Na E06-T03, o avanço já exige medida positiva da série atual e trata `0` como
 
 ## Resultado
 
-Ainda não iniciada.
+Cancelada pela decisão explícita de edição independente na E06-T26. Não exigir sequência nem carga positiva como condição nova de avanço; confirmação exige as medidas válidas aplicáveis.

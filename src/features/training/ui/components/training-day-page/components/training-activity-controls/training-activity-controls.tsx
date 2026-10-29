@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@fradelli/ui/button";
 import { PlayIcon } from "@fradelli/ui/icons/Play";
 import { PauseIcon } from "@fradelli/ui/icons/Pause";
-import { StopIcon } from "@fradelli/ui/icons/Stop";
 import { CheckCircleIcon } from "@fradelli/ui/icons/CheckCircle";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -67,13 +66,13 @@ export function TrainingActivityControls({
           type="button"
           variant="ghost"
           size="icon"
-          className="min-h-11 min-w-11 [&>svg]:size-5"
+          className="min-h-11 min-w-11 text-status-warning hover:bg-status-warning-subtle hover:text-status-warning [&>svg]:size-4 sm:[&>svg]:size-[18px]"
           disabled={!ready}
           aria-label={t("finishNamedActivity", { name: activity.name })}
           title={t("recordPerformedActivity")}
           onClick={openCompletion}
         >
-          <CheckCircleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+          <CheckCircleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
         </Button>
       ) : (
         <>
@@ -81,7 +80,7 @@ export function TrainingActivityControls({
             type="button"
             variant="ghost"
             size="icon"
-            className="min-h-11 min-w-11 [&>svg]:size-5"
+            className="min-h-11 min-w-11 [&>svg]:size-4 sm:[&>svg]:size-[18px]"
             disabled={!ready || (!draft && status !== "scheduled")}
             aria-label={
               status === "in_progress"
@@ -102,9 +101,9 @@ export function TrainingActivityControls({
             onClick={status === "in_progress" ? onPause : status === "paused" ? onResume : onStart}
           >
             {status === "in_progress" ? (
-              <PauseIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+              <PauseIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
             ) : (
-              <PlayIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+              <PlayIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
             )}
           </Button>
           {draft ? (
@@ -113,12 +112,12 @@ export function TrainingActivityControls({
               type="button"
               variant="ghost"
               size="icon"
-              className="min-h-11 min-w-11 [&>svg]:size-5"
+              className="min-h-11 min-w-11 text-status-warning hover:bg-status-warning-subtle hover:text-status-warning [&>svg]:size-4 sm:[&>svg]:size-[18px]"
               aria-label={t("finishNamedActivity", { name: activity.name })}
               title={t("finishActivity")}
               onClick={openCompletion}
             >
-              <StopIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+              <CheckCircleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
             </Button>
           ) : null}
         </>

@@ -1,11 +1,11 @@
 # Tarefa selecionada
 
-- **Tarefa:** E09-T09 — Internacionalizar interface atual em português e inglês
+- **Tarefa:** E06-T26 — Execução independente de séries e histórico
 - **Status:** DONE
-- **Entrada principal:** `roadmap/epics/E09-future-evolution/T09-localize-current-interface.md`.
-- **Branch:** `codex/E09-T09-interface-i18n`.
-- **Autorização:** implementação e retomada aprovadas pelo usuário em 29/10/2026.
-- **Próxima ação:** PR [#75](https://github.com/fradelli/nextjs-kaizen-app/pull/75) aberta para developer; acompanhar checks e revisão. Conteúdo editorial será integrado ao catálogo novo.
+- **Entrada principal:** `roadmap/epics/E06-training-execution/T26-set-execution.md`.
+- **Branch:** `codex/E06-T26-set-execution`.
+- **Autorização:** implementação aprovada em 29/10/2026.
+- **Próxima ação:** PR #76 aberta para developer; aguardar CI e revisão. Merge não realizado.
 
 ## Pendências preservadas
 

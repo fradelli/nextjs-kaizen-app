@@ -3,5 +3,5 @@ export const exercisePriorityIndicatorStyles = {
   bars: "inline-flex items-center gap-1",
   bar: "h-3 w-1 rounded-full border",
   inactive: "border-border bg-transparent",
-  active: "border-muted-foreground bg-muted-foreground",
+  active: "border-status-warning bg-status-warning",
 } as const;

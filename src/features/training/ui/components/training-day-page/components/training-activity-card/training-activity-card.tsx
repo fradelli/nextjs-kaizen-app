@@ -1,4 +1,6 @@
 "use client";
+import { TrainingRestTimer } from "../training-rest-timer/training-rest-timer";
+
 import { useTranslations } from "next-intl";
 
 import { CaretUpIcon } from "@fradelli/ui/icons/CaretUp";
@@ -76,6 +78,7 @@ export function TrainingActivityCard({
     setExpandedOverride(null);
   }
 
+  const resting = Object.entries(activeDraft?.exercises ?? {}).find(([, item]) => item.rest);
   return (
     <article className={`${trainingActivityCardStyles.root} ${rootState}`}>
       <header className={trainingActivityCardStyles.header}>
@@ -91,9 +94,9 @@ export function TrainingActivityCard({
               >
                 <span className="fd-text-card">{activity.name}</span>
                 {expanded ? (
-                  <CaretUpIcon size={16} weight="regular" aria-hidden="true" focusable="false" />
+                  <CaretUpIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
                 ) : (
-                  <CaretDownIcon size={16} weight="regular" aria-hidden="true" focusable="false" />
+                  <CaretDownIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
                 )}
               </Button>
             </h2>
@@ -274,6 +277,21 @@ export function TrainingActivityCard({
             </Button>
           ) : null}
         </div>
+      ) : null}
+      {resting?.[1].rest ? (
+        <TrainingRestTimer
+          endsAt={resting[1].rest.endsAt}
+          onAdjust={(seconds) =>
+            execution.updateExercise(resting[0], {
+              ...resting[1],
+              rest: {
+                ...resting[1].rest!,
+                endsAt: Math.max(Date.now(), resting[1].rest!.endsAt + seconds * 1000),
+              },
+            })
+          }
+          onSkip={() => execution.updateExercise(resting[0], { ...resting[1], rest: undefined })}
+        />
       ) : null}
     </article>
   );

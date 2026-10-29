@@ -23,19 +23,19 @@ enum LogicalEnvironment {
 }
 
 model Workspace {
-  id                                  String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt                           DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
-  pairingRateLimit_workspace          PairingRateLimit[]          @relation("PairingRateLimit_workspace")
-  dailyTrainingAssignment_workspace   DailyTrainingAssignment[]   @relation("DailyTrainingAssignment_workspace")
-  trainingExecution_workspace         TrainingExecution[]         @relation("TrainingExecution_workspace")
-  trainingExerciseExecution_workspace TrainingExerciseExecution[] @relation("TrainingExerciseExecution_workspace")
-  trainingSetExecution_workspace      TrainingSetExecution[]      @relation("TrainingSetExecution_workspace")
-  trainingDayActivity_workspace       TrainingDayActivity[]       @relation("TrainingDayActivity_workspace")
+  id                                          String                              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt                                   DateTime                            @default(now()) @map("created_at") @db.Timestamptz(6)
+  pairingRateLimit_workspace                  PairingRateLimit[]                  @relation("PairingRateLimit_workspace")
+  dailyTrainingAssignment_workspace           DailyTrainingAssignment[]           @relation("DailyTrainingAssignment_workspace")
+  trainingExecution_workspace                 TrainingExecution[]                 @relation("TrainingExecution_workspace")
+  trainingExerciseExecution_workspace         TrainingExerciseExecution[]         @relation("TrainingExerciseExecution_workspace")
+  trainingSetExecution_workspace              TrainingSetExecution[]              @relation("TrainingSetExecution_workspace")
+  trainingDayActivity_workspace               TrainingDayActivity[]               @relation("TrainingDayActivity_workspace")
   trainingActivityExecutionInterval_workspace TrainingActivityExecutionInterval[] @relation("TrainingActivityExecutionInterval_workspace")
   trainingActivityExerciseExecution_workspace TrainingActivityExerciseExecution[] @relation("TrainingActivityExerciseExecution_workspace")
   trainingActivitySetExecution_workspace      TrainingActivitySetExecution[]      @relation("TrainingActivitySetExecution_workspace")
-  dailyNutritionAssignment_workspace  DailyNutritionAssignment[]  @relation("DailyNutritionAssignment_workspace")
-  mealExecution_workspace             MealExecution[]             @relation("MealExecution_workspace")
+  dailyNutritionAssignment_workspace          DailyNutritionAssignment[]          @relation("DailyNutritionAssignment_workspace")
+  mealExecution_workspace                     MealExecution[]                     @relation("MealExecution_workspace")
 
   @@map("workspace")
 }

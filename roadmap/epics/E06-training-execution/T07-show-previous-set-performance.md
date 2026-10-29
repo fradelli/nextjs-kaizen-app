@@ -55,4 +55,4 @@ A E06-T03 persiste exercícios e séries por atividade, mas a leitura do dia con
 
 ## Resultado
 
-Ainda não iniciada.
+Escopo incorporado à E06-T26 com correspondência por tipo (aquecimento/trabalho), entre treinos, aprovada pelo usuário. Não implementar outra referência paralela.

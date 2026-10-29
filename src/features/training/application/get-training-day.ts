@@ -220,11 +220,22 @@ function projectTrainingActivitySession(
     notes: session.notes,
     exercises: Object.freeze(
       session.exercises.map((prescription) =>
-        projectTrainingDayExercise(
-          prescription,
-          role,
-          persistedByPrescription.get(prescription.prescriptionId),
-        ),
+        Object.freeze({
+          ...projectTrainingDayExercise(
+            prescription,
+            role,
+            persistedByPrescription.get(prescription.prescriptionId),
+          ),
+          history: activity.history?.filter(
+            (item) =>
+              item.activityId !== activity.id &&
+              (item.startedAt && activity.startedAt ? item.startedAt < activity.startedAt : true) &&
+              item.exerciseId === prescription.exercise.exerciseId &&
+              item.unit === prescription.dose.unit &&
+              item.scope === prescription.dose.scope &&
+              item.loadApplicable === prescription.exercise.loadApplicable,
+          ),
+        }),
       ),
     ),
   });
@@ -271,11 +282,13 @@ function projectTrainingDaySession(
     notes: session.notes,
     exercises: Object.freeze(
       session.exercises.map((prescription) =>
-        projectTrainingDayExercise(
-          prescription,
-          role,
-          persistedByPrescription.get(prescription.prescriptionId),
-        ),
+        Object.freeze({
+          ...projectTrainingDayExercise(
+            prescription,
+            role,
+            persistedByPrescription.get(prescription.prescriptionId),
+          ),
+        }),
       ),
     ),
   });
@@ -286,7 +299,10 @@ function projectTrainingDayExercise(
   role: TrainingExerciseRole,
   persisted: TrainingExerciseExecutionSnapshot | undefined,
 ): TrainingDayExerciseDto {
-  if (persisted && persisted.sets.some((set) => set.setNumber > prescription.sets)) {
+  if (
+    persisted &&
+    persisted.sets.some((set) => set.setNumber > prescription.sets && set.confirmed === undefined)
+  ) {
     invalidReference("A execução contém uma série fora da prescrição apresentada.");
   }
 
@@ -301,8 +317,14 @@ function projectTrainingDayExercise(
   const persistedSets = new Map(persisted?.sets.map((set) => [set.setNumber, set]) ?? []);
   const sets =
     role === "main"
-      ? Array.from({ length: prescription.sets }, (_, index) =>
-          projectTrainingSet(index + 1, persistedSets.get(index + 1)),
+      ? Array.from(
+          {
+            length: Math.max(
+              prescription.sets,
+              ...(persisted?.sets.map((set) => set.setNumber) ?? []),
+            ),
+          },
+          (_, index) => projectTrainingSet(index + 1, persistedSets.get(index + 1)),
         )
       : [];
 
@@ -352,6 +374,8 @@ function projectTrainingSet(
 ): TrainingSetDto {
   return Object.freeze({
     setNumber,
+    kind: persisted?.kind,
+    confirmed: persisted?.confirmed,
     status: persisted?.status ?? "pending",
     value: persisted?.value ?? null,
     leftValue: persisted?.leftValue ?? null,

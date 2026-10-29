@@ -1,3 +1,14 @@
+export type TrainingExerciseHistory = Readonly<{
+  activityId?: string;
+  startedAt?: string | null;
+  date: string;
+  exerciseId: string;
+  unit: string;
+  scope: string;
+  loadApplicable: boolean;
+  sets: readonly TrainingSetExecutionSnapshot[];
+}>;
+
 export type CivilDate = string & { readonly __civilDate: unique symbol };
 
 export type TrainingEnvironment = "local" | "preview" | "staging" | "production";
@@ -78,6 +89,9 @@ export type TrainingPlanSnapshot = Readonly<{
 
 export type TrainingSetExecutionSnapshot = Readonly<{
   setNumber: number;
+  kind?: "warmup" | "work";
+  confirmed?: boolean | null;
+
   status: TrainingItemStatus;
   value: number | null;
   leftValue: number | null;
@@ -127,6 +141,7 @@ export type TrainingAssignmentSnapshot = Readonly<{
 }>;
 
 export type TrainingActivitySnapshot = Readonly<{
+  history?: readonly TrainingExerciseHistory[];
   id: string;
   type: TrainingActivityType;
   source: TrainingActivitySource;

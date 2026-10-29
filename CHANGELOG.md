@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-10-29 — execução independente de séries
+
+- Confirmação local por série, aquecimentos e séries adicionais, com envio ao finalizar o treino.
+- Descanso recuperável com ajustes de 15 segundos; referência anterior por tipo e histórico durante execução.
+- Layout compacto com faixa de estado, toggle e dicas em dialog; contratos e migração preservam registros legados.
+
+
 ## 2026-10-29 — interface em português e inglês
 
 - Idioma automático do navegador, HTML/metadados e interface de treino traduzidos com next-intl.

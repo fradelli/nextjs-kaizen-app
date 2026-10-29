@@ -161,3 +161,57 @@ Rollback proposto: desativar nova edição mantendo leitor compatível; preserva
 Ampliar os testes existentes em `use-training-exercise-draft.test.ts`, `use-training-activity-draft.test.tsx`, `training-day-page.test.tsx`, `tests/integration/training-mutations.test.ts` e `tests/integration/training-projections.test.ts`; acrescentar testes de domínio e componentes novos pelos comportamentos acima. Na implementação executar formato, lint, estrutura, tipos, testes pertinentes, integração em banco descartável e build; não reutilizar resultados da E10-T08 como evidência desta mudança.
 
 Aceite do planejamento: decisões abertas identificadas, escopo inicial/futuro separado, caminhos e responsabilidades revisados, compatibilidade e verificações definidas. Aceite da implementação: todas as regras aprovadas e casos pertinentes comprovados, sem alteração de prescrição/histórico por efeito colateral.
+
+
+## Implementação E06-T26 em 29/10/2026
+
+Implementação autorizada e realizada na branch `codex/E06-T26-set-execution`, criada após atualizar developer para `ed89d0a`.
+
+- Grade independente com confirmação local; editar valores válidos mantém confirmação e não reinicia descanso. Apagar medidas obrigatórias desmarca a série e cancela seu descanso associado.
+- Novas séries têm número persistido estável; aquecimentos são apresentados antes das válidas, com ordinal visual separado. Limite de 100 séries por exercício, conforme limite de entrada já existente.
+- Confirmação e tipo persistidos por migração aditiva. Confirmação nula identifica registros antigos sem marcação explícita; não há backfill inventando confirmação humana. Rascunhos v1 permanecem legíveis.
+- Backend recebe séries durante finalização do treino. Correções explícitas de histórico mantêm o caminho próprio já existente.
+- Referência por exercício canônico, unidade, escopo e aplicabilidade de carga; consultas isoladas por workspace e somente sessões concluídas não excluídas. Sessões anteriores no mesmo dia exigem instantes confiáveis; sem instantes usa-se data civil anterior. Uma sessão por tipo, sem preencher lacunas buscando outras datas. Não há cópia.
+- Um descanso na execução ativa; iniciar outra atividade pausa a anterior e encerra seu descanso. Persistido no rascunho por instante de término, com controles de 15 segundos e pular. Aquecimentos usam o descanso do exercício. Sem descanso prescrito, não se inventa duração. Pausa do treino não suspende a passagem do descanso; nenhum alarme ou notificação foi acrescentado.
+- Exercício sem card externo; cabeçalho com faixa, texto e contagem; toggle preservado. Verde exige finalização e todas as séries realizadas, incluindo aquecimentos/adicionais; amarelo indica parcial/dados pendentes; vermelho finalizado sem medidas. Dicas e histórico usam o modal compartilhado.
+- Textos de interface em português e inglês. Conteúdo editorial das dicas segue o plano de tradução já existente.
+
+Validações e limitações: build de produção, tipos, lint e validações estruturais executados; 409 testes da suíte passaram antes da adição dos testes puros de domínio e referência; testes posteriores cobrem essas novas regras. Migração aplicada no banco local. Testes específicos de persistência/projeção passaram, incluindo caso novo de aquecimento adicional e confirmação fora de ordem. Conferência em navegador mostrou grade, referência histórica real e descanso em largura mobile; teclado virtual, área segura, TalkBack/VoiceOver e dispositivo físico permanecem verificações manuais. A busca histórica atual carrega medidas dos exercícios da sessão; paginação do histórico poderá ser necessária com crescimento dos registros.
+
+Rollback: manter a migração aditiva e um leitor que compreenda confirmação/tipo. Voltar para aplicação que infere realização apenas por valores não é rollback seguro. Não apagar registros nem colunas para reverter interface.
+
+Atualização da validação: a suíte completa de integração PostgreSQL passou com 54 testes. E06-T07 e E06-T08 foram encerradas como CANCELLED no roadmap por incorporação/substituição explícita na E06-T26, preservando IDs e descrição histórica.
+
+Validação final: 414 testes unitários/interface, 54 testes PostgreSQL e build aprovados. Checagens de tipos, lint, estrutura, fronteiras, ícones e i18n aprovadas. Os testes de integração foram executados com timeout de 30 segundos por caso devido ao custo do importador, sem alteração dos limites versionados.
+
+
+## Refinamento aprovado e aplicado em 29/10/2026
+
+- Grade horizontal com série, anterior sem data, carga, dose e confirmação. Colunas centrais iguais; carga sem aplicação permanece desabilitada. Rótulos acessíveis preservados.
+- Comentário nas ações, aberto no modal compartilhado; salvar altera somente o rascunho local. Recolher oculta todas as ações.
+- Prescrição no subtítulo acima do estado; prioridade amarela e check circular nas duas ações de conclusão, com destaque semântico de sucesso.
+- Classes globais `kaizen-text-title`, `kaizen-text-body` e `kaizen-text-caption` centralizam tamanhos responsivos consumidos na execução. Inputs preservam 16px no mobile. Sem alteração do pacote do Design System.
+- Build, tipos, lint e i18n aprovados. Verificação física de teclado e área segura permanece pendente.
+
+
+## Revisão de responsabilidades e semântica — 29/10/2026
+
+Escopo examinado: regras de realização/direções, validação de finalização e correção, editor local, confirmação, referências e controles de execução. Não equivale a auditoria de todos os módulos do aplicativo.
+
+Correções: definição única de direções no domínio com reexport compatível na UI; validação única de séries nos dois caminhos de salvamento; grade compartilhada entre cabeçalho e linhas; remoção dos estilos obsoletos do editor; nomes de ações explícitos; remoção de condição de carga impossível nos campos de dose e de asserção não nula no histórico. Aquecimento usa amarelo sólido. Campos por lado/direção mantêm identificação visual, além da acessível.
+
+Contratos preservados: confirmação independente do preenchimento e da prescrição, rascunho local, envio na finalização, compatibilidade de registros sem confirmação explícita e autorização no servidor. A presença de medidas em registros antigos continua uma adaptação de compatibilidade; não substituir pela confirmação moderna sem migração e decisão explícita.
+
+Limites: o componente de exercício ainda reúne apresentação e abertura de dialogs; extração adicional pode ser feita quando reduzir acoplamento demonstrável. Consulta de histórico cresce com o histórico dos exercícios relevantes; paginação precisa preservar a seleção independente por tipo e não foi introduzida nesta revisão. Teclado virtual e leitor de tela em aparelho físico permanecem sem validação.
+
+
+## Descanso flutuante e identidade da aba — 29/10/2026
+
+Cronômetro compacto em linha, renderizado no body para evitar contextos de empilhamento dos cards. Mobile usa medidas compartilhadas com o menu e área segura; desktop usa margem inferior de 16px. O conteúdo reserva espaço adicional somente enquanto o descanso está visível. Arrastar permanece fora do escopo. Regras e persistência inalteradas.
+
+Adicionado `src/app/icon.svg` pela convenção de metadata do Next.js, com os caracteres 改善 do logo. Sem dependências novas. Verificação em aparelho físico de teclado virtual e área segura permanece pendente.
+
+
+Ajuste de legibilidade aprovado: painel flutuante em duas linhas, tempo em 64px e controles abaixo. Mantida posição acima do menu no mobile e reserva de rolagem ampliada; substitui a apresentação compacta anterior.
+
+Correção de posicionamento: no mobile, o painel sobrepõe o menu inferior durante o descanso, em vez de ocupar uma faixa adicional acima dele. Tamanho preservado.

@@ -45,9 +45,9 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
         onClick={() => setOpen(true)}
       >
         {props.activity ? (
-          <PencilSimpleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+          <PencilSimpleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
         ) : (
-          <PlusIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+          <PlusIcon size={20} weight="bold" aria-hidden="true" focusable="false" />
         )}
       </Button>
       {open ? (

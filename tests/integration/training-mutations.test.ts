@@ -585,6 +585,181 @@ describe("training mutations with PostgreSQL", () => {
       ).toBe(2);
     }));
 
+  it("persists out-of-order confirmation and an added warmup without changing prescription", () =>
+    withImportDatabase(async (client) => {
+      const fixture = await client.$transaction(createDatabaseFixture);
+      const repository = new PrismaTrainingRepository(client);
+      await client.planActivation.create({
+        data: {
+          domain: "training",
+          logicalEnvironment: "local",
+          trainingPlanVersionId: fixture.trainingPlan.id,
+          pointerImportBatchId: fixture.trainingPointer.id,
+          activatedAt: new Date(),
+        },
+      });
+      const civilDate = "2026-09-16" as CivilDate;
+      await repository.addTrainingActivity({
+        workspaceId: fixture.workspace.id,
+        environment: "local",
+        civilDate,
+        type: "structured_training",
+        name: "Treino do plano",
+        sport: null,
+        sessionId: fixture.mainSession.sessionId,
+        plannedStartTime: "09:00",
+        plannedEndTime: "09:35",
+      });
+      const day = await repository.findTrainingDay({
+        workspaceId: fixture.workspace.id,
+        civilDate,
+        environment: "local",
+      });
+      const activity = day.activities.find(
+        (candidate) => candidate.type === "structured_training",
+      )!;
+      const definitions = await client.trainingExerciseDefinition.findMany({
+        where: { trainingPlanVersionId: fixture.trainingPlan.id },
+        include: { exercise: true, session: true },
+      });
+      const exercises = Object.fromEntries(
+        definitions.map((definition) => {
+          const role: "preparation" | "main" =
+            definition.session.assignmentRole === "preparation" ? "preparation" : "main";
+          return [
+            `${role}:${definition.exercise.exerciseId}`,
+            {
+              sessionId: definition.session.sessionId,
+              exerciseId: definition.exercise.exerciseId,
+              role,
+              completed: role === "main" && definition.ordinal === 1,
+              comment: "",
+              sets: Array.from({ length: role === "main" ? definition.sets : 0 }, (_, index) => ({
+                kind: "work" as "work" | "warmup",
+                confirmed: role === "main" && definition.ordinal === 1 && index === 1,
+                setNumber: index + 1,
+                value: role === "main" && definition.ordinal === 1 && index === 1 ? "6" : "",
+                leftValue: "",
+                rightValue: "",
+                directionValues: {},
+                loadKg: "",
+              })),
+            },
+          ];
+        }),
+      );
+      const target = Object.values(exercises).find((exercise) => exercise.role === "main")!;
+      target.sets.push({
+        ...target.sets[0]!,
+        setNumber: target.sets.length + 1,
+        kind: "warmup",
+        confirmed: false,
+        value: "",
+      });
+      const startedAt = new Date(Date.now() - 60_000).toISOString();
+      const pausedAt = new Date(Date.now() - 40_000).toISOString();
+      const resumedAt = new Date(Date.now() - 20_000).toISOString();
+      const executionDraft = {
+        version: 1 as const,
+        activityId: activity.id,
+        civilDate,
+        expectedRevision: activity.revision,
+        status: "in_progress" as const,
+        startedAt,
+        intervals: [
+          { startedAt, endedAt: pausedAt },
+          { startedAt: resumedAt, endedAt: null },
+        ],
+        exercises,
+      };
+      expect(
+        await client.trainingActivityExerciseExecution.count({
+          where: { activityId: activity.id },
+        }),
+      ).toBe(0);
+      expect(
+        await client.trainingActivityExecutionInterval.count({
+          where: { activityId: activity.id },
+        }),
+      ).toBe(0);
+      await expect(
+        repository.controlTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          civilDate,
+          activityId: activity.id,
+          action: "complete",
+          intensity: "moderate",
+          energy: "normal",
+          comment: null,
+          expectedRevision: activity.revision,
+        }),
+      ).resolves.toMatchObject({ status: "invalid" });
+      await expect(
+        repository.controlTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          civilDate,
+          activityId: activity.id,
+          action: "complete",
+          intensity: "moderate",
+          energy: "normal",
+          comment: null,
+          expectedRevision: activity.revision,
+          executionDraft: {
+            ...executionDraft,
+            exercises: {
+              ...executionDraft.exercises,
+              "main:unknown": {
+                ...Object.values(executionDraft.exercises)[0]!,
+                exerciseId: "unknown",
+              },
+            },
+          },
+        }),
+      ).resolves.toMatchObject({ status: "invalid" });
+      expect(
+        await client.trainingActivityExecutionInterval.count({
+          where: { activityId: activity.id },
+        }),
+      ).toBe(0);
+      await expect(
+        repository.controlTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          civilDate,
+          activityId: activity.id,
+          action: "complete",
+          intensity: "moderate",
+          energy: "normal",
+          comment: null,
+          expectedRevision: activity.revision,
+          executionDraft,
+        }),
+      ).resolves.toEqual({ status: "saved", revision: activity.revision + 1 });
+      expect(
+        await client.trainingActivityExerciseExecution.count({
+          where: { activityId: activity.id },
+        }),
+      ).toBe(definitions.length);
+      expect(
+        await client.trainingActivitySetExecution.count({
+          where: { exerciseExecution: { activityId: activity.id } },
+        }),
+      ).toBe(9);
+      expect(
+        await client.trainingActivityExecutionInterval.count({
+          where: { activityId: activity.id },
+        }),
+      ).toBe(2);
+      expect(
+        (await client.trainingDayActivity.findUniqueOrThrow({ where: { id: activity.id } })).status,
+      ).toBe("completed");
+
+      const savedSets = await client.trainingActivitySetExecution.findMany({
+        where: { exerciseExecution: { activityId: activity.id } },
+      });
+      expect(savedSets.some((set) => set.kind === "warmup" && set.confirmed === false)).toBe(true);
+      expect(savedSets.some((set) => set.setNumber === 2 && set.confirmed === true)).toBe(true);
+    }));
+
   it("commits the browser draft, intervals and every structured set only on finalization", () =>
     withImportDatabase(async (client) => {
       const fixture = await client.$transaction(createDatabaseFixture);

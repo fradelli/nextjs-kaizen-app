@@ -20,14 +20,9 @@ export function AppShellNavigationLinks({ items }: AppShellNavigationLinksProps)
               >
                 <span className={styles.icon} aria-hidden="true">
                   {item.href === "/treino" ? (
-                    <BarbellIcon size={24} weight="regular" aria-hidden="true" focusable="false" />
+                    <BarbellIcon size={24} weight="fill" aria-hidden="true" focusable="false" />
                   ) : (
-                    <ForkKnifeIcon
-                      size={24}
-                      weight="regular"
-                      aria-hidden="true"
-                      focusable="false"
-                    />
+                    <ForkKnifeIcon size={24} weight="fill" aria-hidden="true" focusable="false" />
                   )}
                 </span>
                 <span className={styles.label}>

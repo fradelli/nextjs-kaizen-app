@@ -240,7 +240,25 @@
       "right": "Direita"
     },
     "block": "Bloco {ordinal}{position}",
-    "deleting": "Excluindo…"
+    "deleting": "Excluindo…",
+    "setReference": "Anterior",
+    "warmupSet": "Aquecimento {number}",
+    "confirmSet": "Confirmar série {number}",
+    "addWorkSet": "+ Série válida",
+    "addWarmupSet": "+ Aquecimento",
+    "skipRest": "Pular",
+    "exerciseOpen": "Em aberto",
+    "exerciseComplete": "Completo",
+    "exercisePartial": "Parcial",
+    "exerciseEmpty": "Não realizado",
+    "executionTips": "Como executar",
+    "exerciseHistory": "Histórico",
+    "noReference": "Sem referência",
+    "setHeading": "SET",
+    "confirmHeading": "✓",
+    "lessRest": "−15 s",
+    "moreRest": "+15 s",
+    "separator": " · "
   },
   "feedback": {
     "rescheduleStarted": "Só é possível mudar a data de atividades ainda não iniciadas, incluindo o aquecimento.",

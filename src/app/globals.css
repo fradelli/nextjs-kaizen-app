@@ -13,3 +13,23 @@ html.kaizen-static-motion dialog::backdrop {
   scroll-behavior: auto !important;
   transition: none !important;
 }
+
+/* Escala responsiva compartilhada; campos preservam 16px para foco no mobile. */
+.kaizen-text-title {
+  @apply text-sm sm:text-base;
+}
+.kaizen-text-body {
+  @apply text-xs sm:text-sm;
+}
+.kaizen-text-caption {
+  @apply text-xs sm:text-sm;
+}
+.kaizen-text-body input {
+  font-size: 1rem;
+}
+
+:root {
+  --kaizen-mobile-nav-height: calc(2.75rem + 2 * var(--fd-space-2) + 2px);
+  --kaizen-mobile-nav-bottom: calc(var(--fd-space-2) + env(safe-area-inset-bottom, 0px));
+  --kaizen-rest-panel-height: 9rem;
+}

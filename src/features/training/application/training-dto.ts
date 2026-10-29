@@ -1,5 +1,6 @@
 import type {
   CivilDate,
+  TrainingExerciseHistory,
   NormalizedTrainingDose,
   TrainingExerciseRole,
   TrainingExecutionStatus,
@@ -61,6 +62,9 @@ export type PublicTrainingPlanDto =
 
 export type TrainingSetDto = Readonly<{
   setNumber: number;
+  kind?: "warmup" | "work";
+  confirmed?: boolean | null;
+
   status: TrainingItemStatus;
   value: number | null;
   leftValue: number | null;
@@ -71,6 +75,9 @@ export type TrainingSetDto = Readonly<{
 }>;
 
 export type TrainingDayExerciseDto = PublicTrainingExerciseDto &
+  Readonly<{
+    history?: readonly TrainingExerciseHistory[];
+  }> &
   Readonly<{
     executionId: string | null;
     status: TrainingItemStatus;

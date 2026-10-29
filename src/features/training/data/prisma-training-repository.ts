@@ -1,3 +1,4 @@
+import { hasPerformedTrainingSetMeasures } from "../domain/training-set-execution.rules";
 import { ensureScheduledTrainingDayInTransaction } from "./ensure-scheduled-training-day";
 import {
   activityScheduleInclude,
@@ -143,10 +144,91 @@ export class PrismaTrainingRepository implements TrainingRepository {
           }
         }
 
+        const historyExerciseIds = [
+          ...new Set(
+            activities.flatMap(
+              (activity) =>
+                activity.session?.trainingExerciseDefinition_session.map(
+                  (prescription) => prescription.exercise.exerciseId,
+                ) ?? [],
+            ),
+          ),
+        ];
+        const prior = await transaction.trainingActivityExerciseExecution.findMany({
+          where: {
+            workspaceId: input.workspaceId,
+            prescription: { exercise: { exerciseId: { in: historyExerciseIds } } },
+            role: "main",
+            activity: {
+              workspaceId: input.workspaceId,
+              deletedAt: null,
+              status: "completed",
+              civilDate: { lte: toCivilDateDatabaseValue(input.civilDate) },
+            },
+          },
+          orderBy: [{ activity: { civilDate: "desc" } }, { createdAt: "desc" }, { id: "desc" }],
+          include: {
+            sets: { orderBy: { setNumber: "asc" } },
+            prescription: { include: { exercise: true } },
+            activity: { select: { civilDate: true, startedAt: true } },
+          },
+        });
+        const history = prior.map((item) => {
+          const dose = parseNormalizedTrainingDose(item.prescription.normalizedDose);
+          return {
+            date: item.activity.civilDate.toISOString().slice(0, 10),
+            activityId: item.activityId,
+            startedAt: item.activity.startedAt?.toISOString() ?? null,
+            exerciseId: item.prescription.exercise.exerciseId,
+            unit: dose.unit,
+            scope: dose.scope,
+            loadApplicable: item.prescription.exercise.loadApplicable,
+            sets: item.sets.map((set) => ({
+              setNumber: set.setNumber,
+              kind: set.kind as "work" | "warmup",
+              confirmed: set.confirmed,
+              status:
+                (set.confirmed ??
+                isSetResultPerformed(
+                  {
+                    ...set,
+                    directionValues: parseDirectionValues(set.directionValues),
+                    value: set.value,
+                    loadKg: set.loadKg?.toString() ?? null,
+                  },
+                  dose,
+                ))
+                  ? ("completed" as const)
+                  : ("skipped" as const),
+              value: set.value,
+              leftValue: set.leftValue,
+              rightValue: set.rightValue,
+              directionValues: parseDirectionValues(set.directionValues),
+              loadKg: set.loadKg?.toString() ?? null,
+              revision: set.revision,
+            })),
+          };
+        });
+        history.sort((a, b) =>
+          (b.startedAt ?? `${b.date}T00:00:00.000Z`).localeCompare(
+            a.startedAt ?? `${a.date}T00:00:00.000Z`,
+          ),
+        );
         return Object.freeze({
           activePlan,
           assignment: assignment ? mapPrismaTrainingAssignment(assignment) : null,
-          activities: Object.freeze(activities.map(mapTrainingActivity)),
+          activities: Object.freeze(
+            activities.map((activity) => ({
+              ...mapTrainingActivity(activity),
+              history: history.filter(
+                (item) =>
+                  item.activityId !== activity.id &&
+                  (item.startedAt && activity.startedAt
+                    ? item.startedAt < activity.startedAt.toISOString()
+                    : item.date < input.civilDate),
+              ),
+            })),
+          ),
         });
       },
       { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
@@ -444,6 +526,8 @@ export class PrismaTrainingRepository implements TrainingRepository {
             });
         for (const { setInput, loadKg } of normalizedSets) {
           const data = {
+            kind: setInput.kind ?? "work",
+            confirmed: setInput.confirmed ?? null,
             value: setInput.value,
             leftValue: setInput.leftValue,
             rightValue: setInput.rightValue,
@@ -704,6 +788,8 @@ async function completeTrainingActivityFromDraft(
       if (value === null || leftValue === null || rightValue === null)
         return invalid("Revise os valores das séries.");
       sets.push({
+        kind: set.kind ?? "work",
+        confirmed: set.confirmed ?? null,
         setNumber: set.setNumber,
         value,
         leftValue: dose.scope === "each_side" ? leftValue : set.leftValue === "" ? null : leftValue,
@@ -727,11 +813,7 @@ async function completeTrainingActivityFromDraft(
     };
     const setError =
       role === "main"
-        ? validateCompleteExerciseSetInput(
-            command,
-            prescription.sets,
-            parseNormalizedTrainingDose(prescription.normalizedDose),
-          )
+        ? validateCompleteExerciseSetInput(command, prescription.sets, dose)
         : sets.length
           ? invalid("Aquecimento não aceita séries.", "sets")
           : null;
@@ -793,6 +875,8 @@ async function completeTrainingActivityFromDraft(
         });
     for (const set of item.sets) {
       const data = {
+        kind: set.kind,
+        confirmed: set.confirmed,
         value: set.value,
         leftValue: set.leftValue,
         rightValue: set.rightValue,
@@ -1000,9 +1084,12 @@ function mapTrainingActivity(activity: TrainingDayActivityRow): TrainingActivity
             execution.sets.map((set) =>
               Object.freeze({
                 setNumber: set.setNumber,
-                status: hasSetExecutionMeasurement(set)
-                  ? ("completed" as const)
-                  : ("skipped" as const),
+                kind: set.kind as "warmup" | "work",
+                confirmed: set.confirmed,
+                status:
+                  (set.confirmed ?? hasSetExecutionMeasurement(set))
+                    ? ("completed" as const)
+                    : ("skipped" as const),
                 value: set.value,
                 leftValue: set.leftValue,
                 rightValue: set.rightValue,
@@ -1256,6 +1343,22 @@ function validateCompleteExerciseSetInput(
   prescribedSetCount: number,
   dose: NormalizedTrainingDose,
 ): TrainingMutationResult | null {
+  if (input.sets.every((set) => typeof set.confirmed === "boolean")) {
+    if (
+      input.sets.length > 100 ||
+      input.sets.filter((set) => (set.kind ?? "work") === "work").length < prescribedSetCount ||
+      new Set(input.sets.map((set) => set.setNumber)).size !== input.sets.length ||
+      input.sets.some(
+        (set) =>
+          !Number.isInteger(set.setNumber) ||
+          set.setNumber < 1 ||
+          set.setNumber > 100 ||
+          (set.confirmed && !isSetResultPerformed(set, dose)),
+      )
+    )
+      return invalid("Revise as séries e suas medidas.", "sets");
+    return null;
+  }
   if (input.sets.length !== prescribedSetCount) {
     return invalid("Envie todas as séries prescritas ao salvar o exercício.", "sets");
   }
@@ -1275,23 +1378,13 @@ function validateCompleteExerciseSetInput(
 }
 
 function isSetResultPerformed(
-  set: SaveTrainingActivityExerciseCommand["sets"][number],
+  set: Pick<
+    SaveTrainingActivityExerciseCommand["sets"][number],
+    "value" | "leftValue" | "rightValue" | "directionValues" | "loadKg"
+  >,
   dose: NormalizedTrainingDose,
 ): boolean {
-  if (dose.scope === "total") return set.value > 0;
-  if (dose.scope === "each_side") {
-    return (set.leftValue ?? 0) > 0 && (set.rightValue ?? 0) > 0;
-  }
-  const requiredDirections =
-    dose.scope === "two_directions"
-      ? ["forward", "backward"]
-      : dose.scope === "four_directions"
-        ? ["flexion", "extension", "left", "right"]
-        : [];
-  return (
-    requiredDirections.length > 0 &&
-    requiredDirections.every((direction) => (set.directionValues?.[direction] ?? 0) > 0)
-  );
+  return hasPerformedTrainingSetMeasures(set, dose);
 }
 
 function hasSetExecutionMeasurement(set: {

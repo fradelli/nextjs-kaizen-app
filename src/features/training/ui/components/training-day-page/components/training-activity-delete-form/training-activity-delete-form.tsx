@@ -102,7 +102,7 @@ export function TrainingActivityDeleteForm({
         }}
       >
         {compact ? (
-          <TrashIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+          <TrashIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
         ) : (
           t("deleteActivity")
         )}
