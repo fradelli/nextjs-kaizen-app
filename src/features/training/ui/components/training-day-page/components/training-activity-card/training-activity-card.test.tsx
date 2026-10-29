@@ -313,13 +313,55 @@ describe("TrainingActivityCard", () => {
     fireEvent.click(screen.getByRole("switch", { name: "Concluir exercício" }));
     expect(screen.queryByLabelText("Repetições")).not.toBeInTheDocument();
     const exerciseCard = screen.getByText("Agachamento").closest("article");
-    expect(exerciseCard?.className).toContain("border-l-status-info-border");
+    expect(within(exerciseCard!).getByText(/Não realizado/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("switch", { name: "Reabrir exercício para edição" }));
-    expect(exerciseCard?.className).toContain("border-l-category-yellow-border");
-    fireEvent.click(screen.getByRole("button", { name: "Comentário" }));
-    expect(within(exerciseCard!).getByLabelText("Comentário")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Fechar comentário" }));
-    expect(within(exerciseCard!).queryByLabelText("Comentário")).not.toBeInTheDocument();
+    expect(within(exerciseCard!).getByText(/Em aberto/)).toBeInTheDocument();
+    fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Comentário" }));
+    const dialog = screen.getByRole("dialog");
+    fireEvent.change(within(dialog).getByLabelText("Comentário"), {
+      target: { value: "Ajuste local" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Salvar" }));
+    fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Comentário" }));
+    expect(within(screen.getByRole("dialog")).getByLabelText("Comentário")).toHaveValue(
+      "Ajuste local",
+    );
+    expect(action).not.toHaveBeenCalled();
+  });
+
+  it("keeps confirmation and added warmups local and requires every set for green", async () => {
+    const planned = createStructuredActivity({ status: "scheduled" });
+    const exercise = createExercise("main", "Agachamento", "8 reps", "pending");
+    renderCard({
+      ...planned,
+      structured: {
+        ...planned.structured!,
+        main: { ...planned.structured!.main, exercises: [exercise] },
+      },
+    });
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Iniciar treino" })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar treino" }));
+    fireEvent.click(screen.getByRole("button", { name: "Ir para o treino" }));
+    fireEvent.change(screen.getByLabelText("Série 1 Repetições"), { target: { value: "8" } });
+    const check = screen.getByRole("button", { name: "Confirmar série 1" });
+    expect(check).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(check);
+    expect(check).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(screen.getByRole("button", { name: "+ Aquecimento" }));
+    expect(screen.getByLabelText("Aquecimento 1")).toHaveTextContent("W");
+    fireEvent.click(screen.getByRole("switch", { name: "Concluir exercício" }));
+    expect(screen.getByText(/Parcial/)).toBeInTheDocument();
+    const stored = JSON.parse(
+      localStorage.getItem(`kaizen:training-draft:v1:2026-09-17:${planned.id}`)!,
+    );
+    const recorded = stored.exercises[`main:${exercise.exerciseId}`];
+    expect(recorded.sets).toHaveLength(exercise.sets.length + 1);
+    expect(recorded.sets.find((set: { kind: string }) => set.kind === "warmup").confirmed).toBe(
+      false,
+    );
+    expect(recorded.rest).toBeDefined();
     expect(action).not.toHaveBeenCalled();
   });
 

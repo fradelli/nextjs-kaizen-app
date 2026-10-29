@@ -127,7 +127,7 @@ export function TrainingActivityModal({
             disabled={busy}
             onClick={onRequestClose}
           >
-            <XIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
+            <XIcon size={20} weight="bold" aria-hidden="true" focusable="false" />
           </Button>
         </header>
         <div className={s.body}>{children}</div>

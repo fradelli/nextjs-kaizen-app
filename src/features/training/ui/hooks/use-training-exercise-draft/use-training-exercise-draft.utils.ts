@@ -1,3 +1,4 @@
+import { hasPerformedTrainingSetMeasures } from "@/features/training/domain/training-set-execution.rules";
 import type { NormalizedTrainingDose } from "@/features/training/domain/training-day.types";
 import type { TrainingDayExerciseDto } from "@/features/training/application/training-dto";
 
@@ -8,6 +9,8 @@ export function createTrainingSetDrafts(
 ): readonly TrainingSetDraft[] {
   return exercise.sets.map((set) => ({
     setNumber: set.setNumber,
+    kind: set.kind ?? "work",
+    confirmed: set.confirmed === undefined ? set.status === "completed" : set.confirmed,
     value: displayValue(set.value),
     leftValue: displayValue(set.leftValue),
     rightValue: displayValue(set.rightValue),
@@ -25,14 +28,7 @@ export function isTrainingSetPerformed(
   set: TrainingSetDraft,
   dose: NormalizedTrainingDose,
 ): boolean {
-  if (dose.scope === "total") return positive(set.value);
-  if (dose.scope === "each_side") return positive(set.leftValue) && positive(set.rightValue);
-
-  const directions = requiredDirections(dose.scope);
-  return (
-    directions.length > 0 &&
-    directions.every((direction) => positive(set.directionValues[direction] ?? ""))
-  );
+  return hasPerformedTrainingSetMeasures(set, dose);
 }
 
 export function hasTrainingSetData(set: TrainingSetDraft): boolean {
@@ -49,6 +45,8 @@ export function serializeTrainingSetDrafts(drafts: readonly TrainingSetDraft[]):
   return JSON.stringify(
     drafts.map((set) => ({
       setNumber: set.setNumber,
+      kind: set.kind ?? "work",
+      confirmed: set.confirmed,
       value: integerOrZero(set.value),
       leftValue: nullableInteger(set.leftValue),
       rightValue: nullableInteger(set.rightValue),
@@ -63,20 +61,10 @@ export function serializeTrainingSetDrafts(drafts: readonly TrainingSetDraft[]):
   );
 }
 
-export function requiredDirections(
-  scope: string,
-): readonly ("forward" | "backward" | "flexion" | "extension" | "left" | "right")[] {
-  if (scope === "two_directions") return ["forward", "backward"];
-  if (scope === "four_directions") return ["flexion", "extension", "left", "right"];
-  return [];
-}
+export { requiredDirections } from "@/features/training/domain/training-set-execution.rules";
 
 function displayValue(value: number | null): string {
   return value === null || value === 0 ? "" : String(value);
-}
-
-function positive(value: string): boolean {
-  return Number(value) > 0;
 }
 
 function integerOrZero(value: string): number {

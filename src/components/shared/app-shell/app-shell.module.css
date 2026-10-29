@@ -69,3 +69,14 @@
     padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+.content:has([data-rest-panel-active]) {
+  padding-bottom: calc(var(--kaizen-rest-panel-height) + 2 * var(--fd-space-4));
+}
+@media (width < 48rem) {
+  .content:has([data-rest-panel-active]) {
+    padding-bottom: calc(
+      var(--kaizen-mobile-nav-bottom) + var(--kaizen-rest-panel-height) + 2 * var(--fd-space-4)
+    );
+  }
+}

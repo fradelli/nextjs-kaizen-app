@@ -2,6 +2,9 @@ import type { TrainingDayExerciseDto } from "@/features/training/application/tra
 
 export type TrainingSetDraft = Readonly<{
   setNumber: number;
+  kind?: "warmup" | "work";
+  confirmed?: boolean | null;
+
   value: string;
   leftValue: string;
   rightValue: string;

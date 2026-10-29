@@ -240,7 +240,25 @@
       "right": "Right"
     },
     "block": "Block {ordinal}{position}",
-    "deleting": "Deleting…"
+    "deleting": "Deleting…",
+    "setReference": "Previous",
+    "warmupSet": "Warm-up {number}",
+    "confirmSet": "Confirm set {number}",
+    "addWorkSet": "+ Work set",
+    "addWarmupSet": "+ Warm-up",
+    "skipRest": "Skip",
+    "exerciseOpen": "Open",
+    "exerciseComplete": "Complete",
+    "exercisePartial": "Partial",
+    "exerciseEmpty": "Not performed",
+    "executionTips": "How to perform",
+    "exerciseHistory": "History",
+    "noReference": "No reference",
+    "setHeading": "SET",
+    "confirmHeading": "✓",
+    "lessRest": "−15 s",
+    "moreRest": "+15 s",
+    "separator": " · "
   },
   "feedback": {
     "rescheduleStarted": "Only activities that have not started, including warm-up, can be moved to another date.",

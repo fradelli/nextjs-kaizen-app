@@ -76,7 +76,9 @@ const activityControlSchema = z.object({
             sets: z
               .array(
                 z.object({
-                  setNumber: z.number().int().positive(),
+                  setNumber: z.number().int().positive().max(100),
+                  kind: z.enum(["warmup", "work"]).optional(),
+                  confirmed: z.boolean().nullable().optional(),
                   value: z.string().max(16),
                   leftValue: z.string().max(16),
                   rightValue: z.string().max(16),
@@ -109,7 +111,9 @@ const activityExerciseSchema = z.object({
     parseJsonFormValue,
     z.array(
       z.object({
-        setNumber: z.number().int().positive(),
+        setNumber: z.number().int().positive().max(100),
+        kind: z.enum(["warmup", "work"]).optional(),
+        confirmed: z.boolean().nullable().optional(),
         value: z.number().int().nonnegative(),
         leftValue: z.number().int().nonnegative().nullable(),
         rightValue: z.number().int().nonnegative().nullable(),

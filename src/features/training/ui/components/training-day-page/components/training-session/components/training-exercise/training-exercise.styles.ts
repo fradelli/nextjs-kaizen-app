@@ -1,14 +1,16 @@
 export const trainingExerciseStyles = {
-  root: "fd-card flex flex-col gap-3 rounded-2xl border border-border border-l-4 bg-surface p-4",
+  root: "flex flex-col gap-3 border-b border-border py-4 sm:px-4",
   status: {
-    pending: "border-l-category-yellow-border",
-    completed: "border-l-status-info-border",
+    pending: "border-l-status-info-border",
+    completed: "border-l-status-success-border",
+    partial: "border-l-status-warning-border",
+    empty: "border-l-status-destructive-border",
   },
   header: "flex items-start justify-between gap-2",
   heading: "min-w-0",
-  title: "fd-text-interface font-semibold text-foreground",
+  title: "kaizen-text-title font-semibold text-foreground",
   prescription: "text-sm font-medium text-foreground",
-  metadata: "flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground",
+  metadata: "flex flex-wrap gap-x-2 gap-y-1 kaizen-text-caption text-muted-foreground",
   screenReaderOnly: "sr-only",
   disclosure: "rounded-xl border border-border bg-surface-elevated",
   disclosureSummary:

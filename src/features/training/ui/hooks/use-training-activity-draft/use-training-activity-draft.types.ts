@@ -6,6 +6,7 @@ export type TrainingExerciseExecutionDraft = {
   exerciseId: string;
   role: "main" | "preparation";
   completed: boolean;
+  rest?: { setNumber: number; endsAt: number };
   comment: string;
   sets: readonly TrainingSetDraft[];
 };

@@ -58,6 +58,8 @@ export type TrainingActivityExecutionInput = Readonly<{
         comment: string;
         sets: readonly Readonly<{
           setNumber: number;
+          kind?: "warmup" | "work";
+          confirmed?: boolean | null;
           value: string;
           leftValue: string;
           rightValue: string;
@@ -83,6 +85,8 @@ export type SaveTrainingActivityExerciseCommand = Readonly<{
 }>;
 
 export type TrainingActivitySetResultInput = Readonly<{
+  kind?: "warmup" | "work";
+  confirmed?: boolean | null;
   setNumber: number;
   value: number;
   leftValue: number | null;

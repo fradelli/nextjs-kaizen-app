@@ -127,6 +127,12 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
         const now = new Date().toISOString();
         const paused: TrainingActivityExecutionDraft = {
           ...running,
+          exercises: Object.fromEntries(
+            Object.entries(running.exercises).map(([key, exercise]) => [
+              key,
+              { ...exercise, rest: undefined },
+            ]),
+          ),
           status: "paused",
           intervals: running.intervals.map((interval, intervalIndex) =>
             intervalIndex === running.intervals.length - 1 && interval.endedAt === null
@@ -216,7 +222,13 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
     updateExercise(exerciseKey: string, exercise: TrainingExerciseExecutionDraft) {
       const current = currentDraft.current;
       if (!isTrainingExecutionDateEditable(civilDate) || !current) return;
-      publishDraft({ ...current, exercises: { ...current.exercises, [exerciseKey]: exercise } });
+      const exercises = { ...current.exercises };
+      if (exercise.rest && exercise.rest !== exercises[exerciseKey]?.rest) {
+        for (const key of Object.keys(exercises))
+          exercises[key] = { ...exercises[key]!, rest: undefined };
+      }
+      exercises[exerciseKey] = exercise;
+      publishDraft({ ...current, exercises });
     },
     clear() {
       publishDraft(null);

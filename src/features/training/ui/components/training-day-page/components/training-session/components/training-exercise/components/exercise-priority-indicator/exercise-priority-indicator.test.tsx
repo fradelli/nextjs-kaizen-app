@@ -20,7 +20,7 @@ describe("ExercisePriorityIndicator", () => {
     const indicator = screen.getByRole("img", { name: label });
     expect(indicator).toHaveAttribute("title", label);
     expect(indicator).toHaveTextContent("Prioridade:");
-    expect(indicator.querySelectorAll(".bg-muted-foreground")).toHaveLength(level);
+    expect(indicator.querySelectorAll(".bg-status-warning")).toHaveLength(level);
     expect(indicator.className).not.toContain("red");
   });
 });
