@@ -24,4 +24,4 @@ data continuam preservadas. Sem alteração no DS, banco ou dados de planos.
 
 394 testes, lint, estrutura, tipos/build e diff check aprovados. Chromium 320/1440px
 confirmou estado desabilitado, cor de hover e retorno para hoje pela marca e raiz.
-Alterações locais na branch codex/E10-T08-today-navigation, sem commit.
+Ajustes publicados junto da E09-T09 na PR [#75](https://github.com/fradelli/nextjs-kaizen-app/pull/75), com destino developer.

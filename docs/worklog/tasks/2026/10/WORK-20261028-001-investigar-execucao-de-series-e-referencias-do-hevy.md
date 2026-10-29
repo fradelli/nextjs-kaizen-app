@@ -77,6 +77,10 @@ Confrontar regras atuais com benchmark e preparar decisões antes de fechar plan
 - Achado: Há alterações paralelas de internacionalização na árvore; preservadas. Participação do aquecimento na completude e limite entre ausência e medidas parciais ainda pendentes.
 - Decisão: Aprovadas cinco regras de descanso; faixa no cabeçalho e toggle que finaliza/recolhe permanecem. Amarelo parcial aprovado; vermelho para nenhuma execução sugerido pelo usuário.
 
+### 2026-10-29
+
+- Decisão: Usuário confirmou: verde somente quando tudo completado; aquecimentos, válidas e séries adicionadas participam. Toggle finalizado com qualquer série pendente não fica verde.
+
 ## Resultado final
 
 

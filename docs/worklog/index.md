@@ -6,13 +6,13 @@
 
 | ID | Status | Início | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa |
 |---|---|---|---|---|---|---|---|
-| [WORK-20261029-003](tasks/2026/10/WORK-20261029-003-publicar-i18n-e-alteracoes-acumuladas-em-pr.md) | em-andamento | 2026-10-29 |  | — | não informadas | — | Publicar i18n e alterações acumuladas em PR |
 | [WORK-20261028-001](tasks/2026/10/WORK-20261028-001-investigar-execucao-de-series-e-referencias-do-hevy.md) | em-andamento | 2026-10-28 |  | — | não informadas | — | Investigar execução de séries e referências do Hevy |
 
 ## Concluídas e canceladas
 
 | ID | Status | Início | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa |
 |---|---|---|---|---|---|---|---|
+| [WORK-20261029-003](tasks/2026/10/WORK-20261029-003-publicar-i18n-e-alteracoes-acumuladas-em-pr.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Publicar i18n e alterações acumuladas em PR |
 | [WORK-20261029-002](tasks/2026/10/WORK-20261029-002-implementar-i18n-da-interface-em-portugues-e-ingles.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Implementar i18n da interface em português e inglês |
 | [WORK-20261029-001](tasks/2026/10/WORK-20261029-001-planejar-internacionalizacao-portugues-e-ingles.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Planejar internacionalização português e inglês |
 | [WORK-20261026-006](tasks/2026/10/WORK-20261026-006-implementar-fim-planejado-automatico-do-treino.md) | concluida | 2026-10-26 | 2026-10-26 | — | não informadas | — | Implementar fim planejado automatico do treino |

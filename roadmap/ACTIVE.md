@@ -5,11 +5,11 @@
 - **Entrada principal:** `roadmap/epics/E09-future-evolution/T09-localize-current-interface.md`.
 - **Branch:** `codex/E09-T09-interface-i18n`.
 - **Autorização:** implementação e retomada aprovadas pelo usuário em 29/10/2026.
-- **Próxima ação:** interface traduzida e validada; integrar conteúdo editorial quando o catálogo novo estiver definido. Alterações locais sem commit ou PR.
+- **Próxima ação:** PR [#75](https://github.com/fradelli/nextjs-kaizen-app/pull/75) aberta para developer; acompanhar checks e revisão. Conteúdo editorial será integrado ao catálogo novo.
 
 ## Pendências preservadas
 
-- E10-T08: alterações locais preservadas, sem commit ou PR.
+- E10-T08: ajustes publicados junto da E09-T09 na PR #75.
 
 - E06-T23: registro retrospectivo implementado e integrado; jornada manual completa ainda pendente. Não repetir a implementação.
 - E06-T14: BLOCKED por validação de teclado virtual e área segura em dispositivo real.
