@@ -1,3 +1,5 @@
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
@@ -13,21 +15,27 @@ const inter = Inter({
 
 export const viewport: Viewport = { viewportFit: "cover" };
 
-export const metadata: Metadata = {
-  title: "Kaizen",
-  description: "Dieta e treino pessoal.",
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("metadata");
+  return {
+    title: "Kaizen",
+    description: t("description"),
+    robots: {
+      index: false,
+      follow: false,
+      nocache: true,
+    },
+  };
+}
 
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="pt-BR" className={`${inter.variable} dark kaizen-static-motion`}>
+    <html lang={locale} className={`${inter.variable} dark kaizen-static-motion`}>
       <body>
-        <AppShell>{children}</AppShell>
+        <NextIntlClientProvider>
+          <AppShell>{children}</AppShell>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

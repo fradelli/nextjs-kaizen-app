@@ -1,4 +1,9 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "../../../../../../../../tests/support/render-localized";
 import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import { TrainingActivityModal } from "./training-activity-modal";
 beforeEach(() => {

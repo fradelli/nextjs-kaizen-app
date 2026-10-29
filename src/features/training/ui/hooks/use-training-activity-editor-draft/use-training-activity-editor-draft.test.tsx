@@ -1,5 +1,10 @@
 import { StrictMode } from "react";
-import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  renderHook,
+  waitFor,
+} from "../../../../../../tests/support/render-localized";
 import { afterEach, describe, it, expect, vi } from "vitest";
 import {
   activityEditorContext,

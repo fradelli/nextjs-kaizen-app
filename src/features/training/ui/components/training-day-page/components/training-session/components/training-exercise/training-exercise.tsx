@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Alert, AlertDescription, AlertTitle } from "@fradelli/ui/alert";
 import { Input } from "@fradelli/ui/input";
@@ -24,6 +25,8 @@ export function TrainingExercise({
   executionDraft,
   onExecutionDraftChange,
 }: TrainingExerciseProps) {
+  const t = useTranslations("training");
+
   const local = Boolean(executionDraft && onExecutionDraftChange);
   const completed = local
     ? executionDraft!.completed
@@ -40,7 +43,14 @@ export function TrainingExercise({
             {formatTrainingDisplayText(exercise.name)}
           </h3>
           {exercise.blockLabel ? (
-            <p className={trainingExerciseStyles.prescription}>{exercise.blockLabel}</p>
+            <p className={trainingExerciseStyles.prescription}>
+              {exercise.block?.mode === "alternating"
+                ? t("block", {
+                    ordinal: exercise.block.ordinal,
+                    position: exercise.block.position === 1 ? "A" : "B",
+                  })
+                : exercise.blockLabel}
+            </p>
           ) : null}
         </div>
         {local ? (
@@ -48,7 +58,7 @@ export function TrainingExercise({
             className="shrink-0"
             checked={completed}
             onClick={() => onExecutionDraftChange?.({ ...executionDraft!, completed: !completed })}
-            aria-label={completed ? "Reabrir exercício para edição" : "Concluir exercício"}
+            aria-label={completed ? t("reopenExercise") : t("completeExercise")}
           />
         ) : role === "preparation" && saveExerciseAction && civilDate && activityId && sessionId ? (
           <TrainingWarmupToggle
@@ -64,22 +74,22 @@ export function TrainingExercise({
       {!completed || !local ? (
         <dl className={trainingExerciseStyles.metadata}>
           <div>
-            <dt className={trainingExerciseStyles.screenReaderOnly}>Séries prescritas</dt>
-            <dd>{exercise.prescribedSets} séries</dd>
+            <dt className={trainingExerciseStyles.screenReaderOnly}>{t("prescribedSets")}</dt>
+            <dd>{t("setCount", { count: exercise.prescribedSets })}</dd>
           </div>
           <div>
-            <dt className={trainingExerciseStyles.screenReaderOnly}>Dose prescrita</dt>
+            <dt className={trainingExerciseStyles.screenReaderOnly}>{t("prescribedDose")}</dt>
             <dd>{formatTrainingDisplayText(exercise.prescribedText)}</dd>
           </div>
           {exercise.restSeconds === null ? null : (
             <div>
-              <dt className={trainingExerciseStyles.screenReaderOnly}>Descanso</dt>
-              <dd>Descanso: {exercise.restSeconds}s</dd>
+              <dt className={trainingExerciseStyles.screenReaderOnly}>{t("rest")}</dt>
+              <dd>{t("restSeconds", { seconds: exercise.restSeconds })}</dd>
             </div>
           )}
           {exercise.priorityLevel ? (
             <div>
-              <dt className={trainingExerciseStyles.screenReaderOnly}>Prioridade</dt>
+              <dt className={trainingExerciseStyles.screenReaderOnly}>{t("priority")}</dt>
               <dd>
                 <ExercisePriorityIndicator level={exercise.priorityLevel} />
               </dd>
@@ -118,12 +128,12 @@ export function TrainingExercise({
         (role === "preparation" && saveExerciseAction) ? (
           <details className={`${trainingExerciseStyles.disclosure} ${styles.disclosure}`}>
             <summary className={trainingExerciseStyles.disclosureSummary}>
-              Ver dicas de execução
+              {t("showInstructions")}
             </summary>
             <div className={trainingExerciseStyles.details}>
               {exercise.notes ? (
                 <div>
-                  <h4 className={trainingExerciseStyles.detailTitle}>Observação</h4>
+                  <h4 className={trainingExerciseStyles.detailTitle}>{t("note")}</h4>
                   <p className={trainingExerciseStyles.notes}>
                     {formatTrainingDisplayText(exercise.notes)}
                   </p>
@@ -131,7 +141,7 @@ export function TrainingExercise({
               ) : null}
               {exercise.instructions.length ? (
                 <div>
-                  <h4 className={trainingExerciseStyles.detailTitle}>Execução</h4>
+                  <h4 className={trainingExerciseStyles.detailTitle}>{t("instructions")}</h4>
                   <ul className={trainingExerciseStyles.list}>
                     {exercise.instructions.map((instruction) => (
                       <li key={instruction}>{instruction}</li>
@@ -141,7 +151,7 @@ export function TrainingExercise({
               ) : null}
               {exercise.cues.length ? (
                 <div>
-                  <h4 className={trainingExerciseStyles.detailTitle}>Pontos de atenção</h4>
+                  <h4 className={trainingExerciseStyles.detailTitle}>{t("cues")}</h4>
                   <ul className={trainingExerciseStyles.list}>
                     {exercise.cues.map((cue) => (
                       <li key={cue}>{cue}</li>
@@ -152,7 +162,7 @@ export function TrainingExercise({
               {exercise.risks ? (
                 <Alert variant="warning" className={trainingExerciseStyles.alert}>
                   <AlertTitle className={trainingExerciseStyles.alertTitle}>
-                    Alerta da definição
+                    {t("definitionWarning")}
                   </AlertTitle>
                   <AlertDescription className={trainingExerciseStyles.alertDescription}>
                     {exercise.risks}
@@ -165,7 +175,7 @@ export function TrainingExercise({
                     htmlFor={`${exercise.prescriptionId}-warmup-comment`}
                     className={trainingExerciseStyles.detailTitle}
                   >
-                    Comentário
+                    {t("comment")}
                   </label>
                   <Input
                     id={`${exercise.prescriptionId}-warmup-comment`}
@@ -199,7 +209,9 @@ export function TrainingExercise({
         ) : null
       ) : null}
       {exercise.comment && !saveExerciseAction ? (
-        <p className={trainingExerciseStyles.notes}>Comentário: {exercise.comment}</p>
+        <p className={trainingExerciseStyles.notes}>
+          {t("commentText", { comment: exercise.comment })}
+        </p>
       ) : null}
     </article>
   );

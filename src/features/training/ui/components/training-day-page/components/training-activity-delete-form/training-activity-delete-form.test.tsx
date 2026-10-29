@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "../../../../../../../../tests/support/render-localized";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type { TrainingActivityDto } from "@/features/training/application/training-dto";

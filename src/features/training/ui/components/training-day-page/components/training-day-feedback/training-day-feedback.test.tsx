@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../../../../../../../tests/support/render-localized";
 import { describe, expect, it } from "vitest";
 
 import { TrainingDayFeedback } from "./training-day-feedback";

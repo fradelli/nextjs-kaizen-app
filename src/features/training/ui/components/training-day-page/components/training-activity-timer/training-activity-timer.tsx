@@ -1,10 +1,13 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useTrainingActivityTimer } from "@/features/training/ui/hooks/use-training-activity-timer/use-training-activity-timer";
 import { trainingActivityTimerStyles } from "./training-activity-timer.styles";
 import type { TrainingActivityTimerProps } from "./training-activity-timer.types";
 
 export function TrainingActivityTimer({ activity, draft }: TrainingActivityTimerProps) {
+  const t = useTranslations("training");
+
   const closedSeconds = draft?.intervals.reduce(
     (total, interval) =>
       total +
@@ -26,7 +29,7 @@ export function TrainingActivityTimer({ activity, draft }: TrainingActivityTimer
       : activity,
   );
   return (
-    <time className={trainingActivityTimerStyles.root} aria-label="Tempo ativo">
+    <time className={trainingActivityTimerStyles.root} aria-label={t("activeTime")}>
       {formatDuration(seconds)}
     </time>
   );

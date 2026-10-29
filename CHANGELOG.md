@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-29 — interface em português e inglês
+
+- Idioma automático do navegador, HTML/metadados e interface de treino traduzidos com next-intl.
+- Catálogos com 290 mensagens por idioma, pluralização, datas e validação no CI.
+- 408 testes e build aprovados; HTML verificado em seis cenários HTTP. Conteúdo editorial aguarda integração com o catálogo novo.
+
+## 2026-10-28 — Hoje e entrada do aplicativo
+
+- Hoje amarelo e desabilitado na data atual; cinza com hover/foco amarelo nas demais. Badge redundante removido.
+- Marca leva à raiz; entrada do aplicativo redireciona para treino de hoje em São Paulo.
+
 ## 2026-10-28 — correções da revisão de rascunhos
 
 - Descarte da avaliação preserva o horário de stop recuperado; eventos de armazenamento são isolados e falhas de limpeza legada não impedem a recuperação da sessão.

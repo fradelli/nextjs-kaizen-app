@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Field, FieldDescription, FieldLabel } from "@fradelli/ui/field";
 import { trainingNativeSelectStyles } from "@/features/training/ui/training-native-select.styles";
 import type { TrainingPreparationSelectProps } from "./training-preparation-select.types";
@@ -10,6 +11,8 @@ export function TrainingPreparationSelect({
   disabled,
   allowKeep,
 }: TrainingPreparationSelectProps) {
+  const t = useTranslations("training");
+
   const sessions =
     availablePlan?.sessions.filter((session) => session.assignmentRole === "preparation") ?? [];
   const id = `activity-preparation-${activity?.id ?? "new"}`;
@@ -17,7 +20,7 @@ export function TrainingPreparationSelect({
   return (
     <Field className="grid min-w-0 gap-2">
       <FieldLabel htmlFor={id} className="fd-text-label text-foreground">
-        Aquecimento
+        {t("warmup")}
       </FieldLabel>
       <select
         id={id}
@@ -31,16 +34,16 @@ export function TrainingPreparationSelect({
         {!["keep", "automatic", "none"].includes(value) &&
         !sessions.some((session) => session.sessionId === value) ? (
           <option value={value} disabled>
-            Aquecimento indisponível
+            {t("warmupUnavailable")}
           </option>
         ) : null}
         {allowKeep ? (
           <option value="keep">
-            {current ? `Manter: ${current}` : "Manter configuração atual"}
+            {current ? t("keepNamedPreparation", { name: current }) : t("keepCurrent")}
           </option>
         ) : null}
-        <option value="automatic">Automático pelo esporte</option>
-        <option value="none">Sem aquecimento</option>
+        <option value="automatic">{t("automaticWarmup")}</option>
+        <option value="none">{t("noWarmup")}</option>
         {sessions.map((session) => (
           <option key={session.sessionId} value={session.sessionId}>
             {session.name}
@@ -49,12 +52,12 @@ export function TrainingPreparationSelect({
       </select>
       <FieldDescription id={`${id}-hint`} className="fd-text-interface text-muted-foreground">
         {disabled
-          ? "O aquecimento de uma atividade já iniciada será preservado."
+          ? t("preserveStartedWarmup")
           : value === "automatic"
-            ? "Usa a associação do esporte no plano, quando disponível. Você também pode escolher um aquecimento."
+            ? t("automaticWarmupDescription")
             : value === "none"
-              ? "Esta atividade será salva sem aquecimento."
-              : "O aquecimento é opcional e não inicia nem conclui a atividade."}
+              ? t("saveWithoutWarmup")
+              : t("optionalWarmupDescription")}
       </FieldDescription>
     </Field>
   );

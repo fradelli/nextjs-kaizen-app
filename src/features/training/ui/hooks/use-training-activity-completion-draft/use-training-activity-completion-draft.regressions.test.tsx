@@ -1,4 +1,9 @@
-import { act, cleanup, renderHook, waitFor } from "@testing-library/react";
+import {
+  act,
+  cleanup,
+  renderHook,
+  waitFor,
+} from "../../../../../../tests/support/render-localized";
 import { afterEach, it, expect, vi } from "vitest";
 import { useTrainingActivityCompletionDraft } from "./use-training-activity-completion-draft";
 const input = {

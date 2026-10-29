@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Switch } from "@fradelli/ui/switch";
 
@@ -17,6 +18,8 @@ export function TrainingWarmupToggle({
   exercise,
   action,
 }: TrainingWarmupToggleProps) {
+  const t = useTranslations("training");
+
   const submission = useTrainingActionFeedback(action);
   const completed = exercise.status === "completed";
   return (
@@ -37,12 +40,10 @@ export function TrainingWarmupToggle({
       <Switch
         type="submit"
         checked={completed}
-        aria-label={
-          completed ? "Marcar aquecimento como não feito" : "Marcar aquecimento como feito"
-        }
+        aria-label={completed ? t("markWarmupIncomplete") : t("markWarmupComplete")}
         disabled={submission.pending}
       />
-      <span className={trainingWarmupToggleStyles.label}>{completed ? "Feito" : "A fazer"}</span>
+      <span className={trainingWarmupToggleStyles.label}>{completed ? t("done") : "A fazer"}</span>
     </form>
   );
 }

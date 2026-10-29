@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { XIcon } from "@fradelli/ui/icons/X";
 import { Button } from "@fradelli/ui/button";
@@ -8,7 +9,7 @@ import { trainingActivityModalStyles as s } from "./training-activity-modal.styl
 export function TrainingActivityModal({
   initialFocusRef,
   size = "form",
-  closeLabel = "Fechar formulário",
+  closeLabel,
   title,
   description,
   children,
@@ -17,6 +18,7 @@ export function TrainingActivityModal({
   onRequestClose,
   restoreFocusRef,
 }: TrainingActivityModalProps) {
+  const t = useTranslations("training");
   const id = useId(),
     dialog = useRef<HTMLDialogElement>(null),
     heading = useRef<HTMLHeadingElement>(null);
@@ -121,7 +123,7 @@ export function TrainingActivityModal({
             variant="ghost"
             size="icon"
             className={s.close}
-            aria-label={closeLabel}
+            aria-label={closeLabel ?? t("closeForm")}
             disabled={busy}
             onClick={onRequestClose}
           >

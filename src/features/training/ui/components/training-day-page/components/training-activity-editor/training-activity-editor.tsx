@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { PencilSimpleIcon } from "@fradelli/ui/icons/PencilSimple";
 import { PlusIcon } from "@fradelli/ui/icons/Plus";
@@ -9,6 +10,8 @@ import { isTrainingAgendaDateEditable } from "@/features/training/domain/trainin
 import { TrainingActivityEditorContent } from "../training-activity-editor-content/training-activity-editor-content";
 import type { TrainingActivityEditorProps } from "./training-activity-editor.types";
 export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
+  const t = useTranslations("training");
+
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [refreshing, startTransition] = useTransition();
@@ -35,7 +38,7 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
         variant={props.activity ? "ghost" : "default"}
         className="min-h-11 min-w-11 [&>svg]:size-5"
         aria-label={
-          props.activity ? `Editar atividade: ${props.activity.name}` : "Adicionar atividade"
+          props.activity ? t("editNamedActivity", { name: props.activity.name }) : t("addActivity")
         }
         disabled={refreshing}
         aria-busy={refreshing || undefined}

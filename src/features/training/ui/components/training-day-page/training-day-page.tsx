@@ -1,5 +1,4 @@
-import { Badge } from "@fradelli/ui/badge";
-
+import { useLocale, useTranslations } from "next-intl";
 import { TrainingDateNavigation } from "./components/training-date-navigation/training-date-navigation";
 import { trainingDayPageStyles } from "./training-day-page.styles";
 import type { TrainingDayPageProps } from "./training-day-page.types";
@@ -11,13 +10,16 @@ export function TrainingDayPage({
   controls,
   summary,
 }: TrainingDayPageProps) {
+  const t = useTranslations("training");
+  const locale = useLocale();
+
   const selectedDate = dateResolution.status === "valid" ? dateResolution.civilDate : null;
 
   return (
     <section className={trainingDayPageStyles.root} aria-labelledby="training-day-title">
       <header className={trainingDayPageStyles.header}>
         <h1 id="training-day-title" className={trainingDayPageStyles.screenReaderTitle}>
-          Treino
+          {t("training")}
         </h1>
         <div className={trainingDayPageStyles.toolbar}>
           <TrainingDateNavigation dateResolution={dateResolution} />
@@ -26,12 +28,9 @@ export function TrainingDayPage({
         <div className={trainingDayPageStyles.headingRow}>
           <p className={trainingDayPageStyles.date}>
             {selectedDate
-              ? formatTrainingDateLabel(selectedDate)
-              : "A data informada não é válida."}
+              ? formatTrainingDateLabel(selectedDate, locale)
+              : t("invalidDateDescription")}
           </p>
-          {dateResolution.status === "valid" && dateResolution.isToday ? (
-            <Badge variant="success">Hoje</Badge>
-          ) : null}
         </div>
         {summary}
       </header>

@@ -3,6 +3,8 @@ allowBuilds:
   "@prisma/engines": true
   prisma: true
   unrs-resolver: true
+  "@parcel/watcher": false
+  "@swc/core": false
 
 minimumReleaseAgeExclude:
   - "@fradelli/ui@0.3.0 || 0.6.0"

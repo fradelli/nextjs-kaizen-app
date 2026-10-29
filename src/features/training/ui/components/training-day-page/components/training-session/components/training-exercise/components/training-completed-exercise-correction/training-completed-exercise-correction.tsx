@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@fradelli/ui/button";
 import { Switch } from "@fradelli/ui/switch";
@@ -18,6 +19,8 @@ export function TrainingCompletedExerciseCorrection({
   exercise,
   action,
 }: TrainingCompletedExerciseCorrectionProps) {
+  const t = useTranslations("training");
+
   const [draft, setDraft] = useState(() =>
     initialTrainingExerciseDraft(sessionId, "main", exercise),
   );
@@ -25,7 +28,7 @@ export function TrainingCompletedExerciseCorrection({
 
   return (
     <details>
-      <summary>Corrigir exercício</summary>
+      <summary>{t("correctExercise")}</summary>
       <form action={submission.formAction} className="space-y-3 pt-3">
         <input type="hidden" name="civilDate" value={civilDate} />
         <input type="hidden" name="activityId" value={activityId} />
@@ -40,10 +43,10 @@ export function TrainingCompletedExerciseCorrection({
         <Switch
           checked={draft.completed}
           onClick={() => setDraft((current) => ({ ...current, completed: !current.completed }))}
-          aria-label={draft.completed ? "Desmarcar exercício" : "Marcar exercício como feito"}
+          aria-label={draft.completed ? t("uncheckExercise") : t("markExerciseDone")}
         />
         <Button type="submit" disabled={submission.pending}>
-          Salvar correção
+          {t("saveCorrection")}
         </Button>
         {submission.state.status !== "saved" && !submission.pending ? (
           <TrainingActionFeedback state={submission.state} pending={false} />

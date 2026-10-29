@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Button } from "@fradelli/ui/button";
 import Link from "next/link";
 
@@ -10,21 +11,23 @@ export function InvalidTrainingDate({
   reason,
   maximumFutureDate,
 }: InvalidTrainingDateProps) {
+  const t = useTranslations("training");
+
   const isFutureDateOutOfRange = reason === "future_date_out_of_range";
   return (
     <TrainingDayFeedback
       variant={isFutureDateOutOfRange ? "warning" : "destructive"}
-      title={isFutureDateOutOfRange ? "Programação ainda indisponível" : "Data inválida"}
+      title={isFutureDateOutOfRange ? t("scheduleUnavailable") : t("invalidDate")}
       description={
         reason === "repeated_date"
-          ? "Informe somente uma data na URL para abrir o treino do dia."
+          ? t("singleDateRequired")
           : isFutureDateOutOfRange
-            ? `Você pode consultar e preparar treinos somente até ${maximumFutureDate ?? "quatro dias à frente"}.`
-            : "Use uma data existente no formato ano-mês-dia, por exemplo 2026-09-16."
+            ? t("futureDateLimit", { date: maximumFutureDate ?? t("fourDaysAhead") })
+            : t("validDateRequired")
       }
       action={
         <Button asChild>
-          <Link href={createTrainingDateHref(todayDate)}>Voltar para hoje</Link>
+          <Link href={createTrainingDateHref(todayDate)}>{t("backToToday")}</Link>
         </Button>
       }
     />

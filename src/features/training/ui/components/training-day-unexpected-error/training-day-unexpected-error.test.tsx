@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "../../../../../../tests/support/render-localized";
 import { describe, expect, it, vi } from "vitest";
 
 import { TrainingDayUnexpectedError } from "./training-day-unexpected-error";

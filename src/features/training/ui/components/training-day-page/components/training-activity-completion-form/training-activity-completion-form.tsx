@@ -1,4 +1,6 @@
 "use client";
+import { useTranslations } from "next-intl";
+
 import { Field, FieldLabel } from "@fradelli/ui/field";
 import { Input } from "@fradelli/ui/input";
 import { trainingNativeSelectStyles } from "@/features/training/ui/training-native-select.styles";
@@ -13,13 +15,15 @@ export function TrainingActivityCompletionForm({
   values,
   onChange,
 }: TrainingActivityCompletionFormProps) {
+  const t = useTranslations("training");
+
   return (
     <fieldset disabled={disabled} className={styles.root}>
-      <legend className="sr-only">Avaliação da atividade</legend>
+      <legend className="sr-only">{t("activityFeedback")}</legend>
       {!mobility ? (
         <>
           <Field>
-            <FieldLabel htmlFor={`${id}-intensity`}>Intensidade</FieldLabel>
+            <FieldLabel htmlFor={`${id}-intensity`}>{t("intensity")}</FieldLabel>
             <select
               id={`${id}-intensity`}
               name="intensity"
@@ -33,14 +37,14 @@ export function TrainingActivityCompletionForm({
                 })
               }
             >
-              <option value="">Selecione</option>
-              <option value="low">Leve</option>
-              <option value="moderate">Moderada</option>
-              <option value="high">Alta</option>
+              <option value="">{t("select")}</option>
+              <option value="low">{t("low")}</option>
+              <option value="moderate">{t("moderate")}</option>
+              <option value="high">{t("high")}</option>
             </select>
           </Field>
           <Field>
-            <FieldLabel htmlFor={`${id}-energy`}>Disposição durante a atividade</FieldLabel>
+            <FieldLabel htmlFor={`${id}-energy`}>{t("energy")}</FieldLabel>
             <select
               id={`${id}-energy`}
               name="energy"
@@ -54,10 +58,10 @@ export function TrainingActivityCompletionForm({
                 })
               }
             >
-              <option value="">Selecione</option>
-              <option value="tired">Cansado</option>
-              <option value="normal">Normal</option>
-              <option value="energized">Disposto</option>
+              <option value="">{t("select")}</option>
+              <option value="tired">{t("tired")}</option>
+              <option value="normal">{t("normal")}</option>
+              <option value="energized">{t("energized")}</option>
             </select>
           </Field>
         </>
@@ -68,7 +72,7 @@ export function TrainingActivityCompletionForm({
         </>
       )}
       <Field className="sm:col-span-2">
-        <FieldLabel htmlFor={`${id}-comment`}>Comentário</FieldLabel>
+        <FieldLabel htmlFor={`${id}-comment`}>{t("comment")}</FieldLabel>
         <Input
           id={`${id}-comment`}
           name="comment"

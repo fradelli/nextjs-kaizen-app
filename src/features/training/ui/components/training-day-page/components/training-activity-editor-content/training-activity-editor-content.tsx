@@ -1,4 +1,7 @@
 "use client";
+import { useLocale, useTranslations } from "next-intl";
+import { formatTrainingShortDate } from "@/features/training/ui/components/training-day-page/training-day-page.utils";
+
 import { Button } from "@fradelli/ui/button";
 import { PendingButton } from "@fradelli/ui/pending-button";
 import { useRouter } from "next/navigation";
@@ -15,18 +18,17 @@ import { TrainingActivityDeleteForm } from "../training-activity-delete-form/tra
 import type { TrainingActivityEditorContentProps } from "./training-activity-editor-content.types";
 
 const messages = {
-  loading: "Carregando formulário…",
+  loading: "loadingForm",
   clean: "",
-  dirty: "Guardando rascunho…",
-  stored: "Rascunho salvo nesta sessão.",
-  restored: "Rascunho recuperado neste navegador. As alterações ainda não foram aplicadas.",
-  storage_error:
-    "Não foi possível guardar o rascunho neste navegador. Você pode salvar a atividade ou tentar guardar novamente antes de fechar.",
-  stale: "O treino ou o plano mudou desde este rascunho. Confira os dados atuais antes de salvar.",
-  external_change: "Este rascunho mudou em outra aba. Reabra o editor para conferir os dados.",
-  expired: "Este rascunho expirou. Descarte-o para começar novamente.",
-  invalid: "Não foi possível recuperar este rascunho. Descarte-o para começar novamente.",
-};
+  dirty: "storingDraft",
+  stored: "draftStored",
+  restored: "draftRestored",
+  storage_error: "editorStorageFailed",
+  stale: "planChanged",
+  external_change: "draftChangedElsewhere",
+  expired: "editorDraftExpired",
+  invalid: "editorDraftInvalid",
+} as const;
 export function TrainingActivityEditorContent({
   civilDate,
   activity,
@@ -37,6 +39,9 @@ export function TrainingActivityEditorContent({
   onCommitted,
   triggerRef,
 }: TrainingActivityEditorContentProps) {
+  const t = useTranslations("training");
+  const locale = useLocale();
+
   const router = useRouter();
   const formId = useId();
   const currentContext = activityEditorContext(civilDate, activity, availablePlan);
@@ -70,14 +75,11 @@ export function TrainingActivityEditorContent({
   const finishDraft = draft.finish;
   const saved = useCallback(
     ({ targetCivilDate }: { targetCivilDate: string }) => {
-      if (finishDraft().status === "failed")
-        announceEditorNotice(
-          "A alteração foi salva. Não foi possível limpar o rascunho deste navegador.",
-        );
+      if (finishDraft().status === "failed") announceEditorNotice(t("changesSavedCleanupFailed"));
       busy.current = false;
       onCommitted(targetCivilDate);
     },
-    [finishDraft, onCommitted],
+    [finishDraft, onCommitted, t],
   );
   const deleted = useCallback(() => {
     finishDraft();
@@ -113,11 +115,11 @@ export function TrainingActivityEditorContent({
   const lock = busyKind !== null || confirmingDelete;
   return (
     <TrainingActivityModal
-      title={activity ? "Editar atividade" : "Adicionar atividade"}
+      title={activity ? t("editActivity") : t("addActivity")}
       description={
         activity
           ? undefined
-          : `Atividade de ${civilDate.split("-").reverse().join("/")}. Preencha os dados para incluir na agenda.`
+          : t("newActivityDescription", { date: formatTrainingShortDate(civilDate, locale) })
       }
       busy={lock}
       restoreFocusRef={triggerRef}
@@ -144,7 +146,7 @@ export function TrainingActivityEditorContent({
               disabled={lock || draft.status === "external_change"}
               onClick={discard}
             >
-              Excluir rascunho
+              {t("deleteDraft")}
             </Button>
           ) : (
             <span />
@@ -154,10 +156,10 @@ export function TrainingActivityEditorContent({
             form={formId}
             className="min-h-11"
             pending={busyKind === "save"}
-            pendingLabel="Salvando…"
+            pendingLabel={t("saving")}
             disabled={!draft.ready || lock || blocked || closeError}
           >
-            {activity ? "Salvar alterações" : "Adicionar atividade"}
+            {activity ? t("saveChanges") : t("addActivity")}
           </PendingButton>
         </>
       }
@@ -165,10 +167,12 @@ export function TrainingActivityEditorContent({
       {!activity && (messages[draft.status] || changed || needsReload) ? (
         <div role="status" className="pt-2 fd-text-interface text-muted-foreground">
           {changed
-            ? messages.stale
+            ? t(messages.stale)
             : needsReload
-              ? "Confira a agenda atual antes de tentar salvar novamente."
-              : messages[draft.status]}
+              ? t("checkScheduleBeforeRetry")
+              : draft.status === "clean"
+                ? ""
+                : t(messages[draft.status])}
         </div>
       ) : null}
       {blocked ? (
@@ -182,7 +186,7 @@ export function TrainingActivityEditorContent({
               requestClose();
             }}
           >
-            Conferir agenda
+            {t("checkSchedule")}
           </Button>
         </div>
       ) : null}
@@ -191,10 +195,7 @@ export function TrainingActivityEditorContent({
           role="alert"
           className="my-3 grid gap-3 rounded-lg border border-status-destructive-border p-3 text-sm"
         >
-          <p>
-            Não foi possível guardar este preenchimento. Fechar sem guardar pode perder as últimas
-            alterações.
-          </p>
+          <p>{t("closeWithoutStorageWarning")}</p>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Button
               type="button"
@@ -203,7 +204,7 @@ export function TrainingActivityEditorContent({
               size="sm"
               onClick={onClose}
             >
-              Fechar sem guardar
+              {t("closeWithoutStorage")}
             </Button>
             <div className="ml-auto flex flex-wrap justify-end gap-2">
               <Button
@@ -214,7 +215,7 @@ export function TrainingActivityEditorContent({
                   if (draft.flush().status === "ok") onClose();
                 }}
               >
-                Tentar guardar novamente
+                {t("retryStorage")}
               </Button>
               <Button
                 type="button"
@@ -222,7 +223,7 @@ export function TrainingActivityEditorContent({
                 size="sm"
                 onClick={() => setCloseError(false)}
               >
-                Continuar preenchendo
+                {t("continueEditing")}
               </Button>
             </div>
           </div>

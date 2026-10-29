@@ -21,6 +21,7 @@ export type PublicTrainingExerciseDto = Readonly<{
   prescribedSets: number;
   prescribedText: string;
   blockLabel?: string | null;
+  block?: Readonly<{ mode: string; ordinal: number; position: number }> | null;
   restSeconds: number | null;
   priorityLevel: TrainingExercisePriorityLevel | null;
   notes: string | null;

@@ -11,8 +11,8 @@
     "dev": "pnpm db:generate && pnpm workspace:ensure && next dev",
     "build": "pnpm db:generate && next build",
     "start": "next start",
-    "format": "prettier --write src scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
-    "format:check": "prettier --check src scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
+    "format": "prettier --write src messages scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
+    "format:check": "prettier --check src messages scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
     "lint": "eslint src scripts tests prisma/*.ts eslint.config.mjs next.config.ts prisma.config.ts vitest.config.ts vitest.integration.config.ts vitest.setup.ts --max-warnings=0",
     "typecheck": "pnpm db:generate && tsc --noEmit",
     "test": "pnpm db:generate && vitest run",
@@ -31,13 +31,15 @@
     "workspace:ensure": "node --conditions=react-server --import tsx scripts/ensure-fixed-workspace.ts",
     "db:recovery:check": "pnpm db:generate && node --conditions=react-server --import tsx scripts/validate-backup-and-restore.ts",
     "structure:check": "node scripts/validate-component-structure.mjs && node scripts/validate-layer-boundaries.mjs && node scripts/validate-ui-icons.mjs",
-    "ci": "pnpm db:validate && pnpm format:check && pnpm lint && pnpm structure:check && pnpm typecheck && pnpm test:coverage && pnpm test:integration && pnpm test:ci-scripts && pnpm data:check && pnpm build && pnpm audit --audit-level=moderate"
+    "ci": "pnpm db:validate && pnpm format:check && pnpm lint && pnpm structure:check && pnpm i18n:check && pnpm typecheck && pnpm test:coverage && pnpm test:integration && pnpm test:ci-scripts && pnpm data:check && pnpm build && pnpm audit --audit-level=moderate",
+    "i18n:check": "node scripts/validate-i18n.mjs"
   },
   "dependencies": {
     "@fradelli/ui": "0.6.0",
     "@prisma/adapter-pg": "7.10.0",
     "@prisma/client": "7.10.0",
     "next": "16.4.2",
+    "next-intl": "4.14.9",
     "pg": "8.23.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",

@@ -38,6 +38,11 @@
 }
 
 .brand {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  text-decoration: none;
   margin: 0;
   color: var(--fd-color-foreground);
   font-size: var(--fd-font-size-xl);

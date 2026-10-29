@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { useEffect, useRef, useState } from "react";
 import { isTrainingExecutionDateEditable } from "@/features/training/domain/training-edit-window";
@@ -18,6 +19,8 @@ import {
 const DRAFT_EVENT = "kaizen:training-draft-change";
 
 export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingActivityDraftInput) {
+  const t = useTranslations("training");
+
   const key = trainingActivityDraftKey(civilDate, activity.id);
   const [draft, setDraft] = useState<TrainingActivityExecutionDraft | null>(null);
   const currentDraft = useRef<TrainingActivityExecutionDraft | null>(null);
@@ -120,8 +123,7 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
         )
           continue;
         const running = other;
-        if (!window.confirm("Há outra atividade em andamento. Pausá-la e iniciar esta?"))
-          return false;
+        if (!window.confirm(t("pauseOtherActivity"))) return false;
         const now = new Date().toISOString();
         const paused: TrainingActivityExecutionDraft = {
           ...running,

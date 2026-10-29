@@ -1,4 +1,5 @@
 "use client";
+import { useTranslations } from "next-intl";
 
 import { ArrowLeftIcon } from "@fradelli/ui/icons/ArrowLeft";
 import { ArrowRightIcon } from "@fradelli/ui/icons/ArrowRight";
@@ -22,6 +23,8 @@ export function TrainingLocalExerciseEditor({
   draft,
   onChange,
 }: TrainingLocalExerciseEditorProps) {
+  const t = useTranslations("training");
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [commentOpen, setCommentOpen] = useState(false);
   const currentSet = draft.sets[currentIndex];
@@ -43,8 +46,7 @@ export function TrainingLocalExerciseEditor({
       !isTrainingSetPerformed(next, exercise.dose) &&
       updated.slice(currentIndex + 1).some((set) => isTrainingSetPerformed(set, exercise.dose))
     ) {
-      if (!window.confirm("Zerar esta série também limpará as séries seguintes. Deseja continuar?"))
-        return;
+      if (!window.confirm(t("clearSetConfirmation"))) return;
       for (let index = currentIndex + 1; index < updated.length; index++) {
         const set = updated[index];
         if (set)
@@ -70,10 +72,10 @@ export function TrainingLocalExerciseEditor({
       key: "value",
       label:
         exercise.dose.unit === "seconds"
-          ? "Segundos"
+          ? t("seconds")
           : exercise.dose.unit === "contacts"
-            ? "Contatos"
-            : "Repetições",
+            ? t("contacts")
+            : t("repetitions"),
       value: currentSet.value,
       className: styles.measureInput,
     });
@@ -81,13 +83,13 @@ export function TrainingLocalExerciseEditor({
     fields.push(
       {
         key: "leftValue",
-        label: "Esquerdo",
+        label: t("left"),
         value: currentSet.leftValue,
         className: styles.measureInput,
       },
       {
         key: "rightValue",
-        label: "Direito",
+        label: t("right"),
         value: currentSet.rightValue,
         className: styles.measureInput,
       },
@@ -95,7 +97,7 @@ export function TrainingLocalExerciseEditor({
   for (const direction of requiredDirections(exercise.dose.scope)) {
     fields.push({
       key: `direction:${direction}`,
-      label: direction,
+      label: t(`directions.${direction}`),
       value: currentSet.directionValues[direction] ?? "",
       className: styles.measureInput,
     });
@@ -103,7 +105,7 @@ export function TrainingLocalExerciseEditor({
   if (exercise.loadApplicable)
     fields.push({
       key: "loadKg",
-      label: `Carga (${exercise.loadUnit ?? "kg"})`,
+      label: t("load", { unit: exercise.loadUnit ?? "kg" }),
       value: currentSet.loadKg,
       className: styles.loadInput,
       step: "0.001",
@@ -112,28 +114,30 @@ export function TrainingLocalExerciseEditor({
   return (
     <div className={styles.root}>
       <div className={styles.seriesHeader}>
-        <strong className="shrink-0 whitespace-nowrap">Série {currentSet.setNumber}</strong>
-        <nav className={styles.navigation} aria-label="Navegação entre séries">
+        <strong className="shrink-0 whitespace-nowrap">
+          {t("setNumber", { number: currentSet.setNumber })}
+        </strong>
+        <nav className={styles.navigation} aria-label={t("setNavigation")}>
           <Button
             type="button"
             variant="outline"
             size="icon"
             className="min-h-11 min-w-11"
-            aria-label="Abrir série anterior"
+            aria-label={t("openPreviousSet")}
             disabled={currentIndex === 0}
             onClick={() => setCurrentIndex(currentIndex - 1)}
           >
             <ArrowLeftIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
           </Button>
           <span className={styles.counter} aria-live="polite">
-            {currentIndex + 1} de {draft.sets.length}
+            {t("setPosition", { current: currentIndex + 1, total: draft.sets.length })}
           </span>
           <Button
             type="button"
             variant="outline"
             size="icon"
             className="min-h-11 min-w-11"
-            aria-label="Abrir próxima série"
+            aria-label={t("openNextSet")}
             disabled={!nextEnabled}
             onClick={() => setCurrentIndex(currentIndex + 1)}
           >
@@ -166,13 +170,13 @@ export function TrainingLocalExerciseEditor({
       {commentOpen ? (
         <div className={styles.commentPanel}>
           <div className={styles.commentHeader}>
-            <label htmlFor={`${exercise.prescriptionId}-local-comment`}>Comentário</label>
+            <label htmlFor={`${exercise.prescriptionId}-local-comment`}>{t("comment")}</label>
             <Button
               type="button"
               variant="ghost"
               size="icon"
               className="min-h-11 min-w-11"
-              aria-label="Fechar comentário"
+              aria-label={t("closeComment")}
               onClick={() => setCommentOpen(false)}
             >
               <XIcon size={20} weight="regular" aria-hidden="true" focusable="false" />
@@ -195,7 +199,7 @@ export function TrainingLocalExerciseEditor({
         onClick={() => setCommentOpen(!commentOpen)}
       >
         <ChatCircleIcon size={20} weight="regular" aria-hidden="true" focusable="false" />{" "}
-        Comentário
+        {t("comment")}
       </Button>
     </div>
   );

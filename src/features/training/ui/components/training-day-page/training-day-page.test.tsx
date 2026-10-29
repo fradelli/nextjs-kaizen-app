@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "../../../../../../tests/support/render-localized";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { resolveTrainingDayDate } from "../../../application/resolve-training-day-date";
@@ -26,7 +26,9 @@ describe("TrainingDayPage", () => {
       "href",
       "/treino?date=2026-09-15",
     );
-    expect(screen.getByRole("link", { name: "Hoje" })).toHaveAttribute("aria-current", "date");
+    expect(screen.getByRole("button", { name: "Hoje" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Hoje" })).toHaveAttribute("aria-current", "date");
+    expect(screen.getAllByText("Hoje")).toHaveLength(1);
     expect(screen.getByRole("link", { name: "Abrir dia seguinte" })).toHaveAttribute(
       "href",
       "/treino?date=2026-09-17",
