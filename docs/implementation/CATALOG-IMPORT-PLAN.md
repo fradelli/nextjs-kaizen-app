@@ -1,5 +1,13 @@
 # Catálogo de equipamentos e exercícios
 
+## Uso da primeira seed
+
+Na raiz do aplicativo, `pnpm catalog:check` valida os arquivos e imprime a identificação e as contagens do pacote. Para um banco inicializado com as migrações, defina `DIRECT_URL` explicitamente no ambiente do processo e execute `pnpm catalog:apply`. O comando importa apenas os dois catálogos. A rotina de planos antigos é independente.
+
+A migração `20261108010000_exercise_catalog` cria cinco tabelas. Grupos principais ficam indexados; cada alternativa de equipamento tem número de configuração e linhas de requisitos obrigatórios/opcionais. Características, exigência de parceiro, medidas, carga e decisões editoriais permanecem no perfil JSON. A anatomia inclui a ficha de leitura e as análises com seus grupos de origem. O lote preserva as fontes e as convenções de registro. O estado de pesquisa e o estado editorial do perfil têm significados distintos; a carga não constitui aprovação para publicação.
+
+O importador usa uma transação e um bloqueio de catálogo. Cada pacote recebe hash de conteúdo incluindo a versão da projeção. Uma versão idêntica reconhecida como atual retorna sem regravar. Mantenha correções editoriais no JSON versionado. A verificação em PostgreSQL descartável aplicou a cadeia de migrações e duas cargas consecutivas; as contagens e os resumos dos exercícios e requisitos coincidiram.
+
 ## Estado e evidências
 
 Proposta técnica para aprovação. A preparação dos dados foi autorizada. Migração e carga no PostgreSQL dependem da revisão deste desenho. Entradas normativas: [arquitetura](../architecture/TARGET-ARCHITECTURE.md), [equipamentos](../../data/catalogs/equipamentos.json), [exercícios](../../data/catalogs/exercicios.json) e [resultado da auditoria](../../data/catalogs/revisao.json).
