@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 
 import { resolveTrainingDayDate } from "@/features/training/application/resolve-training-day-date";
-import { queryFixedWorkspaceTrainingDayPage } from "@/features/training/data/training-queries";
+import { queryFixedWorkspaceTrainingWeekPage } from "@/features/training/data/training-queries";
 import { InvalidTrainingDate } from "@/features/training/ui/components/training-day-page/components/invalid-training-date/invalid-training-date";
 import { TrainingDayContent } from "@/features/training/ui/components/training-day-page/components/training-day-content/training-day-content";
-import { TrainingAgendaBadges } from "@/features/training/ui/components/training-day-page/components/training-agenda-badges/training-agenda-badges";
+import { TrainingWeekGrid } from "@/features/training/ui/components/training-week-grid/training-week-grid";
 import { TrainingActivityEditor } from "@/features/training/ui/components/training-day-page/components/training-activity-editor/training-activity-editor";
 import { TrainingActivityEditorNotice } from "@/features/training/ui/components/training-day-page/components/training-activity-editor-notice/training-activity-editor-notice";
 import { TrainingDayPage } from "@/features/training/ui/components/training-day-page/training-day-page";
@@ -37,10 +37,10 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
   }
 
   if (dateResolution.requiresCanonicalRedirect) {
-    redirect(`/treino?date=${encodeURIComponent(dateResolution.civilDate)}`);
+    redirect(`/workout?date=${encodeURIComponent(dateResolution.civilDate)}`);
   }
 
-  const trainingDayResult = await queryFixedWorkspaceTrainingDayPage(dateResolution.civilDate);
+  const trainingWeekResult = await queryFixedWorkspaceTrainingWeekPage(dateResolution.civilDate);
   const actions = {
     addActivity: addTrainingActivityAction,
     updateActivity: updateTrainingActivityAction,
@@ -48,7 +48,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     saveActivityExercise: saveTrainingActivityExerciseAction,
     deleteActivity: deleteTrainingActivityAction,
   };
-  const day = trainingDayResult.status === "ready" ? trainingDayResult.day : null;
+  const day = trainingWeekResult.status === "ready" ? trainingWeekResult.week.days[0]! : null;
 
   return (
     <TrainingDayPage
@@ -65,13 +65,28 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
       summary={
         day ? (
           <>
-            <TrainingAgendaBadges day={day} />
             <TrainingActivityEditorNotice />
           </>
         ) : null
       }
     >
-      <TrainingDayContent result={Promise.resolve(trainingDayResult)} actions={actions} />
+      {trainingWeekResult.status === "ready" ? (
+        <>
+          {day?.state === "unavailable" && day.activities.length === 0 ? (
+            <TrainingDayContent
+              result={Promise.resolve({ status: "ready", day })}
+              actions={actions}
+            />
+          ) : null}
+          <TrainingWeekGrid
+            key={trainingWeekResult.week.startDate}
+            days={trainingWeekResult.week.days}
+            actions={actions}
+          />
+        </>
+      ) : (
+        <TrainingDayContent result={Promise.resolve(trainingWeekResult)} actions={actions} />
+      )}
     </TrainingDayPage>
   );
 }

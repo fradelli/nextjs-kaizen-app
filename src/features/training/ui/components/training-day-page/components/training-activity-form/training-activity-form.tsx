@@ -100,7 +100,7 @@ export function TrainingActivityForm({
               setSport("");
               setPreparationChoice(null);
             }
-            if (activity && targetDate !== civilDate) router.push(`/treino?date=${targetDate}`);
+            if (activity && targetDate !== civilDate) router.push(`/workout?date=${targetDate}`);
           }
         }
         return result;
@@ -352,6 +352,7 @@ export function TrainingActivityForm({
               id={`activity-start-time-${activity?.id ?? "new"}`}
               name="plannedStartTime"
               type="time"
+              step={900}
               value={schedule.startTime}
               onChange={(event) => schedule.setStartTime(event.target.value)}
               required
@@ -368,6 +369,7 @@ export function TrainingActivityForm({
               id={`activity-end-time-${activity?.id ?? "new"}`}
               name="plannedEndTime"
               type="time"
+              step={900}
               value={schedule.endTime}
               onChange={(event) => schedule.changeEnd(event.target.value)}
               onBlur={() => setValidateTimes(Boolean(schedule.startTime && schedule.endTime))}

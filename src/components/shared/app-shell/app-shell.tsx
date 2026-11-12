@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./app-shell.module.css";
 import type { AppShellProps } from "./app-shell.types";
 import { AppShellNavigation } from "./components/app-shell-navigation/app-shell-navigation";
+import { ActiveTrainingBar } from "@/features/training/ui/components/active-training-bar/active-training-bar";
 
 export function AppShell({ children }: AppShellProps) {
   const t = useTranslations("shell");
@@ -12,7 +13,7 @@ export function AppShell({ children }: AppShellProps) {
         {t("skip")}
       </a>
 
-      <header className={`${styles.header} fd-surface-glass`}>
+      <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link href="/" className={styles.brand} aria-label={t("home")} prefetch={false}>
             <span lang="ja">改善</span>
@@ -25,6 +26,7 @@ export function AppShell({ children }: AppShellProps) {
       <main id="conteudo-principal" className={styles.content} tabIndex={-1}>
         {children}
       </main>
+      <ActiveTrainingBar />
     </div>
   );
 }

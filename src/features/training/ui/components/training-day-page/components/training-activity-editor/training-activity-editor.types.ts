@@ -4,6 +4,7 @@ import type {
 } from "@/features/training/application/training-dto";
 import type { TrainingDayFormActions } from "@/features/training/ui/training-action.types";
 export type TrainingActivityEditorProps = Readonly<{
+  triggerLabel?: string;
   civilDate: string;
   activity?: TrainingActivityDto;
   availablePlan: AvailablePublicTrainingPlanDto | null;

@@ -1,7 +1,7 @@
 export const trainingExerciseStyles = {
-  root: "flex flex-col gap-3 border-b border-border py-4 sm:px-4",
+  root: "flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 sm:p-4",
   status: {
-    pending: "border-l-status-info-border",
+    pending: "border-l-[var(--kaizen-training-accent)]",
     completed: "border-l-status-success-border",
     partial: "border-l-status-warning-border",
     empty: "border-l-status-destructive-border",

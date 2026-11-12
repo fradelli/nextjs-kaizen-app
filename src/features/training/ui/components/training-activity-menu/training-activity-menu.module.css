@@ -1,0 +1,22 @@
+.panel {
+  position: fixed;
+  inset: auto;
+  left: var(--menu-left);
+  top: var(--menu-top);
+  width: 15rem;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--fd-color-border);
+  border-radius: 0.5rem;
+  background: var(--fd-color-surface-elevated);
+  color: var(--fd-color-foreground);
+  font-size: 0.875rem;
+}
+.panel:popover-open {
+  display: grid;
+  gap: 0.25rem;
+}
+.panel > button {
+  min-height: 44px;
+  justify-content: start;
+}

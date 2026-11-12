@@ -1,4 +1,5 @@
 "use client";
+import { initialTrainingExerciseDraft } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
 import { useState, useRef } from "react";
 import { Input } from "@fradelli/ui/input";
 import { Button } from "@fradelli/ui/button";
@@ -23,6 +24,7 @@ import { TrainingLocalExerciseEditor } from "./components/training-local-exercis
 
 export function TrainingExercise({
   exercise,
+  previewSets = false,
   sessionId,
   role,
   civilDate,
@@ -73,7 +75,7 @@ export function TrainingExercise({
       aria-labelledby={`${exercise.prescriptionId}-title`}
     >
       <header
-        className={`${trainingExerciseStyles.header} border-l-4 pl-3 ${trainingExerciseStyles.status[visualStatus]}`}
+        className={`${trainingExerciseStyles.header} border-l-2 pl-3 ${trainingExerciseStyles.status[visualStatus]}`}
       >
         <div className={trainingExerciseStyles.heading}>
           <h3 id={`${exercise.prescriptionId}-title`} className={trainingExerciseStyles.title}>
@@ -261,6 +263,11 @@ export function TrainingExercise({
           exercise={exercise}
           draft={executionDraft}
           onChange={onExecutionDraftChange}
+        />
+      ) : previewSets && role === "main" && sessionId ? (
+        <TrainingLocalExerciseEditor
+          exercise={exercise}
+          draft={initialTrainingExerciseDraft(sessionId, "main", exercise)}
         />
       ) : !local &&
         role === "main" &&

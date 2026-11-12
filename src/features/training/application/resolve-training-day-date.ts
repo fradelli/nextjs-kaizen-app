@@ -7,7 +7,7 @@ import type {
 } from "./resolve-training-day-date.types";
 
 const TRAINING_TIME_ZONE = "America/Sao_Paulo";
-const MAXIMUM_FUTURE_DAYS = 4;
+const MAXIMUM_AGENDA_EDIT_DAYS = 4;
 
 export function resolveTrainingDayDate({
   rawDate,
@@ -25,15 +25,6 @@ export function resolveTrainingDayDate({
 
   try {
     const civilDate = parseCivilDate(rawDate);
-    const maximumFutureDate = shiftCivilDate(todayDate, MAXIMUM_FUTURE_DAYS);
-    if (civilDate > maximumFutureDate) {
-      return {
-        status: "invalid",
-        reason: "future_date_out_of_range",
-        todayDate,
-        maximumFutureDate,
-      };
-    }
     return createValidResolution(civilDate, todayDate, false);
   } catch (error) {
     if (error instanceof TrainingProjectionError && error.code === "TRAINING_CIVIL_DATE_INVALID") {
@@ -49,13 +40,13 @@ function createValidResolution(
   todayDate: CivilDate,
   requiresCanonicalRedirect: boolean,
 ): Extract<TrainingDayDateResolution, { status: "valid" }> {
-  const maximumFutureDate = shiftCivilDate(todayDate, MAXIMUM_FUTURE_DAYS);
+  const maximumFutureDate = shiftCivilDate(todayDate, MAXIMUM_AGENDA_EDIT_DAYS);
   return {
     status: "valid",
     civilDate,
     previousDate: shiftCivilDate(civilDate, -1),
     nextDate: shiftCivilDate(civilDate, 1),
-    canNavigateNext: civilDate < maximumFutureDate,
+    canNavigateNext: true,
     maximumFutureDate,
     todayDate,
     isToday: civilDate === todayDate,

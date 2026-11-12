@@ -5,6 +5,7 @@ import type { TrainingExerciseExecutionDraft } from "@/features/training/ui/hook
 
 export type TrainingExerciseProps = Readonly<{
   exercise: TrainingDayExerciseDto;
+  previewSets?: boolean;
   sessionId?: string;
   role?: TrainingExerciseRole;
   civilDate?: string;

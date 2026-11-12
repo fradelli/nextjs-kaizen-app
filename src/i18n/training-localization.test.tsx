@@ -70,7 +70,7 @@ describe("localized training interface", () => {
         screen.getByRole("link", {
           name: locale === "en" ? "Open previous day" : "Abrir dia anterior",
         }),
-      ).toHaveAttribute("href", "/treino?date=2026-09-15");
+      ).toHaveAttribute("href", "/workout?date=2026-09-15");
     },
   );
   it("localizes server feedback and plurals without changing units or civil dates", () => {

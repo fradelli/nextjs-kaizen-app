@@ -28,13 +28,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({
+  children,
+  workout,
+}: Readonly<{ children: ReactNode; workout?: ReactNode }>) {
   const locale = await getLocale();
   return (
     <html lang={locale} className={`${inter.variable} dark kaizen-static-motion`}>
       <body>
         <NextIntlClientProvider>
           <AppShell>{children}</AppShell>
+          {workout}
         </NextIntlClientProvider>
       </body>
     </html>

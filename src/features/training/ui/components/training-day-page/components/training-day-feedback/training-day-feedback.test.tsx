@@ -1,5 +1,6 @@
 import { render, screen } from "../../../../../../../../tests/support/render-localized";
 import { describe, expect, it } from "vitest";
+import Link from "next/link";
 
 import { TrainingDayFeedback } from "./training-day-feedback";
 
@@ -9,7 +10,7 @@ describe("TrainingDayFeedback", () => {
       <TrainingDayFeedback
         title="Nenhuma atividade programada"
         description="Use o botão + para adicionar um treino ou outra atividade."
-        action={<a href="/treino?date=2026-10-27">Conferir agenda</a>}
+        action={<Link href="/workout?date=2026-10-27">Conferir agenda</Link>}
       />,
     );
 
@@ -19,7 +20,7 @@ describe("TrainingDayFeedback", () => {
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Conferir agenda" })).toHaveAttribute(
       "href",
-      "/treino?date=2026-10-27",
+      "/workout?date=2026-10-27",
     );
   });
 });

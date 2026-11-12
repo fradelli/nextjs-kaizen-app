@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createTrainingDraftId } from "../../lib/training-draft-id";
 import {
   readCompletionDraft,
   type CompletionValues,
@@ -57,7 +58,7 @@ export function useTrainingActivityCompletionDraft(input: CompletionDraftInput) 
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      writer.current = crypto.randomUUID();
+      writer.current = createTrainingDraftId();
       try {
         window.localStorage.removeItem(base.key);
       } catch {

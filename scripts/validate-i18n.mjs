@@ -50,7 +50,7 @@ const roots = [
   "src/features/training/ui/components",
   "src/components/shared/app-shell",
   "src/components/shared/feature-placeholder",
-  "src/app/dieta",
+  "src/app/nutrition",
 ];
 for (const root of roots) {
   for (const relative of fs.readdirSync(root, { recursive: true })) {

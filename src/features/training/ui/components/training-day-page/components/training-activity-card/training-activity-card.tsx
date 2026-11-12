@@ -1,14 +1,18 @@
 "use client";
+import Link from "next/link";
+import styles from "./training-activity-card.module.css";
 import { TrainingRestTimer } from "../training-rest-timer/training-rest-timer";
 
 import { useTranslations } from "next-intl";
 
 import { CaretUpIcon } from "@fradelli/ui/icons/CaretUp";
 import { CaretDownIcon } from "@fradelli/ui/icons/CaretDown";
+import { ArrowLeftIcon } from "@fradelli/ui/icons/ArrowLeft";
 
 import { Badge } from "@fradelli/ui/badge";
 import { Button } from "@fradelli/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { TrainingWorkoutOverlayContext } from "../../../training-workout-overlay/training-workout-overlay.context";
 import {
   isTrainingAgendaDateEditable,
   isTrainingExecutionDateEditable,
@@ -33,13 +37,35 @@ const statusLabels = {
   skipped: "skipped",
 } as const;
 
-export function TrainingActivityCard({
+export function TrainingActivityCard({ activity, civilDate, ...props }: TrainingActivityCardProps) {
+  const t = useTranslations("training");
+  if (activity.structured || activity.preparationSession) {
+    return (
+      <article className="min-w-0">
+        <Link
+          href={`/workout/activity/${encodeURIComponent(activity.id)}?date=${encodeURIComponent(civilDate)}`}
+          className={styles.agendaLink}
+        >
+          <h2 className={trainingActivityCardStyles.title}>{activity.name}</h2>
+          <p className={trainingActivityCardStyles.metadata}>
+            {activitySummary(activity, activity.status, t)}
+          </p>
+        </Link>
+      </article>
+    );
+  }
+  return <TrainingInlineActivityCard activity={activity} civilDate={civilDate} {...props} />;
+}
+
+export function TrainingInlineActivityCard({
+  dedicated = false,
   civilDate,
   activity,
   actions,
   availablePlan = null,
-}: TrainingActivityCardProps) {
+}: TrainingActivityCardProps & { dedicated?: boolean }) {
   const t = useTranslations("training");
+  const closeOverlay = useContext(TrainingWorkoutOverlayContext);
 
   const execution = useTrainingActivityDraft({ activity, civilDate });
   const retrospective = supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt;
@@ -52,13 +78,15 @@ export function TrainingActivityCard({
   const status = activeDraft?.status ?? activity.status;
   const [expandedOverride, setExpandedOverride] = useState<boolean | null>(null);
   const expanded =
-    expandedOverride ?? (status === "in_progress" || (Boolean(activeDraft) && status === "paused"));
+    dedicated ||
+    (expandedOverride ??
+      (status === "in_progress" || (Boolean(activeDraft) && status === "paused")));
   const genericPreparation = activity.preparations[0] ?? null;
   const hasPreparation = Boolean(
     activity.structured?.preparation || activity.preparationSession || genericPreparation,
   );
   const [phase, setPhase] = useState<"preparation" | "main">(
-    hasPreparation && !retrospective ? "preparation" : "main",
+    hasPreparation && !dedicated && !retrospective ? "preparation" : "main",
   );
   const structured = activity.structured;
   const activeSession =
@@ -74,42 +102,74 @@ export function TrainingActivityCard({
 
   function startActivity() {
     if (!execution.start()) return;
-    setPhase(hasPreparation ? "preparation" : "main");
+    setPhase(hasPreparation && !dedicated ? "preparation" : "main");
     setExpandedOverride(null);
   }
 
   const resting = Object.entries(activeDraft?.exercises ?? {}).find(([, item]) => item.rest);
   return (
-    <article className={`${trainingActivityCardStyles.root} ${rootState}`}>
+    <article
+      className={dedicated ? styles.dedicated : `${trainingActivityCardStyles.root} ${rootState}`}
+    >
       <header className={trainingActivityCardStyles.header}>
-        <div className={trainingActivityCardStyles.top}>
+        <div className={dedicated ? styles.detailTop : trainingActivityCardStyles.top}>
           <div className="min-w-0 flex-1">
-            <h2 className={trainingActivityCardStyles.title}>
+            {dedicated ? (
               <Button
-                type="button"
-                variant="ghost"
-                className={trainingActivityCardStyles.headingToggle}
-                aria-expanded={expanded}
-                onClick={() => setExpandedOverride(!expanded)}
+                data-kaizen-action="general"
+                variant="default"
+                size="icon"
+                className={styles.back}
+                asChild
               >
-                <span className="fd-text-card">{activity.name}</span>
-                {expanded ? (
-                  <CaretUpIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
-                ) : (
-                  <CaretDownIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
-                )}
+                <Link
+                  href={`/workout?date=${encodeURIComponent(civilDate)}`}
+                  onClick={(event) => {
+                    if (closeOverlay) {
+                      event.preventDefault();
+                      closeOverlay();
+                    }
+                  }}
+                  aria-label={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
+                  title={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
+                >
+                  <ArrowLeftIcon size={20} weight="bold" aria-hidden="true" focusable="false" />
+                </Link>
               </Button>
+            ) : null}
+            <h2 className={trainingActivityCardStyles.title}>
+              {dedicated ? (
+                <span className="fd-text-card">{activity.name}</span>
+              ) : (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className={trainingActivityCardStyles.headingToggle}
+                  aria-expanded={expanded}
+                  onClick={() => setExpandedOverride(!expanded)}
+                >
+                  <span className="fd-text-card">{activity.name}</span>
+                  {expanded ? (
+                    <CaretUpIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
+                  ) : (
+                    <CaretDownIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
+                  )}
+                </Button>
+              )}
             </h2>
             <p className={trainingActivityCardStyles.metadata}>
               {activitySummary(activity, status, t)}
             </p>
           </div>
-          <div className={trainingActivityCardStyles.tools}>
+          <div
+            className={`${trainingActivityCardStyles.tools} ${dedicated ? styles.detailTools : ""}`}
+          >
             <TrainingActivityControls
               civilDate={civilDate}
               activity={activity}
               action={actions.controlActivity}
               draft={activeDraft}
+              showLabel={dedicated}
               onStart={startActivity}
               onPause={execution.pause}
               onResume={execution.resume}
@@ -118,7 +178,7 @@ export function TrainingActivityCard({
               onFinalized={execution.clear}
               ready={execution.ready && executionEditable}
             />
-            {status !== "completed" && agendaEditable ? (
+            {!dedicated && status !== "completed" && agendaEditable ? (
               <TrainingActivityEditor
                 civilDate={civilDate}
                 activity={activity}
@@ -127,7 +187,7 @@ export function TrainingActivityCard({
                 startedLocally={Boolean(activeDraft)}
               />
             ) : null}
-            {status !== "completed" && agendaEditable ? (
+            {!dedicated && status !== "completed" && agendaEditable ? (
               <TrainingActivityDeleteForm
                 civilDate={civilDate}
                 activity={activity}
@@ -144,6 +204,11 @@ export function TrainingActivityCard({
         ) : null}
       </header>
 
+      {execution.reconciliation === "preserved" || execution.reconciliation === "storage_error" ? (
+        <p role="status" className={trainingActivityCardStyles.guidance}>
+          {t("completedDraftPreserved")}
+        </p>
+      ) : null}
       {!retrospective && execution.storageError ? (
         <p role="alert" className={trainingActivityCardStyles.guidance}>
           {t("storageFull")}
@@ -164,6 +229,7 @@ export function TrainingActivityCard({
               <Button
                 type="button"
                 size="sm"
+                data-kaizen-tab={phase === "preparation" ? "warmup" : undefined}
                 variant={phase === "preparation" ? "default" : "outline"}
                 onClick={() => setPhase("preparation")}
               >
@@ -173,6 +239,7 @@ export function TrainingActivityCard({
             <Button
               type="button"
               size="sm"
+              data-kaizen-tab={phase === "main" ? "training" : undefined}
               variant={phase === "main" ? "default" : "outline"}
               onClick={() => setPhase("main")}
             >
@@ -189,7 +256,10 @@ export function TrainingActivityCard({
                     {activeSession.intensity ? ` · ${humanize(activeSession.intensity)}` : ""}
                   </p>
                 </div>
-                <Badge variant={phase === "preparation" ? "info" : "warning"}>
+                <Badge
+                  data-kaizen-tab={phase === "preparation" ? "warmup" : undefined}
+                  variant={phase === "preparation" ? "info" : "warning"}
+                >
                   {phase === "preparation" ? t("preparation") : t("training")}
                 </Badge>
               </div>
@@ -201,6 +271,12 @@ export function TrainingActivityCard({
                     sessionId={activeSession.sessionId}
                     activityId={activity.id}
                     role={activeSession.role}
+                    previewSets={
+                      dedicated &&
+                      !activeDraft &&
+                      activity.status !== "completed" &&
+                      activity.status !== "skipped"
+                    }
                     civilDate={civilDate}
                     saveExerciseAction={
                       activity.status === "completed" && executionEditable
@@ -245,7 +321,6 @@ export function TrainingActivityCard({
                     {t("optionalPreparation")}
                   </p>
                 </div>
-                <Badge variant="info">{t("preparation")}</Badge>
               </div>
               <p className={trainingActivityCardStyles.guidance}>
                 {retrospective ? t("retrospectivePreparation") : t("preparationGuidance")}

@@ -41,10 +41,10 @@ describe("TrainingActivityDeleteForm", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("warns when a started activity is removed and hides completed deletion", () => {
+  it("blocks deletion during execution and hides completed deletion", () => {
     const { rerender } = renderForm({ ...activity, status: "paused" });
     fireEvent.click(screen.getByRole("button", { name: "Excluir atividade" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("A atividade já começou");
+    expect(screen.getByRole("button", { name: "Excluir atividade" })).toBeDisabled();
 
     rerender(
       <TrainingActivityDeleteForm

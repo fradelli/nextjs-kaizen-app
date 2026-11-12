@@ -14,7 +14,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 beforeEach(() => {
-  vi.mocked(usePathname).mockReturnValue("/dieta");
+  vi.mocked(usePathname).mockReturnValue("/nutrition");
   vi.mocked(useSearchParams).mockReturnValue(
     new URLSearchParams() as ReturnType<typeof useSearchParams>,
   );
@@ -31,13 +31,13 @@ describe("AppShellNavigation", () => {
       new URLSearchParams("date=2026-09-28&extra=ignored") as ReturnType<typeof useSearchParams>,
     );
     render(<AppShellNavigation />);
-    expect(screen.getByRole("link", { name: "Treino" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Meu Dia" })).toHaveAttribute(
       "href",
-      "/treino?date=2026-09-28",
+      "/workout?date=2026-09-28",
     );
-    expect(screen.getByRole("link", { name: "Dieta" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Alimentação" })).toHaveAttribute(
       "href",
-      "/dieta?date=2026-09-28",
+      "/nutrition?date=2026-09-28",
     );
     expect(screen.getAllByRole("navigation")).toHaveLength(1);
   });
@@ -48,27 +48,27 @@ describe("AppShellNavigation", () => {
     const links = within(navigation).getAllByRole("link");
 
     expect(links).toHaveLength(2);
-    expect(within(navigation).getByRole("link", { name: "Dieta" })).toHaveAttribute(
+    expect(within(navigation).getByRole("link", { name: "Alimentação" })).toHaveAttribute(
       "href",
-      "/dieta",
+      "/nutrition",
     );
-    expect(within(navigation).getByRole("link", { name: "Dieta" })).toHaveAttribute(
+    expect(within(navigation).getByRole("link", { name: "Alimentação" })).toHaveAttribute(
       "aria-current",
       "page",
     );
-    expect(within(navigation).getByRole("link", { name: "Treino" })).toHaveAttribute(
+    expect(within(navigation).getByRole("link", { name: "Meu Dia" })).toHaveAttribute(
       "href",
-      "/treino",
+      "/workout",
     );
   });
 
   it("marca a área atual inclusive em uma subrota", () => {
-    vi.mocked(usePathname).mockReturnValue("/treino/sessao");
+    vi.mocked(usePathname).mockReturnValue("/workout/sessao");
 
     render(<AppShellNavigation />);
 
-    expect(screen.getByRole("link", { name: "Treino" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "Dieta" })).not.toHaveAttribute("aria-current");
+    expect(screen.getByRole("link", { name: "Meu Dia" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Alimentação" })).not.toHaveAttribute("aria-current");
   });
 });
 
@@ -76,22 +76,24 @@ describe("buildAppShellNavigationHref", () => {
   it.each([null, "", "2026-02-30", "2026-13-01", "28/09/2026", "invalid"])(
     "descarta data inválida %s",
     (date) => {
-      expect(buildAppShellNavigationHref("/treino", date)).toBe("/treino");
+      expect(buildAppShellNavigationHref("/workout", date)).toBe("/workout");
     },
   );
   it("preserva uma data real de ano bissexto", () => {
-    expect(buildAppShellNavigationHref("/dieta", "2024-02-29")).toBe("/dieta?date=2024-02-29");
+    expect(buildAppShellNavigationHref("/nutrition", "2024-02-29")).toBe(
+      "/nutrition?date=2024-02-29",
+    );
   });
 });
 
 describe("isAppShellNavigationItemActive", () => {
   it("aceita a rota exata e suas subrotas", () => {
-    expect(isAppShellNavigationItemActive("/dieta", "/dieta")).toBe(true);
-    expect(isAppShellNavigationItemActive("/dieta/refeicoes", "/dieta")).toBe(true);
+    expect(isAppShellNavigationItemActive("/nutrition", "/nutrition")).toBe(true);
+    expect(isAppShellNavigationItemActive("/nutrition/refeicoes", "/nutrition")).toBe(true);
   });
 
   it("não confunde rotas apenas com prefixo semelhante", () => {
-    expect(isAppShellNavigationItemActive("/dietas", "/dieta")).toBe(false);
-    expect(isAppShellNavigationItemActive("/treino", "/dieta")).toBe(false);
+    expect(isAppShellNavigationItemActive("/nutritions", "/nutrition")).toBe(false);
+    expect(isAppShellNavigationItemActive("/workout", "/nutrition")).toBe(false);
   });
 });

@@ -1,4 +1,6 @@
 "use client";
+import { useContext } from "react";
+import { TrainingWorkoutPortalContext } from "../../../training-workout-overlay/training-workout-overlay.context";
 import { createPortal } from "react-dom";
 import styles from "./training-rest-timer.module.css";
 import { useEffect, useState } from "react";
@@ -14,6 +16,7 @@ export function TrainingRestTimer({
   onSkip: () => void;
 }) {
   const t = useTranslations("training");
+  const portalContainer = useContext(TrainingWorkoutPortalContext);
   const [now, setNow] = useState(0);
   useEffect(() => {
     const id = window.setInterval(() => setNow(Date.now()), 250);
@@ -25,7 +28,7 @@ export function TrainingRestTimer({
     <>
       <span data-rest-panel-active hidden />
       {createPortal(
-        <section className={styles.panel} aria-label={t("rest")}>
+        <section data-training-rest-panel className={styles.panel} aria-label={t("rest")}>
           <p className={styles.time}>
             {Math.floor(remaining / 60)}:{String(remaining % 60).padStart(2, "0")}
           </p>
@@ -41,7 +44,7 @@ export function TrainingRestTimer({
             </Button>
           </div>
         </section>,
-        document.body,
+        portalContainer ?? document.body,
       )}
     </>
   );
