@@ -1,4 +1,6 @@
+import { roundUpToQuarterHour } from "../domain/training-schedule-time";
 import "server-only";
+import { createHash } from "node:crypto";
 import { isTrainingExecutionDateEditable } from "../domain/training-edit-window";
 
 import { Prisma, type PrismaClient } from "@/generated/prisma/client";
@@ -65,6 +67,7 @@ export async function ensureScheduledTrainingDay(
   const dateResolution = resolveTrainingDayDate({ rawDate: input.civilDate, now });
   if (
     dateResolution.status !== "valid" ||
+    input.civilDate > dateResolution.maximumFutureDate ||
     (input.civilDate < dateResolution.todayDate &&
       !isTrainingExecutionDateEditable(input.civilDate, now))
   )
@@ -84,23 +87,31 @@ export async function ensureScheduledTrainingDay(
   }
 }
 
-export async function ensureScheduledTrainingDayInTransaction(
+export async function readScheduledTrainingDay(
   transaction: Prisma.TransactionClient,
   input: FindTrainingDayInput,
-): Promise<void> {
+  now: Date = new Date(),
+) {
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Sao_Paulo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(now);
+  if (input.civilDate < today && !isTrainingExecutionDateEditable(input.civilDate, now)) return;
+  return loadScheduledTrainingDay(transaction, input);
+}
+
+async function loadScheduledTrainingDay(
+  transaction: Prisma.TransactionClient,
+  input: FindTrainingDayInput,
+) {
   const civilDate = toCivilDateDatabaseValue(input.civilDate);
   const existingAssignment = await transaction.dailyTrainingAssignment.findUnique({
     where: { workspaceId_civilDate: { workspaceId: input.workspaceId, civilDate } },
     select: { id: true },
   });
   if (existingAssignment) return;
-
-  // Include logically deleted rows: an intentional deletion must not recreate the plan.
-  const existingActivity = await transaction.trainingDayActivity.findFirst({
-    where: { workspaceId: input.workspaceId, civilDate },
-    select: { id: true },
-  });
-  if (existingActivity) return;
 
   const plan = await loadActiveTrainingPlanForSchedule(transaction, input.environment);
   if (!plan) return;
@@ -152,11 +163,27 @@ export async function ensureScheduledTrainingDayInTransaction(
           ),
         );
 
-  await transaction.dailyTrainingAssignment.create({
-    data: {
+  const activities = plannedActivities.map((activity, ordinal) => {
+    const hash = createHash("sha256")
+      .update(JSON.stringify([input.workspaceId, input.civilDate, plan.id, ordinal]))
+      .digest("hex");
+    const id = `${hash.slice(0, 8)}-${hash.slice(8, 12)}-5${hash.slice(13, 16)}-a${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
+    return { ...activity, id };
+  });
+  // Include tombstones so a removed occurrence stays absent on the next visit.
+  const existing = await transaction.trainingDayActivity.findMany({
+    where: { workspaceId: input.workspaceId, id: { in: activities.map((item) => item.id) } },
+    select: { id: true },
+  });
+  const persistedIds = new Set(existing.map((item) => item.id));
+  return {
+    plan,
+    legacy: !modern,
+    activities: activities.filter((item) => !persistedIds.has(item.id)),
+    assignment: {
       workspaceId: input.workspaceId,
       civilDate,
-      kind: restEntry ? "rest" : "unassigned",
+      kind: restEntry ? ("rest" as const) : ("unassigned" as const),
       reason:
         restEntry && "session" in restEntry && restEntry.session === "rest_or_light_mobility"
           ? "Descanso ou mobilidade leve"
@@ -164,14 +191,28 @@ export async function ensureScheduledTrainingDayInTransaction(
             ? "Descanso previsto no plano semanal"
             : null,
     },
+  };
+}
+
+export async function ensureScheduledTrainingDayInTransaction(
+  transaction: Prisma.TransactionClient,
+  input: FindTrainingDayInput,
+): Promise<void> {
+  const existing = await transaction.trainingDayActivity.findFirst({
+    where: { workspaceId: input.workspaceId, civilDate: toCivilDateDatabaseValue(input.civilDate) },
+    select: { id: true },
   });
-  for (const activity of plannedActivities) {
-    const created = await transaction.trainingDayActivity.create({ data: activity });
-    if ((activity.type === "specific_training" || activity.type === "sport_practice") && !modern) {
+  if (existing) return;
+  const schedule = await loadScheduledTrainingDay(transaction, input);
+  if (!schedule) return;
+  await transaction.dailyTrainingAssignment.create({ data: schedule.assignment });
+  for (const data of schedule.activities) {
+    const created = await transaction.trainingDayActivity.create({ data });
+    if (schedule.legacy && (data.type === "specific_training" || data.type === "sport_practice")) {
       await transaction.trainingDayActivity.create({
         data: {
           workspaceId: input.workspaceId,
-          civilDate,
+          civilDate: toCivilDateDatabaseValue(input.civilDate),
           type: "mobility",
           source: "plan",
           role: "preparation",
@@ -179,11 +220,11 @@ export async function ensureScheduledTrainingDayInTransaction(
           name: "Aquecimento de futevôlei",
           sport: "Futevôlei",
           plannedStartMinute:
-            typeof activity.plannedStartMinute !== "number"
-              ? null
-              : Math.max(0, activity.plannedStartMinute - 10),
-          plannedEndMinute: activity.plannedStartMinute ?? null,
-          trainingPlanVersionId: plan.id,
+            typeof data.plannedStartMinute === "number"
+              ? Math.max(0, data.plannedStartMinute - 15)
+              : null,
+          plannedEndMinute: data.plannedStartMinute ?? null,
+          trainingPlanVersionId: schedule.plan.id,
         },
       });
     }
@@ -209,10 +250,13 @@ function buildPlannedActivity(
   entry: LegacyTrainingWeeklyScheduleEntry,
   footvolleyDurationMinutes: number,
 ): ScheduledActivityInput {
-  const plannedStartMinute = entry.time === null ? null : parseClockMinute(entry.time);
+  const scheduledStart = entry.time === null ? null : parseClockMinute(entry.time);
+  const plannedStartMinute = scheduledStart === null ? null : roundUpToQuarterHour(scheduledStart);
   if (entry.session === "footvolley" || entry.session === "footvolley_only") {
     const plannedEndMinute =
-      plannedStartMinute === null ? null : plannedStartMinute + footvolleyDurationMinutes;
+      plannedStartMinute === null
+        ? null
+        : plannedStartMinute + roundUpToQuarterHour(footvolleyDurationMinutes);
     if (plannedEndMinute !== null && plannedEndMinute > 1440) {
       throw new TrainingProjectionError(
         "TRAINING_DEFINITION_INVALID",
@@ -253,7 +297,7 @@ function buildPlannedActivity(
       `A sessão ${entry.session} não corresponde ao plano ativo ou está sem horário.`,
     );
   }
-  const plannedEndMinute = plannedStartMinute + session.targetDurationMinutes;
+  const plannedEndMinute = plannedStartMinute + roundUpToQuarterHour(session.targetDurationMinutes);
   if (plannedEndMinute > 1440) {
     throw new TrainingProjectionError(
       "TRAINING_DEFINITION_INVALID",
@@ -320,7 +364,10 @@ function buildWeeklyActivity(
       "A atividade semanal está incompleta ou referencia uma sessão inválida.",
     );
   }
-  const plannedEndMinute = end ?? start + session!.targetDurationMinutes;
+  const plannedStartMinute = roundUpToQuarterHour(start);
+  const plannedEndMinute =
+    plannedStartMinute +
+    roundUpToQuarterHour(end === null ? session!.targetDurationMinutes : end - start);
   if (plannedEndMinute > 1440) {
     throw new TrainingProjectionError(
       "TRAINING_DEFINITION_INVALID",
@@ -334,7 +381,7 @@ function buildWeeklyActivity(
     source: "plan",
     name: session?.name ?? entry.name!,
     sport: entry.sport ?? null,
-    plannedStartMinute: start,
+    plannedStartMinute,
     plannedEndMinute,
     trainingPlanVersionId: plan.id,
     sessionDefinitionId: session?.id ?? null,

@@ -1,5 +1,5 @@
 export const trainingActivityCardStyles = {
-  root: "fd-card fd-surface-glass grid gap-4 rounded-2xl border border-category-yellow-border/50 p-6",
+  root: "grid gap-4",
   completed: "border-status-info-border/60",
   paused: "border-muted-foreground/50",
   header: "grid gap-3",

@@ -219,13 +219,13 @@ async function executeMutation<Schema extends z.ZodType<Record<string, unknown>>
     };
   }
   const result = await mutation(parsed.data);
-  if (result.status === "saved") revalidatePath("/treino");
+  if (result.status === "saved") revalidatePath("/workout");
   return result;
 }
 
 function dependencies() {
   return {
-    repository: new PrismaTrainingRepository(getDatabaseClient()),
+    repository: new PrismaTrainingRepository(getDatabaseClient(), getServerEnvironment().APP_ENV),
     resolveWorkspace: resolveFixedWorkspace,
   };
 }

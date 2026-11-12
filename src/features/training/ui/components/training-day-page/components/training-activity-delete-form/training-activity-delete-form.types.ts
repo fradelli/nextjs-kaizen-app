@@ -2,6 +2,7 @@ import type { TrainingActivityDto } from "@/features/training/application/traini
 import type { TrainingFormAction } from "@/features/training/ui/training-action.types";
 
 export type TrainingActivityDeleteFormProps = Readonly<{
+  triggerLabel?: string;
   civilDate: string;
   activity: TrainingActivityDto;
   action: TrainingFormAction;

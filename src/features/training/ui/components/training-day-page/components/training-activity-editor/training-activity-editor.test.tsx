@@ -148,7 +148,7 @@ describe("activity editor workflows", () => {
       target: { value: "2026-09-18" },
     });
     submit();
-    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/treino?date=2026-09-18"));
+    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/workout?date=2026-09-18"));
     const data = action.mock.calls[0][1];
     expect(data.get("civilDate")).toBe(date);
     expect(data.get("targetCivilDate")).toBe("2026-09-18");
@@ -278,7 +278,7 @@ describe("editor additional safeguards", () => {
       return { status: "saved", revision: 1 };
     });
     submit();
-    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/treino?date=2026-09-18"));
+    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/workout?date=2026-09-18"));
   });
 
   it("detects changes to the server DTO while editing", async () => {

@@ -1,4 +1,5 @@
 "use client";
+import { createTrainingDraftId } from "../../lib/training-draft-id";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   activityEditorDraftKey,
@@ -151,7 +152,7 @@ export function useTrainingActivityEditorDraft(
     let cancelled = false;
     queueMicrotask(() => {
       if (cancelled) return;
-      writerId.current = crypto.randomUUID();
+      writerId.current = createTrainingDraftId();
       try {
         window.localStorage.removeItem(key);
       } catch {

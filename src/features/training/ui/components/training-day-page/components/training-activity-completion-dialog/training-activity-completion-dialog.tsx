@@ -68,7 +68,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
           setNeedsReload(true);
         return result;
       } catch {
-        setNeedsReload(true);
+        if (mode !== "complete" || !props.completionRequestedAt) setNeedsReload(true);
         return {
           status: "invalid",
           message: t("saveUnconfirmedPreserved"),

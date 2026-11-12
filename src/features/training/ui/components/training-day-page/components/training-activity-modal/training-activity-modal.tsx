@@ -6,6 +6,7 @@ import { Button } from "@fradelli/ui/button";
 import { useEffect, useId, useRef } from "react";
 import type { TrainingActivityModalProps } from "./training-activity-modal.types";
 import { trainingActivityModalStyles as s } from "./training-activity-modal.styles";
+import { lockTrainingDialogScroll } from "../../../../lib/training-dialog-scroll-lock";
 export function TrainingActivityModal({
   initialFocusRef,
   size = "form",
@@ -28,13 +29,12 @@ export function TrainingActivityModal({
       restoreFocusRef?.current ??
       (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     const element = dialog.current;
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlock = lockTrainingDialogScroll();
     if (element && !element.open) element.showModal();
     (initialFocusRef?.current ?? heading.current)?.focus();
     return () => {
       if (element?.open) element.close();
-      document.body.style.overflow = overflow;
+      unlock();
       const target =
         previous?.isConnected && !previous.matches(":disabled")
           ? previous
@@ -42,7 +42,7 @@ export function TrainingActivityModal({
       if (target) {
         const had = target.hasAttribute("tabindex");
         if (!had) target.tabIndex = -1;
-        target.focus();
+        target.focus({ preventScroll: true });
         if (!had) target.removeAttribute("tabindex");
       }
     };

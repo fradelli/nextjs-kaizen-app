@@ -10,6 +10,23 @@ import type { TrainingRepository } from "./training-repository";
 import { trainingPlanFixture } from "./get-public-training-plan.test";
 
 describe("getTrainingDay", () => {
+  it("consulta o dia sem materializar a programação", async () => {
+    const repository = repositoryWith(async () => ({
+      activePlan: null,
+      assignment: null,
+      activities: [],
+    }));
+    const materialize = vi.spyOn(repository, "ensureScheduledTrainingDay");
+    await getTrainingDay(
+      {
+        repository,
+        environment: "local",
+        resolveWorkspace: () => ({ workspaceId: "workspace-server" }),
+      },
+      { civilDate: "2026-11-10" },
+    );
+    expect(materialize).not.toHaveBeenCalled();
+  });
   it.each(["pending", "completed", "skipped"] as const)(
     "preserves the exercise toggle state %s independently of set measurements",
     async (itemStatus) => {

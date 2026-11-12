@@ -30,7 +30,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({
+  children,
+  workout,
+}: Readonly<{ children: ReactNode; workout?: ReactNode }>) {
   const locale = await getLocale();
   return (
     <html
@@ -40,6 +43,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body>
         <NextIntlClientProvider>
           <AppShell>{children}</AppShell>
+          {workout}
         </NextIntlClientProvider>
       </body>
     </html>

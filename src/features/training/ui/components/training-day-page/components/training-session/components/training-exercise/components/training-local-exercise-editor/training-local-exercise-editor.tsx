@@ -26,7 +26,7 @@ export function TrainingLocalExerciseEditor({
       ? { ...set, directionValues: { ...set.directionValues, [field.slice(10)]: value } }
       : { ...set, [field]: value };
     if (!isTrainingSetPerformed(next, exercise.dose)) next.confirmed = false;
-    onChange({
+    onChange?.({
       ...draft,
       rest: !next.confirmed && timer?.setNumber === set.setNumber ? undefined : timer,
       sets: draft.sets.map((x) => (x.setNumber === set.setNumber ? next : x)),
@@ -40,7 +40,7 @@ export function TrainingLocalExerciseEditor({
         : timer?.setNumber === set.setNumber
           ? undefined
           : timer;
-    onChange({
+    onChange?.({
       ...draft,
       rest,
       sets: draft.sets.map((x) => ({
@@ -63,7 +63,7 @@ export function TrainingLocalExerciseEditor({
       directionValues: {},
       loadKg: "",
     };
-    onChange({
+    onChange?.({
       ...draft,
       sets: [
         ...draft.sets.map((x) => ({
@@ -81,10 +81,8 @@ export function TrainingLocalExerciseEditor({
   let work = 0,
     warmup = 0;
   return (
-    <div className="space-y-2 kaizen-text-body">
-      <div
-        className={`${trainingLocalExerciseEditorStyles.columns} text-xs text-muted-foreground}`}
-      >
+    <fieldset disabled={!onChange} className="min-w-0 space-y-2 kaizen-text-body">
+      <div className={`${trainingLocalExerciseEditorStyles.columns} text-xs text-muted-foreground`}>
         <span>{t("setHeading")}</span>
         <span>{t("setReference")}</span>
         <span>{t("load", { unit: exercise.loadUnit ?? "kg" })}</span>
@@ -134,7 +132,7 @@ export function TrainingLocalExerciseEditor({
         return (
           <div
             key={set.setNumber}
-            className={`${trainingLocalExerciseEditorStyles.columns} items-center border-b border-border pb-2}`}
+            className={`${trainingLocalExerciseEditorStyles.columns} items-center border-b border-border pb-2`}
           >
             <span
               className={warm ? "font-semibold text-status-warning" : "font-semibold"}
@@ -169,14 +167,14 @@ export function TrainingLocalExerciseEditor({
               value={exercise.loadApplicable ? set.loadKg : ""}
               aria-label={`${t("setNumber", { number: ordinal })} ${t("load", { unit: exercise.loadUnit ?? "kg" })}`}
               onChange={(event) => updateSetMeasure(set, "loadKg", event.currentTarget.value)}
-              className="min-w-0 px-1 text-center"
+              className="min-h-11 min-w-0 px-1 text-center text-base"
             />
             <div className="grid gap-1">
               {fields.map((field) => (
                 <label key={field.key} className="min-w-0 text-xs text-muted-foreground">
                   <span className={fields.length > 1 ? "text-xs" : "sr-only"}>{field.label}</span>
                   <Input
-                    className="min-w-0 px-1 text-center"
+                    className="min-h-11 min-w-0 px-1 text-center text-base"
                     type="number"
                     min={0}
                     step="1"
@@ -223,6 +221,6 @@ export function TrainingLocalExerciseEditor({
           {t("addWarmupSet")}
         </Button>
       </div>
-    </div>
+    </fieldset>
   );
 }

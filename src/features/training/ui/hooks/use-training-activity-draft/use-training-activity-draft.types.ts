@@ -12,6 +12,7 @@ export type TrainingExerciseExecutionDraft = {
 };
 
 export type TrainingActivityExecutionDraft = {
+  activityName?: string;
   version: 1;
   activityId: string;
   civilDate: string;
@@ -26,3 +27,5 @@ export type UseTrainingActivityDraftInput = Readonly<{
   activity: TrainingActivityDto;
   civilDate: string;
 }>;
+
+export type TrainingDraftReconciliation = "none" | "cleared" | "preserved" | "storage_error";

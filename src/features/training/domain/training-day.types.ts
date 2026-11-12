@@ -171,6 +171,7 @@ export type TrainingActivitySnapshot = Readonly<{
 }>;
 
 export type TrainingDaySnapshot = Readonly<{
+  plannedRestReason?: string | null;
   activePlan: TrainingPlanSnapshot | null;
   assignment: TrainingAssignmentSnapshot | null;
   activities: readonly TrainingActivitySnapshot[];

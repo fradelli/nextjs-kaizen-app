@@ -11,18 +11,11 @@ export function TrainingAgendaBadges({ day }: TrainingAgendaBadgesProps) {
 
   return (
     <>
-      <div className={trainingAgendaBadgesStyles.root} aria-label={t("dailyAgenda")}>
-        {plannedLabel ? <Badge variant="outline">{plannedLabel}</Badge> : null}
-        {day.activities.map((activity) => (
-          <Badge
-            key={activity.id}
-            variant={activity.status === "completed" ? "success" : "warning"}
-          >
-            {activity.name} · {activity.plannedStartTime ?? t("timeUnknown")}
-            {activity.plannedEndTime ? `–${activity.plannedEndTime}` : ""}
-          </Badge>
-        ))}
-      </div>
+      {plannedLabel ? (
+        <div className={trainingAgendaBadgesStyles.root} aria-label={t("dailyAgenda")}>
+          <Badge variant="outline">{plannedLabel}</Badge>
+        </div>
+      ) : null}
       {"planId" in day ? (
         <details className="fd-text-interface text-muted-foreground">
           <summary className="cursor-pointer py-2">{t("planDetails")}</summary>

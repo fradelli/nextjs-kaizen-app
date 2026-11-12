@@ -20,7 +20,7 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
     (targetCivilDate: string) => {
       setOpen(false);
       startTransition(() => {
-        if (targetCivilDate !== props.civilDate) router.push(`/treino?date=${targetCivilDate}`);
+        if (targetCivilDate !== props.civilDate) router.push(`/workout?date=${targetCivilDate}`);
         else router.refresh();
       });
     },
@@ -32,19 +32,25 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
   return (
     <>
       <Button
+        data-kaizen-action={props.activity ? undefined : "add"}
         ref={triggerRef}
         type="button"
-        size="icon"
+        size={props.triggerLabel ? "sm" : "icon"}
         variant={props.activity ? "ghost" : "default"}
         className="min-h-11 min-w-11 [&>svg]:size-5"
         aria-label={
-          props.activity ? t("editNamedActivity", { name: props.activity.name }) : t("addActivity")
+          props.triggerLabel ??
+          (props.activity
+            ? t("editNamedActivity", { name: props.activity.name })
+            : t("addActivity"))
         }
         disabled={refreshing}
         aria-busy={refreshing || undefined}
         onClick={() => setOpen(true)}
       >
-        {props.activity ? (
+        {props.triggerLabel ? (
+          props.triggerLabel
+        ) : props.activity ? (
           <PencilSimpleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
         ) : (
           <PlusIcon size={20} weight="bold" aria-hidden="true" focusable="false" />

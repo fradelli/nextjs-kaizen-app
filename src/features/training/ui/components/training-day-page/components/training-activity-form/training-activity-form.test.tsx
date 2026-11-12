@@ -125,7 +125,7 @@ describe("training activity schedule experience", () => {
     if (startFirst) change("Início planejado", "18:00");
     chooseTraining();
     if (!startFirst) change("Início planejado", "18:00");
-    expect(end()).toHaveValue("18:40");
+    expect(end()).toHaveValue("18:45");
     change("Treino", "b");
     expect(end()).toHaveValue("19:00");
     change("Início planejado", "19:00");
@@ -135,9 +135,9 @@ describe("training activity schedule experience", () => {
     renderForm();
     chooseTraining();
     change("Início planejado", "18:00");
-    change("Fim planejado", "18:50");
+    change("Fim planejado", "19:15");
     change("Treino", "b");
-    expect(end()).toHaveValue("18:50");
+    expect(end()).toHaveValue("19:15");
     change("Fim planejado", "");
     change("Início planejado", "19:00");
     expect(end()).toHaveValue("");
@@ -147,10 +147,10 @@ describe("training activity schedule experience", () => {
   it("preserves a manually entered value even when equal to the suggestion", () => {
     renderForm();
     chooseTraining();
-    change("Fim planejado", "18:40");
+    change("Fim planejado", "18:45");
     change("Início planejado", "18:00");
     change("Treino", "b");
-    expect(end()).toHaveValue("18:40");
+    expect(end()).toHaveValue("18:45");
   });
   it("freezes the ending when switching to a manual activity type and back", () => {
     renderForm();
@@ -158,9 +158,9 @@ describe("training activity schedule experience", () => {
     change("Início planejado", "18:00");
     change("Tipo de atividade", "mobility");
     change("Início planejado", "19:00");
-    expect(end()).toHaveValue("18:40");
+    expect(end()).toHaveValue("18:45");
     chooseTraining();
-    expect(end()).toHaveValue("18:40");
+    expect(end()).toHaveValue("18:45");
   });
   it("clears obsolete automatic suggestions and explains midnight overflow", () => {
     renderForm();
@@ -168,7 +168,7 @@ describe("training activity schedule experience", () => {
     change("Início planejado", "18:00");
     change("Início planejado", "");
     expect(end()).toHaveValue("");
-    change("Início planejado", "23:20");
+    change("Início planejado", "23:30");
     expect(end()).toHaveValue("");
     expect(screen.getByText(/terminaria no dia seguinte/)).toBeInTheDocument();
     change("Fim planejado", "23:50");
@@ -195,7 +195,7 @@ describe("training activity schedule experience", () => {
   });
   it("does not replace an absent historical session or revision on refreshed props", () => {
     const view = renderForm(saved, activity, { ...plan, sessions: [plan.sessions[1]] });
-    change("Fim planejado", "18:55");
+    change("Fim planejado", "19:00");
     view.rerender(
       <TrainingActivityForm
         civilDate="2026-10-26"
@@ -204,7 +204,7 @@ describe("training activity schedule experience", () => {
         availablePlan={plan}
       />,
     );
-    expect(end()).toHaveValue("18:55");
+    expect(end()).toHaveValue("19:00");
     expect(view.container.querySelector('[name="expectedRevision"]')).toHaveValue("3");
     expect(screen.getByRole("option", { name: "Treino antigo" })).toBeInTheDocument();
   });
@@ -226,12 +226,12 @@ describe("training activity schedule experience", () => {
       change("Nome", "Jogo");
       change("Esporte", "Futevôlei");
       change("Início planejado", "18:00");
-      change("Fim planejado", "18:50");
+      change("Fim planejado", "18:45");
       submit();
       await screen.findByText("Não foi salvo.");
       expect(screen.getByLabelText("Nome")).toHaveValue("Jogo");
-      expect(end()).toHaveValue("18:50");
-      expect(action.mock.calls[0][1].get("plannedEndTime")).toBe("18:50");
+      expect(end()).toHaveValue("18:45");
+      expect(action.mock.calls[0][1].get("plannedEndTime")).toBe("18:45");
     },
   );
   it("preserves input when the server action rejects because the connection failed", async () => {
@@ -239,12 +239,12 @@ describe("training activity schedule experience", () => {
     renderForm(action);
     chooseTraining();
     change("Início planejado", "18:00");
-    change("Fim planejado", "18:55");
+    change("Fim planejado", "19:00");
     submit();
     await screen.findByText(
       "Não foi possível confirmar o salvamento. Confira a agenda antes de tentar novamente.",
     );
-    expect(end()).toHaveValue("18:55");
+    expect(end()).toHaveValue("19:00");
     expect(end()).not.toBeDisabled();
   });
   it("freezes controls while saving and resets a successful addition", async () => {
@@ -266,10 +266,10 @@ describe("training activity schedule experience", () => {
   it("uses the saved revision and preserves the submitted ending after editing", async () => {
     const action = vi.fn<TrainingFormAction>(async () => ({ status: "saved", revision: 4 }));
     const view = renderForm(action, activity);
-    change("Fim planejado", "18:55");
+    change("Fim planejado", "19:00");
     submit();
     await screen.findByText("Salvo.");
-    expect(end()).toHaveValue("18:55");
+    expect(end()).toHaveValue("19:00");
     expect(view.container.querySelector('[name="expectedRevision"]')).toHaveValue("4");
     expect(action.mock.calls[0][1].get("expectedRevision")).toBe("3");
   });
@@ -329,7 +329,7 @@ describe("preparation choice and rescheduling", () => {
     renderForm(action, activity);
     change("Data da atividade", "2026-10-28");
     submit();
-    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/treino?date=2026-10-28"));
+    await waitFor(() => expect(navigation.push).toHaveBeenCalledWith("/workout?date=2026-10-28"));
     expect(action.mock.calls[0][1].get("civilDate")).toBe("2026-10-26");
     expect(action.mock.calls[0][1].get("targetCivilDate")).toBe("2026-10-28");
     expect(action.mock.calls[0][1].get("plannedEndTime")).toBe("18:30");

@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Button } from "@fradelli/ui/button";
+import { ArrowLeftIcon } from "@fradelli/ui/icons/ArrowLeft";
 import Link from "next/link";
 
 import { trainingDateNavigationStyles } from "./training-date-navigation.styles";
@@ -12,16 +13,26 @@ export function TrainingDateNavigation({ dateResolution }: TrainingDateNavigatio
   if (dateResolution.status === "invalid") {
     return (
       <nav className={trainingDateNavigationStyles.root} aria-label={t("dateNavigation")}>
-        <Button className={trainingDateNavigationStyles.button} variant="outline" disabled>
-          {t("previous")}
+        <Button
+          className={trainingDateNavigationStyles.button}
+          variant="outline"
+          aria-label={t("previous")}
+          disabled
+        >
+          <ArrowLeftIcon size={18} aria-hidden="true" />
         </Button>
         <Button className={trainingDateNavigationStyles.todayLink} variant="secondary" asChild>
           <Link prefetch={false} href={createTrainingDateHref(dateResolution.todayDate)}>
             {t("today")}
           </Link>
         </Button>
-        <Button className={trainingDateNavigationStyles.button} variant="outline" disabled>
-          {t("next")}
+        <Button
+          className={trainingDateNavigationStyles.button}
+          variant="outline"
+          aria-label={t("next")}
+          disabled
+        >
+          <ArrowLeftIcon className="rotate-180" size={18} aria-hidden="true" />
         </Button>
       </nav>
     );
@@ -35,7 +46,7 @@ export function TrainingDateNavigation({ dateResolution }: TrainingDateNavigatio
           href={createTrainingDateHref(dateResolution.previousDate)}
           aria-label={t("openPreviousDay")}
         >
-          {t("previous")}
+          <ArrowLeftIcon size={18} aria-hidden="true" />
         </Link>
       </Button>
       {dateResolution.isToday ? (
@@ -62,7 +73,7 @@ export function TrainingDateNavigation({ dateResolution }: TrainingDateNavigatio
             href={createTrainingDateHref(dateResolution.nextDate)}
             aria-label={t("openNextDay")}
           >
-            {t("next")}
+            <ArrowLeftIcon className="rotate-180" size={18} aria-hidden="true" />
           </Link>
         </Button>
       ) : (
@@ -72,7 +83,7 @@ export function TrainingDateNavigation({ dateResolution }: TrainingDateNavigatio
           aria-label={t("nextDayUnavailable")}
           disabled
         >
-          {t("next")}
+          <ArrowLeftIcon className="rotate-180" size={18} aria-hidden="true" />
         </Button>
       )}
     </nav>

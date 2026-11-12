@@ -7,6 +7,8 @@ import {
   within,
 } from "../../../../../../../../tests/support/render-localized";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { TrainingWorkoutOverlayContext } from "../../../training-workout-overlay/training-workout-overlay.context";
+import { trainingActivityDraftKey } from "../../../../hooks/use-training-activity-draft/use-training-activity-draft.utils";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 
@@ -16,7 +18,7 @@ import type {
   TrainingDaySessionDto,
 } from "@/features/training/application/training-dto";
 import type { TrainingDayFormActions } from "@/features/training/ui/training-action.types";
-import { TrainingActivityCard } from "./training-activity-card";
+import { TrainingActivityCard, TrainingInlineActivityCard } from "./training-activity-card";
 
 beforeEach(() => {
   HTMLDialogElement.prototype.showModal = function () {
@@ -37,6 +39,88 @@ afterEach(() => {
 });
 
 describe("TrainingActivityCard", () => {
+  it("avisa sobre uma cópia local não confirmada sem ocultar o resultado concluído", async () => {
+    const activity = createStructuredActivity({ status: "completed" });
+    const key = trainingActivityDraftKey("2026-09-17", activity.id);
+    localStorage.setItem(key, "cópia inválida preservada");
+    renderCard(activity);
+    expect(
+      await screen.findByText(/há dados locais cuja conferência não foi concluída/),
+    ).toBeVisible();
+    expect(localStorage.getItem(key)).toBe("cópia inválida preservada");
+    expect(screen.queryByRole("button", { name: "Iniciar treino" })).not.toBeInTheDocument();
+  });
+  it("preserva o rascunho e reenvia a mesma finalização após perder a resposta", async () => {
+    action.mockRejectedValueOnce(new Error("Resposta perdida"));
+    renderCard(createStructuredActivity({ status: "scheduled" }));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Iniciar treino" })).toBeEnabled(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Iniciar treino" }));
+    fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
+    await waitFor(() => expect(screen.getByLabelText("Intensidade")).toBeEnabled());
+    fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
+    fireEvent.change(screen.getByLabelText("Disposição durante a atividade"), {
+      target: { value: "normal" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Salvar registro" }));
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar" }));
+    await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Salvar registro" })).toBeEnabled(),
+    );
+    expect(localStorage.length).toBeGreaterThan(0);
+    const first = action.mock.calls[0]![1] as FormData;
+    fireEvent.click(screen.getByRole("button", { name: "Salvar registro" }));
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar" }));
+    await waitFor(() => expect(action).toHaveBeenCalledTimes(2));
+    const second = action.mock.calls[1]![1] as FormData;
+    expect(second.get("executionDraft")).toBe(first.get("executionDraft"));
+    expect(second.get("completionRequestedAt")).toBe(first.get("completionRequestedAt"));
+    await waitFor(() => expect(localStorage.length).toBe(0));
+  });
+  it("volta pela navegação da sobreposição quando ela está ativa", () => {
+    const close = vi.fn();
+    render(
+      <TrainingWorkoutOverlayContext.Provider value={close}>
+        <TrainingInlineActivityCard
+          dedicated
+          civilDate="2026-09-17"
+          activity={createStructuredActivity({ status: "scheduled" })}
+          actions={actions}
+        />
+      </TrainingWorkoutOverlayContext.Provider>,
+    );
+    fireEvent.click(screen.getByRole("link", { name: "Voltar à página anterior" }));
+    expect(close).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("button", { name: /Excluir atividade/ })).not.toBeInTheDocument();
+  });
+  it("links the compact summary to the selected day without repeating the date", () => {
+    const activity = createStructuredActivity({ status: "scheduled" });
+    render(<TrainingActivityCard civilDate="2026-09-17" activity={activity} actions={actions} />);
+    expect(screen.getByRole("link")).toHaveAttribute(
+      "href",
+      `/workout/activity/${encodeURIComponent(activity.id)}?date=2026-09-17`,
+    );
+    expect(screen.queryByText("2026-09-17")).not.toBeInTheDocument();
+    expect(screen.getByText(/Não iniciado/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Iniciar treino" })).not.toBeInTheDocument();
+  });
+
+  it("provides a return link from the dedicated workout to its day", () => {
+    render(
+      <TrainingInlineActivityCard
+        dedicated
+        civilDate="2026-09-17"
+        activity={createStructuredActivity({ status: "scheduled" })}
+        actions={actions}
+      />,
+    );
+    expect(screen.getByRole("link", { name: /Voltar/ })).toHaveAttribute(
+      "href",
+      "/workout?date=2026-09-17",
+    );
+  });
   it("requires an explicit choice before closing when the paused execution cannot be stored", async () => {
     renderCard(createStructuredActivity({ status: "scheduled" }));
     await waitFor(
@@ -534,7 +618,7 @@ describe("TrainingActivityCard", () => {
 
 function renderCard(activity: TrainingActivityDto) {
   return render(
-    <TrainingActivityCard civilDate="2026-09-17" activity={activity} actions={actions} />,
+    <TrainingInlineActivityCard civilDate="2026-09-17" activity={activity} actions={actions} />,
   );
 }
 

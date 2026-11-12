@@ -28,11 +28,6 @@ export async function getTrainingDay(
 ): Promise<TrainingDayDto> {
   const civilDate = parseCivilDate(input.civilDate);
   const { workspaceId } = await dependencies.resolveWorkspace();
-  await dependencies.repository.ensureScheduledTrainingDay({
-    workspaceId,
-    civilDate,
-    environment: dependencies.environment,
-  });
   const snapshot = await dependencies.repository.findTrainingDay({
     workspaceId,
     civilDate,
@@ -61,6 +56,7 @@ export async function getTrainingDay(
       assignmentId: assignment?.id ?? null,
       assignmentRevision: assignment?.revision ?? null,
       availablePlan: projectAvailablePublicTrainingPlan(snapshot.activePlan),
+      plannedRestReason: snapshot.plannedRestReason ?? null,
       activities,
     });
   }
