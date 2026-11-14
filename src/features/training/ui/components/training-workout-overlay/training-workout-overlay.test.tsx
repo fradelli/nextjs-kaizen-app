@@ -55,7 +55,7 @@ describe("TrainingWorkoutOverlay", () => {
       </TrainingWorkoutOverlay>,
     );
     expect(document.body.style.overflow).toBe("hidden");
-    fireEvent(screen.getByRole("dialog"), new Event("cancel", { bubbles: true, cancelable: true }));
+    fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(back).toHaveBeenCalledTimes(1);
     page.unmount();
     expect(document.body.style.overflow).toBe("auto");
@@ -67,7 +67,7 @@ describe("TrainingWorkoutOverlay", () => {
       </TrainingWorkoutOverlay>,
     );
     act(() => vi.advanceTimersByTime(250));
-    expect(screen.getByRole("region", { name: "Descanso" }).closest("dialog")).toBe(
+    expect(screen.getByRole("region", { name: "Descanso" }).closest('[role="dialog"]')).toBe(
       screen.getByRole("dialog"),
     );
   });

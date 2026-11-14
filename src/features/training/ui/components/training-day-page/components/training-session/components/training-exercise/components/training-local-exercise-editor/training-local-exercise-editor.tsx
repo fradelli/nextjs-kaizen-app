@@ -1,10 +1,13 @@
 "use client";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@fradelli/ui/dialog";
 import { previousTrainingSet } from "@/features/training/domain/training-set-execution.rules";
 
 import { useTranslations } from "next-intl";
 import { Button } from "@fradelli/ui/button";
 import { Input } from "@fradelli/ui/input";
-import { CheckIcon } from "@fradelli/ui/icons/Check";
+import { Checkbox } from "@fradelli/ui/checkbox";
+import { Field, FieldLabel } from "@fradelli/ui/field";
 
 import {
   isTrainingSetPerformed,
@@ -21,11 +24,14 @@ export function TrainingLocalExerciseEditor({
 }: TrainingLocalExerciseEditorProps) {
   const t = useTranslations("training");
   const timer = draft.rest;
+  const [adding, setAdding] = useState(false);
+  const [kind, setKind] = useState<"work" | "warmup">("work");
   function updateSetMeasure(set: TrainingSetDraft, field: string, value: string) {
     const next = field.startsWith("direction:")
       ? { ...set, directionValues: { ...set.directionValues, [field.slice(10)]: value } }
       : { ...set, [field]: value };
-    if (!isTrainingSetPerformed(next, exercise.dose)) next.confirmed = false;
+    if (!isTrainingSetPerformed(next, exercise.dose, exercise.loadApplicable))
+      next.confirmed = false;
     onChange?.({
       ...draft,
       rest: !next.confirmed && timer?.setNumber === set.setNumber ? undefined : timer,
@@ -33,7 +39,7 @@ export function TrainingLocalExerciseEditor({
     });
   }
   function toggleSetConfirmation(set: TrainingSetDraft, timestamp: number) {
-    const confirmed = !(set.confirmed ?? isTrainingSetPerformed(set, exercise.dose));
+    const confirmed = !set.confirmed;
     const rest =
       confirmed && exercise.restSeconds
         ? { setNumber: set.setNumber, endsAt: timestamp + exercise.restSeconds * 1000 }
@@ -48,7 +54,7 @@ export function TrainingLocalExerciseEditor({
         confirmed:
           x.setNumber === set.setNumber
             ? confirmed
-            : (x.confirmed ?? isTrainingSetPerformed(x, exercise.dose)),
+            : (x.confirmed ?? false),
       })),
     });
   }
@@ -68,7 +74,8 @@ export function TrainingLocalExerciseEditor({
       sets: [
         ...draft.sets.map((x) => ({
           ...x,
-          confirmed: x.confirmed ?? isTrainingSetPerformed(x, exercise.dose),
+          confirmed:
+            x.confirmed ?? false,
         })),
         set,
       ],
@@ -81,12 +88,14 @@ export function TrainingLocalExerciseEditor({
   let work = 0,
     warmup = 0;
   return (
-    <fieldset disabled={!onChange} className="min-w-0 space-y-2 kaizen-text-body">
-      <div className={`${trainingLocalExerciseEditorStyles.columns} text-xs text-muted-foreground`}>
+    <fieldset disabled={!onChange} className="min-w-0 space-y-2 fd-text-interface">
+      <div
+        className={`${trainingLocalExerciseEditorStyles.columns} ${exercise.dose.scope === "each_side" ? trainingLocalExerciseEditorStyles.unilateral : trainingLocalExerciseEditorStyles.bilateral} text-xs text-muted-foreground`}
+      >
         <span>{t("setHeading")}</span>
         <span>{t("setReference")}</span>
         <span>{t("load", { unit: exercise.loadUnit ?? "kg" })}</span>
-        <span>
+        <span className={exercise.dose.scope === "each_side" ? "col-span-2" : undefined}>
           {exercise.dose.unit === "seconds"
             ? t("seconds")
             : exercise.dose.unit === "contacts"
@@ -128,14 +137,16 @@ export function TrainingLocalExerciseEditor({
           ordinal,
         );
         const previous = reference?.set;
-        const checked = set.confirmed ?? isTrainingSetPerformed(set, exercise.dose);
+        const performed = isTrainingSetPerformed(set, exercise.dose, exercise.loadApplicable);
+        const checked = set.confirmed === true;
         return (
           <div
             key={set.setNumber}
-            className={`${trainingLocalExerciseEditorStyles.columns} items-center border-b border-border pb-2`}
+            data-performed={performed}
+            className={`${trainingLocalExerciseEditorStyles.columns} ${exercise.dose.scope === "each_side" ? trainingLocalExerciseEditorStyles.unilateral : trainingLocalExerciseEditorStyles.bilateral} items-center border-b border-border pb-2 `}
           >
             <span
-              className={warm ? "font-semibold text-status-warning" : "font-semibold"}
+              className={`flex size-6 items-center justify-center rounded-md bg-surface-interactive text-xs font-semibold ${warm ? "text-status-warning" : "text-foreground"}`}
               aria-label={
                 warm ? t("warmupSet", { number: ordinal }) : t("setNumber", { number: ordinal })
               }
@@ -143,7 +154,7 @@ export function TrainingLocalExerciseEditor({
               {warm ? "W" : ordinal}
             </span>
             <p
-              className="kaizen-text-caption text-muted-foreground break-words"
+              className="text-xs text-muted-foreground break-words"
               aria-label={previous ? undefined : t("noReference")}
             >
               {previous?.status === "completed"
@@ -158,23 +169,62 @@ export function TrainingLocalExerciseEditor({
                   }`
                 : "—"}
             </p>
-            <Input
-              type="number"
-              min={0}
-              step="0.001"
-              inputMode="decimal"
-              disabled={!exercise.loadApplicable}
-              value={exercise.loadApplicable ? set.loadKg : ""}
-              aria-label={`${t("setNumber", { number: ordinal })} ${t("load", { unit: exercise.loadUnit ?? "kg" })}`}
-              onChange={(event) => updateSetMeasure(set, "loadKg", event.currentTarget.value)}
-              className="min-h-11 min-w-0 px-1 text-center text-base"
-            />
-            <div className="grid gap-1">
+            <Field>
+              <FieldLabel
+                className="sr-only"
+                htmlFor={`${exercise.prescriptionId}-${set.setNumber}-load`}
+              >
+                {`${t("setNumber", { number: ordinal })} ${t("load", { unit: exercise.loadUnit ?? "kg" })}`}
+              </FieldLabel>
+              <Input
+                id={`${exercise.prescriptionId}-${set.setNumber}-load`}
+                type="number"
+                min={0}
+                step="0.001"
+                inputMode="decimal"
+                disabled={!exercise.loadApplicable}
+                value={exercise.loadApplicable ? set.loadKg : ""}
+                aria-describedby={`${exercise.prescriptionId}-title`}
+                onChange={(event) => updateSetMeasure(set, "loadKg", event.currentTarget.value)}
+                className={`min-w-0 text-center ${checked && exercise.loadApplicable ? "border-status-success-border" : ""}`}
+              />
+            </Field>
+            <div
+              className={
+                exercise.dose.scope === "each_side"
+                  ? "col-span-2 grid grid-cols-2 gap-2"
+                  : "grid gap-1"
+              }
+            >
               {fields.map((field) => (
-                <label key={field.key} className="min-w-0 text-xs text-muted-foreground">
-                  <span className={fields.length > 1 ? "text-xs" : "sr-only"}>{field.label}</span>
+                <Field
+                  key={field.key}
+                  orientation={exercise.dose.scope === "each_side" ? "horizontal" : "vertical"}
+                  className={
+                    exercise.dose.scope === "each_side"
+                      ? "flex-row flex-nowrap items-center gap-1"
+                      : undefined
+                  }
+                >
+                  <FieldLabel
+                    htmlFor={`${exercise.prescriptionId}-${set.setNumber}-${field.key}`}
+                    className={
+                      fields.length > 1
+                        ? "w-auto! flex-none! items-center gap-1 text-xs sm:text-sm"
+                        : "sr-only"
+                    }
+                  >
+                    <span className="sr-only">{t("setNumber", { number: ordinal })} </span>
+                    {exercise.dose.scope === "each_side" ? (
+                      <span className="sr-only">{field.label}</span>
+                    ) : null}
+                    {exercise.dose.scope === "each_side"
+                      ? t(field.key === "leftValue" ? "leftShort" : "rightShort")
+                      : field.label}
+                  </FieldLabel>
                   <Input
-                    className="min-h-11 min-w-0 px-1 text-center text-base"
+                    id={`${exercise.prescriptionId}-${set.setNumber}-${field.key}`}
+                    className={`min-w-0 text-center ${checked ? "border-status-success-border" : ""}`}
                     type="number"
                     min={0}
                     step="1"
@@ -183,44 +233,61 @@ export function TrainingLocalExerciseEditor({
                     onChange={(event) =>
                       updateSetMeasure(set, field.key, event.currentTarget.value)
                     }
-                    aria-label={`${t("setNumber", { number: ordinal })} ${field.label}`}
+                    aria-describedby={`${exercise.prescriptionId}-title`}
                   />
-                </label>
+                </Field>
               ))}
             </div>
-            <Button
-              type="button"
-              size="icon"
-              variant={checked ? "default" : "outline"}
-              className="min-h-11 min-w-11"
-              aria-pressed={checked}
+            <Checkbox
+              checked={checked}
               aria-label={t("confirmSet", { number: ordinal })}
-              disabled={!isTrainingSetPerformed(set, exercise.dose)}
-              onClick={() => toggleSetConfirmation(set, Date.now())}
-            >
-              <CheckIcon size={16} aria-hidden="true" weight="bold" />
-            </Button>
+              disabled={
+                !onChange || !isTrainingSetPerformed(set, exercise.dose, exercise.loadApplicable)
+              }
+              onCheckedChange={() => toggleSetConfirmation(set, Date.now())}
+              className="justify-self-center data-checked:border-status-success-border data-checked:bg-status-success-subtle data-checked:text-status-success dark:data-checked:bg-status-success-subtle"
+            />
           </div>
         );
       })}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          disabled={draft.sets.length >= 100}
-          onClick={() => addSet("work")}
-        >
-          {t("addWorkSet")}
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          disabled={draft.sets.length >= 100}
-          onClick={() => addSet("warmup")}
-        >
-          {t("addWarmupSet")}
-        </Button>
-      </div>
+      <Button
+        type="button"
+        tone="general"
+        disabled={draft.sets.length >= 100}
+        onClick={() => {
+          setKind("work");
+          setAdding(true);
+        }}
+      >
+        {t("addSet")}
+      </Button>
+      <Dialog open={adding} onOpenChange={setAdding}>
+        <DialogContent>
+          <DialogTitle>{t("addSet")}</DialogTitle>
+          <div className="flex gap-2">
+            <Button
+              variant={kind === "work" ? "default" : "outline"}
+              onClick={() => setKind("work")}
+            >
+              {t("workSetType")}
+            </Button>
+            <Button
+              variant={kind === "warmup" ? "default" : "outline"}
+              onClick={() => setKind("warmup")}
+            >
+              {t("warmupSetType")}
+            </Button>
+          </div>
+          <Button
+            onClick={() => {
+              addSet(kind);
+              setAdding(false);
+            }}
+          >
+            {t("addSet")}
+          </Button>
+        </DialogContent>
+      </Dialog>
     </fieldset>
   );
 }

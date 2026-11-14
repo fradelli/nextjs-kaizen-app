@@ -31,7 +31,7 @@ describe("AppShellNavigation", () => {
       new URLSearchParams("date=2026-09-28&extra=ignored") as ReturnType<typeof useSearchParams>,
     );
     render(<AppShellNavigation />);
-    expect(screen.getByRole("link", { name: "Meu Dia" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Agenda" })).toHaveAttribute(
       "href",
       "/workout?date=2026-09-28",
     );
@@ -56,7 +56,7 @@ describe("AppShellNavigation", () => {
       "aria-current",
       "page",
     );
-    expect(within(navigation).getByRole("link", { name: "Meu Dia" })).toHaveAttribute(
+    expect(within(navigation).getByRole("link", { name: "Agenda" })).toHaveAttribute(
       "href",
       "/workout",
     );
@@ -67,7 +67,7 @@ describe("AppShellNavigation", () => {
 
     render(<AppShellNavigation />);
 
-    expect(screen.getByRole("link", { name: "Meu Dia" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Agenda" })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: "Alimentação" })).not.toHaveAttribute("aria-current");
   });
 });

@@ -49,6 +49,21 @@ async function openDiscard() {
 }
 
 describe("ActiveTrainingBar", () => {
+  it("identifica execução ativa com indicador sem anunciar o cronômetro a cada segundo", async () => {
+    render(<ActiveTrainingBar />);
+    const indicator = await screen.findByRole("img", { name: "Em andamento" });
+    expect(indicator).toHaveAttribute("data-pulse", "true");
+    expect(indicator).toHaveAttribute("data-tone", "success");
+    expect(screen.getByRole("complementary")).not.toHaveAttribute("aria-live");
+  });
+  it("mantém a retomada pausada com indicador estático e estado textual", async () => {
+    localStorage.setItem(key, JSON.stringify({ ...draft, status: "paused" }));
+    render(<ActiveTrainingBar />);
+    const indicator = await screen.findByRole("img", { name: "Pausado" });
+    expect(indicator).toHaveAttribute("data-pulse", "false");
+    expect(indicator).toHaveAttribute("data-tone", "warning");
+    expect(screen.getByRole("link", { name: /Voltar ao treino/ })).toHaveTextContent("Pausado");
+  });
   it("recupera o treino após remontagem em outra página com a data de origem", async () => {
     const first = render(<ActiveTrainingBar />);
     expect(await screen.findByRole("link", { name: /Voltar ao treino/ })).toHaveAttribute(

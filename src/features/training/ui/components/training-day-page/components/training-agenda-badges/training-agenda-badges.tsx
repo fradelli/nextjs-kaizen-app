@@ -1,3 +1,5 @@
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@fradelli/ui/collapsible";
+import { Button } from "@fradelli/ui/button";
 import { useTranslations } from "next-intl";
 import { Badge } from "@fradelli/ui/badge";
 
@@ -17,10 +19,14 @@ export function TrainingAgendaBadges({ day }: TrainingAgendaBadgesProps) {
         </div>
       ) : null}
       {"planId" in day ? (
-        <details className="fd-text-interface text-muted-foreground">
-          <summary className="cursor-pointer py-2">{t("planDetails")}</summary>
-          <p>{t("planVersion", { id: day.planId, version: day.planVersion })}</p>
-        </details>
+        <Collapsible className="fd-text-interface text-muted-foreground">
+          <CollapsibleTrigger render={<Button type="button" variant="ghost" />}>
+            {t("planDetails")}
+          </CollapsibleTrigger>
+          <CollapsibleContent keepMounted>
+            <p>{t("planVersion", { id: day.planId, version: day.planVersion })}</p>
+          </CollapsibleContent>
+        </Collapsible>
       ) : null}
     </>
   );

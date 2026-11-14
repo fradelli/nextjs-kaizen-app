@@ -4,5 +4,5 @@ export const trainingDayPageStyles = {
   toolbar: "flex items-center justify-between gap-3",
   headingRow: "flex items-center justify-between gap-3",
   title: "sr-only",
-  date: "fd-text-interface font-normal text-muted-foreground",
+  date: "font-heading text-xl font-semibold leading-7 text-foreground lowercase",
 } as const;

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 
@@ -9,6 +9,7 @@ import { createDatabaseFixture } from "./fixtures/database.fixture";
 import { withImportDatabase } from "./fixtures/import-database.fixture";
 
 describe("training mutations with PostgreSQL", () => {
+  afterEach(() => vi.useRealTimers());
   it.each(["same-minute", "midnight"])("preserves real timestamps across %s clock labels", (kind) =>
     withImportDatabase(async (client) => {
       const fixture = await client.$transaction(createDatabaseFixture);
@@ -439,6 +440,8 @@ describe("training mutations with PostgreSQL", () => {
 
   it("finalizes a previously started activity without replacing persisted history", () =>
     withImportDatabase(async (client) => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-09-16T15:00:00Z"));
       const fixture = await client.$transaction(createDatabaseFixture);
       const repository = new PrismaTrainingRepository(client);
       await client.planActivation.create({
@@ -451,17 +454,19 @@ describe("training mutations with PostgreSQL", () => {
         },
       });
       const civilDate = "2026-09-16" as CivilDate;
-      await repository.addTrainingActivity({
-        workspaceId: fixture.workspace.id,
-        environment: "local",
-        civilDate,
-        type: "structured_training",
-        name: "Treino do plano",
-        sport: null,
-        sessionId: fixture.mainSession.sessionId,
-        plannedStartTime: "09:00",
-        plannedEndTime: "09:35",
-      });
+      await repository
+        .addTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          environment: "local",
+          civilDate,
+          type: "structured_training",
+          name: "Treino do plano",
+          sport: null,
+          sessionId: fixture.mainSession.sessionId,
+          plannedStartTime: "09:00",
+          plannedEndTime: "09:45",
+        })
+        .then((result) => expect(result).toMatchObject({ status: "saved" }));
       const day = await repository.findTrainingDay({
         workspaceId: fixture.workspace.id,
         civilDate,
@@ -587,6 +592,8 @@ describe("training mutations with PostgreSQL", () => {
 
   it("persists out-of-order confirmation and an added warmup without changing prescription", () =>
     withImportDatabase(async (client) => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-09-16T15:00:00Z"));
       const fixture = await client.$transaction(createDatabaseFixture);
       const repository = new PrismaTrainingRepository(client);
       await client.planActivation.create({
@@ -599,17 +606,19 @@ describe("training mutations with PostgreSQL", () => {
         },
       });
       const civilDate = "2026-09-16" as CivilDate;
-      await repository.addTrainingActivity({
-        workspaceId: fixture.workspace.id,
-        environment: "local",
-        civilDate,
-        type: "structured_training",
-        name: "Treino do plano",
-        sport: null,
-        sessionId: fixture.mainSession.sessionId,
-        plannedStartTime: "09:00",
-        plannedEndTime: "09:35",
-      });
+      await repository
+        .addTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          environment: "local",
+          civilDate,
+          type: "structured_training",
+          name: "Treino do plano",
+          sport: null,
+          sessionId: fixture.mainSession.sessionId,
+          plannedStartTime: "09:00",
+          plannedEndTime: "09:45",
+        })
+        .then((result) => expect(result).toMatchObject({ status: "saved" }));
       const day = await repository.findTrainingDay({
         workspaceId: fixture.workspace.id,
         civilDate,
@@ -636,13 +645,13 @@ describe("training mutations with PostgreSQL", () => {
               comment: "",
               sets: Array.from({ length: role === "main" ? definition.sets : 0 }, (_, index) => ({
                 kind: "work" as "work" | "warmup",
-                confirmed: role === "main" && definition.ordinal === 1 && index === 1,
+                confirmed: false,
                 setNumber: index + 1,
                 value: role === "main" && definition.ordinal === 1 && index === 1 ? "6" : "",
                 leftValue: "",
                 rightValue: "",
                 directionValues: {},
-                loadKg: "",
+                loadKg: role === "main" && definition.ordinal === 1 && index === 1 ? "0" : "",
               })),
             },
           ];
@@ -762,6 +771,8 @@ describe("training mutations with PostgreSQL", () => {
 
   it("commits the browser draft, intervals and every structured set only on finalization", () =>
     withImportDatabase(async (client) => {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(new Date("2026-09-16T15:00:00Z"));
       const fixture = await client.$transaction(createDatabaseFixture);
       const repository = new PrismaTrainingRepository(client);
       await client.planActivation.create({
@@ -774,17 +785,19 @@ describe("training mutations with PostgreSQL", () => {
         },
       });
       const civilDate = "2026-09-16" as CivilDate;
-      await repository.addTrainingActivity({
-        workspaceId: fixture.workspace.id,
-        environment: "local",
-        civilDate,
-        type: "structured_training",
-        name: "Treino do plano",
-        sport: null,
-        sessionId: fixture.mainSession.sessionId,
-        plannedStartTime: "09:00",
-        plannedEndTime: "09:35",
-      });
+      await repository
+        .addTrainingActivity({
+          workspaceId: fixture.workspace.id,
+          environment: "local",
+          civilDate,
+          type: "structured_training",
+          name: "Treino do plano",
+          sport: null,
+          sessionId: fixture.mainSession.sessionId,
+          plannedStartTime: "09:00",
+          plannedEndTime: "09:45",
+        })
+        .then((result) => expect(result).toMatchObject({ status: "saved" }));
       const day = await repository.findTrainingDay({
         workspaceId: fixture.workspace.id,
         civilDate,

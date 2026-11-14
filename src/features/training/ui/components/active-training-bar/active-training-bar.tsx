@@ -1,11 +1,13 @@
 "use client";
+import { Trash2 } from "@fradelli/ui/lucide-icons";
 import { TRAINING_ACTIVITY_DRAFT_EVENT } from "../../hooks/use-training-activity-draft/use-training-activity-draft.constants";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { Item, ItemActions, ItemContent, ItemTitle, ItemDescription } from "@fradelli/ui/item";
+import { StatusIndicator } from "@fradelli/ui/status-indicator";
 import { Button } from "@fradelli/ui/button";
-import { TrashIcon } from "@fradelli/ui/icons/Trash";
 import { TrainingActivityModal } from "../training-day-page/components/training-activity-modal/training-activity-modal";
 import { useTrainingActivityTimer } from "../../hooks/use-training-activity-timer/use-training-activity-timer";
 import {
@@ -79,39 +81,57 @@ export function ActiveTrainingBar() {
   }
   return (
     <>
-      <aside data-active-workout className={styles.bar} aria-label={t("activeWorkout")}>
+      <Item
+        variant="outline"
+        size="sm"
+        role="complementary"
+        data-active-workout
+        className={`${styles.bar} bg-surface-elevated`}
+        aria-label={t("activeWorkout")}
+      >
         <Link href={href} prefetch={false} className={styles.resume}>
-          <strong>{t("backToWorkout")}</strong>
-          <span>
-            <span className={styles.name}>{name}</span>
-            <time>{duration}</time>
-            {active.status === "paused" ? ` · ${t("paused")}` : ""}
-          </span>
+          <ItemContent>
+            <ItemTitle>
+              <StatusIndicator
+                tone={active.status === "in_progress" ? "success" : "warning"}
+                pulse={active.status === "in_progress"}
+                aria-label={t(active.status === "in_progress" ? "inProgress" : "paused")}
+              />
+              {t("backToWorkout")}
+            </ItemTitle>
+            <ItemDescription className="flex gap-2">
+              <span className={styles.name}>{name}</span>
+              <time className="shrink-0 tabular-nums">{duration}</time>
+              {active.status === "paused" ? ` · ${t("paused")}` : ""}
+            </ItemDescription>
+          </ItemContent>
         </Link>
-        <Button
-          ref={trigger}
-          variant="ghost"
-          size="icon"
-          className="min-h-11 min-w-11"
-          aria-label={t("discardWorkout")}
-          onClick={() => {
-            try {
-              setError("");
-              setConfirmation({
-                key: trainingActivityDraftKey(active.civilDate, active.activityId),
-                raw: window.localStorage.getItem(
-                  trainingActivityDraftKey(active.civilDate, active.activityId),
-                ),
-              });
-            } catch {
-              setError(t("discardWorkoutFailed"));
-            }
-          }}
-        >
-          <TrashIcon size={20} aria-hidden="true" />
-        </Button>
+        <ItemActions>
+          <Button
+            ref={trigger}
+            variant="ghost"
+            size="icon"
+            tone="danger"
+            aria-label={t("discardWorkout")}
+            onClick={() => {
+              try {
+                setError("");
+                setConfirmation({
+                  key: trainingActivityDraftKey(active.civilDate, active.activityId),
+                  raw: window.localStorage.getItem(
+                    trainingActivityDraftKey(active.civilDate, active.activityId),
+                  ),
+                });
+              } catch {
+                setError(t("discardWorkoutFailed"));
+              }
+            }}
+          >
+            <Trash2 size={20} aria-hidden="true" />
+          </Button>
+        </ItemActions>
         {error && !confirmation ? <p role="alert">{error}</p> : null}
-      </aside>
+      </Item>
       {confirmation ? (
         <TrainingActivityModal
           title={t("discardWorkoutQuestion")}
@@ -122,7 +142,7 @@ export function ActiveTrainingBar() {
           onRequestClose={() => setConfirmation(null)}
           footer={
             <>
-              <Button variant="destructive" onClick={discard}>
+              <Button variant="destructive" tone="danger" onClick={discard}>
                 {t("discardWorkout")}
               </Button>
               <Button ref={keepButton} onClick={() => setConfirmation(null)}>

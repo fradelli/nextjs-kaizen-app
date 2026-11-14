@@ -1,7 +1,6 @@
 .dialog {
   position: fixed;
-  inset: 0;
-  margin: auto;
+  display: block;
   width: min(72rem, calc(100% - 2rem));
   max-width: none;
   height: calc(100dvh - 2rem);
@@ -13,12 +12,7 @@
   background: var(--fd-color-background);
   color: var(--fd-color-foreground);
 }
-.dialog::backdrop {
-  background: #0009;
-}
-.dialog:has([data-rest-panel-active]) {
-  padding-bottom: calc(var(--kaizen-rest-panel-height) + 1rem);
-}
+
 .dialog [data-training-rest-panel] {
   bottom: max(0.5rem, env(safe-area-inset-bottom));
 }

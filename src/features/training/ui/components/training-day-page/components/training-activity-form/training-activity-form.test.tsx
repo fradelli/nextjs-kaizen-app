@@ -7,6 +7,7 @@ import {
   waitFor,
 } from "../../../../../../../../tests/support/render-localized";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { userEvent } from "@testing-library/user-event";
 import type {
   AvailablePublicTrainingPlanDto,
   TrainingActivityDto,
@@ -295,19 +296,22 @@ describe("preparation choice and rescheduling", () => {
       },
     ],
   };
-  it("suggests the real plan warmup for Portuguese sport and preserves a manual choice", () => {
+  it("suggests the real plan warmup for Portuguese sport and preserves a manual choice", async () => {
+    const user = userEvent.setup();
     renderForm(saved, undefined, preparedPlan);
     change("Tipo de atividade", "specific_training");
     change("Esporte", "Futevôlei");
-    expect(screen.getByLabelText("Aquecimento")).toHaveValue("warmup");
-    change("Aquecimento", "other_warmup");
+    const trigger = screen.getByRole("combobox", { name: "Aquecimento" });
+    expect(trigger).toHaveTextContent("Aquecimento futevôlei");
+    await user.click(trigger);
+    expect(screen.queryByRole("option", { name: "Treino A" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("option", { name: "Outro aquecimento" }));
     change("Esporte", "Outro esporte");
-    expect(screen.getByLabelText("Aquecimento")).toHaveValue("other_warmup");
-    expect(
-      screen.getByLabelText("Aquecimento").querySelector('[value="a"]'),
-    ).not.toBeInTheDocument();
+    expect(trigger).toHaveTextContent("Outro aquecimento");
+    expect(new FormData(trigger.closest("form")!).get("preparationSessionId")).toBe("other_warmup");
   });
   it("submits an explicit no-warmup choice and preserves it after failure", async () => {
+    const user = userEvent.setup();
     const action = vi.fn<TrainingFormAction>(async () => ({
       status: "invalid",
       message: "Não salvo",
@@ -316,13 +320,21 @@ describe("preparation choice and rescheduling", () => {
     change("Tipo de atividade", "specific_training");
     change("Nome", "Treino extra");
     change("Esporte", "Futevôlei");
-    change("Aquecimento", "none");
+    const trigger = screen.getByRole("combobox", { name: "Aquecimento" });
+    trigger.focus();
+    await user.keyboard("{ArrowDown}");
+    await screen.findByRole("listbox");
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("listbox")).not.toBeInTheDocument());
+    expect(trigger).toHaveFocus();
+    await user.click(trigger);
+    await user.click(await screen.findByRole("option", { name: "Sem aquecimento" }));
     change("Início planejado", "18:00");
     change("Fim planejado", "19:00");
     submit();
     await screen.findByText("Não salvo");
     expect(action.mock.calls[0][1].get("preparationSessionId")).toBe("none");
-    expect(screen.getByLabelText("Aquecimento")).toHaveValue("none");
+    expect(trigger).toHaveTextContent("Sem aquecimento");
   });
   it("submits original and destination dates separately and navigates only after success", async () => {
     const action = vi.fn<TrainingFormAction>(async () => ({ status: "saved", revision: 4 }));

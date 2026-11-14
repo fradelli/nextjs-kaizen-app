@@ -1,8 +1,8 @@
 "use client";
+import { Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { PencilSimpleIcon } from "@fradelli/ui/icons/PencilSimple";
-import { PlusIcon } from "@fradelli/ui/icons/Plus";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@fradelli/ui/button";
 import { useCallback, useState, useTransition, useRef } from "react";
@@ -32,12 +32,11 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
   return (
     <>
       <Button
-        data-kaizen-action={props.activity ? undefined : "add"}
+        tone={props.activity ? undefined : "general"}
         ref={triggerRef}
         type="button"
         size={props.triggerLabel ? "sm" : "icon"}
         variant={props.activity ? "ghost" : "default"}
-        className="min-h-11 min-w-11 [&>svg]:size-5"
         aria-label={
           props.triggerLabel ??
           (props.activity
@@ -51,9 +50,9 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
         {props.triggerLabel ? (
           props.triggerLabel
         ) : props.activity ? (
-          <PencilSimpleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
+          <Pencil size={20} aria-hidden="true" focusable="false" />
         ) : (
-          <PlusIcon size={20} weight="bold" aria-hidden="true" focusable="false" />
+          <Plus size={12} aria-hidden="true" focusable="false" />
         )}
       </Button>
       {open ? (
