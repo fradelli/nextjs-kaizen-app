@@ -3,6 +3,7 @@ import Link from "next/link";
 import styles from "./app-shell.module.css";
 import type { AppShellProps } from "./app-shell.types";
 import { AppShellNavigation } from "./components/app-shell-navigation/app-shell-navigation";
+import { KaizenLogo } from "./components/kaizen-logo/kaizen-logo";
 import { ActiveTrainingBar } from "@/features/training/ui/components/active-training-bar/active-training-bar";
 
 export function AppShell({ children }: AppShellProps) {
@@ -15,8 +16,16 @@ export function AppShell({ children }: AppShellProps) {
 
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link href="/" className={styles.brand} aria-label={t("home")} prefetch={false}>
-            <span lang="ja">改善</span>
+          <Link
+            href="/"
+            className="inline-flex min-h-11 items-center gap-2 rounded-md text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            aria-label={t("home")}
+            prefetch={false}
+          >
+            <KaizenLogo />
+            <span className="font-heading text-2xl font-semibold leading-tight md:text-[26px]">
+              kaizen
+            </span>
           </Link>
         </div>
       </header>

@@ -3,13 +3,12 @@
 
 @source "../../node_modules/@fradelli/ui/dist";
 
-/* O indicador de atividade é a exceção aprovada ao tema estático.
-   O pacote desativa sua pulsação quando há preferência por movimento reduzido. */
+/* As camadas solares respeitam a preferência de movimento no CSS do logo. */
 html.kaizen-static-motion,
 html.kaizen-static-motion
   *:not([data-slot="status-indicator"][data-pulse="true"]):not([data-slot="dialog-content"]):not(
     [data-slot="alert-dialog-content"]
-  ),
+  ):not([data-kaizen-solar-layer]),
 html.kaizen-static-motion *::before,
 html.kaizen-static-motion *::after,
 html.kaizen-static-motion dialog::backdrop {

@@ -34,20 +34,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--fd-space-4);
-  padding: var(--fd-space-4);
-}
-
-.brand {
-  display: inline-flex;
-  min-width: 44px;
-  min-height: 44px;
-  align-items: center;
-  text-decoration: none;
-  margin: 0;
-  color: var(--fd-color-foreground);
-  font-size: var(--fd-font-size-xl);
-  font-weight: var(--fd-font-weight-heading);
-  line-height: var(--fd-font-line-height-xl);
+  padding: 6px var(--fd-space-4);
 }
 
 .content {
@@ -59,11 +46,7 @@
 
 @media (width < 48rem) {
   .headerInner {
-    padding-block: var(--fd-space-2);
-  }
-  .brand {
-    font-size: var(--fd-font-size-lg);
-    line-height: var(--fd-font-line-height-lg);
+    padding-block: 2px;
   }
   .content {
     padding: var(--fd-space-4);
