@@ -17,11 +17,12 @@ import {
 } from "./training-actions";
 
 type TrainingPageProps = Readonly<{
-  searchParams: Promise<Readonly<{ date?: string | readonly string[] }>>;
+  searchParams: Promise<Readonly<{ date?: string | readonly string[]; view?: string }>>;
 }>;
 
 export default async function TrainingPage({ searchParams }: TrainingPageProps) {
-  const { date } = await searchParams;
+  const { date, view: rawView } = await searchParams;
+  const view = rawView === "day" ? "day" : "week";
   const dateResolution = resolveTrainingDayDate({ rawDate: date });
 
   if (dateResolution.status === "invalid") {
@@ -37,7 +38,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
   }
 
   if (dateResolution.requiresCanonicalRedirect) {
-    redirect(`/workout?date=${encodeURIComponent(dateResolution.civilDate)}`);
+    redirect(`/workout?date=${encodeURIComponent(dateResolution.civilDate)}&view=${view}`);
   }
 
   const trainingWeekResult = await queryFixedWorkspaceTrainingWeekPage(dateResolution.civilDate);
@@ -48,11 +49,16 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     saveActivityExercise: saveTrainingActivityExerciseAction,
     deleteActivity: deleteTrainingActivityAction,
   };
-  const day = trainingWeekResult.status === "ready" ? trainingWeekResult.week.days[0]! : null;
+  const day =
+    trainingWeekResult.status === "ready"
+      ? (trainingWeekResult.week.days.find((item) => item.civilDate === dateResolution.civilDate) ??
+        null)
+      : null;
 
   return (
     <TrainingDayPage
       dateResolution={dateResolution}
+      view={view}
       controls={
         day ? (
           <TrainingActivityEditor
@@ -81,6 +87,8 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
           <TrainingWeekGrid
             key={trainingWeekResult.week.startDate}
             days={trainingWeekResult.week.days}
+            selectedDate={dateResolution.civilDate}
+            view={view}
             actions={actions}
           />
         </>

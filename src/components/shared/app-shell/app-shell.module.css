@@ -54,19 +54,6 @@
   }
 }
 
-.content:has([data-rest-panel-active]) {
-  padding-bottom: calc(var(--kaizen-rest-panel-height) + 2 * var(--fd-space-4));
-}
-
-.shell:has([data-active-workout]) .content {
-  padding-bottom: 7rem;
-}
-@media (width < 48rem) {
-  .shell:has([data-active-workout]) .content {
-    padding-bottom: calc(var(--kaizen-mobile-nav-height) + 7rem);
-  }
-}
-
 .shell:has([data-training-agenda]) {
   height: 100dvh;
   min-height: 0;
@@ -79,11 +66,4 @@
   min-height: 0;
   flex-direction: column;
   padding-top: var(--fd-space-2);
-}
-@media (width < 48rem) {
-  .content:has([data-rest-panel-active]) {
-    padding-bottom: calc(
-      var(--kaizen-mobile-nav-bottom) + var(--kaizen-rest-panel-height) + 2 * var(--fd-space-4)
-    );
-  }
 }

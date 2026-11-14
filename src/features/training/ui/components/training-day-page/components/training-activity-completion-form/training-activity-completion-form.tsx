@@ -1,9 +1,9 @@
 "use client";
+import { NativeSelect, NativeSelectOption } from "@fradelli/ui/native-select";
 import { useTranslations } from "next-intl";
 
 import { Field, FieldLabel } from "@fradelli/ui/field";
 import { Input } from "@fradelli/ui/input";
-import { trainingNativeSelectStyles } from "@/features/training/ui/training-native-select.styles";
 import type { CompletionValues } from "@/features/training/ui/lib/training-activity-completion-draft/training-activity-completion-draft";
 import { trainingActivityCompletionFormStyles as styles } from "./training-activity-completion-form.styles";
 import type { TrainingActivityCompletionFormProps } from "./training-activity-completion-form.types";
@@ -24,12 +24,12 @@ export function TrainingActivityCompletionForm({
         <>
           <Field>
             <FieldLabel htmlFor={`${id}-intensity`}>{t("intensity")}</FieldLabel>
-            <select
+            <NativeSelect
               id={`${id}-intensity`}
               name="intensity"
               required
               value={values.intensity}
-              className={trainingNativeSelectStyles.control}
+              className="w-full"
               onChange={(event) =>
                 onChange({
                   ...values,
@@ -37,20 +37,20 @@ export function TrainingActivityCompletionForm({
                 })
               }
             >
-              <option value="">{t("select")}</option>
-              <option value="low">{t("low")}</option>
-              <option value="moderate">{t("moderate")}</option>
-              <option value="high">{t("high")}</option>
-            </select>
+              <NativeSelectOption value="">{t("select")}</NativeSelectOption>
+              <NativeSelectOption value="low">{t("low")}</NativeSelectOption>
+              <NativeSelectOption value="moderate">{t("moderate")}</NativeSelectOption>
+              <NativeSelectOption value="high">{t("high")}</NativeSelectOption>
+            </NativeSelect>
           </Field>
           <Field>
             <FieldLabel htmlFor={`${id}-energy`}>{t("energy")}</FieldLabel>
-            <select
+            <NativeSelect
               id={`${id}-energy`}
               name="energy"
               required
               value={values.energy}
-              className={trainingNativeSelectStyles.control}
+              className="w-full"
               onChange={(event) =>
                 onChange({
                   ...values,
@@ -58,11 +58,11 @@ export function TrainingActivityCompletionForm({
                 })
               }
             >
-              <option value="">{t("select")}</option>
-              <option value="tired">{t("tired")}</option>
-              <option value="normal">{t("normal")}</option>
-              <option value="energized">{t("energized")}</option>
-            </select>
+              <NativeSelectOption value="">{t("select")}</NativeSelectOption>
+              <NativeSelectOption value="tired">{t("tired")}</NativeSelectOption>
+              <NativeSelectOption value="normal">{t("normal")}</NativeSelectOption>
+              <NativeSelectOption value="energized">{t("energized")}</NativeSelectOption>
+            </NativeSelect>
           </Field>
         </>
       ) : (

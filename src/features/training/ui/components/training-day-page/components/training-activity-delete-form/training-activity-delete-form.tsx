@@ -1,7 +1,7 @@
 "use client";
+import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { TrashIcon } from "@fradelli/ui/icons/Trash";
 import { useRouter } from "next/navigation";
 import { Button } from "@fradelli/ui/button";
 import { PendingButton } from "@fradelli/ui/pending-button";
@@ -101,9 +101,7 @@ export function TrainingActivityDeleteForm({
         type="button"
         variant="ghost"
         size={compact && !triggerLabel ? "icon" : "default"}
-        className={
-          compact ? "min-h-11 min-w-11 [&>svg]:size-5" : "min-h-11 text-status-destructive"
-        }
+        tone="danger"
         disabled={
           disabled ||
           submission.pending ||
@@ -126,7 +124,7 @@ export function TrainingActivityDeleteForm({
         {triggerLabel ? (
           triggerLabel
         ) : compact ? (
-          <TrashIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
+          <Trash2 size={20} aria-hidden="true" focusable="false" />
         ) : (
           t("deleteActivity")
         )}
@@ -148,7 +146,7 @@ export function TrainingActivityDeleteForm({
                 type="submit"
                 form={id}
                 variant="ghost"
-                className="min-h-11 text-status-destructive"
+                tone="danger"
                 pending={submission.pending}
                 pendingLabel={t("deleting")}
               >
@@ -157,7 +155,6 @@ export function TrainingActivityDeleteForm({
               <Button
                 ref={keepButton}
                 type="button"
-                className="min-h-11"
                 disabled={submission.pending}
                 onClick={() => {
                   if (!busy.current) setConfirmation(false);

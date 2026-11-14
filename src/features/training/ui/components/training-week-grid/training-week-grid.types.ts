@@ -3,6 +3,8 @@ import type { TrainingDayFormActions } from "../../training-action.types";
 
 export type TrainingWeekGridProps = Readonly<{
   days: readonly TrainingDayDto[];
+  selectedDate: string;
+  view?: "day" | "week";
   actions: TrainingDayFormActions;
 }>;
 

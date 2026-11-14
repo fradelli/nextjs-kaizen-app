@@ -8,11 +8,12 @@ export async function getTrainingWeek(
   input: GetTrainingDayInput,
 ) {
   const startDate = parseCivilDate(input.civilDate);
-  const date = new Date(`${startDate}T00:00:00.000Z`);
-  const dayCount = 7 - date.getUTCDay();
+  const selectedDate = new Date(`${startDate}T00:00:00.000Z`);
+  const date = new Date(selectedDate);
+  date.setUTCDate(date.getUTCDate() - date.getUTCDay());
   const workspace = await dependencies.resolveWorkspace();
   const days: TrainingDayDto[] = [];
-  for (let offset = 0; offset < dayCount; offset++) {
+  for (let offset = 0; offset < 7; offset++) {
     const civilDate = toCivilDateString(date);
     days.push(
       await getTrainingDay({ ...dependencies, resolveWorkspace: () => workspace }, { civilDate }),
@@ -20,7 +21,7 @@ export async function getTrainingWeek(
     date.setUTCDate(date.getUTCDate() + 1);
   }
   return Object.freeze({
-    startDate,
+    startDate: days[0]!.civilDate,
     endDate: days[days.length - 1]!.civilDate,
     days: Object.freeze(days),
   });

@@ -1,4 +1,6 @@
 "use client";
+import { Button } from "@fradelli/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@fradelli/ui/card";
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -36,34 +38,46 @@ export function TrainingGridEvent({
     activity.status === "completed"
       ? activity.status
       : (execution.draft?.status ?? activity.status);
-  const structured = activity.type === "structured_training" && activity.structured;
+  const hasSession = Boolean(activity.structured || activity.preparationSession);
   const start = activity.actualStartTime ?? activity.plannedStartTime;
   const end = activity.actualEndTime ?? activity.plannedEndTime;
   const label = `${activity.name} · ${start ?? t("timeUnknown")}`;
   return (
-    <article className={inList ? styles.listItem : styles.event} data-kind={activity.type}>
-      <div className={styles.eventHeading}>
-        {structured ? (
-          <Link
-            prefetch={false}
-            className={styles.eventTitle}
-            href={`/workout/activity/${encodeURIComponent(activity.id)}?date=${civilDate}`}
-            aria-label={label}
-          >
-            {activity.name}
-          </Link>
+    <Card
+      role="article"
+      surface="solid"
+      size="sm"
+      className={inList ? styles.listItem : styles.event}
+      data-kind={activity.type}
+    >
+      <CardHeader className={styles.eventHeading}>
+        {hasSession ? (
+          <CardTitle asChild>
+            <Button variant="ghost" asChild className={styles.eventTitle}>
+              <Link
+                prefetch={false}
+                href={`/workout/activity/${encodeURIComponent(activity.id)}?date=${civilDate}`}
+                aria-label={label}
+              >
+                {activity.name}
+              </Link>
+            </Button>
+          </CardTitle>
         ) : inList ? (
-          <strong>{activity.name}</strong>
+          <CardTitle className={styles.eventTitle}>{activity.name}</CardTitle>
         ) : (
-          <button
-            ref={trigger}
-            type="button"
-            className={styles.eventTitle}
-            aria-label={label}
-            onClick={() => setOpen(true)}
-          >
-            {activity.name}
-          </button>
+          <CardTitle asChild>
+            <Button
+              ref={trigger}
+              type="button"
+              variant="ghost"
+              aria-label={label}
+              className={styles.eventTitle}
+              onClick={() => setOpen(true)}
+            >
+              {activity.name}
+            </Button>
+          </CardTitle>
         )}
         {inList || !compact ? (
           <TrainingActivityMenu
@@ -73,18 +87,18 @@ export function TrainingGridEvent({
             actions={actions}
           />
         ) : null}
-      </div>
+      </CardHeader>
       {!compact && (
-        <div className={styles.metadata}>
+        <CardDescription className={styles.metadata}>
           <span>
             {start ?? t("timeUnknown")}
             {end ? `–${end}` : ""}
           </span>
           <span>{t(statusKeys[status])}</span>
           {activity.source === "manual" ? <span>{t("outsidePlan")}</span> : null}
-        </div>
+        </CardDescription>
       )}
-      {!structured && !compact ? (
+      {!hasSession && !compact ? (
         <TrainingActivityControls
           civilDate={civilDate}
           activity={activity}
@@ -109,6 +123,6 @@ export function TrainingGridEvent({
           />
         </TrainingActivityModal>
       ) : null}
-    </article>
+    </Card>
   );
 }

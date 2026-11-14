@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@fradelli/ui/button";
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { TrainingActivityModal } from "../training-day-page/components/training-activity-modal/training-activity-modal";
@@ -13,7 +14,12 @@ import {
 import type { TrainingWeekGridProps } from "./training-week-grid.types";
 import styles from "./training-week-grid.module.css";
 
-export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
+export function TrainingWeekGrid({
+  days,
+  selectedDate,
+  view = "week",
+  actions,
+}: TrainingWeekGridProps) {
   const t = useTranslations("training");
   const locale = useLocale();
   const clock = useTrainingGridClock();
@@ -34,16 +40,21 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
       weekday: "short",
       day: "numeric",
     }).format(new Date(`${date}T12:00:00Z`));
+  const formatWeekday = (date: string) =>
+    new Intl.DateTimeFormat(locale, { timeZone: "UTC", weekday: "short" }).format(
+      new Date(`${date}T12:00:00Z`),
+    );
   useLayoutEffect(() => {
     const element = scroller.current;
     if (!element || restoredKey.current === scrollKey) return;
     restoredKey.current = scrollKey;
     const current = trainingGridClock(new Date());
-    const minute =
-      days[0]?.civilDate === current.date
-        ? current.minute
-        : (days[0]?.activities.map(trainingActivityMinutes).find((item) => item !== null)?.start ??
-          480);
+    const todayIsVisible = days.some((item) => item.civilDate === current.date);
+    const selectedDayData = days.find((item) => item.civilDate === selectedDate);
+    const minute = todayIsVisible
+      ? current.minute
+      : (selectedDayData?.activities.map(trainingActivityMinutes).find((item) => item !== null)
+          ?.start ?? 480);
     const hourHeight = parseFloat(getComputedStyle(element).getPropertyValue("--hour-height"));
     let target = Math.max(0, minute - 120);
     try {
@@ -56,7 +67,7 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
     }
     element.scrollTop = (target / 60) * hourHeight;
     element.dataset.positioned = "true";
-  }, [days, scrollKey]);
+  }, [days, scrollKey, selectedDate]);
   return (
     <>
       {days.some(
@@ -66,7 +77,11 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
             (activity) => !trainingActivityMinutes(activity) || isBriefTrainingActivity(activity),
           ),
       ) ? (
-        <div className={styles.dayNotes} style={{ "--day-count": days.length } as CSSProperties}>
+        <div
+          className={styles.dayNotes}
+          data-view={view}
+          style={{ "--day-count": days.length } as CSSProperties}
+        >
           <span />
           {days.map((item, index) => {
             const count = item.activities.filter(
@@ -74,25 +89,36 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
             ).length;
             const briefCount = item.activities.filter(isBriefTrainingActivity).length;
             return (
-              <div key={item.civilDate} className={index ? styles.futureDay : undefined}>
+              <div
+                key={item.civilDate}
+                className={
+                  item.civilDate === selectedDate ? styles.selectedDay : styles.unselectedDay
+                }
+              >
                 {item.plannedRestReason ? <p>{item.plannedRestReason}</p> : null}
                 {count ? (
-                  <button
+                  <Button
+                    variant="ghost"
+                    tone="neutral"
+                    size="sm"
                     type="button"
-                    className={styles.dayNote}
+
                     onClick={() => setSelectedDay({ index })}
                   >
                     {t("withoutTimeRange", { count })}
-                  </button>
+                  </Button>
                 ) : null}
                 {briefCount ? (
-                  <button
+                  <Button
+                    variant="ghost"
+                    tone="neutral"
+                    size="sm"
                     type="button"
-                    className={styles.dayNote}
+
                     onClick={() => setSelectedDay({ index, briefOnly: true })}
                   >
                     {t("briefActivities", { count: briefCount })}
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             );
@@ -101,6 +127,7 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
       ) : null}
       <div
         ref={scroller}
+        data-view={view}
         className={styles.scroller}
         tabIndex={0}
         onScroll={(event) => {
@@ -119,16 +146,23 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
         <div className={styles.dayHeaders}>
           <span aria-hidden="true" />
           {days.map((item, index) => (
-            <button
+            <Button
+              variant="ghost"
+              tone="neutral"
+              size="sm"
               key={item.civilDate}
               type="button"
-              className={index ? styles.futureDay : undefined}
+              className={
+                item.civilDate === selectedDate ? styles.selectedDay : styles.unselectedDay
+              }
+              data-today={clock?.date === item.civilDate || undefined}
               aria-label={t("showDayActivities", { date: formatDay(item.civilDate) })}
               aria-current={clock?.date === item.civilDate ? "date" : undefined}
               onClick={() => setSelectedDay({ index })}
             >
-              {formatDay(item.civilDate)}
-            </button>
+              <span className={styles.weekday}>{formatWeekday(item.civilDate)}</span>
+              <span className={styles.dayNumber}>{Number(item.civilDate.slice(-2))}</span>
+            </Button>
           ))}
         </div>
         <div className={styles.columns}>
@@ -149,16 +183,19 @@ export function TrainingWeekGrid({ days, actions }: TrainingWeekGridProps) {
               </time>
             ) : null}
           </div>
-          {days.map((item, index) => {
+          {days.map((item) => {
             const past = Boolean(clock && item.civilDate < clock.date);
             const today = clock?.date === item.civilDate;
             const timed = positionTrainingActivities(item.activities);
             return (
               <div
                 key={item.civilDate}
-                className={`${styles.day} ${index ? styles.futureDay : ""}`}
+                className={`${styles.day} ${item.civilDate === selectedDate ? styles.selectedDay : styles.unselectedDay}`}
                 data-today={today || undefined}
                 data-past={past || undefined}
+                data-weekend={
+                  new Date(`${item.civilDate}T00:00:00Z`).getUTCDay() % 6 === 0 || undefined
+                }
                 aria-label={formatDay(item.civilDate)}
               >
                 {today && clock ? (

@@ -1,5 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import english from "../../messages/en.json";
 import portuguese from "../../messages/pt-BR.json";
@@ -11,12 +11,14 @@ import { TrainingActionFeedback } from "@/features/training/ui/components/traini
 import { formatTrainingShortDate } from "@/features/training/ui/components/training-day-page/training-day-page.utils";
 import { createTranslator } from "next-intl";
 
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+
 afterEach(cleanup);
 
 describe("localized training interface", () => {
   it.each([
-    ["en", english, "Training", "Today", "Intensity", "Comment", "High"],
-    ["pt-BR", portuguese, "Treino", "Hoje", "Intensidade", "Comentário", "Alta"],
+    ["en", english, "Schedule", "Today", "Intensity", "Comment", "High"],
+    ["pt-BR", portuguese, "Agenda", "Hoje", "Intensidade", "Comentário", "Alta"],
   ] as const)(
     "renders dates, navigation and editable feedback in %s",
     (locale, messages, title, today, intensity, comment, high) => {
@@ -60,17 +62,13 @@ describe("localized training interface", () => {
       expect(values.intensity).toBe("high");
       expect(screen.getByRole("option", { name: high })).toHaveValue("high");
       expect(
-        screen.getByText(
-          locale === "en"
-            ? "Wednesday, September 16, 2026"
-            : "quarta-feira, 16 de setembro de 2026",
-        ),
+        screen.getByText(locale === "en" ? "September 2026" : "setembro de 2026"),
       ).toBeInTheDocument();
       expect(
         screen.getByRole("link", {
-          name: locale === "en" ? "Open previous day" : "Abrir dia anterior",
+          name: locale === "en" ? "Previous" : "Anterior",
         }),
-      ).toHaveAttribute("href", "/workout?date=2026-09-15");
+      ).toHaveAttribute("href", "/workout?date=2026-09-15&view=week");
     },
   );
   it("localizes server feedback and plurals without changing units or civil dates", () => {

@@ -512,7 +512,17 @@ export class PrismaTrainingRepository implements TrainingRepository {
             resolved.prescription.exercise.loadApplicable,
           );
           if ("status" in loadKg) return loadKg;
-          normalizedSets.push({ setInput, loadKg: loadKg.value });
+          normalizedSets.push({
+            setInput: {
+              ...setInput,
+              confirmed: hasPerformedTrainingSetMeasures(
+                setInput,
+                parseNormalizedTrainingDose(resolved.prescription.normalizedDose),
+                resolved.prescription.exercise.loadApplicable,
+              ),
+            },
+            loadKg: loadKg.value,
+          });
         }
         const existing = await transaction.trainingActivityExerciseExecution.findUnique({
           where: {
@@ -823,7 +833,7 @@ async function completeTrainingActivityFromDraft(
         return invalid("Revise os valores das séries.");
       sets.push({
         kind: set.kind ?? "work",
-        confirmed: set.confirmed ?? null,
+        confirmed: hasPerformedTrainingSetMeasures(set, dose, prescription.exercise.loadApplicable),
         setNumber: set.setNumber,
         value,
         leftValue: dose.scope === "each_side" ? leftValue : set.leftValue === "" ? null : leftValue,

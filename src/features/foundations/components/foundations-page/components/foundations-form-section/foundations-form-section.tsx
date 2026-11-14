@@ -3,6 +3,7 @@ import { Field, FieldDescription, FieldError, FieldLabel } from "@fradelli/ui/fi
 import { Input } from "@fradelli/ui/input";
 
 import { foundationsFormSectionStyles } from "./foundations-form-section.styles";
+import { FoundationsControlsExample } from "../foundations-controls-example/foundations-controls-example";
 
 export function FoundationsFormSection() {
   return (
@@ -36,6 +37,7 @@ export function FoundationsFormSection() {
             />
             <FieldError id="foundation-error-message">Revise o valor informado.</FieldError>
           </Field>
+          <FoundationsControlsExample />
         </CardContent>
       </Card>
     </section>

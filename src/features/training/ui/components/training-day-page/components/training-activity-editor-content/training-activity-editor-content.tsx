@@ -2,6 +2,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { formatTrainingShortDate } from "@/features/training/ui/components/training-day-page/training-day-page.utils";
 
+import { Alert, AlertDescription } from "@fradelli/ui/alert";
 import { Button } from "@fradelli/ui/button";
 import { PendingButton } from "@fradelli/ui/pending-button";
 import { useRouter } from "next/navigation";
@@ -142,7 +143,7 @@ export function TrainingActivityEditorContent({
             <Button
               type="button"
               variant="ghost"
-              className="min-h-11 text-status-destructive"
+              tone="danger"
               disabled={lock || draft.status === "external_change"}
               onClick={discard}
             >
@@ -154,7 +155,7 @@ export function TrainingActivityEditorContent({
           <PendingButton
             type="submit"
             form={formId}
-            className="min-h-11"
+            tone={activity ? undefined : "general"}
             pending={busyKind === "save"}
             pendingLabel={t("saving")}
             disabled={!draft.ready || lock || blocked || closeError}
@@ -191,19 +192,10 @@ export function TrainingActivityEditorContent({
         </div>
       ) : null}
       {closeError ? (
-        <section
-          role="alert"
-          className="my-3 grid gap-3 rounded-lg border border-status-destructive-border p-3 text-sm"
-        >
-          <p>{t("closeWithoutStorageWarning")}</p>
+        <Alert role="alert" variant="destructive" className="my-3">
+          <AlertDescription>{t("closeWithoutStorageWarning")}</AlertDescription>
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <Button
-              type="button"
-              variant="ghost"
-              className="text-status-destructive"
-              size="sm"
-              onClick={onClose}
-            >
+            <Button type="button" variant="ghost" tone="danger" size="sm" onClick={onClose}>
               {t("closeWithoutStorage")}
             </Button>
             <div className="ml-auto flex flex-wrap justify-end gap-2">
@@ -227,7 +219,7 @@ export function TrainingActivityEditorContent({
               </Button>
             </div>
           </div>
-        </section>
+        </Alert>
       ) : null}
       {draft.ready ? (
         <TrainingActivityForm

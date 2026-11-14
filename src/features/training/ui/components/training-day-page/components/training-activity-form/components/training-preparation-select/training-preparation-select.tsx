@@ -1,6 +1,6 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@fradelli/ui/select";
 import { useTranslations } from "next-intl";
 import { Field, FieldDescription, FieldLabel } from "@fradelli/ui/field";
-import { trainingNativeSelectStyles } from "@/features/training/ui/training-native-select.styles";
 import type { TrainingPreparationSelectProps } from "./training-preparation-select.types";
 
 export function TrainingPreparationSelect({
@@ -17,40 +17,41 @@ export function TrainingPreparationSelect({
     availablePlan?.sessions.filter((session) => session.assignmentRole === "preparation") ?? [];
   const id = `activity-preparation-${activity?.id ?? "new"}`;
   const current = activity?.preparationSession?.name ?? activity?.preparations[0]?.name;
+  const keepLabel = current ? t("keepNamedPreparation", { name: current }) : t("keepCurrent");
+  const unavailable =
+    !["keep", "automatic", "none"].includes(value) &&
+    !sessions.some((session) => session.sessionId === value);
+  const items = {
+    ...(unavailable ? { [value]: t("warmupUnavailable") } : {}),
+    ...(allowKeep ? { keep: keepLabel } : {}),
+    automatic: t("automaticWarmup"),
+    none: t("noWarmup"),
+    ...Object.fromEntries(sessions.map((session) => [session.sessionId, session.name])),
+  };
   return (
-    <Field className="grid min-w-0 gap-2">
-      <FieldLabel htmlFor={id} className="fd-text-label text-foreground">
-        {t("warmup")}
-      </FieldLabel>
-      <select
-        id={id}
+    <Field>
+      <FieldLabel htmlFor={id}>{t("warmup")}</FieldLabel>
+      <Select
         name="preparationSessionId"
         value={value}
+        items={items}
         disabled={disabled}
-        onChange={(event) => onChange(event.target.value)}
-        aria-describedby={`${id}-hint`}
-        className={trainingNativeSelectStyles.control}
+        onValueChange={(next) => {
+          if (next !== null) onChange(next);
+        }}
       >
-        {!["keep", "automatic", "none"].includes(value) &&
-        !sessions.some((session) => session.sessionId === value) ? (
-          <option value={value} disabled>
-            {t("warmupUnavailable")}
-          </option>
-        ) : null}
-        {allowKeep ? (
-          <option value="keep">
-            {current ? t("keepNamedPreparation", { name: current }) : t("keepCurrent")}
-          </option>
-        ) : null}
-        <option value="automatic">{t("automaticWarmup")}</option>
-        <option value="none">{t("noWarmup")}</option>
-        {sessions.map((session) => (
-          <option key={session.sessionId} value={session.sessionId}>
-            {session.name}
-          </option>
-        ))}
-      </select>
-      <FieldDescription id={`${id}-hint`} className="fd-text-interface text-muted-foreground">
+        <SelectTrigger id={id} aria-describedby={`${id}-hint`} className="w-full">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent alignItemWithTrigger={false}>
+          {Object.entries(items).map(([option, label]) => (
+            <SelectItem key={option} value={option} disabled={unavailable && option === value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FieldDescription id={`${id}-hint`}>
         {disabled
           ? t("preserveStartedWarmup")
           : value === "automatic"

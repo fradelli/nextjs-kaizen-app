@@ -92,7 +92,11 @@ describe("TrainingWeekGrid", () => {
       intervals: [],
     };
     const view = render(
-      <TrainingWeekGrid days={[{ ...days[0]!, activities: [brief, normal] }]} actions={actions} />,
+      <TrainingWeekGrid
+        days={[{ ...days[0]!, activities: [brief, normal] }]}
+        selectedDate={days[0]!.civilDate}
+        actions={actions}
+      />,
     );
     const marker = view.container.querySelector(
       '[aria-hidden="true"][data-kind="structured_training"]',
@@ -117,21 +121,23 @@ describe("TrainingWeekGrid", () => {
     const style = document.createElement("div").style;
     style.setProperty("--hour-height", "64");
     vi.spyOn(window, "getComputedStyle").mockReturnValue(style);
-    const first = render(<TrainingWeekGrid days={days} actions={actions} />);
+    const first = render(
+      <TrainingWeekGrid days={days} selectedDate={days[0]!.civilDate} actions={actions} />,
+    );
     act(() => vi.advanceTimersByTime(1));
-    const scroller = screen.getByLabelText("Grade de horários do Meu Dia");
+    const scroller = screen.getByLabelText("Grade de horários da Agenda");
     scroller.scrollTop = 640;
     fireEvent.scroll(scroller);
     first.unmount();
-    render(<TrainingWeekGrid days={days} actions={actions} />);
+    render(<TrainingWeekGrid days={days} selectedDate={days[0]!.civilDate} actions={actions} />);
     act(() => vi.advanceTimersByTime(1));
-    expect(screen.getByLabelText("Grade de horários do Meu Dia").scrollTop).toBe(640);
+    expect(screen.getByLabelText("Grade de horários da Agenda").scrollTop).toBe(640);
   });
   it("atualiza a hora atual sem perder a posição escolhida na grade", () => {
-    render(<TrainingWeekGrid days={days} actions={actions} />);
+    render(<TrainingWeekGrid days={days} selectedDate={days[0]!.civilDate} actions={actions} />);
     act(() => vi.advanceTimersByTime(1));
     expect(screen.getByText("12:08")).toBeInTheDocument();
-    const scroller = screen.getByLabelText("Grade de horários do Meu Dia");
+    const scroller = screen.getByLabelText("Grade de horários da Agenda");
     scroller.scrollTop = 456;
     act(() => vi.advanceTimersByTime(60_000));
     expect(screen.getByText("12:09")).toBeInTheDocument();
@@ -139,7 +145,7 @@ describe("TrainingWeekGrid", () => {
     expect(action).not.toHaveBeenCalled();
   });
   it("abre a lista do dia pelo cabeçalho e representa as extremidades de 24 horas", () => {
-    render(<TrainingWeekGrid days={days} actions={actions} />);
+    render(<TrainingWeekGrid days={days} selectedDate={days[0]!.civilDate} actions={actions} />);
     expect(screen.getByText("00:00")).toBeInTheDocument();
     expect(screen.getByText("24:00")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Ver atividades de.*11/ }));

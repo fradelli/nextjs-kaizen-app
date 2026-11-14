@@ -2,4 +2,5 @@ import type { TrainingDayDateResolution } from "../../../../../application/resol
 
 export type TrainingDateNavigationProps = Readonly<{
   dateResolution: TrainingDayDateResolution;
+  view?: "day" | "week";
 }>;

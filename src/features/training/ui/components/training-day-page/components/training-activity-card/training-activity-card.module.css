@@ -1,11 +1,5 @@
 .agendaLink {
   display: block;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-}
-
-.agendaLink:hover {
-  background: var(--muted);
 }
 
 .detailTop {
@@ -20,8 +14,6 @@
 }
 
 .back {
-  min-width: 2.25rem;
-  min-height: 2.25rem;
   margin-bottom: 0.25rem;
 }
 
@@ -30,20 +22,6 @@
   background: var(--fd-color-background);
   display: grid;
   gap: 1rem;
-}
-
-.dedicated h2 {
-  font-size: 1.5rem;
-  line-height: 2rem;
-}
-
-.dedicated h3 {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.dedicated button {
-  min-height: 2.25rem;
 }
 
 @media (max-width: 639px) {
@@ -75,4 +53,14 @@
     grid-row: 1;
     grid-column: 1;
   }
+}
+
+.dedicated [data-slot="card"] {
+  background: var(--fd-color-background);
+}
+.dedicated > header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--fd-color-background);
 }

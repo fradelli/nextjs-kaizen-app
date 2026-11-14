@@ -1,4 +1,5 @@
 "use client";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@fradelli/ui/collapsible";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@fradelli/ui/button";
@@ -27,31 +28,35 @@ export function TrainingCompletedExerciseCorrection({
   const submission = useTrainingActionFeedback(action);
 
   return (
-    <details>
-      <summary>{t("correctExercise")}</summary>
-      <form action={submission.formAction} className="space-y-3 pt-3">
-        <input type="hidden" name="civilDate" value={civilDate} />
-        <input type="hidden" name="activityId" value={activityId} />
-        <input type="hidden" name="sessionId" value={sessionId} />
-        <input type="hidden" name="exerciseId" value={exercise.exerciseId} />
-        <input type="hidden" name="role" value="main" />
-        <input type="hidden" name="expectedRevision" value={exercise.revision ?? ""} />
-        <input type="hidden" name="completed" value={String(draft.completed)} />
-        <input type="hidden" name="comment" value={draft.comment} />
-        <input type="hidden" name="sets" value={serializeTrainingSetDrafts(draft.sets)} />
-        <TrainingLocalExerciseEditor exercise={exercise} draft={draft} onChange={setDraft} />
-        <Switch
-          checked={draft.completed}
-          onClick={() => setDraft((current) => ({ ...current, completed: !current.completed }))}
-          aria-label={draft.completed ? t("uncheckExercise") : t("markExerciseDone")}
-        />
-        <Button type="submit" disabled={submission.pending}>
-          {t("saveCorrection")}
-        </Button>
-        {submission.state.status !== "saved" && !submission.pending ? (
-          <TrainingActionFeedback state={submission.state} pending={false} />
-        ) : null}
-      </form>
-    </details>
+    <Collapsible>
+      <CollapsibleTrigger render={<Button type="button" variant="ghost" />}>
+        {t("correctExercise")}
+      </CollapsibleTrigger>
+      <CollapsibleContent keepMounted>
+        <form action={submission.formAction} className="space-y-3 pt-3">
+          <input type="hidden" name="civilDate" value={civilDate} />
+          <input type="hidden" name="activityId" value={activityId} />
+          <input type="hidden" name="sessionId" value={sessionId} />
+          <input type="hidden" name="exerciseId" value={exercise.exerciseId} />
+          <input type="hidden" name="role" value="main" />
+          <input type="hidden" name="expectedRevision" value={exercise.revision ?? ""} />
+          <input type="hidden" name="completed" value={String(draft.completed)} />
+          <input type="hidden" name="comment" value={draft.comment} />
+          <input type="hidden" name="sets" value={serializeTrainingSetDrafts(draft.sets)} />
+          <TrainingLocalExerciseEditor exercise={exercise} draft={draft} onChange={setDraft} />
+          <Switch
+            checked={draft.completed}
+            onClick={() => setDraft((current) => ({ ...current, completed: !current.completed }))}
+            aria-label={draft.completed ? t("uncheckExercise") : t("markExerciseDone")}
+          />
+          <Button type="submit" disabled={submission.pending}>
+            {t("saveCorrection")}
+          </Button>
+          {submission.state.status !== "saved" && !submission.pending ? (
+            <TrainingActionFeedback state={submission.state} pending={false} />
+          ) : null}
+        </form>
+      </CollapsibleContent>
+    </Collapsible>
   );
 }

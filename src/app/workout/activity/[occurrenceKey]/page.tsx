@@ -1,3 +1,5 @@
+import TrainingPage from "../../page";
+import { TrainingWorkoutOverlay } from "@/features/training/ui/components/training-workout-overlay/training-workout-overlay";
 import { TrainingInlineActivityCard } from "@/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card";
 import {
   addTrainingActivityAction,
@@ -23,22 +25,27 @@ export default async function TrainingDetailPage({
   const result = await queryFixedWorkspaceTrainingDayPage(resolution.civilDate);
   if (result.status !== "ready") notFound();
   const activity = result.day.activities.find((item) => item.id === occurrenceKey);
-  if (!activity || activity.type !== "structured_training" || !activity.structured) notFound();
+  if (!activity || (!activity.structured && !activity.preparationSession)) notFound();
   return (
-    <section className="mx-auto max-w-3xl space-y-6 p-4">
-      <TrainingInlineActivityCard
-        dedicated
-        activity={activity}
-        civilDate={resolution.civilDate}
-        availablePlan={"availablePlan" in result.day ? result.day.availablePlan : null}
-        actions={{
-          addActivity: addTrainingActivityAction,
-          updateActivity: updateTrainingActivityAction,
-          controlActivity: controlTrainingActivityAction,
-          saveActivityExercise: saveTrainingActivityExerciseAction,
-          deleteActivity: deleteTrainingActivityAction,
-        }}
-      />
-    </section>
+    <>
+      <TrainingPage searchParams={Promise.resolve({ date: resolution.civilDate })} />
+      <TrainingWorkoutOverlay returnHref={`/workout?date=${resolution.civilDate}`}>
+        <section className="mx-auto max-w-3xl space-y-6 p-4">
+          <TrainingInlineActivityCard
+            dedicated
+            activity={activity}
+            civilDate={resolution.civilDate}
+            availablePlan={"availablePlan" in result.day ? result.day.availablePlan : null}
+            actions={{
+              addActivity: addTrainingActivityAction,
+              updateActivity: updateTrainingActivityAction,
+              controlActivity: controlTrainingActivityAction,
+              saveActivityExercise: saveTrainingActivityExerciseAction,
+              deleteActivity: deleteTrainingActivityAction,
+            }}
+          />
+        </section>
+      </TrainingWorkoutOverlay>
+    </>
   );
 }

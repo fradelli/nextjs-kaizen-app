@@ -1,8 +1,9 @@
 "use client";
+import { MoreHorizontal } from "lucide-react";
 import { useId, useState, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
+import { Card } from "@fradelli/ui/card";
 import { Button } from "@fradelli/ui/button";
-import { DotsThreeIcon } from "@fradelli/ui/icons/DotsThree";
 import { isTrainingAgendaDateEditable } from "../../../domain/training-edit-window";
 import { useTrainingActivityDraft } from "../../hooks/use-training-activity-draft/use-training-activity-draft";
 import { TrainingActivityEditor } from "../training-day-page/components/training-activity-editor/training-activity-editor";
@@ -34,7 +35,6 @@ export function TrainingActivityMenu({
         variant="ghost"
         size="icon"
         popoverTarget={id}
-        className="min-h-11 min-w-11"
         aria-label={t("activityOptions", { name: activity.name })}
         onClick={(event) => {
           const bounds = event.currentTarget.getBoundingClientRect();
@@ -44,11 +44,16 @@ export function TrainingActivityMenu({
           });
         }}
       >
-        <DotsThreeIcon size={20} aria-hidden="true" />
+        <MoreHorizontal size={20} aria-hidden="true" />
       </Button>
-      <div
+      <Card
+        surface="solid"
+        size="sm"
         id={id}
         popover="auto"
+        onClickCapture={(event) => {
+          if ((event.target as HTMLElement).closest("button")) event.currentTarget.hidePopover();
+        }}
         className={styles.panel}
         style={
           {
@@ -79,7 +84,7 @@ export function TrainingActivityMenu({
             />
           </>
         )}
-      </div>
+      </Card>
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  trainingSetVolumeKg,
   previousTrainingSet,
   hasPerformedTrainingSetMeasures,
 } from "./training-set-execution.rules";
@@ -69,4 +70,17 @@ it("uses separate sessions by type without shifting work ordinals or filling his
   expect(previousTrainingSet(history, "work", 1)?.date).toBe("2026-10-27");
   expect(previousTrainingSet(history, "warmup", 2)?.set.loadKg).toBe("30");
   expect(previousTrainingSet(history, "work", 2)).toBeNull();
+});
+
+it("requires applicable load while allowing zero", () => {
+  expect(hasPerformedTrainingSetMeasures({ ...set, loadKg: "" }, dose, true)).toBe(false);
+  expect(hasPerformedTrainingSetMeasures({ ...set, loadKg: "0" }, dose, true)).toBe(true);
+});
+it("excludes warmups and uses per-side load for unequal repetitions", () => {
+  const unilateral = { ...dose, scope: "each_side" };
+  const measures = { ...set, loadKg: "10", leftValue: "8", rightValue: "10" };
+  expect(trainingSetVolumeKg(measures, unilateral, true)).toBe(180);
+  expect(trainingSetVolumeKg({ ...measures, kind: "warmup" }, unilateral, true)).toBe(0);
+  expect(trainingSetVolumeKg({ ...measures, rightValue: "" }, unilateral, true)).toBe(0);
+  expect(trainingSetVolumeKg(measures, { ...unilateral, unit: "seconds" }, true)).toBe(0);
 });

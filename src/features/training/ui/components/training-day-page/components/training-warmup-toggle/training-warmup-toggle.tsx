@@ -1,6 +1,7 @@
 "use client";
 import { useTranslations } from "next-intl";
 
+import { useRef } from "react";
 import { Switch } from "@fradelli/ui/switch";
 
 import { useTrainingActionFeedback } from "@/features/training/ui/hooks/use-training-action-feedback";
@@ -18,12 +19,13 @@ export function TrainingWarmupToggle({
   exercise,
   action,
 }: TrainingWarmupToggleProps) {
+  const form = useRef<HTMLFormElement>(null);
   const t = useTranslations("training");
 
   const submission = useTrainingActionFeedback(action);
   const completed = exercise.status === "completed";
   return (
-    <form action={submission.formAction} className={trainingWarmupToggleStyles.form}>
+    <form ref={form} action={submission.formAction} className={trainingWarmupToggleStyles.form}>
       <input type="hidden" name="civilDate" value={civilDate} />
       <input type="hidden" name="activityId" value={activityId} />
       <input type="hidden" name="sessionId" value={sessionId} />
@@ -38,7 +40,7 @@ export function TrainingWarmupToggle({
         value={serializeTrainingSetDrafts(createTrainingSetDrafts(exercise))}
       />
       <Switch
-        type="submit"
+        onCheckedChange={() => form.current?.requestSubmit()}
         checked={completed}
         aria-label={completed ? t("markWarmupIncomplete") : t("markWarmupComplete")}
         disabled={submission.pending}

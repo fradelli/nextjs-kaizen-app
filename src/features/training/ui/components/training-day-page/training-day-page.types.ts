@@ -4,6 +4,7 @@ import type { TrainingDayDateResolution } from "../../../application/resolve-tra
 
 export type TrainingDayPageProps = Readonly<{
   dateResolution: TrainingDayDateResolution;
+  view?: "day" | "week";
   children: ReactNode;
   controls?: ReactNode;
   summary?: ReactNode;

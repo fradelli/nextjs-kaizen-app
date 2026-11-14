@@ -2,10 +2,10 @@ import { useLocale, useTranslations } from "next-intl";
 import { TrainingDateNavigation } from "./components/training-date-navigation/training-date-navigation";
 import { trainingDayPageStyles } from "./training-day-page.styles";
 import type { TrainingDayPageProps } from "./training-day-page.types";
-import { formatTrainingDateLabel } from "./training-day-page.utils";
 
 export function TrainingDayPage({
   dateResolution,
+  view = "week",
   children,
   controls,
   summary,
@@ -29,12 +29,16 @@ export function TrainingDayPage({
         <div className={trainingDayPageStyles.headingRow}>
           <p className={trainingDayPageStyles.date}>
             {selectedDate
-              ? formatTrainingDateLabel(selectedDate, locale)
+              ? new Intl.DateTimeFormat(locale, {
+                  timeZone: "UTC",
+                  month: "long",
+                  year: "numeric",
+                }).format(new Date(`${selectedDate}T00:00:00.000Z`))
               : t("invalidDateDescription")}
           </p>
         </div>
         <div className={trainingDayPageStyles.toolbar}>
-          <TrainingDateNavigation dateResolution={dateResolution} />
+          <TrainingDateNavigation dateResolution={dateResolution} view={view} />
           {controls}
         </div>
         {summary}

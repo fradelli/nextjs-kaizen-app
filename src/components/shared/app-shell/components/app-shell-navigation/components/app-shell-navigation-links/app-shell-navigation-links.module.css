@@ -22,16 +22,6 @@
   pointer-events: auto;
 }
 
-.navigationLink {
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  justify-content: center;
-}
-
-.icon {
-  display: flex;
-}
-
 @media (width < 48rem) {
   .navigation {
     position: fixed;
@@ -52,27 +42,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .navigationLink {
-    min-width: 3rem;
-    min-height: 2.75rem;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
   .navigationList > li {
     display: flex;
     justify-content: center;
-  }
-  .label {
-    display: inline;
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
-  .icon {
-    display: flex;
-  }
-  .icon > svg {
-    width: 1.25rem;
-    height: 1.25rem;
   }
 }
 
