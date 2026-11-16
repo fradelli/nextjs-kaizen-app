@@ -26,6 +26,7 @@ import {
 
 export function TrainingDateNavigation({
   dateResolution,
+  onCountChange,
   view = "week",
 }: TrainingDateNavigationProps) {
   const t = useTranslations("training");
@@ -43,7 +44,7 @@ export function TrainingDateNavigation({
     (date: Parameters<typeof createTrainingDateHref>[0], mode: "day" | "week" = view) => {
       const href = createTrainingDateHref(date, mode);
       const range = mode === "day" ? 1 : count === 1 ? 7 : count;
-      return range === 7 ? href : href + "&days=" + range;
+      return range === 7 && !params?.has("days") ? href : href + "&days=" + range;
     },
     [count, view],
   );
@@ -79,16 +80,17 @@ export function TrainingDateNavigation({
   const previousWeek = weekStart
     ? view === "day"
       ? shiftTrainingDate(civilDate, -1)
-      : shiftTrainingDate(count === 7 ? weekStart : civilDate, -count)
+      : shiftTrainingDate(count === 7 && !params?.has("days") ? weekStart : civilDate, -count)
     : null;
   const nextWeek = weekStart
     ? view === "day"
       ? shiftTrainingDate(civilDate, 1)
-      : shiftTrainingDate(count === 7 ? weekStart : civilDate, count)
+      : shiftTrainingDate(count === 7 && !params?.has("days") ? weekStart : civilDate, count)
     : null;
 
   const visibleCount = view === "day" ? 1 : count;
   function changeCount(value: number) {
+    if (onCountChange) return onCountChange(value);
     const next = new URLSearchParams(params?.toString());
     next.set("days", String(value));
     next.set("view", value === 1 ? "day" : "week");

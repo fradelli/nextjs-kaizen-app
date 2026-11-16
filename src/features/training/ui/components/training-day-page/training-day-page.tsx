@@ -6,6 +6,7 @@ import type { TrainingDayPageProps } from "./training-day-page.types";
 export function TrainingDayPage({
   dateResolution,
   view = "week",
+  onCountChange,
   children,
   controls,
   summary,
@@ -38,7 +39,7 @@ export function TrainingDayPage({
                 : t("invalidDateDescription")}
             </p>
             <div className={trainingDayPageStyles.toolbar}>
-              <TrainingDateNavigation dateResolution={dateResolution} view={view} />
+              <TrainingDateNavigation dateResolution={dateResolution} view={view} onCountChange={onCountChange} />
               {controls}
             </div>
           </div>
