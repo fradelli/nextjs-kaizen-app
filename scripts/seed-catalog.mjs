@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client.ts";
 
+import { sportModalities } from "../src/features/training/domain/sport-modalities.ts";
+
 async function readCatalog(name) {
   return JSON.parse(
     await readFile(new URL("../data/catalogs/" + name + ".json", import.meta.url), "utf8"),
@@ -14,7 +16,7 @@ const [equipment, exercises] = await Promise.all([
   readCatalog("exercicios"),
 ]);
 const digest = createHash("sha256")
-  .update(JSON.stringify([1, equipment, exercises]))
+  .update(JSON.stringify([2, equipment, exercises, sportModalities]))
   .digest("hex");
 const equipmentRows = equipment.itens.map(({ id, nome_pt_br, ...details }) => ({
   id,
@@ -76,6 +78,7 @@ if (
   throw new Error("Identidades ou vínculos inválidos.");
 const summary = {
   digest,
+  sports: sportModalities.length,
   equipment: equipmentRows.length,
   exercises: exerciseRows.length,
   requirements: requirements.length,
@@ -98,6 +101,7 @@ else if (mode === "--apply") {
             throw new Error("O pacote já foi substituído por uma versão posterior.");
           return "já aplicado";
         }
+        await tx.catalogSport.createMany({ data: sportModalities.map(namePt => ({ namePt })), skipDuplicates: true });
         for (const row of equipmentRows)
           await tx.catalogEquipment.upsert({ where: { id: row.id }, create: row, update: row });
         for (const row of exerciseRows)

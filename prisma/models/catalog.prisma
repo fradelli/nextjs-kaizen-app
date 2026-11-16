@@ -42,3 +42,7 @@ model CatalogImport {
   appliedAt DateTime @default(now()) @db.Timestamptz(6)
   metadata Json
 }
+
+model CatalogSport {
+  namePt String @id
+}
