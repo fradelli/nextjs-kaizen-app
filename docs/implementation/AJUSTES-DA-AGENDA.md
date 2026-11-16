@@ -264,3 +264,25 @@ Ler em lote regras vigentes na janela, avulsas, exceções e estados. Combinar p
 | Cancelar a prévia ou editar uma atividade avulsa | Cancelar mantém os dados anteriores. Uma avulsa altera somente sua própria reserva. |
 
 O [plano técnico da Schedule](SCHEDULE-PLANO-TECNICO.md) organiza as dependências, os arquivos envolvidos e a validação de cada etapa.
+
+## Próximas tarefas antes do drag and drop
+
+Pendentes em 16/11/2026. Executar a correção do card primeiro, depois separar o domínio da agenda e por fim revisar os contratos legados. Usar a [especificação da Schedule](SCHEDULE-PLANO-TECNICO.md) para as regras de grupos, horários e conflitos.
+
+### 1. Exibir cards concluídos independentemente da permissão de editar
+
+Na grade, `TrainingGridEvent` entrega o conteúdo visível ao gatilho de `TrainingActivityEditor`. Esse gatilho pode retornar vazio para uma ocorrência concluída. Separar o conteúdo do card da ação de editar. Preservar o acesso de leitura e o histórico do executor. Tratar a permissão de alteração explicitamente.
+
+Aceite: uma ocorrência concluída continua identificável pelo título nas visões diária e semanal, inclusive após recarregar. A apresentação compacta mantém um nome acessível. Uma ocorrência editável continua abrindo o editor. Cobrir ambos os casos com o mesmo exercício.
+
+### 2. Separar tarefas, reservas de tempo e execução de treino
+
+Começar pelo fluxo lista → reserva na agenda. Hoje a consulta semanal retorna dias de treino e o formulário chama mutações de treino. Definir a identidade da tarefa e sua reserva, a referência opcional ao bloco pai e o contrato de leitura por intervalo. O editor deve escolher os campos e a ação de salvar conforme o tipo. Manter a integração com o executor para treinos vinculados. A tarefa comum nasce na lista de to-dos e recebe horário quando agendada; preservar a identidade e o checkbox entre as duas telas.
+
+Aceite: com zero planos de treino, criar uma tarefa de Matemática na lista e agendá-la para as 8h em um bloco de estudo. Confirmar que a mesma tarefa aparece na grade, que recarregar preserva o vínculo e que nenhuma ocorrência ou execução de treino foi criada. Alterar o horário pelo formulário deve funcionar antes de ligar o gesto de arrastar. Repetir o teste com uma tarefa de Trabalho e verificar a abertura de um treino vinculado no executor.
+
+### 3. Encerrar os contratos antigos de rascunhos e datas
+
+Inventariar os consumidores de serialização do editor, do aviso de limpeza e da janela de quatro dias em `ensureScheduledTrainingDay`, incluindo importadores e testes de integração. Remover o emissor sem ouvinte ou encaminhar uma falha real de limpeza ao mecanismo de feedback usado pela aplicação. Manter o estado temporário do formulário em memória. Revisar separadamente o rascunho de execução que permite retomar um treino em andamento. Identificar se a materialização ainda tem consumidor real antes de alterar a política de datas.
+
+Aceite: fechar e reabrir o formulário descarta a edição, retomar um treino mantém o progresso e abrir a agenda vazia não gera aviso nem gravação. Testar reagendamento em datas além de quatro dias, histórico e conflitos de revisão. Atualizar os testes de comportamento antigos, mantendo as verificações de execução e concorrência. Na auditoria anterior a suíte unitária registrou 425 testes aprovados e 41 falhas; separar expectativas obsoletas de regressões antes de considerar a suíte validada.

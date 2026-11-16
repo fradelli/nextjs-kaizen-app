@@ -15,3 +15,5 @@
 - E06-T22 e E06-T25 permanecem concluídas; detalhes nas respectivas tarefas.
 
 O [diário operacional](../docs/worklog/index.md) registra sessões; seus estados não substituem o status canônico do roadmap.
+
+As [próximas tarefas da agenda antes do drag and drop](../docs/implementation/AJUSTES-DA-AGENDA.md#próximas-tarefas-antes-do-drag-and-drop) estão registradas com critérios de aceite.
