@@ -2,7 +2,7 @@ import type { TrainingActivityDto, TrainingDayDto } from "../../../application/t
 import type { TrainingDayFormActions } from "../../training-action.types";
 
 export type TrainingWeekGridProps = Readonly<{
-  days: readonly TrainingDayDto[];
+  days: readonly (TrainingDayDto | { state: "loading"; civilDate: TrainingDayDto["civilDate"]; activities: readonly []; plannedRestReason?: undefined })[];
   selectedDate: string;
   view?: "day" | "week";
   actions: TrainingDayFormActions;

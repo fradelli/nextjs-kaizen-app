@@ -209,6 +209,7 @@ export function TrainingWeekGrid({
                 className={`${styles.day} ${item.civilDate === selectedDate ? styles.selectedDay : styles.unselectedDay}`}
                 onPointerDown={(event) => {
                   if (
+                    item.state === "loading" ||
                     event.button !== 0 ||
                     !event.isPrimary ||
                     event.target !== event.currentTarget ||

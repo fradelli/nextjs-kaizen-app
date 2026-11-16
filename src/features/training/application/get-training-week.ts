@@ -7,11 +7,12 @@ export async function getTrainingWeek(
   dependencies: GetTrainingDayDependencies,
   input: GetTrainingDayInput,
   dayCount = 7,
+  alignWeek = true,
 ) {
   const startDate = parseCivilDate(input.civilDate);
   const selectedDate = new Date(`${startDate}T00:00:00.000Z`);
   const date = new Date(selectedDate);
-  if (dayCount === 7) date.setUTCDate(date.getUTCDate() - date.getUTCDay());
+  if (alignWeek && dayCount === 7) date.setUTCDate(date.getUTCDate() - date.getUTCDay());
   const workspace = await dependencies.resolveWorkspace();
   const days: TrainingDayDto[] = [];
   for (let offset = 0; offset < dayCount; offset++) {
