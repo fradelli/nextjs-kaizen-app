@@ -34,7 +34,6 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
         <InvalidTrainingDate
           todayDate={dateResolution.todayDate}
           reason={dateResolution.reason}
-          maximumFutureDate={dateResolution.maximumFutureDate}
         />
       </TrainingDayPage>
     );
@@ -59,28 +58,18 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     deleteActivity: deleteTrainingActivityAction,
   };
   if (trainingWeekResult.status === "ready") {
-    const day = trainingWeekResult.week.days.find(
-      (item) => item.civilDate === dateResolution.civilDate,
-    );
     return (
       <CalendarRange
         key={trainingWeekResult.week.startDate}
         initialDays={trainingWeekResult.week.days}
         resolution={dateResolution}
         actions={actions}
-      >
-        {day?.state === "unavailable" && day.activities.length === 0 && (
-          <TrainingDayContent
-            result={Promise.resolve({ status: "ready", day })}
-            actions={actions}
-          />
-        )}
-      </CalendarRange>
+      />
     );
   }
   return (
     <TrainingDayPage dateResolution={dateResolution} view={view}>
-      <TrainingDayContent result={Promise.resolve(trainingWeekResult)} actions={actions} />
+      <TrainingDayContent reason={trainingWeekResult.reason} />
     </TrainingDayPage>
   );
 }

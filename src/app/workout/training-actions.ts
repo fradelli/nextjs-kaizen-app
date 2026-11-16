@@ -212,10 +212,7 @@ async function executeMutation<Schema extends z.ZodType<Record<string, unknown>>
   if (dateResolution.status === "invalid") {
     return {
       status: "invalid",
-      message:
-        dateResolution.reason === "future_date_out_of_range"
-          ? `Só é possível alterar a programação até ${dateResolution.maximumFutureDate}.`
-          : "A data informada é inválida.",
+      message: "A data informada é inválida.",
       field: "civilDate",
     };
   }

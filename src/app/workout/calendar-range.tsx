@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useReducer, type ReactNode } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@fradelli/ui/button";
@@ -18,12 +18,10 @@ export function CalendarRange({
   initialDays,
   resolution,
   actions,
-  children,
 }: {
   initialDays: readonly TrainingDayDto[];
   resolution: Extract<TrainingDayDateResolution, { status: "valid" }>;
   actions: TrainingDayFormActions;
-  children: ReactNode;
 }) {
   const params = useSearchParams();
   const t = useTranslations("training");
@@ -113,7 +111,6 @@ export function CalendarRange({
         )
       }
     >
-      {selectedDate === resolution.civilDate && children}
       {dates.some((date) => cache.failed.has(date)) && (
         <Button
           onClick={() => {

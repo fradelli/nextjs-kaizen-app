@@ -14,9 +14,8 @@ export type TrainingDayDateResolution =
     }>
   | Readonly<{
       status: "invalid";
-      reason: "invalid_date" | "repeated_date" | "future_date_out_of_range";
+      reason: "invalid_date" | "repeated_date";
       todayDate: CivilDate;
-      maximumFutureDate?: CivilDate;
     }>;
 
 export type ResolveTrainingDayDateInput = Readonly<{

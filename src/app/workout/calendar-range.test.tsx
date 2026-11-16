@@ -69,9 +69,7 @@ it("extends and shrinks the visible range while fetching the eighth day only onc
         initialDays={days}
         resolution={resolution}
         actions={{} as TrainingDayFormActions}
-      >
-        {null}
-      </CalendarRange>,
+      />,
     );
     for (const label of ["eight", "seven", "eight"]) {
       fireEvent.click(screen.getByText(label));
