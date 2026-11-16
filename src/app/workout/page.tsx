@@ -1,3 +1,4 @@
+import { TrainingActivityEditor } from "@/features/training/ui/components/training-day-page/components/training-activity-editor/training-activity-editor";
 import { redirect } from "next/navigation";
 
 import { resolveTrainingDayDate } from "@/features/training/application/resolve-training-day-date";
@@ -5,7 +6,6 @@ import { queryFixedWorkspaceTrainingWeekPage } from "@/features/training/data/tr
 import { InvalidTrainingDate } from "@/features/training/ui/components/training-day-page/components/invalid-training-date/invalid-training-date";
 import { TrainingDayContent } from "@/features/training/ui/components/training-day-page/components/training-day-content/training-day-content";
 import { TrainingWeekGrid } from "@/features/training/ui/components/training-week-grid/training-week-grid";
-import { TrainingActivityEditor } from "@/features/training/ui/components/training-day-page/components/training-activity-editor/training-activity-editor";
 import { TrainingActivityEditorNotice } from "@/features/training/ui/components/training-day-page/components/training-activity-editor-notice/training-activity-editor-notice";
 import { TrainingDayPage } from "@/features/training/ui/components/training-day-page/training-day-page";
 import {
@@ -17,11 +17,13 @@ import {
 } from "./training-actions";
 
 type TrainingPageProps = Readonly<{
-  searchParams: Promise<Readonly<{ date?: string | readonly string[]; view?: string }>>;
+  searchParams: Promise<Readonly<{ date?: string | readonly string[]; view?: string; days?: string }>>;
 }>;
 
 export default async function TrainingPage({ searchParams }: TrainingPageProps) {
-  const { date, view: rawView } = await searchParams;
+  const { date, view: rawView, days: rawDays } = await searchParams;
+  const parsedDays = Number(rawDays ?? 7);
+  const dayCount = Number.isInteger(parsedDays) && parsedDays >= 1 && parsedDays <= 14 ? parsedDays : 7;
   const view = rawView === "day" ? "day" : "week";
   const dateResolution = resolveTrainingDayDate({ rawDate: date });
 
@@ -41,7 +43,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     redirect(`/workout?date=${encodeURIComponent(dateResolution.civilDate)}&view=${view}`);
   }
 
-  const trainingWeekResult = await queryFixedWorkspaceTrainingWeekPage(dateResolution.civilDate);
+  const trainingWeekResult = await queryFixedWorkspaceTrainingWeekPage(dateResolution.civilDate, dayCount);
   const actions = {
     addActivity: addTrainingActivityAction,
     updateActivity: updateTrainingActivityAction,
@@ -59,15 +61,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     <TrainingDayPage
       dateResolution={dateResolution}
       view={view}
-      controls={
-        day ? (
-          <TrainingActivityEditor
-            civilDate={day.civilDate}
-            availablePlan={"availablePlan" in day ? day.availablePlan : null}
-            actions={actions}
-          />
-        ) : null
-      }
+      controls={day ? <TrainingActivityEditor shortcutOnly civilDate={day.civilDate} availablePlan={"availablePlan" in day ? day.availablePlan : null} actions={actions} /> : null}
       summary={
         day ? (
           <>

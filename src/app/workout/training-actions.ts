@@ -1,5 +1,6 @@
 "use server";
 
+import { plannedClockPattern } from "@/features/training/domain/training-schedule-time";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
@@ -31,8 +32,8 @@ const activitySchema = z.object({
       value === "automatic" ? undefined : value === "none" || value === "" ? null : value,
     z.string().min(1).nullable().optional(),
   ),
-  plannedStartTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
-  plannedEndTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  plannedStartTime: z.string().regex(plannedClockPattern),
+  plannedEndTime: z.string().regex(plannedClockPattern),
 });
 const activityControlSchema = z.object({
   completionRequestedAt: z.preprocess(

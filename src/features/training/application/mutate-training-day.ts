@@ -23,7 +23,7 @@ export function addTrainingActivity(
   dependencies: MutationDependencies,
   input: Omit<AddTrainingActivityCommand, "workspaceId" | "civilDate"> & { civilDate: string },
 ): Promise<TrainingMutationResult> {
-  if (!isTrainingAgendaDateEditable(input.civilDate, dependencies.now?.()))
+  if (!isTrainingAgendaDateEditable(input.civilDate))
     return agendaDateLocked();
   return dependencies.repository.addTrainingActivity({
     ...input,
@@ -69,16 +69,16 @@ export function updateTrainingActivity(
     targetCivilDate?: string;
   },
 ): Promise<TrainingMutationResult> {
-  if (!isTrainingAgendaDateEditable(input.civilDate, dependencies.now?.()))
+  if (!isTrainingAgendaDateEditable(input.civilDate))
     return agendaDateLocked();
   if (
     input.targetCivilDate &&
-    !isTrainingAgendaDateEditable(input.targetCivilDate, dependencies.now?.())
+    !isTrainingAgendaDateEditable(input.targetCivilDate)
   ) {
     return Promise.resolve({
       status: "invalid",
       field: "targetCivilDate",
-      message: "A nova data deve ficar entre ontem e quatro dias no futuro.",
+      message: "Informe uma data válida para a atividade.",
     });
   }
   return dependencies.repository.updateTrainingActivity({
@@ -95,7 +95,7 @@ export function deleteTrainingActivity(
     civilDate: string;
   },
 ): Promise<TrainingMutationResult> {
-  if (!isTrainingAgendaDateEditable(input.civilDate, dependencies.now?.()))
+  if (!isTrainingAgendaDateEditable(input.civilDate))
     return agendaDateLocked();
   return dependencies.repository.deleteTrainingActivity({
     ...input,
@@ -108,7 +108,7 @@ function agendaDateLocked(): Promise<TrainingMutationResult> {
   return Promise.resolve({
     status: "invalid",
     field: "civilDate",
-    message: "Só é possível organizar atividades de ontem até quatro dias no futuro.",
+    message: "Informe uma data válida para organizar a atividade.",
   });
 }
 

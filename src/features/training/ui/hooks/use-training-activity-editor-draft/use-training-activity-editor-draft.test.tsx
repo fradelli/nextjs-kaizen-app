@@ -46,7 +46,7 @@ describe("activity editor local persistence", () => {
     expect(reopened.result.current.initialValues).toEqual(baseValues);
   });
 
-  it("closes an unchanged stale draft without overwriting or making it editable", async () => {
+  it("restores the fields of an older plan draft for editing", async () => {
     const d = createActivityEditorDraft(
       { ...context, baseFingerprint: "old" },
       next,
@@ -56,10 +56,10 @@ describe("activity editor local persistence", () => {
     sessionStorage.setItem(key, raw);
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));
-    expect(result.current.blocked).toBe(true);
+    expect(result.current.blocked).toBe(false);
     act(() => expect(result.current.flush().status).toBe("ok"));
     expect(sessionStorage.getItem(key)).toBe(raw);
-    expect(result.current.blocked).toBe(true);
+    expect(result.current.initialValues).toEqual(next);
   });
 
   it("does not create empty drafts on mount and flushes the last input before debounce", async () => {
@@ -129,7 +129,7 @@ describe("activity editor local persistence", () => {
     act(() => window.dispatchEvent(new Event("pagehide")));
     expect(sessionStorage.getItem(key)).toBeNull();
   });
-  it("blocks corrupted and stale records until explicitly discarded", async () => {
+  it("blocks corrupted records until explicitly discarded", async () => {
     sessionStorage.setItem(key, "invalid");
     const { result } = open();
     await waitFor(() => expect(result.current.ready).toBe(true));

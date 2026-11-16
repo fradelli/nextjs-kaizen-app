@@ -1,12 +1,14 @@
 .scroller {
-  --hour-height: 64px;
+  --hour-height: 48px;
   flex: 1;
   min-height: 0;
   overflow: auto;
   overscroll-behavior-y: contain;
   overflow-anchor: none;
-  padding-bottom: 1.25rem;
-  scrollbar-gutter: stable;
+  scrollbar-width: none;
+}
+.scroller::-webkit-scrollbar {
+  display: none;
 }
 .scroller:not([data-positioned]) {
   visibility: hidden;
@@ -28,23 +30,36 @@
   background: var(--fd-color-background);
   border-bottom: 1px solid var(--fd-color-border);
 }
-.dayHeaders button {
+.dayHeaders time {
   justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 2rem;
+  font-family: inherit;
+  font-size: calc(var(--fd-font-size-xs) * 5 / 6);
+  line-height: var(--fd-font-line-height-xs);
+  font-weight: 400;
+  color: var(--fd-color-muted-foreground);
 }
 .weekday {
   text-transform: lowercase;
 }
-.dayHeaders button[aria-current] .dayNumber {
-  display: inline-grid;
-  width: 1.5rem;
-  height: 1.5rem;
-  place-items: center;
-  border-radius: 999px;
-  background: var(--fd-color-status-destructive-solid);
-  color: var(--fd-color-status-destructive-foreground);
+.dayHeaders time[data-future] {
+  color: color-mix(in srgb, var(--fd-color-muted-foreground) 75%, var(--fd-color-foreground));
 }
-.columns {
-  margin-top: 0.75rem;
+.dayHeaders time[aria-current="date"] {
+  color: var(--color-white, white);
+  font-weight: 600;
+}
+.dayHeaders time[aria-current] .dayNumber {
+  display: inline-grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  place-items: center;
+  border-radius: var(--radius-sm, 4px);
+  background: var(--fd-color-status-destructive-solid);
+  color: inherit;
 }
 .day,
 .axis {
@@ -66,22 +81,18 @@
 .day[data-weekend] {
   --day-surface: var(--fd-color-surface-elevated);
 }
-.day[data-today] {
-  --day-surface: var(--fd-color-background);
-}
-.day[data-past] {
-  --day-surface: var(--fd-color-background);
-}
 .axis > span,
 .nowLabel {
   position: absolute;
+  inset-inline-end: var(--fd-space-1);
+  font-variant-numeric: tabular-nums;
   transform: translateY(-50%);
-  font-size: var(--fd-font-size-xs);
+  font-size: calc(var(--fd-font-size-xs) * 5 / 6);
   line-height: var(--fd-font-line-height-xs);
   color: var(--fd-color-muted-foreground);
 }
 .axis .elapsedHour {
-  color: color-mix(in srgb, var(--fd-color-muted-foreground) 80%, var(--fd-color-background));
+  color: var(--fd-color-muted-foreground);
 }
 .axis > span[hidden] {
   display: none;
@@ -94,33 +105,18 @@
   font-weight: 600;
   z-index: 4;
 }
-.elapsedArea {
-  position: absolute;
-  inset: 0 0 auto;
-  pointer-events: none;
-  background: color-mix(in srgb, var(--fd-color-background) 25%, transparent);
-}
 .slot {
   position: absolute;
   min-width: 0;
   container-type: size;
-}
-.slot[data-elapsed] {
-  opacity: 0.71;
 }
 .briefMarker {
   display: block;
   height: 100%;
   min-height: 3px;
   border-radius: 2px;
-  background: var(--fd-color-category-cyan-solid);
+  background: var(--event-color);
   pointer-events: none;
-}
-.briefMarker[data-kind="structured_training"] {
-  background: var(--fd-color-category-purple-solid);
-}
-.briefMarker[data-kind="mobility"] {
-  background: var(--fd-color-category-blue-solid);
 }
 .nowLine {
   position: absolute;
@@ -135,9 +131,14 @@
   background: var(--fd-color-status-destructive-solid);
 }
 .event,
-.listItem {
+.listItem,
+.briefMarker {
   --event-color: var(--fd-color-category-cyan-solid);
   --event-background: var(--fd-color-category-cyan-subtle);
+  --event-border: var(--fd-color-category-cyan-border);
+}
+.event,
+.listItem {
   border: 1px solid color-mix(in srgb, var(--event-background) 78%, var(--event-color));
   border-left: 3px solid var(--event-color);
   background: var(--event-background);
@@ -150,17 +151,21 @@
   gap: 0;
   height: 100%;
   overflow: hidden;
-  padding: 0 6px;
+  padding: 0;
 }
+.briefMarker[data-kind="structured_training"],
 .event[data-kind="structured_training"],
 .listItem[data-kind="structured_training"] {
   --event-color: var(--fd-color-category-purple-solid);
   --event-background: var(--fd-color-category-purple-subtle);
+  --event-border: var(--fd-color-category-purple-border);
 }
+.briefMarker[data-kind="mobility"],
 .event[data-kind="mobility"],
 .listItem[data-kind="mobility"] {
   --event-color: var(--fd-color-category-blue-solid);
   --event-background: var(--fd-color-category-blue-subtle);
+  --event-border: var(--fd-color-category-blue-border);
 }
 .eventTitle {
   text-align: left;
@@ -238,12 +243,18 @@
 }
 @media (width < 48rem) {
   .scroller {
-    --hour-height: 80px;
+    --hour-height: 44px;
   }
   .dayHeaders,
   .columns,
   .dayNotes {
     grid-template-columns: 3.25rem minmax(0, 1fr);
+  }
+  .dayHeaders .unselectedDay {
+    display: none;
+  }
+  .dayHeaders .selectedDay {
+    grid-column: 2;
   }
   .selectedDay {
     grid-column: 2;
@@ -251,4 +262,54 @@
   .unselectedDay {
     display: none;
   }
+}
+
+.event {
+  background: color-mix(in srgb, var(--event-color) 38%, var(--fd-color-background));
+  box-shadow: none;
+  position: relative;
+  padding: 0;
+}
+.slot[data-elapsed] .event {
+  background:
+    linear-gradient(var(--event-background), var(--event-background)), var(--fd-color-background);
+  border-left-color: color-mix(in srgb, var(--event-background) 75%, var(--event-border));
+}
+.slot[data-elapsed] .briefMarker {
+  background: linear-gradient(var(--event-border), var(--event-border)), var(--fd-color-background);
+}
+.eventLink {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border-radius: inherit;
+  padding: 4px 6px;
+  text-align: left;
+  color: var(--fd-color-foreground);
+  text-decoration: none;
+}
+.eventContent {
+  min-width: 0;
+  gap: 2px;
+  padding-right: 0;
+}
+.eventTime {
+  font-size: 11px;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.gridTitle {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.eventMenu {
+  position: absolute;
+  right: 2px;
+  top: 2px;
 }

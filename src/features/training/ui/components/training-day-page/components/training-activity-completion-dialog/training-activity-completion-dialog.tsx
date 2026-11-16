@@ -18,7 +18,7 @@ import type { TrainingActivityCompletionDialogProps } from "./training-activity-
 const draftMessages = {
   loading: "loadingFeedback",
   clean: "saveOnConfirmation",
-  stored: "draftStored",
+
   restored: "feedbackRestored",
   storage_error: "feedbackStorageFailed",
   stale: "activityChanged",
@@ -136,9 +136,15 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
         </>
       }
     >
-      <p role="status" className="py-2 fd-text-interface text-muted-foreground">
-        {changed ? t("executionChanged") : t(draftMessages[draft.status])}
-      </p>
+      {(changed || draft.status !== "stored") && (
+        <p role="status" className="py-2 fd-text-interface text-muted-foreground">
+          {changed
+            ? t("executionChanged")
+            : draft.status === "stored"
+              ? null
+              : t(draftMessages[draft.status])}
+        </p>
+      )}
       {closeError ? (
         <div role="alert" className="grid gap-3 py-3">
           <p>

@@ -14,6 +14,10 @@
     "description": "This area is ready. Nutrition plans and tracking will be implemented in E07."
   },
   "training": {
+    "fewerDays": "Fewer days",
+    "moreDays": "More days",
+    "activityPanel": "Activity panel",
+    "displayedDays": "Number of days displayed",
     "briefActivities": "Under 1 min ({count})",
     "briefActivitiesTitle": "Activities under 1 min · {date}",
     "completedDraftPreserved": "This workout has been saved, but some local data could not be fully verified. Review the result before discarding any copy from the resume bar.",
@@ -71,7 +75,7 @@
     "goToActivity": "Go to activity",
     "backToWarmup": "Back to warm-up",
     "timeUnknown": "Time to be determined",
-    "planTraining": "Plan training",
+    "planTraining": "Workout session",
     "sportPractice": "Sports practice",
     "specificTraining": "Specific training",
     "mobility": "Mobility",
@@ -156,7 +160,7 @@
     "localSessionBlocksReschedule": "Training has started in this browser. Finish or discard the draft before changing the date or warm-up.",
     "draftCheckFailed": "Unable to check the local draft. Try again before rescheduling.",
     "activityDate": "Activity date",
-    "rescheduleRange": "Reschedule between yesterday and the next four days. Times and warm-up will be kept.",
+    "rescheduleRange": "Choose the new activity date.",
     "rescheduleNotStartedOnly": "Only activities that have not started can be moved to another date.",
     "activityType": "Activity type",
     "trainingUnavailable": "Training unavailable",
