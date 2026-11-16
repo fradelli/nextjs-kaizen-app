@@ -1,5 +1,7 @@
 # Privacidade e operação do MVP
 
+> Consulta dirigida: acesso atual → [workspace público](PUBLIC-SINGLE-WORKSPACE-MODE.md); recuperação local → [runbook](../operations/BACKUP-AND-RESTORE.md). Pareamento/cookie são desenho histórico adiado. Decisões operacionais não comprovam produção configurada.
+
 ## Status
 
 - Data: 2026-09-02

@@ -16,22 +16,15 @@ A arquitetura aprovada em E03 escolheu CSS Modules e tokens globais locais. O AD
 
 ## Entradas
 
-- `roadmap/epics/E04-nextjs-foundation/T06-adopt-shared-design-system-decision.md`
-- `docs/implementation/E04-T06-DETAILED-PLAN.md`
-- `docs/implementation/tasks/E04-T06.md`
 - `docs/decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `docs/implementation/P0-IMPLEMENTATION-GUIDE.md`
-- `docs/implementation/tasks/E04-T04.md`
-- `docs/implementation/tasks/E04-T05.md`
-- `docs/implementation/tasks/E04-T07.md`
-- `docs/implementation/tasks/E04-T08.md`
-- `roadmap/epics/E04-nextjs-foundation/README.md`
-- `roadmap/epics/E04-nextjs-foundation/T02-configure-static-quality.md`
 - `roadmap/epics/E04-nextjs-foundation/T04-create-accessible-shell.md`
 - `roadmap/epics/E04-nextjs-foundation/T05-configure-minimal-ci.md`
 - `roadmap/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md`
 - `roadmap/epics/E04-nextjs-foundation/T08-integrate-versioned-design-system.md`
+- `roadmap/epics/E04-nextjs-foundation/README.md`
+- `roadmap/epics/E04-nextjs-foundation/T02-configure-static-quality.md`
 - `roadmap/epics/E06-training-execution/T02-create-daily-training-page.md`
 - `roadmap/epics/E07-nutrition-execution/T02-create-nutrition-page.md`
 - `roadmap/epics/E09-future-evolution/README.md`
@@ -93,3 +86,15 @@ Antes da adoção técnica, reverter somente esta decisão documental. Depois qu
 ## Resultado
 
 Concluída em 2026-09-10. A decisão local adotou `@fradelli/ui@0.1.0` por referência, substituiu somente a fundação visual exclusiva local e preservou as demais decisões de E03. Arquitetura, guia, pacotes e roadmap foram sincronizados; E04-T07 ficou responsável pelo GO/NO-GO sem instalação e E04-T08 pela integração técnica. Links, 53 IDs, dependências, ciclos, escopo, whitespace e ausência de segredos foram validados sem falhas.
+
+## Consolidação documental de 12/11/2026
+
+Adoção documental não era instalação. Contrato 0.1.0, ownership e sequência decisão → prontidão → integração → shell permanecem na decisão/resultados.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/tasks/E04-T06.md), SHA-256 `38497c4c5e3e64e6d1721517401edb92c09313f25e58196bfd3f44eba862ebe8`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.
+
+## Consolidação documental de 12/11/2026
+
+Adoção documental não era instalação. Contrato 0.1.0, ownership e sequência decisão → prontidão → integração → shell permanecem na decisão/resultados.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/E04-T06-DETAILED-PLAN.md), SHA-256 `b080b9bcde8aa01d5c6b6b1b87b3f233dfdd4195957dc171638cf37ad6286a05`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.

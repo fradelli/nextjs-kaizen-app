@@ -1,5 +1,7 @@
 # Branches e ambientes
 
+> Esclarecimento operacional aprovado em 12/11/2026: o prefixo genérico abaixo registra a decisão original. A governança implementada aceita somente `codex/<ID>-descricao-curta`; veja o [padrão de PR](../delivery/PULL-REQUEST-STANDARD.md). Direções e métodos de merge permanecem válidos.
+
 ## Status
 
 - Data: 2026-08-30

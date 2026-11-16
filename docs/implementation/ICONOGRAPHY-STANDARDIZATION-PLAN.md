@@ -1,5 +1,7 @@
 # Padronização de ícones — auditoria e plano
 
+> Auditoria histórica Phosphor. A família atual é Lucide no [guia](../product/telas/guia-de-estilo.md); medições abaixo não orientam reinstalar Phosphor.
+
 ## Atualização de escopo em 27/10/2026
 
 A versão **0.6.0** foi publicada pelo workflow oficial do Design System e instalada

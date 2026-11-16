@@ -1,5 +1,7 @@
 # Política do repositório público e dos dados
 
+> Esta política governa exposição no Git. Acesso operacional foi alterado explicitamente por [workspace público](PUBLIC-SINGLE-WORKSPACE-MODE.md); referências originais a ambientes protegidos não comprovam autenticação ativa.
+
 ## Status
 
 - Data: 2026-08-31

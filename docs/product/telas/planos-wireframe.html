@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Planos de treino · Wireframe Kaizen</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#191919;color:#f3f1ef;font:16px/1.5 "IBM Plex Sans",system-ui,sans-serif}main,header div{max-width:900px;margin:auto;padding:24px}header{border-bottom:1px solid #434345}header div,.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header strong,h1,h2{font-family:Figtree,system-ui,sans-serif}header strong,h1{font-size:24px}h2{font-size:20px}h1,h2,h3,p{margin:0}section,article,details{margin-top:18px}article,details{padding:18px;border:1px solid #49484c;border-radius:10px;background:#212123}small,label{color:#dad7df}button,a{color:#ebe7ef}button,input,select{font:inherit;padding:8px 12px;border:1px solid #545258;border-radius:6px;background:#29292c;color:inherit}button,summary{cursor:pointer}.primary{background:#bca7e8;color:#211a2c}.active{color:#f2cf63}label{display:grid;gap:4px}input,select{width:100%}.series{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:12px;margin-top:12px}summary{font-weight:600}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #bca7e8}form>label{margin:18px 0}footer{margin-top:24px} [hidden]{display:none!important}@media(max-width:600px){main,header div{padding:16px}.series{grid-template-columns:1fr 1fr}button,summary{min-height:44px}article,details{padding:12px}}
+</style>
+<header><div><strong>kaizen</strong><span class="active">Planos</span></div></header>
+<main><section id="list"><div class="row"><h1>Planos de treino</h1><button class="primary" id="create">Criar plano</button></div><div id="cards"></div></section>
+<section id="editor" hidden><button id="back">← Planos</button><h1 id="heading"></h1><form id="form"><label>Nome do plano<input required id="planName"></label><label>Nome do treino<input required id="sessionName"></label><article><small>Bloco principal</small><h2>Agachamento</h2><div id="sets"></div><button type="button" id="add">Adicionar série</button></article><footer><button class="primary">Salvar plano</button></footer></form></section>
+<p role="status" id="status"></p></main>
+<template id="set"><details><summary></summary><div class="series"><label>Tipo<select><option>Trabalho</option><option>Aquecimento</option></select></label><label>Repetições<input type="number" min="1" required></label><label>Carga alvo (kg)<input type="number" min="0" step="any"></label><label>Descanso (s)<input type="number" min="0" required></label></div></details></template>
+<script>
+const el=id=>document.getElementById(id);
+const initial=[['Aquecimento',10,20,45],['Trabalho',12,40,90],['Trabalho',8,50,120]];
+const plans=[{name:'Força na areia',session:'Força A',sets:initial}];
+let current;
+function showList(){
+ el('editor').hidden=true;el('list').hidden=false;el('cards').replaceChildren();
+ plans.forEach((p,i)=>{
+  const card=document.createElement('article');card.className='row';
+  const info=document.createElement('div'),title=document.createElement('h2'),meta=document.createElement('small');
+  title.textContent=p.name;meta.textContent=(i===0?'★ Ativo · ':'Disponível · ')+p.session+' · '+p.sets.length+' séries';
+  info.append(title,meta);const open=document.createElement('button');open.textContent='Abrir';open.onclick=()=>edit(i);card.append(info,open);el('cards').append(card);
+ });
+}
+function addSet(values,expanded){
+ const row=el('set').content.firstElementChild.cloneNode(true),fields=[...row.querySelectorAll('select,input')];
+ fields.forEach((f,i)=>f.value=values[i]);el('sets').append(row);
+ const number=el('sets').children.length;
+ function summary(){const [type,reps,kg,rest]=fields.map(f=>f.value);row.querySelector('summary').textContent=number+' · '+type+' · '+reps+' rep'+(kg===''?'':' × '+kg+' kg')+' · '+rest+' s';}
+ row.open=expanded;row.oninput=summary;summary();
+}
+function edit(i){
+ current=i;const p=plans[i]||{name:'',session:'',sets:[['Trabalho',12,'',90]]};
+ el('heading').textContent=i<0?'Criar plano':'Editar plano';el('status').textContent='';
+ el('planName').value=p.name;el('sessionName').value=p.session;el('sets').replaceChildren();
+ p.sets.forEach((v,j)=>addSet(v,j===(i<0?0:1)));el('list').hidden=true;el('editor').hidden=false;el('planName').focus();
+}
+el('add').onclick=()=>addSet(['Trabalho',8,'',90],true);
+el('back').onclick=showList;el('create').onclick=()=>edit(-1);
+el('form').onsubmit=e=>{e.preventDefault();const p={name:el('planName').value,session:el('sessionName').value,sets:[...el('sets').children].map(r=>[...r.querySelectorAll('input,select')].map(f=>f.value))};if(current<0)plans.push(p);else plans[current]=p;showList();el('status').textContent='Plano salvo nesta prévia.';};
+showList();
+</script></html>

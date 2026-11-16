@@ -8,10 +8,15 @@ partículas ficam fora da experiência.
 
 ## Sequência
 
+O resultado e os limites abaixo descrevem a referência histórica do portfólio.
+A E10-T09 segue o guia Mira aprovado, com aparência e primitivas no design system;
+não autoriza recriar estilos genéricos localmente quando faltar um export.
+
 | Tarefa | Depende de | Resultado |
 | --- | --- | --- |
 | E10-T01 | E06-T25 | Integrar referência visual, catálogo de ícones e estados genéricos do DS |
 | E10-T02 | E10-T01 | Player no card, dicas coerentes e encerramento em modal com rascunho |
+| E10-T09 | E10-T08 | Concluir adoção Mira após as entregas históricas E10-T01 a E10-T08 |
 
 ## Limites
 

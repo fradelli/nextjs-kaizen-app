@@ -1,12 +1,14 @@
 # Página dedicada de treino e editor de planos
 
+> Preserve autoria de planos e decisões pendentes. Agenda/detalhe foram continuados no [plano de Meu Dia](MEU-DIA-IMPLEMENTACAO.md); URLs propostas ou históricas não são endpoints atuais.
+
 ## Estado
 
 Para a entrega atual de Meu Dia e para a revisão visual do executor já existente, seguir o [plano consolidado](MEU-DIA-IMPLEMENTACAO.md). Este documento registra o planejamento anterior de detalhe e autoria.
 
 Planejamento solicitado. Implementação da interface depende da aprovação deste recorte. A etapa imediata é navegação da agenda e consulta do treino. Execução, seleção do catálogo e autoria de planos são etapas seguintes com dependências explícitas.
 
-Entradas verificadas: [arquitetura](../architecture/TARGET-ARCHITECTURE.md), [página atual](../../src/app/treino/page.tsx), [consulta do dia](../../src/features/training/application/get-training-day.ts), [consultas Prisma](../../src/features/training/data/training-queries.ts), [card atual](../../src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.tsx), [modelo de treino](../../prisma/models/training.prisma) e [catálogo](CATALOG-IMPORT-PLAN.md).
+Entradas verificadas: [arquitetura](../architecture/TARGET-ARCHITECTURE.md), [página atual — fonte histórica](https://github.com/fradelli/nextjs-kaizen-app/blob/f3c5170d80362cd4005e5600f3b5fa8826c4beea/src/app/treino/page.tsx), [consulta do dia](../../src/features/training/application/get-training-day.ts), [consultas Prisma](../../src/features/training/data/training-queries.ts), [card atual](../../src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.tsx), [modelo de treino](../../prisma/models/training.prisma) e [catálogo](CATALOG-IMPORT-PLAN.md).
 
 ## Decisões de produto
 
