@@ -1,5 +1,5 @@
 import Image from "next/image";
-import solarIcon from "@/app/icon.png";
+import solarIcon from "./solar.png";
 import styles from "./kaizen-logo.module.css";
 
 export function KaizenLogo() {
@@ -10,11 +10,11 @@ export function KaizenLogo() {
         fill
         sizes="(min-width: 48rem) 64px, 56px"
         alt=""
-        className="size-full mix-blend-screen"
+        className="size-full"
       />
       <span data-kaizen-solar-layer="" className={styles.glow}>
         <span data-kaizen-solar-layer="" className={styles.halo} />
-        <span className={styles.disc}>
+        <span data-kaizen-solar-layer="" className={styles.disc}>
           <span data-kaizen-solar-layer="" className={styles.light} />
         </span>
       </span>

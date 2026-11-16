@@ -1,36 +1,23 @@
 "use client";
-import { useLocale, useTranslations } from "next-intl";
-import { formatTrainingShortDate } from "@/features/training/ui/components/training-day-page/training-day-page.utils";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
 
-import { Alert, AlertDescription } from "@fradelli/ui/alert";
 import { Button } from "@fradelli/ui/button";
 import { PendingButton } from "@fradelli/ui/pending-button";
 import { useRouter } from "next/navigation";
-import { useCallback, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   activityEditorContext,
   initialActivityEditorValues,
-  announceEditorNotice,
+  sameActivityEditorValues,
 } from "@/features/training/ui/lib/training-activity-editor-draft/training-activity-editor-draft.utils";
-import { useTrainingActivityEditorDraft } from "@/features/training/ui/hooks/use-training-activity-editor-draft/use-training-activity-editor-draft";
 import { TrainingActivityModal } from "../training-activity-modal/training-activity-modal";
 import { TrainingActivityForm } from "../training-activity-form/training-activity-form";
 import { TrainingActivityDeleteForm } from "../training-activity-delete-form/training-activity-delete-form";
 import type { TrainingActivityEditorContentProps } from "./training-activity-editor-content.types";
 
-const messages = {
-  loading: "loadingForm",
-  clean: "",
-  dirty: "storingDraft",
-  stored: "draftStored",
-  restored: "draftRestored",
-  storage_error: "editorStorageFailed",
-  stale: "planChanged",
-  external_change: "draftChangedElsewhere",
-  expired: "editorDraftExpired",
-  invalid: "editorDraftInvalid",
-} as const;
 export function TrainingActivityEditorContent({
+  selectedPeriod,
   civilDate,
   activity,
   availablePlan,
@@ -41,7 +28,6 @@ export function TrainingActivityEditorContent({
   triggerRef,
 }: TrainingActivityEditorContentProps) {
   const t = useTranslations("training");
-  const locale = useLocale();
 
   const router = useRouter();
   const formId = useId();
@@ -50,16 +36,35 @@ export function TrainingActivityEditorContent({
     context: currentContext,
     baseValues: initialActivityEditorValues(civilDate, activity, availablePlan),
   }));
-  const draft = useTrainingActivityEditorDraft(base);
-  const [formVersion, setFormVersion] = useState(0),
-    [closeError, setCloseError] = useState(false),
-    [needsReload, setNeedsReload] = useState(false);
+  const [initialValues] = useState(() =>
+    selectedPeriod
+      ? {
+          ...base.baseValues,
+          plannedStartTime: selectedPeriod.start,
+          manualEndTime: selectedPeriod.end,
+          automaticEnd: false,
+        }
+      : base.baseValues,
+  );
+  const [dirty, setDirty] = useState(Boolean(selectedPeriod));
+  const trackChanges = useCallback(
+    (values: typeof initialValues) => {
+      setDirty(!sameActivityEditorValues(base.baseValues, values));
+    },
+    [base],
+  );
+  const [needsReload, setNeedsReload] = useState(false);
   const [busyKind, setBusyKind] = useState<"save" | "delete" | null>(null),
     [confirmingDelete, setConfirmingDelete] = useState(false);
   const busy = useRef(false),
     confirmation = useRef(false);
   const changed = JSON.stringify(base.context) !== JSON.stringify(currentContext);
-  const blocked = draft.blocked || changed || needsReload;
+  const blocked = changed || needsReload;
+  useEffect(() => {
+    if (!changed && !needsReload) return;
+    router.refresh();
+    onClose();
+  }, [changed, needsReload, router, onClose]);
   const saveBusy = useCallback((next: boolean) => {
     busy.current = next;
     setBusyKind(next ? "save" : null);
@@ -73,55 +78,14 @@ export function TrainingActivityEditorContent({
     setConfirmingDelete(next);
   }, []);
   const requireReload = useCallback(() => setNeedsReload(true), []);
-  const finishDraft = draft.finish;
-  const saved = useCallback(
-    ({ targetCivilDate }: { targetCivilDate: string }) => {
-      if (finishDraft().status === "failed") announceEditorNotice(t("changesSavedCleanupFailed"));
-      busy.current = false;
-      onCommitted(targetCivilDate);
-    },
-    [finishDraft, onCommitted, t],
-  );
-  const deleted = useCallback(() => {
-    finishDraft();
-    busy.current = false;
-    onCommitted(civilDate);
-  }, [finishDraft, onCommitted, civilDate]);
   function requestClose() {
-    if (busy.current || confirmation.current) return;
-    if (activity) {
-      onClose();
-      return;
-    }
-    if (!draft.dirty) {
-      onClose();
-      return;
-    }
-    if (draft.flush().status === "ok") onClose();
-    else setCloseError(true);
-  }
-  function discard() {
-    if (draft.discard().status !== "ok") {
-      setCloseError(true);
-      return;
-    }
-    if (changed || needsReload) {
-      router.refresh();
-      onClose();
-      return;
-    }
-    setFormVersion((v) => v + 1);
-    setCloseError(false);
+    if (!busy.current && !confirmation.current) onClose();
   }
   const lock = busyKind !== null || confirmingDelete;
   return (
     <TrainingActivityModal
+      placement="right"
       title={activity ? t("editActivity") : t("addActivity")}
-      description={
-        activity
-          ? undefined
-          : t("newActivityDescription", { date: formatTrainingShortDate(civilDate, locale) })
-      }
       busy={lock}
       restoreFocusRef={triggerRef}
       onRequestClose={requestClose}
@@ -134,18 +98,18 @@ export function TrainingActivityEditorContent({
               action={actions.deleteActivity}
               refreshOnSaved={false}
               startedLocally={startedLocally}
-              disabled={busyKind !== null || blocked || closeError}
+              disabled={busyKind !== null || blocked}
               onBusyChange={deleteBusy}
               onConfirmationChange={deleteConfirmation}
-              onDeleted={deleted}
+              onDeleted={() => onCommitted(civilDate)}
             />
-          ) : draft.dirty || draft.blocked ? (
+          ) : dirty ? (
             <Button
               type="button"
               variant="ghost"
               tone="danger"
-              disabled={lock || draft.status === "external_change"}
-              onClick={discard}
+              disabled={lock}
+              onClick={requestClose}
             >
               {t("deleteDraft")}
             </Button>
@@ -158,88 +122,37 @@ export function TrainingActivityEditorContent({
             tone={activity ? undefined : "general"}
             pending={busyKind === "save"}
             pendingLabel={t("saving")}
-            disabled={!draft.ready || lock || blocked || closeError}
+            disabled={lock || blocked}
           >
             {activity ? t("saveChanges") : t("addActivity")}
           </PendingButton>
         </>
       }
     >
-      {!activity && (messages[draft.status] || changed || needsReload) ? (
-        <div role="status" className="pt-2 fd-text-interface text-muted-foreground">
-          {changed
-            ? t(messages.stale)
-            : needsReload
-              ? t("checkScheduleBeforeRetry")
-              : draft.status === "clean"
-                ? ""
-                : t(messages[draft.status])}
-        </div>
-      ) : null}
-      {blocked ? (
-        <div className="flex flex-wrap gap-2 py-3">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              router.refresh();
-              requestClose();
-            }}
-          >
-            {t("checkSchedule")}
-          </Button>
-        </div>
-      ) : null}
-      {closeError ? (
-        <Alert role="alert" variant="destructive" className="my-3">
-          <AlertDescription>{t("closeWithoutStorageWarning")}</AlertDescription>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <Button type="button" variant="ghost" tone="danger" size="sm" onClick={onClose}>
-              {t("closeWithoutStorage")}
-            </Button>
-            <div className="ml-auto flex flex-wrap justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  if (draft.flush().status === "ok") onClose();
-                }}
-              >
-                {t("retryStorage")}
-              </Button>
-              <Button
-                type="button"
-                variant="default"
-                size="sm"
-                onClick={() => setCloseError(false)}
-              >
-                {t("continueEditing")}
-              </Button>
-            </div>
-          </div>
-        </Alert>
-      ) : null}
-      {draft.ready ? (
-        <TrainingActivityForm
-          key={formVersion}
-          civilDate={civilDate}
-          activity={activity}
-          availablePlan={availablePlan}
-          action={activity ? actions.updateActivity : actions.addActivity}
-          startedLocally={startedLocally}
-          editor={{
-            formId,
-            initialValues: draft.initialValues,
-            blocked: blocked || closeError,
-            readOnly: blocked,
-            onValuesChange: draft.update,
-            onBusyChange: saveBusy,
-            onSaved: saved,
-            onNeedsReload: requireReload,
-          }}
-        />
+      <TrainingActivityForm
+        onPanelClose={requestClose}
+        civilDate={civilDate}
+        activity={activity}
+        availablePlan={availablePlan}
+        action={activity ? actions.updateActivity : actions.addActivity}
+        startedLocally={startedLocally}
+        editor={{
+          formId,
+          initialValues,
+          blocked: blocked,
+          readOnly: blocked,
+          onValuesChange: trackChanges,
+          onBusyChange: saveBusy,
+          onSaved: ({ targetCivilDate }) => onCommitted(targetCivilDate),
+          onNeedsReload: requireReload,
+        }}
+      />
+      {activity?.structured ? (
+        <Button variant="outline" asChild>
+          <Link href={`/workout/activity/${encodeURIComponent(activity.id)}?date=${civilDate}`}>
+            {t("backToWorkout")}
+          </Link>
+        </Button>
       ) : null}
     </TrainingActivityModal>
   );

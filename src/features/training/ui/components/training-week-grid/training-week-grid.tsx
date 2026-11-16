@@ -33,6 +33,27 @@ export function TrainingWeekGrid({
     day?.activities.filter(
       (activity) => !selectedDay?.briefOnly || isBriefTrainingActivity(activity),
     ) ?? [];
+  const [range, setRange] = useState<{
+    date: string;
+    anchor: number;
+    slot: number;
+    pointer: number;
+  } | null>(null);
+  const selecting = range !== null;
+  useLayoutEffect(() => {
+    if (!selecting) return;
+    const cancel = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setRange(null);
+    };
+    window.addEventListener("keydown", cancel);
+    return () => window.removeEventListener("keydown", cancel);
+  }, [selecting]);
+  const slotAt = (column: HTMLElement, y: number) => {
+    const rect = column.getBoundingClientRect();
+    return Math.max(0, Math.min(95, Math.floor(((y - rect.top) * 96) / rect.height)));
+  };
+  const formatSlot = (slot: number) =>
+    [Math.floor(slot / 4), (slot % 4) * 15].map((n) => String(n).padStart(2, "0")).join(":");
   const scrollKey = `kaizen:training-grid-scroll:v1:${days[0]?.civilDate ?? ""}`;
   const formatDay = (date: string) =>
     new Intl.DateTimeFormat(locale, {
@@ -145,29 +166,24 @@ export function TrainingWeekGrid({
       >
         <div className={styles.dayHeaders}>
           <span aria-hidden="true" />
-          {days.map((item, index) => (
-            <Button
-              variant="ghost"
-              tone="neutral"
-              size="sm"
+          {days.map((item) => (
+            <time
               key={item.civilDate}
-              type="button"
+              dateTime={item.civilDate}
               className={
                 item.civilDate === selectedDate ? styles.selectedDay : styles.unselectedDay
               }
-              data-today={clock?.date === item.civilDate || undefined}
-              aria-label={t("showDayActivities", { date: formatDay(item.civilDate) })}
+              data-future={Boolean(clock && item.civilDate > clock.date) || undefined}
               aria-current={clock?.date === item.civilDate ? "date" : undefined}
-              onClick={() => setSelectedDay({ index })}
             >
               <span className={styles.weekday}>{formatWeekday(item.civilDate)}</span>
               <span className={styles.dayNumber}>{Number(item.civilDate.slice(-2))}</span>
-            </Button>
+            </time>
           ))}
         </div>
         <div className={styles.columns}>
           <div className={styles.axis}>
-            {Array.from({ length: 25 }, (_, hour) => (
+            {Array.from({ length: 23 }, (_, index) => index + 1).map((hour) => (
               <span
                 key={hour}
                 style={{ top: `${(hour / 24) * 100}%` }}
@@ -191,19 +207,69 @@ export function TrainingWeekGrid({
               <div
                 key={item.civilDate}
                 className={`${styles.day} ${item.civilDate === selectedDate ? styles.selectedDay : styles.unselectedDay}`}
+                onPointerDown={(event) => {
+                  if (
+                    event.button !== 0 ||
+                    !event.isPrimary ||
+                    event.target !== event.currentTarget ||
+                    document.querySelector("#schedule-editor-panel > aside")
+                  )
+                    return;
+                  const slot = slotAt(event.currentTarget, event.clientY);
+                  if (slot >= 95) return;
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  setRange({ date: item.civilDate, anchor: slot, slot, pointer: event.pointerId });
+                }}
+                onPointerMove={(event) => {
+                  if (!range || range.pointer !== event.pointerId) return;
+                  setRange({
+                    ...range,
+                    slot: Math.min(94, slotAt(event.currentTarget, event.clientY)),
+                  });
+                }}
+                onPointerCancel={() => setRange(null)}
+                onLostPointerCapture={() => setRange(null)}
+                onPointerUp={(event) => {
+                  if (!range || range.pointer !== event.pointerId) return;
+                  setRange(null);
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  if (
+                    event.clientX < rect.left ||
+                    event.clientX >= rect.right ||
+                    event.clientY < rect.top ||
+                    event.clientY >= rect.bottom
+                  )
+                    return;
+                  const slot = Math.min(94, slotAt(event.currentTarget, event.clientY));
+                  window.dispatchEvent(
+                    new CustomEvent("schedule-select-period", {
+                      detail: {
+                        civilDate: item.civilDate,
+                        availablePlan: "availablePlan" in item ? item.availablePlan : null,
+                        selectedPeriod: {
+                          start: formatSlot(Math.min(range.anchor, slot)),
+                          end: formatSlot(Math.max(range.anchor, slot) + 1),
+                        },
+                      },
+                    }),
+                  );
+                }}
                 data-today={today || undefined}
-                data-past={past || undefined}
                 data-weekend={
                   new Date(`${item.civilDate}T00:00:00Z`).getUTCDay() % 6 === 0 || undefined
                 }
                 aria-label={formatDay(item.civilDate)}
               >
-                {today && clock ? (
+                {range?.date === item.civilDate && (
                   <div
-                    className={styles.elapsedArea}
-                    style={{ height: `${(clock.minute / 1440) * 100}%` }}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bg-muted-foreground/25"
+                    style={{
+                      top: (Math.min(range.anchor, range.slot) / 96) * 100 + "%",
+                      height: ((Math.abs(range.anchor - range.slot) + 1) / 96) * 100 + "%",
+                    }}
                   />
-                ) : null}
+                )}
                 {timed.map(({ activity, start, end, lane, laneCount }) => (
                   <div
                     key={activity.id}

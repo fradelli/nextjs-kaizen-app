@@ -1,4 +1,5 @@
 "use client";
+import { Item, ItemContent, ItemTitle } from "@fradelli/ui/item";
 import { Button } from "@fradelli/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@fradelli/ui/card";
 import { useRef, useState } from "react";
@@ -7,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { useTrainingActivityDraft } from "../../../../hooks/use-training-activity-draft/use-training-activity-draft";
 import { TrainingActivityModal } from "../../../training-day-page/components/training-activity-modal/training-activity-modal";
 import { TrainingActivityControls } from "../../../training-day-page/components/training-activity-controls/training-activity-controls";
+import { TrainingActivityEditor } from "../../../training-day-page/components/training-activity-editor/training-activity-editor";
 import { TrainingActivityMenu } from "../../../training-activity-menu/training-activity-menu";
 import type { TrainingGridEventProps } from "./training-grid-event.types";
 import styles from "../../training-week-grid.module.css";
@@ -42,6 +44,51 @@ export function TrainingGridEvent({
   const start = activity.actualStartTime ?? activity.plannedStartTime;
   const end = activity.actualEndTime ?? activity.plannedEndTime;
   const label = `${activity.name} · ${start ?? t("timeUnknown")}`;
+  if (!inList) {
+    const content = (
+      <ItemContent className={styles.eventContent}>
+        {!compact && <span className={styles.eventTime}>{start ?? t("timeUnknown")}</span>}
+        <ItemTitle className={styles.gridTitle}>{activity.name}</ItemTitle>
+      </ItemContent>
+    );
+    return (
+      <>
+        <Item
+          role="article"
+          size="xs"
+          variant="outline"
+          className={styles.event}
+          data-kind={activity.type}
+        >
+          <TrainingActivityEditor
+            activity={activity}
+            civilDate={civilDate}
+            actions={actions}
+            availablePlan={availablePlan}
+            triggerContent={content}
+            triggerClassName={styles.eventLink}
+          />
+        </Item>
+        {open && (
+          <TrainingActivityModal
+            title={activity.name}
+            busy={false}
+            footer={null}
+            restoreFocusRef={trigger}
+            onRequestClose={() => setOpen(false)}
+          >
+            <TrainingGridEvent
+              activity={activity}
+              civilDate={civilDate}
+              availablePlan={availablePlan}
+              actions={actions}
+              inList
+            />
+          </TrainingActivityModal>
+        )}
+      </>
+    );
+  }
   return (
     <Card
       role="article"

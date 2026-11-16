@@ -3,6 +3,10 @@
 
 @source "../../node_modules/@fradelli/ui/dist";
 
+a[href] {
+  cursor: default;
+}
+
 /* As camadas solares respeitam a preferência de movimento no CSS do logo. */
 html.kaizen-static-motion,
 html.kaizen-static-motion

@@ -1,6 +1,7 @@
 import type { ReactNode, RefObject } from "react";
 export type TrainingActivityModalProps = Readonly<{
   initialFocusRef?: RefObject<HTMLElement | null>;
+  placement?: "center" | "right";
   size?: "form" | "confirmation";
   closeLabel?: string;
   restoreFocusRef?: RefObject<HTMLElement | null>;

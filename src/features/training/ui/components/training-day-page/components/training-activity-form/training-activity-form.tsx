@@ -1,7 +1,9 @@
 "use client";
+import { sportModalities } from "@/features/training/domain/sport-modalities";
 import { NativeSelect, NativeSelectOption } from "@fradelli/ui/native-select";
 import { useTranslations } from "next-intl";
 
+import { PanelRight } from "lucide-react";
 import { Button } from "@fradelli/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@fradelli/ui/field";
 import { Input } from "@fradelli/ui/input";
@@ -9,9 +11,7 @@ import { PendingButton } from "@fradelli/ui/pending-button";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSameTrainingSport } from "@/features/training/domain/training-sport.rules";
-import { getTrainingAgendaDateWindow } from "@/features/training/domain/training-edit-window";
 import { trainingActivityDraftKey } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
-import { TrainingPreparationSelect } from "./components/training-preparation-select/training-preparation-select";
 import { useTrainingActivitySchedule } from "./hooks/use-training-activity-schedule";
 import { isValidPlannedInterval } from "./training-activity-form.utils";
 
@@ -20,12 +20,24 @@ import { TrainingActionFeedback } from "../training-action-feedback/training-act
 import { trainingActivityFormStyles } from "./training-activity-form.styles";
 import type { TrainingActivityFormProps } from "./training-activity-form.types";
 
+const plannedTimeOptions = Array.from({ length: 24 * 4 }, (_, slot) => {
+  const hour = String(Math.floor(slot / 4)).padStart(2, "0");
+  const minute = String((slot % 4) * 15).padStart(2, "0");
+  const time = `${hour}:${minute}`;
+  return (
+    <NativeSelectOption key={time} value={time}>
+      {time}
+    </NativeSelectOption>
+  );
+});
+
 export function TrainingActivityForm({
   civilDate,
   action,
   activity,
   availablePlan,
   editor,
+  onPanelClose,
   startedLocally = false,
 }: TrainingActivityFormProps) {
   const t = useTranslations("training");
@@ -36,7 +48,6 @@ export function TrainingActivityForm({
     editor ? editor.initialValues.preparationChoice : activity ? "keep" : null,
   );
   const [draftError, setDraftError] = useState<string | null>(null);
-  const dateWindow = getTrainingAgendaDateWindow();
   const notStarted =
     !activity ||
     (!startedLocally &&
@@ -147,20 +158,7 @@ export function TrainingActivityForm({
     );
   const timeError = validateTimes && !isValidPlannedInterval(schedule.startTime, schedule.endTime);
   const hintId = `activity-end-hint-${activity?.id ?? "new"}`;
-  const hint = timeError
-    ? t("endAfterStart")
-    : type !== "structured_training"
-      ? null
-      : !schedule.automatic
-        ? t("timeManuallyAdjusted")
-        : schedule.suggestion.status === "ready"
-          ? t("calculatedDuration", { minutes: schedule.suggestion.durationMinutes })
-          : schedule.suggestion.status === "next_day"
-            ? t("endsNextDay")
-            : schedule.suggestion.status === "duration_unavailable"
-              ? t("durationCalculationFailed")
-              : t("startRequiredForDuration");
-
+  const hint = timeError ? t("endAfterStart") : null;
   return (
     <form
       id={editor?.formId}
@@ -204,7 +202,7 @@ export function TrainingActivityForm({
         disabled={submission.pending || editor?.readOnly}
         className="grid min-w-0 gap-3 border-0 p-0 m-0"
       >
-        <input type="hidden" name="civilDate" value={civilDate} />
+        <input type="hidden" name="civilDate" value={activity ? civilDate : targetDate} />
         {activity ? (
           <>
             <input type="hidden" name="activityId" value={activity.id} />
@@ -212,50 +210,44 @@ export function TrainingActivityForm({
           </>
         ) : null}
         <div className={trainingActivityFormStyles.grid}>
-          {activity ? (
-            <Field>
-              <FieldLabel htmlFor={`activity-date-${activity.id}`}>{t("activityDate")}</FieldLabel>
-              <Input
-                id={`activity-date-${activity.id}`}
-                name="targetCivilDate"
-                type="date"
-                value={targetDate}
-                onChange={(event) => setTargetDate(event.target.value)}
-                min={dateWindow.minimumDate}
-                max={dateWindow.maximumDate}
-                disabled={!notStarted}
-                required
-                aria-describedby={`activity-date-hint-${activity.id}`}
-              />
-              <FieldDescription id={`activity-date-hint-${activity.id}`}>
-                {notStarted ? t("rescheduleRange") : t("rescheduleNotStartedOnly")}
-              </FieldDescription>
+          <div className="flex items-center gap-1">
+            <Field className="min-w-0 flex-1">
+              <FieldLabel className="sr-only" htmlFor={`activity-type-${activity?.id ?? "new"}`}>
+                {t("activityType")}
+              </FieldLabel>
+              <NativeSelect
+                id={`activity-type-${activity?.id ?? "new"}`}
+                name="type"
+                className="w-full"
+                value={type === "specific_training" ? "sport_practice" : type}
+                onChange={(event) => schedule.changeType(event.target.value as typeof type)}
+              >
+                <NativeSelectOption value="structured_training">
+                  {t("planTraining")}
+                </NativeSelectOption>
+                <NativeSelectOption value="sport_practice">{t("sportPractice")}</NativeSelectOption>
+                <NativeSelectOption value="mobility">{t("mobility")}</NativeSelectOption>
+              </NativeSelect>
             </Field>
-          ) : null}
-          <Field>
-            <FieldLabel htmlFor={`activity-type-${activity?.id ?? "new"}`}>
-              {t("activityType")}
-            </FieldLabel>
-            <NativeSelect
-              id={`activity-type-${activity?.id ?? "new"}`}
-              name="type"
-              className="w-full"
-              value={type}
-              onChange={(event) => schedule.changeType(event.target.value as typeof type)}
-            >
-              <NativeSelectOption value="structured_training">
-                {t("planTraining")}
-              </NativeSelectOption>
-              <NativeSelectOption value="sport_practice">{t("sportPractice")}</NativeSelectOption>
-              <NativeSelectOption value="specific_training">
-                {t("specificTraining")}
-              </NativeSelectOption>
-              <NativeSelectOption value="mobility">{t("mobility")}</NativeSelectOption>
-            </NativeSelect>
-          </Field>
+            {onPanelClose && (
+              <Button
+                className="hidden shrink-0 md:inline-flex"
+                type="button"
+                variant="ghost"
+                size="icon"
+                tone="neutral"
+                aria-label={t("closeForm")}
+                aria-controls="schedule-editor-panel"
+                aria-expanded
+                onClick={onPanelClose}
+              >
+                <PanelRight size={12} aria-hidden />
+              </Button>
+            )}
+          </div>
           {type === "structured_training" ? (
             <Field>
-              <FieldLabel htmlFor={`activity-session-${activity?.id ?? "new"}`}>
+              <FieldLabel className="sr-only" htmlFor={`activity-session-${activity?.id ?? "new"}`}>
                 {t("training")}
               </FieldLabel>
               <NativeSelect
@@ -282,9 +274,10 @@ export function TrainingActivityForm({
           ) : (
             <input type="hidden" name="sessionId" value="" />
           )}
-          {type !== "structured_training" ? (
+          {needsSport && <input type="hidden" name="name" value={name || sport} />}
+          {type !== "structured_training" && !needsSport ? (
             <Field>
-              <FieldLabel htmlFor={`activity-name-${activity?.id ?? "new"}`}>
+              <FieldLabel className="sr-only" htmlFor={`activity-name-${activity?.id ?? "new"}`}>
                 {t("name")}
               </FieldLabel>
               <Input
@@ -300,73 +293,107 @@ export function TrainingActivityForm({
           ) : null}
           {needsSport ? (
             <Field>
-              <FieldLabel htmlFor={`activity-sport-${activity?.id ?? "new"}`}>
+              <FieldLabel className="sr-only" htmlFor={`activity-sport-${activity?.id ?? "new"}`}>
                 {t("sport")}
               </FieldLabel>
-              <Input
+              <NativeSelect
                 id={`activity-sport-${activity?.id ?? "new"}`}
                 name="sport"
                 value={sport}
-                onChange={(event) => setSport(event.target.value)}
-                maxLength={80}
-                placeholder={t("sportPlaceholder")}
+                onChange={(event) => {
+                  setSport(event.target.value);
+                  setName(event.target.value);
+                  setPreparationChoice(null);
+                }}
+                className="w-full"
                 required
-              />
+              >
+                <NativeSelectOption value="" disabled>
+                  {t("sport")}
+                </NativeSelectOption>
+                {activity?.sport && !sportModalities.some((item) => item === activity.sport) && (
+                  <NativeSelectOption value={activity.sport}>{activity.sport}</NativeSelectOption>
+                )}
+                {sportModalities.map((item) => (
+                  <NativeSelectOption key={item} value={item}>
+                    {item}
+                  </NativeSelectOption>
+                ))}
+              </NativeSelect>
             </Field>
           ) : (
             <input type="hidden" name="sport" value="" />
           )}
           {needsSport ? (
-            <TrainingPreparationSelect
-              activity={activity}
-              availablePlan={availablePlan}
-              value={preparationValue}
-              onChange={setPreparationChoice}
-              disabled={!notStarted}
-              allowKeep={allowKeepPreparation}
-            />
+            <input type="hidden" name="preparationSessionId" value={preparationValue} />
           ) : null}
-          <Field>
-            <FieldLabel htmlFor={`activity-start-time-${activity?.id ?? "new"}`}>
-              {t("plannedStart")}
-            </FieldLabel>
-            <Input
-              id={`activity-start-time-${activity?.id ?? "new"}`}
-              name="plannedStartTime"
-              type="time"
-              step={900}
-              value={schedule.startTime}
-              onChange={(event) => schedule.setStartTime(event.target.value)}
-              required
-            />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor={`activity-end-time-${activity?.id ?? "new"}`}>
-              {t("plannedEnd")}
-            </FieldLabel>
-            <Input
-              id={`activity-end-time-${activity?.id ?? "new"}`}
-              name="plannedEndTime"
-              type="time"
-              step={900}
-              value={schedule.endTime}
-              onChange={(event) => schedule.changeEnd(event.target.value)}
-              onBlur={() => setValidateTimes(Boolean(schedule.startTime && schedule.endTime))}
-              aria-describedby={hint ? hintId : undefined}
-              aria-invalid={timeError || undefined}
-              required
-            />
-            {hint ? (
-              <FieldDescription id={hintId} aria-live="polite">
-                {hint}
-              </FieldDescription>
-            ) : null}
-            {type === "structured_training" && !schedule.automatic ? (
-              <Button type="button" variant="outline" onClick={schedule.enableAutomatic}>
-                {t("useTrainingDuration")}
-              </Button>
-            ) : null}
-          </Field>
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1">
+            <Field>
+              <FieldLabel
+                className="sr-only"
+                htmlFor={`activity-start-time-${activity?.id ?? "new"}`}
+              >
+                {t("plannedStart")}
+              </FieldLabel>
+              <NativeSelect
+                id={`activity-start-time-${activity?.id ?? "new"}`}
+                name="plannedStartTime"
+                className="w-full"
+                value={schedule.startTime}
+                onChange={(event) => schedule.setStartTime(event.target.value)}
+                required
+              >
+                <NativeSelectOption value="" disabled>
+                  --:--
+                </NativeSelectOption>
+                {plannedTimeOptions}
+              </NativeSelect>
+            </Field>
+            <span aria-hidden="true">&rarr;</span>
+            <Field>
+              <FieldLabel
+                className="sr-only"
+                htmlFor={`activity-end-time-${activity?.id ?? "new"}`}
+              >
+                {t("plannedEnd")}
+              </FieldLabel>
+              <NativeSelect
+                id={`activity-end-time-${activity?.id ?? "new"}`}
+                name="plannedEndTime"
+                className="w-full"
+                value={schedule.endTime}
+                onChange={(event) => schedule.changeEnd(event.target.value)}
+                onBlur={() => setValidateTimes(Boolean(schedule.startTime && schedule.endTime))}
+                aria-describedby={hint ? hintId : undefined}
+                aria-invalid={timeError || undefined}
+                required
+              >
+                <NativeSelectOption value="" disabled>
+                  --:--
+                </NativeSelectOption>
+                {plannedTimeOptions}
+              </NativeSelect>
+            </Field>
+          </div>
+          <Input
+            aria-label={t("activityDate")}
+            type="date"
+            name={activity ? "targetCivilDate" : undefined}
+            value={targetDate}
+            onChange={(event) => setTargetDate(event.target.value)}
+            disabled={!notStarted}
+            required
+          />
+          {hint ? (
+            <FieldDescription id={hintId} aria-live="polite">
+              {hint}
+            </FieldDescription>
+          ) : null}
+          {type === "structured_training" && !schedule.automatic ? (
+            <Button type="button" variant="outline" onClick={schedule.enableAutomatic}>
+              {t("useTrainingDuration")}
+            </Button>
+          ) : null}
         </div>
         {!editor ? (
           <div className={trainingActivityFormStyles.actions}>

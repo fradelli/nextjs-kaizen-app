@@ -144,12 +144,11 @@ describe("TrainingWeekGrid", () => {
     expect(scroller.scrollTop).toBe(456);
     expect(action).not.toHaveBeenCalled();
   });
-  it("abre a lista do dia pelo cabeÃ§alho e representa as extremidades de 24 horas", () => {
+  it("exibe na escala apenas os horários internos do dia", () => {
     render(<TrainingWeekGrid days={days} selectedDate={days[0]!.civilDate} actions={actions} />);
-    expect(screen.getByText("00:00")).toBeInTheDocument();
-    expect(screen.getByText("24:00")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Ver atividades de.*11/ }));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByText("Nenhuma atividade programada")).toBeInTheDocument();
+    expect(screen.queryByText("00:00")).not.toBeInTheDocument();
+    expect(screen.getByText("01:00")).toBeInTheDocument();
+    expect(screen.getByText("23:00")).toBeInTheDocument();
+    expect(screen.queryByText("24:00")).not.toBeInTheDocument();
   });
 });

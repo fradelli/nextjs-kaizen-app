@@ -179,7 +179,13 @@ export function useTrainingActivityEditorDraft(
           setInitialValues(result.draft.values);
           setDirty(!sameActivityEditorValues(result.draft.values, base.baseValues));
         }
-        publish(result.status === "missing" ? "clean" : result.status);
+        publish(
+          result.status === "missing"
+            ? "clean"
+            : result.status === "stale"
+              ? "restored"
+              : result.status,
+        );
       } catch {
         publish("storage_error");
       }

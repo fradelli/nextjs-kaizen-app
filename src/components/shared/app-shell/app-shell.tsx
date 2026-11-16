@@ -18,7 +18,7 @@ export function AppShell({ children }: AppShellProps) {
         <div className={styles.headerInner}>
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center gap-2 rounded-md text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            className="inline-flex active:translate-y-px min-h-11 items-center gap-2 rounded-md text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             aria-label={t("home")}
             prefetch={false}
           >
