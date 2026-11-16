@@ -15,3 +15,14 @@ test-results/
 .DS_Store
 Thumbs.db
 pnpm-debug.log*
+
+# Referências locais do Codex, sem relação com dependências do app.
+.agents/skills/
+skills-lock.json
+# Vínculos locais de clientes não utilizados; preservar instalação existente.
+.claude/skills/
+.windsurf/skills/
+
+# Artefatos locais de diagnóstico
+/.tmp/
+/.tmp-*.log
