@@ -11,7 +11,6 @@ import { PendingButton } from "@fradelli/ui/pending-button";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSameTrainingSport } from "@/features/training/domain/training-sport.rules";
-import { trainingActivityDraftKey } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
 import { useTrainingActivitySchedule } from "./hooks/use-training-activity-schedule";
 import { isValidPlannedInterval } from "./training-activity-form.utils";
 
@@ -38,7 +37,6 @@ export function TrainingActivityForm({
   availablePlan,
   editor,
   onPanelClose,
-  startedLocally = false,
 }: TrainingActivityFormProps) {
   const t = useTranslations("training");
 
@@ -48,13 +46,6 @@ export function TrainingActivityForm({
     editor ? editor.initialValues.preparationChoice : activity ? "keep" : null,
   );
   const [draftError, setDraftError] = useState<string | null>(null);
-  const notStarted =
-    !activity ||
-    (!startedLocally &&
-      activity.status === "scheduled" &&
-      !activity.startedAt &&
-      !activity.completedAt &&
-      activity.preparations.every((item) => item.status === "scheduled" && !item.startedAt));
   const schedule = useTrainingActivitySchedule({
     civilDate,
     action,
@@ -176,19 +167,6 @@ export function TrainingActivityForm({
           return;
         }
         setDraftError(null);
-        if (activity && (targetDate !== civilDate || (needsSport && preparationValue !== "keep"))) {
-          try {
-            if (window.localStorage.getItem(trainingActivityDraftKey(civilDate, activity.id))) {
-              event.preventDefault();
-              setDraftError(t("localSessionBlocksReschedule"));
-              return;
-            }
-          } catch {
-            event.preventDefault();
-            setDraftError(t("draftCheckFailed"));
-            return;
-          }
-        }
         if (!isValidPlannedInterval(schedule.startTime, schedule.endTime)) {
           event.preventDefault();
           setValidateTimes(true);
@@ -381,7 +359,6 @@ export function TrainingActivityForm({
             name={activity ? "targetCivilDate" : undefined}
             value={targetDate}
             onChange={(event) => setTargetDate(event.target.value)}
-            disabled={!notStarted}
             required
           />
           {hint ? (

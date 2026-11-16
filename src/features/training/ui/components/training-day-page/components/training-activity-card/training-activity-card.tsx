@@ -254,7 +254,7 @@ export function TrainingInlineActivityCard({
               onFinalized={execution.clear}
               ready={execution.ready && executionEditable}
             />
-            {!dedicated && status !== "completed" && agendaEditable ? (
+            {!dedicated && agendaEditable ? (
               <TrainingActivityEditor
                 civilDate={civilDate}
                 activity={activity}

@@ -21,12 +21,7 @@ export function TrainingActivityMenu({
   const id = useId();
   const execution = useTrainingActivityDraft({ activity, civilDate });
   const [position, setPosition] = useState({ left: 0, top: 0 });
-  if (
-    !isTrainingAgendaDateEditable(civilDate) ||
-    activity.status === "completed" ||
-    activity.status === "skipped"
-  )
-    return null;
+  if (!isTrainingAgendaDateEditable(civilDate)) return null;
   const blocked =
     Boolean(execution.draft) || activity.status === "in_progress" || activity.status === "paused";
   return (
@@ -63,26 +58,20 @@ export function TrainingActivityMenu({
         }
         aria-label={t("activityOptions", { name: activity.name })}
       >
-        {!execution.ready ? (
-          <p>{t("checkingExecution")}</p>
-        ) : blocked ? (
-          <p>{t("activeWorkoutBeforeChanges")}</p>
-        ) : (
-          <>
-            <TrainingActivityEditor
-              activity={activity}
-              civilDate={civilDate}
-              actions={actions}
-              availablePlan={availablePlan}
-              triggerLabel={t("moveWorkout")}
-            />
-            <TrainingActivityDeleteForm
-              activity={activity}
-              civilDate={civilDate}
-              action={actions.deleteActivity}
-              triggerLabel={t("deleteActivity")}
-            />
-          </>
+        <TrainingActivityEditor
+          activity={activity}
+          civilDate={civilDate}
+          actions={actions}
+          availablePlan={availablePlan}
+          triggerLabel={t("moveWorkout")}
+        />
+        {execution.ready && !blocked && (
+          <TrainingActivityDeleteForm
+            activity={activity}
+            civilDate={civilDate}
+            action={actions.deleteActivity}
+            triggerLabel={t("deleteActivity")}
+          />
         )}
       </Card>
     </>

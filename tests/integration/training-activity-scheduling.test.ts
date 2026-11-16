@@ -206,7 +206,7 @@ describe("manual preparation and activity rescheduling with PostgreSQL", () => {
         }),
       ).resolves.toMatchObject({ status: "not_found" });
     }));
-  it("moves a generic preparation with its original ID and blocks further moves after preparation progress", () =>
+  it("moves a completed activity and preserves the recorded preparation interval", () =>
     withImportDatabase(async (client) => {
       const f = await client.$transaction(createDatabaseFixture);
       const repo = new PrismaTrainingRepository(client);
@@ -251,6 +251,10 @@ describe("manual preparation and activity rescheduling with PostgreSQL", () => {
           endedAt: now,
         },
       });
+      await client.trainingDayActivity.update({
+        where: { id: original.id },
+        data: { status: "completed", startedAt: now, completedAt: now },
+      });
       await expect(
         repo.updateTrainingActivity({
           ...command,
@@ -260,16 +264,28 @@ describe("manual preparation and activity rescheduling with PostgreSQL", () => {
           targetCivilDate: sourceDate,
           preparationSessionId: "keep",
         }),
-      ).resolves.toMatchObject({ status: "invalid", field: "targetCivilDate" });
+      ).resolves.toMatchObject({ status: "saved" });
       await expect(
         repo.updateTrainingActivity({
           ...command,
-          civilDate: destinationDate,
+          civilDate: sourceDate,
           activityId: original.id,
-          expectedRevision: 1,
+          expectedRevision: 2,
           preparationSessionId: null,
         }),
-      ).resolves.toMatchObject({ status: "invalid", field: "preparationSessionId" });
+      ).resolves.toMatchObject({ status: "saved" });
+      expect(
+        await client.trainingDayActivity.findUnique({ where: { id: original.id } }),
+      ).toMatchObject({
+        status: "completed",
+        completedAt: now,
+        civilDate: new Date(sourceDate + "T00:00:00Z"),
+      });
+      expect(
+        await client.trainingActivityExecutionInterval.count({
+          where: { activityId: preparation.id },
+        }),
+      ).toBe(1);
     }));
   it("preserves a legacy assignment in the source while moving the real activity with the same ID", () =>
     withImportDatabase(async (client) => {

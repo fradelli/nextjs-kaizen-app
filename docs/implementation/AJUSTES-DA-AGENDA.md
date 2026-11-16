@@ -271,9 +271,9 @@ Pendentes em 16/11/2026. Executar a correção do card primeiro, depois separar 
 
 ### 1. Exibir cards concluídos independentemente da permissão de editar
 
-Na grade, `TrainingGridEvent` entrega o conteúdo visível ao gatilho de `TrainingActivityEditor`. Esse gatilho pode retornar vazio para uma ocorrência concluída. Separar o conteúdo do card da ação de editar. Preservar o acesso de leitura e o histórico do executor. Tratar a permissão de alteração explicitamente.
+Uma atividade concluída continua editável em qualquer data civil, passada, presente ou futura. O editor permite mudar data, horários e demais campos da agenda. O reagendamento preserva a identidade da ocorrência e os registros de execução. A gravação continua validando o intervalo e a revisão para evitar conflitos entre alterações simultâneas.
 
-Aceite: uma ocorrência concluída continua identificável pelo título nas visões diária e semanal, inclusive após recarregar. A apresentação compacta mantém um nome acessível. Uma ocorrência editável continua abrindo o editor. Cobrir ambos os casos com o mesmo exercício.
+Aceite: abrir o card concluído, editar, mover para outra data e reabrir após recarregar. Verificar o título, o estado de conclusão e o histórico da execução.
 
 ### 2. Separar tarefas, reservas de tempo e execução de treino
 

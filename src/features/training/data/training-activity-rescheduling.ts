@@ -6,27 +6,14 @@ import type { CivilDate } from "../domain/training-day.types";
 export const activityScheduleInclude = {
   session: true,
   preparationSession: true,
-  _count: { select: { intervals: true, exerciseExecutions: true } },
   preparations: {
     where: { deletedAt: null },
-    include: { _count: { select: { intervals: true, exerciseExecutions: true } } },
   },
 } satisfies Prisma.TrainingDayActivityInclude;
 
 type ActivityScheduleRow = Prisma.TrainingDayActivityGetPayload<{
   include: typeof activityScheduleInclude;
 }>;
-
-export function hasTrainingActivityProgress(activity: ActivityScheduleRow): boolean {
-  const started = (
-    item: Pick<ActivityScheduleRow, "status" | "startedAt" | "completedAt" | "_count">,
-  ) =>
-    item.status !== "scheduled" ||
-    Boolean(item.startedAt || item.completedAt) ||
-    item._count.intervals > 0 ||
-    item._count.exerciseExecutions > 0;
-  return started(activity) || activity.preparations.some(started);
-}
 
 export async function recordTrainingActivityReschedule(
   transaction: Prisma.TransactionClient,
