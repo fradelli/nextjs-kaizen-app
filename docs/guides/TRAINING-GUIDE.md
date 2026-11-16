@@ -1,53 +1,21 @@
 # Guia de consulta do treino
 
-Este guia é uma projeção humana compacta. A prescrição canônica está no arquivo indicado por [`data/active.json`](../../data/active.json); doses e exercícios devem ser lidos no plano, não copiados deste documento.
-
-## Objetivos
-
-- Melhorar desempenho no futevôlei e potência de salto.
-- Desenvolver força, aterrissagem e estabilidade.
-- Controlar o volume adicional de saltos considerando a carga esportiva.
-- Manter ganho estético como objetivo secundário.
+Este guia orienta a consulta. Prescrição, sessões, doses e agenda da versão corrente pertencem ao plano indicado por [data/active.json](../../data/active.json), não a uma lista fixa neste documento.
 
 ## Como consultar
 
-1. Abra [`data/active.json`](../../data/active.json).
-2. Siga `active_plan_path` e confirme que `active_plan_id` coincide com `plan_id`.
-3. Escolha a sessão usando a agenda privada e as regras públicas de [`data/schedule.json`](../../data/schedule.json).
-4. Consulte descrições, execução e riscos pelo `exercise_id` em [`data/exercises.json`](../../data/exercises.json).
-5. Use o [resumo diário](DAILY-TRAINING-SUMMARY.md) somente como navegação rápida.
+1. Leia `active_plan_path` e confira `active_plan_id` com o `plan_id` do JSON.
+2. Abra `human_guide_path` para particularidades dessa versão.
+3. Consulte a programação em [data/schedule.json](../../data/schedule.json). Agenda operacional e realizado pertencem ao banco; programação não comprova realização.
+4. Resolva descrições e riscos pelos IDs em [data/exercises.json](../../data/exercises.json). Divergências são lacunas para revisão, não autorização para inventar doses.
 
-## Sessões do plano ativo
+## Execução e atualização
 
-| ID | Finalidade | Uso |
-| --- | --- | --- |
-| `lower_a` | Força de inferiores e potência vertical | Sessão principal, executada quando houver recuperação suficiente |
-| `upper_a` | Força de puxada e empurrada | Sessão de superiores com versão curta |
-| `lower_b` | Unilateral, adutores e estabilidade | Volume moderado e baixa fadiga relativa |
-| `lower_b_microdose` | Estímulo neural de baixo volume | Alternativa próxima ao jogo quando prevista pelo plano |
-| `upper_b` | Hipertrofia, ombros e controle cervical | Sessão de superiores com versão curta |
-| `pre_upper_warmup` | Aquecimento de superiores | Progressivo e não fatigante |
-| `pre_lower_warmup` | Aquecimento de inferiores | Prepara mobilidade, aterrissagem e saltos |
-| `pre_footvolley_warmup` | Aquecimento do futevôlei | Progressão específica sem duplicar aquecimento equivalente |
+- Siga somente alternativas previstas no plano ativo. Não aplique versões curtas, microdoses ou sessões de outro plano por semelhança de nome.
+- Contabilize a carga esportiva, preserve recuperação e descanso; aquecimento prepara sem buscar exaustão.
+- Registre o ocorrido mesmo quando diferente do prescrito. Mudança material cria nova versão; siga o [procedimento](UPDATING-TRAINING-DATA.md) e as [regras](TRAINING-RULES.md).
+- Dor aguda, piora progressiva ou perda de controle exigem interromper/adaptar; persistência, trauma ou sintomas neurológicos exigem avaliação profissional. Veja [evidências e limites](../evidence/TRAINING-EVIDENCE-AND-LIMITS.md).
 
-## Distribuição sem agenda pública
+## Origem histórica
 
-- Contabilize cada treino de areia e jogo como carga.
-- Posicione força e potência de inferiores quando houver recuperação suficiente.
-- Evite sessão completa de inferiores imediatamente antes da areia.
-- Superiores podem ocorrer depois da areia quando a recuperação não for prejudicada.
-- Use a microdose somente quando o plano e a proximidade do jogo justificarem.
-- Dias e horários exatos permanecem fora deste repositório.
-
-## Regras de execução
-
-- Preserve as repetições em reserva definidas no plano.
-- Interrompa saltos quando altura, velocidade, coordenação ou aterrissagem piorarem claramente.
-- Não aumente carga, séries e dificuldade na mesma semana.
-- Use as versões curtas em vez de comprimir descanso ou acumular complementares.
-- Aquecimento termina com prontidão, não fadiga.
-- Mobilidade prolongada fica depois do treino ou em sessão separada.
-
-## Segurança
-
-Adapte ou interrompa a sessão diante de dor aguda, piora progressiva, perda de controle ou sinal neurológico. Dor persistente, trauma, retorno pós-cirúrgico ou sintomas neurológicos exigem avaliação profissional presencial. Consulte [Evidências e limites](../evidence/TRAINING-EVIDENCE-AND-LIMITS.md).
+Listas `lower_a`/`upper_a` e alternativas de agosto não definem a versão atual. O resumo diário foi consolidado aqui; sua [fonte preservada](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/guides/DAILY-TRAINING-SUMMARY.md) mantém o contexto original. O manifesto conserva hashes da migração original, sem reescrita para representar esta revisão.

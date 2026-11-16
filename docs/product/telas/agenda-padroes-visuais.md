@@ -1,6 +1,10 @@
 # Agenda, botões e foco — revisão para o design system
 
-**Estado:** diagnóstico do Kaizen e proposta para revisão. A implementação das mudanças abaixo depende da definição dos comportamentos pendentes.
+> Vigência: aparência no [guia](guia-de-estilo.md), comportamento em [Meu Dia](meu-dia.md). Este documento preserva diagnóstico e experimentos da migração em andamento. Em conflito de cores, fontes, ícones ou receitas, siga o guia. Arraste, painel lateral e tooltip temporizado continuam propostas onde identificados. Conteúdo preservado durante a edição visual paralela.
+
+**Estado:** primeira aplicação visual e da navegação semanal em andamento. A seleção por arraste e o painel lateral descritos adiante continuam planejados.
+
+**Aplicado nesta etapa:** carregamento fixo de domingo a sábado; celular mostra a data selecionada; setas avançam um dia no celular e uma semana no desktop; cabeçalho mostra mês e ano; número de hoje recebe círculo vermelho; início de semana, cores de fim de semana, borda e sombra dos eventos foram ajustados. O preset fornece IBM Plex Sans, Figtree e Lucide.
 
 ## Referência de preset shadcn
 
@@ -71,7 +75,7 @@ Nos controles neutros, propor texto claro #EEEDEF; nos preenchidos em pastel, te
 
 ### Cursor, hover e dicas de atalho
 
-**Regra definida para todas as aplicações consumidoras:** botões de texto, de ícone, de navegação, de envio e links apresentados como botões usam o cursor padrão de seta. Ao passar o mouse sobre um botão disponível, clarear discretamente sua própria superfície, preservando cor semântica, borda, dimensões e estado de seleção. O foco visível continua indicando navegação por teclado. Aplicar hover apenas em dispositivos que suportam esse gesto.
+**Regra definida para todas as aplicações consumidoras:** botões de texto, de ícone, de navegação, de envio e links apresentados como botões usam o cursor padrão de seta, nunca a mão (`pointer`). Esta é uma escolha visual do Kaizen e do design system, não uma afirmação de que o cursor de mão deixou de ser usado na web. Ao passar o mouse sobre um botão disponível, clarear discretamente sua própria superfície, preservando cor semântica, borda, dimensões e estado de seleção. O hover e o foco visível continuam indicando interação; no celular, a área de toque e o retorno ao acionamento permanecem claros. Aplicar hover apenas em dispositivos que suportam esse gesto.
 
 **Dicas de atalho:** após o ponteiro permanecer sobre um controle com atalho implementado, mostrar a ação no idioma da interface e a tecla em destaque. Proposta para Hoje: “Vá para hoje” e tecla T. D e W alternam a visão, como descrito abaixo. Aplicar as mesmas restrições de foco e digitação aos três atalhos. O tooltip complementa o nome acessível do controle. Não anunciar atalhos ainda indisponíveis.
 
@@ -88,6 +92,8 @@ Cada coluna identifica o dia da semana e o número do dia do mês (por exemplo, 
 No topo, mostrar o mês e o ano da data selecionada, por exemplo “novembro de 2026”. Em semanas que atravessam dois meses, cada coluna mantém seu dia correto. No desktop, oferecer Dia e Semana. A visão mensal fica para uma etapa futura. Manter a data de referência ao alternar a visão.
 
 ### Cabeçalho e atalhos propostos
+
+Implementado no Kaizen: seletor Dia/Semana no desktop, preferência na URL por `view=day|week` e atalhos D, W e T. As setas respeitam a visão escolhida. No celular, a grade permanece diária. Atalhos são ignorados durante edição de campos, menus e diálogos. A dica temporizada de atalho permanece pendente.
 
 Mês e ano à esquerda. À direita, seletor Dia/Semana, Hoje e setas. Em Semana, cada seta desloca sete dias; em Dia, um dia. Hoje traz a data atual na visão escolhida. O menu indica a opção ativa e mostra D (Dia) e W (Semana), inclusive em português, para manter os atalhos entre idiomas. Só tratar essas teclas com a agenda em foco, fora de campos editáveis, menus e diálogos, sem modificadores. O seletor também funciona por toque e teclado. Proposta de URL: guardar a data e a visão em parâmetros para preservar o contexto ao voltar do treino.
 

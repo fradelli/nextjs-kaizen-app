@@ -1,5 +1,7 @@
 # Adoção do Design System compartilhado
 
+> Evolução visual de 12/11/2026: o [guia aprovado no Kaizen](../product/telas/guia-de-estilo.md) substitui a aparência inicial por Mira/Lucide/IBM Plex Sans/Figtree. Ownership, imports públicos e distribuição por release permanecem. O contrato `0.1.0` abaixo é histórico. Tarball local é prévia da migração, não release para entrega. A decisão normativa externa não foi reconfirmada nesta revisão.
+
 ## Status
 
 - **Estado:** aceita

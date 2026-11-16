@@ -1,8 +1,8 @@
 # Mapa de navegação do Kaizen
 
-[Execução do treino estruturado — revisão visual](execucao.md)
+[Execução do treino estruturado — revisão visual](execucao.md) · [Guia vigente](guia-de-estilo.md) · [Adoção](componentes-shadcn.md)
 
-O [Meu Dia](meu-dia.md) e o tratamento visual da execução têm referência aprovada. Consulte as [medidas comuns](medidas.md) e o [plano de implementação por etapas](../../implementation/MEU-DIA-IMPLEMENTACAO.md). As etapas seguintes do mapa indicam o escopo de produto para detalhamento.
+O [Meu Dia](meu-dia.md) e o tratamento visual da execução têm referência aprovada. Consulte as [medidas comuns](medidas.md) e o [plano de implementação por etapas](../../implementation/MEU-DIA-IMPLEMENTACAO.md). As etapas seguintes indicam escopo para detalhamento, não rotas entregues; veja **Rotas do P0** na [arquitetura](../../architecture/TARGET-ARCHITECTURE.md).
 
 | Etapa | Tela de entrada | Subtelas e retorno |
 | --- | --- | --- |

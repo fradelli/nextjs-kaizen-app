@@ -1,5 +1,7 @@
 # Catálogo de equipamentos e exercícios
 
+> Estado reconciliado: migração e primeira carga possuem implementação local em **Uso da primeira seed**. **Estado e evidências** conserva checkpoint anterior; aprovação editorial, modalidades e integração ao editor continuam pendentes. Não recriar schema/importador pelo texto histórico.
+
 ## Uso da primeira seed
 
 Na raiz do aplicativo, `pnpm catalog:check` valida os arquivos e imprime a identificação e as contagens do pacote. Para um banco inicializado com as migrações, defina `DIRECT_URL` explicitamente no ambiente do processo e execute `pnpm catalog:apply`. O comando importa apenas os dois catálogos. A rotina de planos antigos é independente.

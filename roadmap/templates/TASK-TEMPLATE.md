@@ -12,7 +12,7 @@ Resultado único desta tarefa.
 
 ## Entradas
 
-- `caminho/exato.ext` — motivo pelo qual é necessário.
+- `caminho/exato.ext` — seção/título necessário e motivo da leitura.
 
 Não use referências vagas a épicos, conversas ou “todos os documentos”.
 

@@ -1,10 +1,63 @@
 # Changelog
 
+## 2026-11-14 — Executor e diálogos Mira
+
+- Executor modal consistente após reload, superfície escura uniforme e ações superiores com mesma geometria. Clique externo recolhe o treino.
+- Duração abre controles de pausa. Resumo exclui aquecimentos e usa carga unilateral por lado. Séries realizadas dependem das medidas válidas, com destaque de linha e ✓ dedicado ao descanso.
+- Campos E/D ou L/R lado a lado, Switch Mira do pacote e diálogos inferiores no mobile. Barra usa variantes oficiais e preserva o halo do indicador.
+- 64 testes direcionados e 18 integrações PostgreSQL aprovados. Build e checks estáticos aprovados. Navegador em 1440, 390 e 320 px. Candidato local do DS, com release seguindo o fluxo próprio.
+
+
+## 2026-11-13 — Barra de retomada flutuante pelo design system
+
+- Item Mira, indicador de status, ícone e alvo de toque consumidos do candidato
+  local do DS. Indicador verde pulsa durante execução e fica estático ao pausar
+  ou solicitar movimento reduzido.
+- Barra sobreposta ao conteúdo, acima da navegação móvel, sem padding condicional
+  que encolha a agenda. Descarte e retomada continuam independentes.
+- Validação em 1440, 390 e 320 px; 21 testes direcionados, build e checks estáticos
+  aprovados. Candidato local, sem release ou deploy. Ajustes do executor e nova
+  regra de contagem documentados como pendentes, sem mudança funcional nesta entrega.
+
+## 2026-11-13 — Preparação da migração Mira e primeiro Select
+
+- E10-T09 registrada com plano de conclusão e retomada verificável.
+- Candidato local com Select instalado pelo pnpm; aquecimento do formulário usa
+  o export público e preserva sugestões, rascunho e payload.
+- Banco local atualizado; formulário validado em desktop e mobile emulado com
+  envio real e retorno de foco. Build e checks estáticos aprovados, 68 testes
+  direcionados aprovados. Release e migração integral permanecem pendentes.
+- Popover de opções interceptando cliques na exclusão aninhada registrado como
+  achado da agenda; exclusão por teclado confirmada.
+
+
+## 2026-11-12 — Consolidação documental e contexto do Codex
+
+- Roteiro por tarefa/seção, vigência visual e rotas atuais documentados; referências Prisma locais fora do versionamento.
+- Pacotes E04, resumo diário e contexto consolidado substituídos por fontes específicas com origens imutáveis no relatório único.
+- Código, dados, dependências e trabalho visual paralelo preservados; nenhuma publicação nesta entrega.
+## 12/11/2026 - Revisão local da adoção do design system
+
+- Execução dedicada mantém a prévia bloqueada e o contador parado antes do início, com campos de séries compostos por Field e Input.
+- Aquecimento usa Collapsible ao lado do treino principal; rotina só de aquecimento permanece aberta e acessível pela rota de detalhe existente.
+- Títulos interativos da agenda recebem CardTitle diretamente. Exemplos das fundações incluem os controles realmente exportados pelo artefato local, e os ícones do aplicativo usam Lucide.
+- 475 testes aprovados, cobertura de branches de 80,19%; lint, tipos, formato, estrutura e traduções aprovados. Build e aceite visual desktop/mobile bloqueados pelo carregamento nativo do SWC no ambiente.
+- Inventário e pendências de distribuição registrados em [componentes compartilhados](docs/product/telas/componentes-shadcn.md). Nenhuma publicação realizada.
+
+## 12/11/2026 — Cursor padrão nos controles
+
+- Botões, links com aparência de botão e controles de divulgação usam a seta padrão. O hover, o foco visível e o acionamento por toque continuam indicando interação.
+
+## 11/11/2026 — Semana fixa e referência visual da agenda
+
+- Desktop consulta sempre domingo a sábado, com sete colunas de largura constante. No celular, permanece visível apenas o dia selecionado.
+- Navegação por dia no celular e por semana no desktop. Cabeçalho mensal, marcador vermelho para hoje e diferenciação sutil dos fins de semana.
+- Agenda usa as fontes IBM Plex Sans e Figtree, controles de data em Lucide e sombras discretas nos eventos.
+
 ## 11/11/2026 — Cores de ações
 
 - Padrão compartilhado por finalidade: menta para iniciar, lilás para adicionar e amarelo para a seleção de hoje.
 - Estados de interação e indisponibilidade derivados das mesmas cores.
-
 
 ## 11/11/2026 — Agenda e navegação
 
@@ -14,7 +67,6 @@
 - Grade visual com linhas e rótulos de hora em hora. Novos horários planejados em blocos de 15 minutos. Estimativas são arredondadas para cima ao reservar o intervalo.
 - Validação de horários no formulário e no servidor. Duração real continua registrada com precisão.
 - 57 testes de formulário, cálculo de horários, navegação e grade aprovados.
-
 
 ## 2026-11-11 — sessões de segundos na agenda
 
@@ -65,7 +117,6 @@
 - Confirmação local por série, aquecimentos e séries adicionais, com envio ao finalizar o treino.
 - Descanso recuperável com ajustes de 15 segundos; referência anterior por tipo e histórico durante execução.
 - Layout compacto com faixa de estado, toggle e dicas em dialog; contratos e migração preservam registros legados.
-
 
 ## 2026-10-29 — interface em português e inglês
 

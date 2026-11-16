@@ -18,7 +18,6 @@ O CI deve proteger a validação de prontidão e a integração do Design System
 
 - `.github/dependabot.yml`
 - `.github/workflows/ci.yml`
-- `docs/implementation/tasks/E04-T05.md`
 - `docs/decisions/CI-CD-GOVERNANCE.md`
 - `docs/guides/NUTRITION.md`
 - `docs/guides/TRAINING-GUIDE.md`
@@ -92,3 +91,9 @@ Reverter o workflow defeituoso sem remover ou relaxar os gates locais.
 ## Resultado
 
 Concluída em 2026-09-10. A PR #27 executou com sucesso os seis gates remotos. Os rulesets `developer-pr-gates` e `promotion-pr-gates` exigem PR e os checks estáveis em `developer`, `staging` e `master`, sem bypass, exclusão ou force push. Tarefas usam squash, promoções usam merge commit e rebase merge está desabilitado.
+
+## Consolidação documental de 12/11/2026
+
+SHAs iniciais das Actions permanecem na origem. Regras correntes em CI-CD-GOVERNANCE/PULL-REQUEST-STANDARD e no validador.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/tasks/E04-T05.md), SHA-256 `ba71abd93960777e303ae6b3e5c3a07083e7f7b3bd7a056231a72e08ec563b7d`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.

@@ -1,6 +1,8 @@
-# Programação de treino vigente
+# Guia da programação de setembro de 2026
 
-O [plano versionado](../../../data/plans/2026-09-training-v1.json) define Treino 1 às 17h de terça, Treino 2 às 17h de quinta e Treino 3 às 17h de sexta. A meta de 40 minutos por sessão inclui o aquecimento; não é uma duração validada.
+A vigência é determinada por [data/active.json](../../data/active.json); este guia descreve a versão referenciada abaixo.
+
+O [plano versionado](../../data/plans/2026-09-training-v1-1.json) define Treino 1 às 17h de terça, Treino 2 às 17h de quinta e Treino 3 às 17h de sexta. A meta de 40 minutos por sessão inclui o aquecimento; não é uma duração validada.
 
 A prática de futevôlei ocorre de segunda a quinta, das 12h às 13h30, incluindo o aquecimento de até cinco minutos na areia. Jogos não fazem parte da agenda fixa e são adicionados manualmente quando houver.
 

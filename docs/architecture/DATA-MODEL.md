@@ -1,5 +1,7 @@
 # Modelo de dados do P0
 
+> Desenho relacional inicial de E05-T01: as 18 entidades abaixo não são inventário exaustivo do banco atual. Confira [modelos](../../prisma/models/) e [migrations](../../prisma/migrations/). A operação evoluiu para `TrainingDayActivity`, intervalos e resultados de atividade/séries; o modelo antigo de execução permanece histórico conforme **Modelo conceitual / Treino** na [arquitetura](TARGET-ARCHITECTURE.md). O catálogo acrescenta `CatalogEquipment`, `CatalogExercise`, `CatalogExerciseAlias`, `CatalogRequirement` e `CatalogImport`, descritos no [plano do catálogo](../implementation/CATALOG-IMPORT-PLAN.md). `PairingRateLimit` no schema não comprova autenticação ativa; vale a decisão de workspace público. Esta nota não autoriza migration ou remoção de legado.
+
 ## Status e fontes
 
 - Data: 2026-09-12.

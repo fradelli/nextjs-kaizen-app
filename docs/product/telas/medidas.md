@@ -1,17 +1,17 @@
-# Medidas de interface do Kaizen
+# Geometria e áreas de toque do Kaizen
 
-Aplicar os mesmos papéis tipográficos no celular e no desktop. A composição se adapta à largura disponível. Usar os estilos equivalentes do design system e definir localmente apenas as diferenças necessárias. Os valores abaixo estão em pixels CSS; preferir unidades relativas para texto. A família tipográfica e a biblioteca de ícones atuais atendem a esta etapa.
+Tipografia, ícones, densidade visual, cores e variantes pertencem ao [guia de estilo](guia-de-estilo.md). `@fradelli/ui` fornece as receitas. Aqui ficam requisitos de interação específicos do produto.
 
-| Papel | Tamanho / entrelinha | Uso |
-| --- | --- | --- |
-| Título de página | 24 / 32 | Meu Dia e nome do treino. Peso 700. |
-| Título de seção | 20 / 28 | Sessões e resumo. Peso 600. |
-| Texto e valores | 16 / 24 | Conteúdo de leitura, cargas e repetições. |
-| Texto compacto | 14 / 20 | Botões, abas e ações na grade. |
-| Legenda | 12 / 16 | Eixo horário, Anterior e navegação inferior. Peso 600 para status. |
+## Toque e legibilidade
 
-Ícones de navegação e ações principais usam 20 px. Ícones auxiliares e marcas de confirmação usam 16 px. Usar um traço visual consistente dentro da família atual. A área acionável no celular mede pelo menos 44 × 44 px para os controles, incluindo a confirmação ao lado de cada série. O cronômetro usa algarismos de largura fixa.
+- Área acionável de pelo menos 44 × 44 px no celular, inclusive na confirmação de série. Desenho compacto de 28 px não autoriza sobreposição de alvos invisíveis.
+- Confirmar série e editar carga são gestos independentes. Ícones têm nome acessível; cronômetros usam algarismos de largura fixa.
+- Validar texto ampliado, títulos longos, teclado, foco visível, teclado virtual e áreas seguras. Emulação não comprova aparelho físico; pendência na E06-T14.
 
-A geometria de um evento representa o tempo. Com 80 px por hora, 15 min ocupam 20 px no celular. Para eventos adjacentes, impedir sobreposição de alvos invisíveis. Proposta a testar: quando o toque cair em uma região ambígua, abrir uma escolha com títulos, horários e linhas de 44 px. Validar com dois eventos consecutivos em 390 px antes de adotar a interação.
+## Geometria da agenda
 
-Validar também em 1280 px, com texto ampliado, navegação por teclado, foco visível, teclado virtual aberto e áreas seguras do aparelho. Confirmar série e editar a carga ao lado precisam ser gestos independentes.
+Posição e altura representam tempo. Na referência de 80 px/h, 15 min ocupam 20 px. Não inflar duração de sessões curtas para caber controles; detalhes continuam acessíveis por seleção/lista.
+
+**Proposta a testar:** toque ambíguo entre eventos adjacentes abre escolha com títulos, horários e linhas de 44 px. Validar dois eventos consecutivos em 390 px antes de adotar; conferir também 1280 px.
+
+Comportamento da [agenda](meu-dia.md) e da [execução](execucao.md) permanece em seus documentos. Pesos anteriores (700 página, 600 seção/status) são referência histórica; a receita Mira do pacote determina a implementação atual.

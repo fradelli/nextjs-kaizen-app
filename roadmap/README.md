@@ -5,9 +5,8 @@ Este arquivo é a fonte canônica do status de todos os épicos e tarefas. Não 
 ## Protocolo de leitura
 
 1. Leia `AGENTS.md`.
-2. Consulte este índice para o status global.
-3. Leia `ACTIVE.md`.
-4. Abra somente a tarefa ativa e os arquivos de entrada indicados nela.
+2. Leia `ACTIVE.md` e somente a tarefa selecionada com suas entradas.
+3. Consulte este índice apenas para planejar ou alterar status/dependências.
 
 ## Estados
 
@@ -19,7 +18,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 
 | ID  | Status      | Épico                                                                   | Resultado                                                               |
 | --- | ----------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| E00 | DONE        | [Governança do repositório](epics/E00-repository-governance/README.md)  | Repositório público governado, contexto otimizado e legado rastreável   |
+| E00 | DONE | [Governança do repositório](epics/E00-repository-governance/README.md)  | Repositório público governado, contexto otimizado e legado rastreável   |
 | E01 | DONE        | [Migração de treino](epics/E01-training-data-migration/README.md)       | Fundação de treino migrada e validada                                   |
 | E02 | DONE        | [Migração de alimentação](epics/E02-nutrition-data-migration/README.md) | Plano alimentar revisado, versionado e validado                         |
 | E03 | DONE        | [Produto e arquitetura](epics/E03-product-and-architecture/README.md)   | P0, arquitetura e guia de implementação aprovados                       |
@@ -29,7 +28,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E07 | PLANNED     | [Execução de alimentação](epics/E07-nutrition-execution/README.md)      | Consulta e registro utilizáveis de alimentação                          |
 | E08 | PLANNED     | [Publicação pessoal](epics/E08-personal-release/README.md)              | Local, preview e produção verificados                                   |
 | E09 | PLANNED     | [Evolução futura](epics/E09-future-evolution/README.md)                 | Backlog posterior ao MVP pessoal                                        |
-| E10 | DONE | [Alinhamento visual com o portfólio](epics/E10-portfolio-visual-alignment/README.md) | Kaizen integrado à linguagem visual do portfólio |
+| E10 | IN_PROGRESS | [Alinhamento visual com o portfólio](epics/E10-portfolio-visual-alignment/README.md) | Base histórica entregue; conclusão da adoção Mira em andamento |
 
 ## Todas as tarefas
 
@@ -42,6 +41,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E00-T06 | DONE        | [Adaptar governança de PR e CI/CD](epics/E00-repository-governance/T06-adapt-delivery-governance.md)                                           | E00-T04                               |
 | E00-T05 | DONE        | [Registrar proveniência do legado](epics/E00-repository-governance/T05-register-legacy-provenance.md)                                          | E00-T04, E00-T06                      |
 | E00-T07 | DONE        | [Otimizar contexto e sanear dependências pré-MVP](epics/E00-repository-governance/T07-optimize-agent-context.md)                               | E03-T05                               |
+| E00-T08 | DONE | [Consolidar documentação e contexto do Codex](epics/E00-repository-governance/T08-consolidate-documentation.md) | E00-T07 |
 | E01-T01 | DONE        | [Congelar snapshot de origem](epics/E01-training-data-migration/T01-freeze-source-snapshot.md)                                                 | E00-T05                               |
 | E01-T02 | DONE        | [Migrar dados canônicos de treino](epics/E01-training-data-migration/T02-migrate-canonical-training-data.md)                                   | E01-T01                               |
 | E01-T03 | DONE        | [Migrar histórico de treino](epics/E01-training-data-migration/T03-migrate-training-history.md)                                                | E01-T02                               |
@@ -135,6 +135,8 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E10-T07 | DONE | [Corrigir achados da revisão de rascunhos](epics/E10-portfolio-visual-alignment/T07-fix-draft-review.md) | E10-T06 |
 
 | E10-T08 | DONE | [Ajustar Hoje e entrada do aplicativo](epics/E10-portfolio-visual-alignment/T08-today-navigation.md) | E10-T07 |
+
+| E10-T09 | IN_PROGRESS | [Concluir adoção do design system Mira](epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md) | E10-T08 |
 
 ## Regra de atualização
 

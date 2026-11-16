@@ -1,5 +1,7 @@
 # Diário operacional
 
+> Índice gerado pelo processo abaixo. Estados representam sessões, não tarefas de produto. WORK-20261028-001 permanece aberto na origem; E06-T26 posterior não comprova encerramento de toda a pesquisa. Não alterar tabela gerada para simular conclusão.
+
 Índice gerado automaticamente por `track-work-tasks/scripts/worklog.py`.
 
 ## Ativas

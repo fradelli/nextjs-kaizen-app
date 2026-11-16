@@ -26,7 +26,6 @@ essas responsabilidades sem antecipar as features E06 e E07.
 - `CHANGELOG.md`
 - `roadmap/ACTIVE.md`
 - `roadmap/README.md`
-- `docs/implementation/tasks/E04-T09.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `src/app/dieta/page.tsx`
 - `src/app/treino/page.tsx`
@@ -145,3 +144,9 @@ em pastas próprias e responsabilidades auxiliares colocalizadas. Foundations
 passou a renderizar no servidor com apenas o exemplo de `Sheet` no cliente, e o
 novo gate `structure:check` protege a convenção localmente e na CI. Conteúdo,
 acessibilidade e resultado visual foram preservados; todos os gates passaram.
+
+## Consolidação documental de 12/11/2026
+
+Pasta própria, ownership de auxiliares e Server/Client estão na arquitetura/validador. Inventário da base antiga permanece na origem.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/tasks/E04-T09.md), SHA-256 `b25d690846bba03530cf7bb02a17c0412bfe43207220fef0fdc7873f7c118661`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.
