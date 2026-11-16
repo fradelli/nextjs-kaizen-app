@@ -54,8 +54,7 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
     setSelection(undefined);
     setOpen(false);
   }, []);
-  if (!isTrainingAgendaDateEditable(props.civilDate) || props.activity?.status === "completed")
-    return null;
+  if (!isTrainingAgendaDateEditable(props.civilDate)) return null;
   return (
     <>
       {props.shortcutOnly && (
