@@ -1,12 +1,9 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { Figtree } from "next/font/google";
 import styles from "./app-shell.module.css";
 import type { AppShellProps } from "./app-shell.types";
 import { AppShellNavigation } from "./components/app-shell-navigation/app-shell-navigation";
 import { KaizenLogo } from "./components/kaizen-logo/kaizen-logo";
-
-const brandFont = Figtree({ subsets: ["latin"], display: "swap" });
 
 export function AppShell({ children }: AppShellProps) {
   const t = useTranslations("shell");
@@ -25,7 +22,7 @@ export function AppShell({ children }: AppShellProps) {
             prefetch={false}
           >
             <KaizenLogo />
-            <span className={`${brandFont.className} text-2xl font-semibold leading-tight md:text-[26px]`}>
+            <span className="font-[family-name:var(--font-figtree)] text-2xl font-semibold leading-tight md:text-[26px]">
               kaizen
             </span>
           </Link>
