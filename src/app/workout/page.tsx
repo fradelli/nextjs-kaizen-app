@@ -31,10 +31,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
   if (dateResolution.status === "invalid") {
     return (
       <TrainingDayPage dateResolution={dateResolution}>
-        <InvalidTrainingDate
-          todayDate={dateResolution.todayDate}
-          reason={dateResolution.reason}
-        />
+        <InvalidTrainingDate todayDate={dateResolution.todayDate} reason={dateResolution.reason} />
       </TrainingDayPage>
     );
   }

@@ -36,7 +36,11 @@ export async function queryFixedWorkspaceTrainingDay(civilDate: string): Promise
   );
 }
 
-export async function queryFixedWorkspaceTrainingWeek(civilDate: string, dayCount = 7, alignWeek = true) {
+export async function queryFixedWorkspaceTrainingWeek(
+  civilDate: string,
+  dayCount = 7,
+  alignWeek = true,
+) {
   const environment = getServerEnvironment();
   return getTrainingWeek(
     {
@@ -60,9 +64,16 @@ export async function queryFixedWorkspaceTrainingDayPage(
   }
 }
 
-export async function queryFixedWorkspaceTrainingWeekPage(civilDate: string, dayCount = 7, alignWeek = true) {
+export async function queryFixedWorkspaceTrainingWeekPage(
+  civilDate: string,
+  dayCount = 7,
+  alignWeek = true,
+) {
   try {
-    return { status: "ready" as const, week: await queryFixedWorkspaceTrainingWeek(civilDate, dayCount, alignWeek) };
+    return {
+      status: "ready" as const,
+      week: await queryFixedWorkspaceTrainingWeek(civilDate, dayCount, alignWeek),
+    };
   } catch (error) {
     return trainingProjectionFailure(error);
   }
