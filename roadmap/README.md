@@ -102,6 +102,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E06-T24 | DONE | [Escolher aquecimento e remarcar atividades não iniciadas](epics/E06-training-execution/T24-select-preparation-and-reschedule-activities.md)   | E06-T12, E06-T19                      |
 | E06-T25 | DONE | [Modais de inclusão e edição com rascunhos locais](epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md) | E06-T24 |
 | E06-T26 | DONE | [Execução independente de séries e histórico](epics/E06-training-execution/T26-set-execution.md) | E06-T03, E09-T09 |
+| E06-T27 | READY | [Integrar agenda consolidada](epics/E06-training-execution/T27-integrate-calendar.md) | E06-T26, E10-T09 |
 | E07-T01 | PLANNED     | [Projetar dieta e execução do dia](epics/E07-nutrition-execution/T01-project-active-nutrition-plan.md)                                         | E05-T05                               |
 | E07-T02 | PLANNED     | [Criar página de dieta do dia](epics/E07-nutrition-execution/T02-create-nutrition-page.md)                                                     | E04-T04, E07-T01                      |
 | E07-T03 | PLANNED     | [Registrar escolhas, cumprimento e comentários](epics/E07-nutrition-execution/T03-record-meal-execution.md)                                    | E07-T02                               |
