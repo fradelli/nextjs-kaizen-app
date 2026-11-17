@@ -39,7 +39,11 @@ export function TrainingDayPage({
                 : t("invalidDateDescription")}
             </p>
             <div className={trainingDayPageStyles.toolbar}>
-              <TrainingDateNavigation dateResolution={dateResolution} view={view} onCountChange={onCountChange} />
+              <TrainingDateNavigation
+                dateResolution={dateResolution}
+                view={view}
+                onCountChange={onCountChange}
+              />
               {controls}
             </div>
           </div>
