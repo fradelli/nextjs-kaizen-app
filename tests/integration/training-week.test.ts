@@ -171,7 +171,9 @@ describe("consulta semanal e ocorrências projetadas no PostgreSQL", () => {
       const first = await getTrainingWeek(deps, f.input);
       const second = await getTrainingWeek(deps, f.input);
       expect(second).toEqual(first);
-      expect(first.days[0]!.activities).toHaveLength(3);
+      expect(
+        first.days.find((day) => day.civilDate === f.input.civilDate)?.activities,
+      ).toHaveLength(3);
       expect(
         await Promise.all([
           client.trainingDayActivity.count(),
