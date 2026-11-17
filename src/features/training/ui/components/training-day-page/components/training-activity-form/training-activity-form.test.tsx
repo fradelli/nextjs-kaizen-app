@@ -305,7 +305,7 @@ describe("preparation choice and rescheduling", () => {
     expect(trigger).toHaveTextContent("Aquecimento futevôlei");
     await user.click(trigger);
     expect(screen.queryByRole("option", { name: "Treino A" })).not.toBeInTheDocument();
-    await user.click(screen.getByRole("option", { name: "Outro aquecimento" }));
+    await user.click(await screen.findByRole("option", { name: "Outro aquecimento" }));
     change("Esporte", "Outro esporte");
     expect(trigger).toHaveTextContent("Outro aquecimento");
     expect(new FormData(trigger.closest("form")!).get("preparationSessionId")).toBe("other_warmup");

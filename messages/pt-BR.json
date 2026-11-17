@@ -293,8 +293,8 @@
     "startedAtLabel": "Início",
     "volumeKg": "{value, number} kg",
     "finishTraining": "Finalizar treino",
-    "addSet": "Adicionar s�rie",
-    "workSetType": "S�rie v�lida",
+    "addSet": "Adicionar série",
+    "workSetType": "Série válida",
     "warmupSetType": "Aquecimento"
   },
   "feedback": {
