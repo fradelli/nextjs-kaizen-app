@@ -1,13 +1,16 @@
 "use client";
+import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import { TrashIcon } from "@fradelli/ui/icons/Trash";
 import { useRouter } from "next/navigation";
 import { Button } from "@fradelli/ui/button";
 import { PendingButton } from "@fradelli/ui/pending-button";
 import { useId, useRef, useState } from "react";
 import { useTrainingActionFeedback } from "@/features/training/ui/hooks/use-training-action-feedback";
-import { trainingActivityDraftKey } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
+import {
+  trainingActivityDraftKey,
+  isTrainingActivityDraft,
+} from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
 import {
   announceEditorNotice,
   removeActivityEditorDraft,
@@ -24,6 +27,7 @@ export function TrainingActivityDeleteForm({
   onDeleted,
   disabled = false,
   refreshOnSaved = true,
+  triggerLabel,
   onBusyChange,
   onConfirmationChange,
 }: TrainingActivityDeleteFormProps) {
@@ -40,6 +44,18 @@ export function TrainingActivityDeleteForm({
     async (previous, data) => {
       let saved = false;
       try {
+        const stored = localStorage.getItem(trainingActivityDraftKey(civilDate, activity.id));
+        let active = false;
+        if (stored) {
+          try {
+            active = isTrainingActivityDraft(JSON.parse(stored), activity.id, civilDate);
+          } catch {
+            /* A corrupt entry does not represent an active execution. */
+          }
+        }
+        if (startedLocally || active) {
+          return { status: "invalid" as const, message: t("activeWorkoutBeforeChanges") };
+        }
         const result = await action(previous, data);
         saved = result.status === "saved";
         if (saved) {
@@ -84,12 +100,16 @@ export function TrainingActivityDeleteForm({
         ref={triggerRef}
         type="button"
         variant="ghost"
-        size={compact ? "icon" : "default"}
-        className={
-          compact ? "min-h-11 min-w-11 [&>svg]:size-5" : "min-h-11 text-status-destructive"
+        size={compact && !triggerLabel ? "icon" : "default"}
+        tone="danger"
+        disabled={
+          disabled ||
+          submission.pending ||
+          startedLocally ||
+          activity.status === "in_progress" ||
+          activity.status === "paused"
         }
-        disabled={disabled || submission.pending}
-        aria-label={t("deleteActivity")}
+        aria-label={triggerLabel ?? t("deleteActivity")}
         onClick={() => {
           try {
             setFoundLocalDraft(
@@ -101,8 +121,10 @@ export function TrainingActivityDeleteForm({
           setConfirmation(true);
         }}
       >
-        {compact ? (
-          <TrashIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
+        {triggerLabel ? (
+          triggerLabel
+        ) : compact ? (
+          <Trash2 size={20} aria-hidden="true" focusable="false" />
         ) : (
           t("deleteActivity")
         )}
@@ -124,7 +146,7 @@ export function TrainingActivityDeleteForm({
                 type="submit"
                 form={id}
                 variant="ghost"
-                className="min-h-11 text-status-destructive"
+                tone="danger"
                 pending={submission.pending}
                 pendingLabel={t("deleting")}
               >
@@ -133,7 +155,6 @@ export function TrainingActivityDeleteForm({
               <Button
                 ref={keepButton}
                 type="button"
-                className="min-h-11"
                 disabled={submission.pending}
                 onClick={() => {
                   if (!busy.current) setConfirmation(false);

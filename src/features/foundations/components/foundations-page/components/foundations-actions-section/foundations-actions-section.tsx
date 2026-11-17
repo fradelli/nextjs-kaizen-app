@@ -14,11 +14,16 @@ export function FoundationsActionsSection() {
         </p>
       </div>
       <div className={foundationsActionsSectionStyles.actions}>
-        <Button>Ação principal</Button>
+        <Button tone="general">Adicionar ou voltar</Button>
+        <Button tone="neutral">Hoje</Button>
+        <Button tone="start">Iniciar treino</Button>
+        <Button tone="navigation">Seção ativa</Button>
         <Button variant="secondary">Ação secundária</Button>
         <Button variant="outline">Ação contornada</Button>
         <Button variant="ghost">Ação discreta</Button>
-        <Button variant="destructive">Ação destrutiva</Button>
+        <Button variant="destructive" tone="danger">
+          Confirmar descarte
+        </Button>
         <Button disabled>Ação indisponível</Button>
       </div>
     </section>

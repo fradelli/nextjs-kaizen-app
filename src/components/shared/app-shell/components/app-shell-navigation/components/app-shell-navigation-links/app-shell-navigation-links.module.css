@@ -4,7 +4,7 @@
   z-index: 10;
   display: grid;
   grid-area: 1 / 1;
-  width: min(100%, 64rem);
+  width: 100%;
   margin-inline: auto;
   align-self: center;
   justify-items: end;
@@ -22,26 +22,18 @@
   pointer-events: auto;
 }
 
-.navigationLink {
-  min-width: 5rem;
-}
-
-.icon {
-  display: none;
-}
-
 @media (width < 48rem) {
   .navigation {
     position: fixed;
     z-index: 20;
-    inset-inline: var(--fd-space-6);
-    bottom: var(--kaizen-mobile-nav-bottom);
+    inset-inline: 0;
+    bottom: 0;
     min-height: var(--kaizen-mobile-nav-height);
     width: auto;
-    max-width: 24rem;
-    padding: var(--fd-space-2);
-    border: 1px solid var(--fd-color-border);
-    border-radius: var(--fd-radius-xl);
+    padding: var(--fd-space-2) var(--fd-space-4)
+      calc(var(--fd-space-2) + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--fd-color-border);
+    background: var(--fd-color-background);
     justify-items: stretch;
     pointer-events: auto;
   }
@@ -50,23 +42,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .navigationLink {
-    min-width: 3rem;
-    min-height: 2.75rem;
-  }
   .navigationList > li {
     display: flex;
     justify-content: center;
-  }
-  .label {
-    display: none;
-  }
-  .icon {
-    display: flex;
-  }
-  .icon > svg {
-    width: 1.5rem;
-    height: 1.5rem;
   }
 }
 

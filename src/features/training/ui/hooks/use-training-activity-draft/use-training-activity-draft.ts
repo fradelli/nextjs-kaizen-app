@@ -2,9 +2,11 @@
 import { useTranslations } from "next-intl";
 
 import { useEffect, useRef, useState } from "react";
+import { reconcileCompletedTrainingDraft } from "./reconcile-completed-training-draft";
 import { isTrainingExecutionDateEditable } from "@/features/training/domain/training-edit-window";
 
 import type {
+  TrainingDraftReconciliation,
   TrainingActivityExecutionDraft,
   TrainingExerciseExecutionDraft,
   UseTrainingActivityDraftInput,
@@ -16,22 +18,34 @@ import {
   trainingActivityDraftKey,
 } from "./use-training-activity-draft.utils";
 
-const DRAFT_EVENT = "kaizen:training-draft-change";
+import {
+  TRAINING_ACTIVITY_DRAFT_EVENT,
+  TRAINING_ACTIVITY_DRAFT_PREFIX,
+} from "./use-training-activity-draft.constants";
 
 export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingActivityDraftInput) {
   const t = useTranslations("training");
 
   const key = trainingActivityDraftKey(civilDate, activity.id);
+  const terminal = activity.status === "completed" || activity.status === "skipped";
   const [draft, setDraft] = useState<TrainingActivityExecutionDraft | null>(null);
   const currentDraft = useRef<TrainingActivityExecutionDraft | null>(null);
   const [ready, setReady] = useState(false);
   const [storageError, setStorageError] = useState(false);
+  const [reconciliation, setReconciliation] = useState<TrainingDraftReconciliation>("none");
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
+      if (activity.status === "completed" || activity.status === "skipped") {
+        setReconciliation(reconcileCompletedTrainingDraft(activity, civilDate));
+        currentDraft.current = null;
+        setDraft(null);
+        setReady(true);
+        return;
+      }
       try {
         const stored = window.localStorage.getItem(key);
-        if (stored && activity.status !== "completed" && activity.status !== "skipped") {
+        if (stored) {
           const parsed: unknown = JSON.parse(stored);
           if (
             isTrainingActivityDraft(parsed, activity.id, civilDate) &&
@@ -43,7 +57,7 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
             currentDraft.current = resumePersistedTrainingActivityDraft(activity, civilDate);
             setDraft(currentDraft.current);
           }
-        } else if (activity.status !== "completed" && activity.status !== "skipped") {
+        } else {
           currentDraft.current = resumePersistedTrainingActivityDraft(activity, civilDate);
           setDraft(currentDraft.current);
         }
@@ -58,17 +72,24 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
 
   useEffect(() => {
     function updateFromAnotherCard(event: Event) {
-      const detail = (event as CustomEvent<{ key: string; draft: TrainingActivityExecutionDraft }>)
-        .detail;
-      if (detail?.key === key) {
+      const detail = (
+        event as CustomEvent<{ key: string; draft: TrainingActivityExecutionDraft | null }>
+      ).detail;
+      if (
+        detail?.key === key &&
+        (detail.draft === null ||
+          (activity.status !== "completed" && activity.status !== "skipped"))
+      ) {
         currentDraft.current = detail.draft;
         setDraft(detail.draft);
       }
     }
     function updateFromAnotherTab(event: StorageEvent) {
-      if (event.key !== key) return;
+      if (event.key !== key && event.key !== null) return;
+      if (activity.status === "completed" || activity.status === "skipped") return;
       try {
-        const parsed: unknown = event.newValue ? JSON.parse(event.newValue) : null;
+        const raw = event.key === null ? window.localStorage.getItem(key) : event.newValue;
+        const parsed: unknown = raw ? JSON.parse(raw) : null;
         if (
           parsed === null ||
           (isTrainingActivityDraft(parsed, activity.id, civilDate) &&
@@ -82,12 +103,12 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
       }
     }
     window.addEventListener("storage", updateFromAnotherTab);
-    window.addEventListener(DRAFT_EVENT, updateFromAnotherCard);
+    window.addEventListener(TRAINING_ACTIVITY_DRAFT_EVENT, updateFromAnotherCard);
     return () => {
-      window.removeEventListener(DRAFT_EVENT, updateFromAnotherCard);
+      window.removeEventListener(TRAINING_ACTIVITY_DRAFT_EVENT, updateFromAnotherCard);
       window.removeEventListener("storage", updateFromAnotherTab);
     };
-  }, [key, activity.id, activity.revision, civilDate]);
+  }, [key, activity.id, activity.revision, activity.status, civilDate]);
 
   useEffect(() => {
     function protectUnstoredExecution(event: BeforeUnloadEvent) {
@@ -101,7 +122,7 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
     try {
       for (let index = 0; index < window.localStorage.length; index++) {
         const otherKey = window.localStorage.key(index);
-        if (!otherKey?.startsWith("kaizen:training-draft:v1:") || otherKey === key) continue;
+        if (!otherKey?.startsWith(TRAINING_ACTIVITY_DRAFT_PREFIX) || otherKey === key) continue;
         const raw = window.localStorage.getItem(otherKey);
         if (!raw) continue;
         let other: unknown;
@@ -142,7 +163,9 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
         };
         window.localStorage.setItem(otherKey, JSON.stringify(paused));
         window.dispatchEvent(
-          new CustomEvent(DRAFT_EVENT, { detail: { key: otherKey, draft: paused } }),
+          new CustomEvent(TRAINING_ACTIVITY_DRAFT_EVENT, {
+            detail: { key: otherKey, draft: paused },
+          }),
         );
       }
       return true;
@@ -157,6 +180,9 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
     try {
       if (next) window.localStorage.setItem(key, JSON.stringify(next));
       else window.localStorage.removeItem(key);
+      window.dispatchEvent(
+        new CustomEvent(TRAINING_ACTIVITY_DRAFT_EVENT, { detail: { key, draft: next } }),
+      );
       setStorageError(false);
       return true;
     } catch {
@@ -167,7 +193,7 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
 
   function pauseAt(completionRequestedAt: string) {
     const current = currentDraft.current;
-    if (!current || !isTrainingExecutionDateEditable(civilDate)) return null;
+    if (terminal || !current || !isTrainingExecutionDateEditable(civilDate)) return null;
     const paused: TrainingActivityExecutionDraft =
       current.status === "paused"
         ? current
@@ -188,8 +214,9 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
     draft,
     ready,
     storageError,
+    reconciliation,
     start() {
-      if (!ready || !isTrainingExecutionDateEditable(civilDate)) return false;
+      if (terminal || !ready || !isTrainingExecutionDateEditable(civilDate)) return false;
       if (currentDraft.current) return true;
       if (!pauseOtherActivity()) return false;
       const next = startTrainingActivityDraft(activity, civilDate, new Date().toISOString());
@@ -211,7 +238,8 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
     },
     resume() {
       const current = currentDraft.current;
-      if (!isTrainingExecutionDateEditable(civilDate) || current?.status !== "paused") return;
+      if (terminal || !isTrainingExecutionDateEditable(civilDate) || current?.status !== "paused")
+        return;
       if (!pauseOtherActivity()) return;
       publishDraft({
         ...current,
@@ -221,7 +249,7 @@ export function useTrainingActivityDraft({ activity, civilDate }: UseTrainingAct
     },
     updateExercise(exerciseKey: string, exercise: TrainingExerciseExecutionDraft) {
       const current = currentDraft.current;
-      if (!isTrainingExecutionDateEditable(civilDate) || !current) return;
+      if (terminal || !isTrainingExecutionDateEditable(civilDate) || !current) return;
       const exercises = { ...current.exercises };
       if (exercise.rest && exercise.rest !== exercises[exerciseKey]?.rest) {
         for (const key of Object.keys(exercises))

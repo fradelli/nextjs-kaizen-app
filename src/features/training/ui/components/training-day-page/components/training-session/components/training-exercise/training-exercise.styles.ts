@@ -1,25 +1,14 @@
 export const trainingExerciseStyles = {
-  root: "flex flex-col gap-3 border-b border-border py-4 sm:px-4",
   status: {
-    pending: "border-l-status-info-border",
+    pending: "border-l-[var(--fd-color-category-purple-solid)]",
     completed: "border-l-status-success-border",
     partial: "border-l-status-warning-border",
     empty: "border-l-status-destructive-border",
   },
   header: "flex items-start justify-between gap-2",
   heading: "min-w-0",
-  title: "kaizen-text-title font-semibold text-foreground",
   prescription: "text-sm font-medium text-foreground",
-  metadata: "flex flex-wrap gap-x-2 gap-y-1 kaizen-text-caption text-muted-foreground",
+  metadata: "flex flex-wrap gap-x-2 gap-y-1 text-xs text-muted-foreground",
   screenReaderOnly: "sr-only",
-  disclosure: "rounded-xl border border-border bg-surface-elevated",
-  disclosureSummary:
-    "fd-focus-managed cursor-pointer rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground",
-  details: "grid gap-3 border-t border-border px-4 py-3 sm:grid-cols-2",
-  detailTitle: "mb-1 text-sm font-semibold text-foreground",
-  list: "list-disc space-y-1 pl-5 text-sm text-muted-foreground",
   notes: "whitespace-pre-wrap text-sm text-muted-foreground",
-  alert: "grid-cols-1 gap-y-1 sm:col-span-2",
-  alertTitle: "col-start-1",
-  alertDescription: "col-start-1",
 } as const;

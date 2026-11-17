@@ -1,0 +1,28 @@
+.bar {
+  position: fixed;
+  z-index: 25;
+  bottom: max(var(--fd-space-4), env(safe-area-inset-bottom, 0px));
+  right: max(var(--fd-space-6), env(safe-area-inset-right, 0px));
+  width: min(25rem, calc(100% - 2rem));
+}
+.resume {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  text-decoration: none;
+}
+.name {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (width < 48rem) {
+  .bar {
+    bottom: calc(var(--kaizen-mobile-nav-height) + var(--fd-space-2));
+    right: max(var(--fd-space-4), env(safe-area-inset-right, 0px));
+  }
+}

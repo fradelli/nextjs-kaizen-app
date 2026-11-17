@@ -5,6 +5,8 @@ import type { AppShellProps } from "./app-shell.types";
 import { AppShellNavigation } from "./components/app-shell-navigation/app-shell-navigation";
 import { KaizenLogo } from "./components/kaizen-logo/kaizen-logo";
 
+import { ActiveTrainingBar } from "@/features/training/ui/components/active-training-bar/active-training-bar";
+
 export function AppShell({ children }: AppShellProps) {
   const t = useTranslations("shell");
   return (
@@ -34,6 +36,7 @@ export function AppShell({ children }: AppShellProps) {
       <main id="conteudo-principal" className={styles.content} tabIndex={-1}>
         {children}
       </main>
+      <ActiveTrainingBar />
     </div>
   );
 }

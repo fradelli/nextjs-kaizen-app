@@ -12,6 +12,13 @@
 
 | ID | Status | Início | Conclusão | Jira | Horas confirmadas | Grupo | Tarefa |
 |---|---|---|---|---|---|---|---|
+| [WORK-20261111-005](tasks/2026/11/WORK-20261111-005-posicionar-sessoes-de-menos-de-um-minuto-na-agenda.md) | concluida | 2026-11-11 | 2026-11-11 | — | não informadas | — | Posicionar sessões de menos de um minuto na agenda |
+| [WORK-20261111-004](tasks/2026/11/WORK-20261111-004-validar-finalizacao-no-navegador-com-resposta-perdida.md) | concluida | 2026-11-11 | 2026-11-11 | — | não informadas | — | Validar finalização no navegador com resposta perdida |
+| [WORK-20261111-003](tasks/2026/11/WORK-20261111-003-reconciliar-rascunho-local-com-execucao-ja-finalizada.md) | concluida | 2026-11-11 | 2026-11-11 | — | não informadas | — | Reconciliar rascunho local com execução já finalizada |
+| [WORK-20261111-002](tasks/2026/11/WORK-20261111-002-abrir-treino-em-rota-sobreposta-e-recuperar-finalizacao.md) | concluida | 2026-11-11 | 2026-11-11 | — | não informadas | — | Abrir treino em rota sobreposta e recuperar finalização com resposta perdida |
+| [WORK-20261111-001](tasks/2026/11/WORK-20261111-001-integrar-retomada-global-e-menu-de-atividades-do-meu-dia.md) | concluida | 2026-11-11 | 2026-11-11 | — | não informadas | — | Integrar retomada global e menu de atividades do Meu Dia |
+| [WORK-20261110-002](tasks/2026/11/WORK-20261110-002-integrar-grade-responsiva-do-meu-dia-aos-dados-semanais.md) | concluida | 2026-11-10 | 2026-11-10 | — | não informadas | — | Integrar grade responsiva do Meu Dia aos dados semanais |
+| [WORK-20261110-001](tasks/2026/11/WORK-20261110-001-concluir-consulta-semanal-sem-escrita-e-validar-persiste.md) | concluida | 2026-11-10 | 2026-11-10 | — | não informadas | — | Concluir consulta semanal sem escrita e validar persistência de ocorrências |
 | [WORK-20261029-008](tasks/2026/10/WORK-20261029-008-revisar-e-publicar-pr-da-execucao-independente-de-series.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Revisar e publicar PR da execucao independente de series |
 | [WORK-20261029-007](tasks/2026/10/WORK-20261029-007-compactar-descanso-flutuante-e-adicionar-favicon-kaizen.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Compactar descanso flutuante e adicionar favicon Kaizen |
 | [WORK-20261029-006](tasks/2026/10/WORK-20261029-006-revisar-qualidade-da-execucao-de-treino-e-criar-skill-gl.md) | concluida | 2026-10-29 | 2026-10-29 | — | não informadas | — | Revisar qualidade da execucao de treino e criar skill global |

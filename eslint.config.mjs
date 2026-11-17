@@ -26,13 +26,12 @@ export default defineConfig([
               group: [
                 "@phosphor-icons/*",
                 "@phosphor-icons/**",
-                "lucide-react",
-                "lucide-react/**",
                 "react-icons",
                 "react-icons/**",
                 "@radix-ui/react-icons",
               ],
-              message: "Use os ícones públicos de @fradelli/ui/icons/<Nome>.",
+              message:
+                "Use Lucide conforme o preset Mira; os exports legados do pacote ainda usam Phosphor.",
             },
           ],
         },

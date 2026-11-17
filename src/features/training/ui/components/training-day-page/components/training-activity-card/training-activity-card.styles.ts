@@ -1,11 +1,11 @@
 export const trainingActivityCardStyles = {
-  root: "fd-card fd-surface-glass grid gap-4 rounded-2xl border border-category-yellow-border/50 p-6",
+  root: "grid gap-4",
   completed: "border-status-info-border/60",
   paused: "border-muted-foreground/50",
   header: "grid gap-3",
   top: "flex flex-col items-stretch gap-3 sm:flex-row sm:items-start sm:justify-between",
   title: "fd-text-card text-foreground",
-  headingToggle: "h-auto justify-start p-0 text-left whitespace-normal hover:bg-transparent",
+  headingToggle: "justify-start text-left",
   metadata: "fd-text-interface text-muted-foreground",
   tools: "flex max-w-full shrink-0 flex-wrap items-center justify-end gap-1 self-end sm:self-start",
   body: "grid gap-4",

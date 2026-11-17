@@ -18,7 +18,7 @@ export function hasUnfinishedTrainingExercises(
         !recorded?.completed ||
         (session.role === "main" &&
           recorded.sets.some(
-            (set) => set.confirmed === false || !isTrainingSetPerformed(set, exercise.dose),
+            (set) => !isTrainingSetPerformed(set, exercise.dose, exercise.loadApplicable),
           ))
       );
     }),

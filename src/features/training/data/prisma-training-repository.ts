@@ -1,5 +1,8 @@
 import { hasPerformedTrainingSetMeasures } from "../domain/training-set-execution.rules";
-import { ensureScheduledTrainingDayInTransaction } from "./ensure-scheduled-training-day";
+import {
+  ensureScheduledTrainingDayInTransaction,
+  readScheduledTrainingDay,
+} from "./ensure-scheduled-training-day";
 import {
   activityScheduleInclude,
   hasTrainingActivityProgress,
@@ -60,7 +63,10 @@ type TrainingDayActivityRow = Prisma.TrainingDayActivityGetPayload<{
 }>;
 
 export class PrismaTrainingRepository implements TrainingRepository {
-  constructor(private readonly client: PrismaClient) {}
+  constructor(
+    private readonly client: PrismaClient,
+    private readonly environment: TrainingEnvironment = "local",
+  ) {}
 
   async ensureScheduledTrainingDay(input: FindTrainingDayInput): Promise<void> {
     await ensureScheduledTrainingDay(this.client, input);
@@ -76,6 +82,7 @@ export class PrismaTrainingRepository implements TrainingRepository {
     return this.client.$transaction(
       async (transaction) => {
         const activePlan = await findActiveTrainingPlan(transaction, input.environment);
+        const schedule = await readScheduledTrainingDay(transaction, input);
         const assignment = await transaction.dailyTrainingAssignment.findUnique({
           where: {
             workspaceId_civilDate: {
@@ -85,7 +92,7 @@ export class PrismaTrainingRepository implements TrainingRepository {
           },
           include: trainingAssignmentInclude,
         });
-        const activities = await transaction.trainingDayActivity.findMany({
+        const persistedActivities = await transaction.trainingDayActivity.findMany({
           where: {
             workspaceId: input.workspaceId,
             civilDate: toCivilDateDatabaseValue(input.civilDate),
@@ -122,6 +129,12 @@ export class PrismaTrainingRepository implements TrainingRepository {
           },
         });
 
+        const activities = [...persistedActivities, ...projectScheduledActivities(schedule)].sort(
+          (left, right) =>
+            (left.plannedStartMinute ?? 1440) - (right.plannedStartMinute ?? 1440) ||
+            left.createdAt.getTime() - right.createdAt.getTime() ||
+            left.id.localeCompare(right.id),
+        );
         if (
           assignment &&
           (assignment.kind === "training" || assignment.kind === "mobility") &&
@@ -216,6 +229,8 @@ export class PrismaTrainingRepository implements TrainingRepository {
         );
         return Object.freeze({
           activePlan,
+          plannedRestReason:
+            schedule?.assignment.kind === "rest" ? schedule.assignment.reason : null,
           assignment: assignment ? mapPrismaTrainingAssignment(assignment) : null,
           activities: Object.freeze(
             activities.map((activity) => ({
@@ -231,7 +246,11 @@ export class PrismaTrainingRepository implements TrainingRepository {
           ),
         });
       },
-      { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+        maxWait: 10_000,
+        timeout: 15_000,
+      },
     );
   }
 
@@ -239,7 +258,7 @@ export class PrismaTrainingRepository implements TrainingRepository {
     return executePrismaMutation(async () => {
       const activityData = validateActivitySchedule(input);
       if ("status" in activityData) return activityData;
-      return this.client.$transaction(async (transaction) => {
+      return runTrainingMutationTransaction(this.client, async (transaction) => {
         const definition = await resolveActivityDefinition(transaction, input);
         if ("status" in definition) return definition;
         const activity = await transaction.trainingDayActivity.create({
@@ -283,8 +302,10 @@ export class PrismaTrainingRepository implements TrainingRepository {
     return executePrismaMutation(async () => {
       const activityData = validateActivitySchedule(input);
       if ("status" in activityData) return activityData;
-      return this.client.$transaction(
+      return runTrainingMutationTransaction(
+        this.client,
         async (transaction) => {
+          await materializeProjectedActivity(transaction, input, this.environment);
           const existing = await transaction.trainingDayActivity.findFirst({
             where: { ...activityMutationWhere(input), role: "primary" },
             include: activityScheduleInclude,
@@ -420,14 +441,16 @@ export class PrismaTrainingRepository implements TrainingRepository {
     input: ControlTrainingActivityCommand,
   ): Promise<TrainingMutationResult> {
     return executePrismaMutation(() =>
-      this.client.$transaction(async (transaction) => {
+      runTrainingMutationTransaction(this.client, async (transaction) => {
         if (input.action === "record_completed") {
+          await materializeProjectedActivity(transaction, input, this.environment);
           return recordCompletedExternalActivity(transaction, input);
         }
         if (input.action === "complete") {
           if (!input.executionDraft) {
             return invalid("A finalização exige o rascunho completo da atividade.");
           }
+          await materializeProjectedActivity(transaction, input, this.environment);
           return completeTrainingActivityFromDraft(
             transaction,
             input,
@@ -469,7 +492,7 @@ export class PrismaTrainingRepository implements TrainingRepository {
     input: SaveTrainingActivityExerciseCommand,
   ): Promise<TrainingMutationResult> {
     return executePrismaMutation(() =>
-      this.client.$transaction(async (transaction) => {
+      runTrainingMutationTransaction(this.client, async (transaction) => {
         const resolved = await resolveActivityPrescription(transaction, input);
         if ("status" in resolved) return resolved;
         const comment = normalizeComment(input.comment);
@@ -489,7 +512,17 @@ export class PrismaTrainingRepository implements TrainingRepository {
             resolved.prescription.exercise.loadApplicable,
           );
           if ("status" in loadKg) return loadKg;
-          normalizedSets.push({ setInput, loadKg: loadKg.value });
+          normalizedSets.push({
+            setInput: {
+              ...setInput,
+              confirmed: hasPerformedTrainingSetMeasures(
+                setInput,
+                parseNormalizedTrainingDose(resolved.prescription.normalizedDose),
+                resolved.prescription.exercise.loadApplicable,
+              ),
+            },
+            loadKg: loadKg.value,
+          });
         }
         const existing = await transaction.trainingActivityExerciseExecution.findUnique({
           where: {
@@ -562,7 +595,8 @@ export class PrismaTrainingRepository implements TrainingRepository {
     input: DeleteTrainingActivityCommand,
   ): Promise<TrainingMutationResult> {
     return executePrismaMutation(async () => {
-      return this.client.$transaction(async (transaction) => {
+      return runTrainingMutationTransaction(this.client, async (transaction) => {
+        await materializeProjectedActivity(transaction, input, this.environment);
         const activity = await transaction.trainingDayActivity.findFirst({
           where: activityMutationWhere(input),
           select: { status: true },
@@ -570,6 +604,9 @@ export class PrismaTrainingRepository implements TrainingRepository {
         if (!activity) return conflictOrMissingActivity(transaction, input);
         if (activity.status === "completed") {
           return invalid("Uma atividade concluída não pode ser excluída.");
+        }
+        if (activity.status === "in_progress" || activity.status === "paused") {
+          return invalid("Finalize a execução antes de remover esta atividade.");
         }
         const result = await transaction.trainingDayActivity.updateMany({
           where: activityMutationWhere(input),
@@ -661,14 +698,21 @@ async function completeTrainingActivityFromDraft(
     input.activityId,
   );
   if (!activity) return notFound("A atividade não foi encontrada.");
-  if (activity.revision !== input.expectedRevision) return conflict();
+  const replay =
+    activity.status === "completed" &&
+    activity.revision === input.expectedRevision + 1 &&
+    Boolean(input.completionRequestedAt) &&
+    draft.status === "paused" &&
+    activity.startedAt?.getTime() === Date.parse(draft.startedAt);
+  if (!replay && activity.revision !== input.expectedRevision) return conflict();
   if (supportsRetrospectiveTrainingRecord(activity.type) && activity.status === "scheduled") {
     return invalid("Use o registro retrospectivo para esta atividade externa.");
   }
   if (
     activity.status !== "scheduled" &&
     activity.status !== "in_progress" &&
-    activity.status !== "paused"
+    activity.status !== "paused" &&
+    !replay
   )
     return invalid("Esta atividade não pode ser finalizada novamente.");
   const persistedIntervals =
@@ -789,7 +833,7 @@ async function completeTrainingActivityFromDraft(
         return invalid("Revise os valores das séries.");
       sets.push({
         kind: set.kind ?? "work",
-        confirmed: set.confirmed ?? null,
+        confirmed: hasPerformedTrainingSetMeasures(set, dose, prescription.exercise.loadApplicable),
         setNumber: set.setNumber,
         value,
         leftValue: dose.scope === "each_side" ? leftValue : set.leftValue === "" ? null : leftValue,
@@ -825,6 +869,57 @@ async function completeTrainingActivityFromDraft(
       normalizedSets.push({ ...set, loadKg: load.value });
     }
     exercisesToSave.push({ prescription, session, role, exercise, sets: normalizedSets });
+  }
+
+  if (replay) {
+    if (
+      persistedIntervals.length !== intervals.length ||
+      activity.actualEndMinute !== saoPauloClockMinute(completionInstant) ||
+      activity.comment !== normalizeComment(input.comment) ||
+      activity.intensity !== (activity.type === "mobility" ? null : input.intensity) ||
+      activity.energy !== (activity.type === "mobility" ? null : input.energy)
+    )
+      return conflict();
+    const recorded = await transaction.trainingActivityExerciseExecution.findMany({
+      where: { workspaceId: input.workspaceId, activityId: activity.id },
+      include: { sets: true },
+    });
+    if (recorded.length !== exercisesToSave.length) return conflict();
+    for (const item of exercisesToSave) {
+      const previous = recorded.find(
+        (entry) =>
+          entry.exerciseDefinitionId === item.prescription.id &&
+          entry.sessionDefinitionId === item.session.id &&
+          entry.role === item.role,
+      );
+      if (
+        !previous ||
+        Boolean(previous.completedAt) !== item.exercise.completed ||
+        previous.comment !== normalizeComment(item.exercise.comment) ||
+        previous.sets.length !== item.sets.length
+      )
+        return conflict();
+      const sets = new Map(previous.sets.map((set) => [set.setNumber, set]));
+      for (const set of item.sets) {
+        const stored = sets.get(set.setNumber);
+        if (
+          !stored ||
+          stored.kind !== set.kind ||
+          stored.confirmed !== set.confirmed ||
+          stored.value !== set.value ||
+          stored.leftValue !== set.leftValue ||
+          stored.rightValue !== set.rightValue ||
+          (set.loadKg === null
+            ? stored.loadKg !== null
+            : stored.loadKg?.equals(set.loadKg) !== true) ||
+          JSON.stringify(
+            Object.entries(parseDirectionValues(stored.directionValues) ?? {}).sort(),
+          ) !== JSON.stringify(Object.entries(set.directionValues ?? {}).sort())
+        )
+          return conflict();
+      }
+    }
+    return saved(activity.revision);
   }
 
   for (const [index, persisted] of persistedIntervals.entries()) {
@@ -1042,6 +1137,70 @@ function parseClockMinute(value: string): number | null {
   return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59 ? hour * 60 + minute : null;
 }
 
+async function materializeProjectedActivity(
+  transaction: Prisma.TransactionClient,
+  input: { workspaceId: string; civilDate: CivilDate; activityId: string },
+  environment: TrainingEnvironment,
+) {
+  const existing = await transaction.trainingDayActivity.findFirst({
+    where: { id: input.activityId, workspaceId: input.workspaceId },
+    select: { id: true },
+  });
+  if (existing) return;
+  const query = { ...input, environment };
+  const schedule = await readScheduledTrainingDay(transaction, query);
+  const activity = schedule?.activities.find((item) => item.id === input.activityId);
+  if (!activity) return;
+  await transaction.trainingDayActivity.create({ data: activity });
+}
+
+function projectScheduledActivities(
+  schedule: Awaited<ReturnType<typeof readScheduledTrainingDay>>,
+): TrainingDayActivityRow[] {
+  if (!schedule) return [];
+  return schedule.activities.map((activity) => ({
+    id: activity.id,
+    workspaceId: activity.workspaceId,
+    civilDate: new Date(activity.civilDate),
+    type: activity.type,
+    source: "plan",
+    role: "primary",
+    status: "scheduled",
+    name: activity.name,
+    sport: activity.sport ?? null,
+    plannedStartMinute: activity.plannedStartMinute ?? null,
+    plannedEndMinute: activity.plannedEndMinute ?? null,
+    actualStartMinute: null,
+    actualEndMinute: null,
+    startedAt: null,
+    completedAt: null,
+    intensity: null,
+    energy: null,
+    comment: null,
+    revision: 0,
+    deletedAt: null,
+    createdAt: new Date(0),
+    updatedAt: new Date(0),
+    parentActivityId: null,
+    assignmentId: null,
+    trainingPlanVersionId: schedule.plan.id,
+    sessionDefinitionId: activity.sessionDefinitionId ?? null,
+    preparationSessionDefinitionId: activity.preparationSessionDefinitionId ?? null,
+    plan: schedule.plan,
+    session:
+      schedule.plan.trainingSessionDefinition_plan.find(
+        (session) => session.id === activity.sessionDefinitionId,
+      ) ?? null,
+    preparationSession:
+      schedule.plan.trainingSessionDefinition_plan.find(
+        (session) => session.id === activity.preparationSessionDefinitionId,
+      ) ?? null,
+    intervals: [],
+    exerciseExecutions: [],
+    preparations: [],
+  }));
+}
+
 function mapTrainingActivity(activity: TrainingDayActivityRow): TrainingActivitySnapshot {
   return Object.freeze({
     id: activity.id,
@@ -1197,6 +1356,9 @@ function validateActivitySchedule(
     plannedEndMinute <= plannedStartMinute
   ) {
     return invalid("O horário planejado final deve ser posterior ao inicial.", "plannedEndTime");
+  }
+  if (plannedStartMinute % 15 || plannedEndMinute % 15) {
+    return invalid("Use intervalos de 15 minutos.", "plannedEndTime");
   }
   return { type: input.type, name, sport, plannedStartMinute, plannedEndMinute };
 }
@@ -1416,12 +1578,34 @@ function notFound(
   return { status: "not_found", message };
 }
 
+class TrainingMutationRollback extends Error {
+  constructor(readonly result: TrainingMutationResult) {
+    super("A operação de treino precisa ser revertida.");
+  }
+}
+
+function runTrainingMutationTransaction(
+  client: PrismaClient,
+  mutation: (transaction: Prisma.TransactionClient) => Promise<TrainingMutationResult>,
+  options?: { isolationLevel: Prisma.TransactionIsolationLevel },
+) {
+  return client.$transaction(async (transaction) => {
+    return requireSavedMutation(await mutation(transaction));
+  }, options);
+}
+
+function requireSavedMutation(result: TrainingMutationResult): TrainingMutationResult {
+  if (result.status !== "saved") throw new TrainingMutationRollback(result);
+  return result;
+}
+
 async function executePrismaMutation(
   mutation: () => Promise<TrainingMutationResult>,
 ): Promise<TrainingMutationResult> {
   try {
     return await mutation();
   } catch (error) {
+    if (error instanceof TrainingMutationRollback) return error.result;
     const code = readErrorCode(error);
     if (code === "P2002" || code === "P2034") return conflict();
     if (code === "P2039" && readDatabaseErrorCode(error) === "23514") {

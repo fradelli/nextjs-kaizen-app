@@ -1,5 +1,65 @@
 # Changelog
 
+## 11/11/2026 — Cores de ações
+
+- Padrão compartilhado por finalidade: menta para iniciar, lilás para adicionar e amarelo para a seleção de hoje.
+- Estados de interação e indisponibilidade derivados das mesmas cores.
+
+
+## 11/11/2026 — Agenda e navegação
+
+- Rotas principais em inglês, com redirecionamento das URLs anteriores e preservação da data.
+- Navegação somente por ícones acessíveis, com calendário para Meu Dia.
+- Data acima dos controles compactos de navegação e título de Meu Dia visualmente oculto.
+- Grade visual com linhas e rótulos de hora em hora. Novos horários planejados em blocos de 15 minutos. Estimativas são arredondadas para cima ao reservar o intervalo.
+- Validação de horários no formulário e no servidor. Duração real continua registrada com precisão.
+- 57 testes de formulário, cálculo de horários, navegação e grade aprovados.
+
+
+## 2026-11-11 — sessões de segundos na agenda
+
+- Sessões concluídas preservam a precisão dos intervalos registrados na grade, inclusive quando início e fim caem no mesmo minuto.
+- Marcadores compactos e lista “Menos de 1 min” permitem localizar e abrir sessões breves sem aumentar sua duração real.
+- Horários corrigidos, recuperação de rascunhos e cálculo das sobreposições permanecem preservados.
+
+## 2026-11-11 — avaliação em rede local
+
+- Corrigido bloqueio do formulário de avaliação em acesso HTTP por IP, quando o navegador não disponibiliza `crypto.randomUUID`.
+- Identificadores dos rascunhos de avaliação e edição usam aleatoriedade criptográfica compatível com esse acesso, mantendo o formato UUID e a identificação de escritas concorrentes.
+
+## 2026-11-11 — recuperação de cópias locais após conclusão
+
+- Agenda e detalhe reconhecem cópias locais que correspondem à execução já concluída, limpando a barra de retomada sem gravar no banco.
+- Divergências e falta da avaliação da aba impedem a limpeza automática; o detalhe orienta a conferir o resultado antes do descarte.
+- Estado concluído bloqueia retomada local por eventos antigos e início acidental de outro cronômetro para a mesma ocorrência.
+
+## 2026-11-11 — treino sobre a agenda e reenvio da finalização
+
+- Rota paralela abre o executor sobre a página de origem, com retorno pelo histórico e acesso direto pela URL.
+- Descanso e diálogos internos compartilham o contexto da sobreposição e liberam a rolagem ao fechar.
+- Repetição idêntica de uma finalização reconhece o resultado salvo; dados divergentes continuam protegidos por conflito.
+- Falha na resposta preserva o snapshot e permite reenviar a finalização com o encerramento original.
+
+## 2026-11-11 — retomada global e menu de atividades
+
+- Card de retomada recupera o treino local ao navegar entre páginas e confirma o descarte da execução.
+- Menu de três pontos reúne mudança de dia ou horário e exclusão da ocorrência, com bloqueio durante execução.
+- Executor dedicado concentra controles de execução; agenda recupera a posição de rolagem por data.
+- Testes cobrem sincronização, falhas de armazenamento, descarte e preservação de uma execução pausada no PostgreSQL.
+
+## 2026-11-10 — grade responsiva do Meu Dia
+
+- Grade de 24 horas conectada às atividades reais, com um dia no celular e os dias restantes da semana no desktop.
+- Posicionamento proporcional, sobreposições, itens sem intervalo e lista acessível pelo cabeçalho do dia.
+- Tema grafite, categorias pastel e relógio local com marcador e contraste por passagem do tempo.
+
+## 2026-11-10 — consulta semanal do Meu Dia
+
+- Consulta de uma data até sábado com programação calculada sem persistência pela visita.
+- Ocorrências previstas usam identidade comum à consulta e à gravação; exclusões permanecem ocultas.
+- Mutações rejeitadas revertem efeitos parciais. Consulta futura cobre a semana completa.
+- Validação com 24 testes unitários, 27 testes de PostgreSQL descartável, lint, tipos e formatação.
+
 ## 2026-10-29 — execução independente de séries
 
 - Confirmação local por série, aquecimentos e séries adicionais, com envio ao finalizar o treino.

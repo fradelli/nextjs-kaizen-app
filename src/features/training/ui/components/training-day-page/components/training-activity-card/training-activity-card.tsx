@@ -1,14 +1,20 @@
 "use client";
+
+import { ChevronUp, ChevronDown, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { WorkoutTotals } from "./components/workout-totals/workout-totals";
+import styles from "./training-activity-card.module.css";
 import { TrainingRestTimer } from "../training-rest-timer/training-rest-timer";
 
 import { useTranslations } from "next-intl";
 
-import { CaretUpIcon } from "@fradelli/ui/icons/CaretUp";
-import { CaretDownIcon } from "@fradelli/ui/icons/CaretDown";
-
 import { Badge } from "@fradelli/ui/badge";
 import { Button } from "@fradelli/ui/button";
-import { useState } from "react";
+import { Card, CardDescription, CardHeader, CardTitle } from "@fradelli/ui/card";
+import { Collapsible, CollapsibleContent } from "@fradelli/ui/collapsible";
+import type { TrainingDaySessionDto } from "@/features/training/application/training-dto";
+import { useContext, useState } from "react";
+import { TrainingWorkoutOverlayContext } from "../../../training-workout-overlay/training-workout-overlay.context";
 import {
   isTrainingAgendaDateEditable,
   isTrainingExecutionDateEditable,
@@ -33,13 +39,37 @@ const statusLabels = {
   skipped: "skipped",
 } as const;
 
-export function TrainingActivityCard({
+export function TrainingActivityCard({ activity, civilDate, ...props }: TrainingActivityCardProps) {
+  const t = useTranslations("training");
+  if (activity.structured || activity.preparationSession) {
+    return (
+      <Card role="article" surface="solid" size="sm">
+        <CardHeader>
+          <Link
+            href={`/workout/activity/${encodeURIComponent(activity.id)}?date=${encodeURIComponent(civilDate)}`}
+            className={styles.agendaLink}
+          >
+            <CardTitle asChild>
+              <h2>{activity.name}</h2>
+            </CardTitle>
+            <CardDescription>{activitySummary(activity, activity.status, t)}</CardDescription>
+          </Link>
+        </CardHeader>
+      </Card>
+    );
+  }
+  return <TrainingInlineActivityCard activity={activity} civilDate={civilDate} {...props} />;
+}
+
+export function TrainingInlineActivityCard({
+  dedicated = false,
   civilDate,
   activity,
   actions,
   availablePlan = null,
-}: TrainingActivityCardProps) {
+}: TrainingActivityCardProps & { dedicated?: boolean }) {
   const t = useTranslations("training");
+  const closeOverlay = useContext(TrainingWorkoutOverlayContext);
 
   const execution = useTrainingActivityDraft({ activity, civilDate });
   const retrospective = supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt;
@@ -50,17 +80,21 @@ export function TrainingActivityCard({
       ? null
       : execution.draft;
   const status = activeDraft?.status ?? activity.status;
+  const [warmupOpen, setWarmupOpen] = useState(false);
   const [expandedOverride, setExpandedOverride] = useState<boolean | null>(null);
   const expanded =
-    expandedOverride ?? (status === "in_progress" || (Boolean(activeDraft) && status === "paused"));
+    dedicated ||
+    (expandedOverride ??
+      (status === "in_progress" || (Boolean(activeDraft) && status === "paused")));
   const genericPreparation = activity.preparations[0] ?? null;
   const hasPreparation = Boolean(
     activity.structured?.preparation || activity.preparationSession || genericPreparation,
   );
-  const [phase, setPhase] = useState<"preparation" | "main">(
-    hasPreparation && !retrospective ? "preparation" : "main",
-  );
   const structured = activity.structured;
+  const preparationOnly = Boolean(activity.preparationSession && !structured);
+  const [phase, setPhase] = useState<"preparation" | "main">(
+    preparationOnly || (hasPreparation && !dedicated && !retrospective) ? "preparation" : "main",
+  );
   const activeSession =
     phase === "preparation"
       ? (structured?.preparation ?? activity.preparationSession)
@@ -74,42 +108,144 @@ export function TrainingActivityCard({
 
   function startActivity() {
     if (!execution.start()) return;
-    setPhase(hasPreparation ? "preparation" : "main");
+    setPhase(preparationOnly || (hasPreparation && !dedicated) ? "preparation" : "main");
     setExpandedOverride(null);
+  }
+
+  function renderSession(session: TrainingDaySessionDto) {
+    return (
+      <section className={trainingActivityCardStyles.session}>
+        <div className={trainingActivityCardStyles.sessionHeader}>
+          <div>
+            <h3 className={trainingActivityCardStyles.sessionTitle}>{session.name}</h3>
+            <p className={trainingActivityCardStyles.sessionMetadata}>
+              {session.targetDurationMinutes} {t("minutes")}
+              {session.intensity ? ` · ${humanize(session.intensity)}` : ""}
+            </p>
+          </div>
+          <Badge variant={session.role !== "main" ? "info" : "warning"}>
+            {session.role !== "main" ? t("preparation") : t("training")}
+          </Badge>
+        </div>
+        <div className={trainingActivityCardStyles.exercises}>
+          {session.exercises.map((exercise) => (
+            <TrainingExercise
+              key={exercise.prescriptionId}
+              exercise={exercise}
+              sessionId={session.sessionId}
+              activityId={activity.id}
+              role={session.role}
+              previewSets={
+                dedicated &&
+                !activeDraft &&
+                activity.status !== "completed" &&
+                activity.status !== "skipped"
+              }
+              civilDate={civilDate}
+              saveExerciseAction={
+                activity.status === "completed" && executionEditable
+                  ? actions.saveActivityExercise
+                  : undefined
+              }
+              executionDraft={
+                activeDraft?.exercises[
+                  trainingExerciseDraftKey(
+                    session.role === "main" ? "main" : "preparation",
+                    exercise.exerciseId,
+                  )
+                ]
+              }
+              onExecutionDraftChange={
+                activeDraft && executionEditable
+                  ? (value) =>
+                      execution.updateExercise(
+                        trainingExerciseDraftKey(
+                          session.role === "main" ? "main" : "preparation",
+                          exercise.exerciseId,
+                        ),
+                        value,
+                      )
+                  : undefined
+              }
+            />
+          ))}
+        </div>
+      </section>
+    );
   }
 
   const resting = Object.entries(activeDraft?.exercises ?? {}).find(([, item]) => item.rest);
   return (
-    <article className={`${trainingActivityCardStyles.root} ${rootState}`}>
+    <article
+      className={dedicated ? styles.dedicated : `${trainingActivityCardStyles.root} ${rootState}`}
+    >
       <header className={trainingActivityCardStyles.header}>
-        <div className={trainingActivityCardStyles.top}>
+        <div className={dedicated ? styles.detailTop : trainingActivityCardStyles.top}>
           <div className="min-w-0 flex-1">
-            <h2 className={trainingActivityCardStyles.title}>
+            {dedicated ? (
+              <Button tone="general" variant="default" size="icon" className={styles.back} asChild>
+                <Link
+                  href={`/workout?date=${encodeURIComponent(civilDate)}`}
+                  onClick={(event) => {
+                    if (closeOverlay) {
+                      event.preventDefault();
+                      closeOverlay();
+                    }
+                  }}
+                  aria-label={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
+                  title={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
+                >
+                  <ArrowLeft size={20} aria-hidden="true" focusable="false" />
+                </Link>
+              </Button>
+            ) : null}
+            {!dedicated && (
+              <h2 className={trainingActivityCardStyles.title}>
+                {dedicated ? (
+                  <span className="fd-text-card">{activity.name}</span>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className={trainingActivityCardStyles.headingToggle}
+                    aria-expanded={expanded}
+                    onClick={() => setExpandedOverride(!expanded)}
+                  >
+                    <span className="fd-text-card">{activity.name}</span>
+                    {expanded ? (
+                      <ChevronUp size={16} aria-hidden="true" focusable="false" />
+                    ) : (
+                      <ChevronDown size={16} aria-hidden="true" focusable="false" />
+                    )}
+                  </Button>
+                )}
+              </h2>
+            )}
+            {!dedicated && (
+              <p className={trainingActivityCardStyles.metadata}>
+                {activitySummary(activity, status, t)}
+              </p>
+            )}
+          </div>
+          <div
+            className={`${trainingActivityCardStyles.tools} ${dedicated ? styles.detailTools : ""}`}
+          >
+            {dedicated && structured?.preparation ? (
               <Button
                 type="button"
-                variant="ghost"
-                className={trainingActivityCardStyles.headingToggle}
-                aria-expanded={expanded}
-                onClick={() => setExpandedOverride(!expanded)}
+                tone="warm"
+                onClick={() => setWarmupOpen(!warmupOpen)}
+                aria-expanded={warmupOpen}
               >
-                <span className="fd-text-card">{activity.name}</span>
-                {expanded ? (
-                  <CaretUpIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
-                ) : (
-                  <CaretDownIcon size={16} weight="fill" aria-hidden="true" focusable="false" />
-                )}
+                {t("warmup")}
               </Button>
-            </h2>
-            <p className={trainingActivityCardStyles.metadata}>
-              {activitySummary(activity, status, t)}
-            </p>
-          </div>
-          <div className={trainingActivityCardStyles.tools}>
+            ) : null}
             <TrainingActivityControls
               civilDate={civilDate}
               activity={activity}
               action={actions.controlActivity}
               draft={activeDraft}
+              showLabel={dedicated}
               onStart={startActivity}
               onPause={execution.pause}
               onResume={execution.resume}
@@ -118,7 +254,7 @@ export function TrainingActivityCard({
               onFinalized={execution.clear}
               ready={execution.ready && executionEditable}
             />
-            {status !== "completed" && agendaEditable ? (
+            {!dedicated && status !== "completed" && agendaEditable ? (
               <TrainingActivityEditor
                 civilDate={civilDate}
                 activity={activity}
@@ -127,7 +263,7 @@ export function TrainingActivityCard({
                 startedLocally={Boolean(activeDraft)}
               />
             ) : null}
-            {status !== "completed" && agendaEditable ? (
+            {!dedicated && status !== "completed" && agendaEditable ? (
               <TrainingActivityDeleteForm
                 civilDate={civilDate}
                 activity={activity}
@@ -139,11 +275,26 @@ export function TrainingActivityCard({
             ) : null}
           </div>
         </div>
-        {!retrospective && status !== "scheduled" ? (
-          <TrainingActivityTimer activity={activity} draft={activeDraft} />
+        {!retrospective && (dedicated || status !== "scheduled") ? (
+          <div className="flex flex-wrap items-center gap-6">
+            <TrainingActivityTimer
+              activity={activity}
+              draft={activeDraft}
+              onPause={execution.pause}
+              onResume={execution.resume}
+            />
+            {dedicated && structured ? (
+              <WorkoutTotals exercises={structured.main.exercises} draft={activeDraft} />
+            ) : null}
+          </div>
         ) : null}
       </header>
 
+      {execution.reconciliation === "preserved" || execution.reconciliation === "storage_error" ? (
+        <p role="status" className={trainingActivityCardStyles.guidance}>
+          {t("completedDraftPreserved")}
+        </p>
+      ) : null}
       {!retrospective && execution.storageError ? (
         <p role="alert" className={trainingActivityCardStyles.guidance}>
           {t("storageFull")}
@@ -159,78 +310,43 @@ export function TrainingActivityCard({
 
       {expanded ? (
         <div className={trainingActivityCardStyles.body}>
-          <nav className={trainingActivityCardStyles.navigation} aria-label={t("trainingStage")}>
-            {hasPreparation ? (
+          {!dedicated && !preparationOnly ? (
+            <nav className={trainingActivityCardStyles.navigation} aria-label={t("trainingStage")}>
+              {hasPreparation ? (
+                <Button
+                  type="button"
+                  size="sm"
+                  tone={phase === "preparation" ? "warm" : undefined}
+                  variant={phase === "preparation" ? "default" : "outline"}
+                  onClick={() => setPhase("preparation")}
+                >
+                  {t("warmup")}
+                </Button>
+              ) : null}
               <Button
                 type="button"
                 size="sm"
-                variant={phase === "preparation" ? "default" : "outline"}
-                onClick={() => setPhase("preparation")}
+                tone={phase === "main" ? "cool" : undefined}
+                variant={phase === "main" ? "default" : "outline"}
+                onClick={() => setPhase("main")}
               >
-                {t("warmup")}
+                {structured ? t("training") : t("activity")}
               </Button>
-            ) : null}
-            <Button
-              type="button"
-              size="sm"
-              variant={phase === "main" ? "default" : "outline"}
-              onClick={() => setPhase("main")}
-            >
-              {structured ? t("training") : t("activity")}
-            </Button>
-          </nav>
-          {activeSession ? (
-            <section className={trainingActivityCardStyles.session}>
-              <div className={trainingActivityCardStyles.sessionHeader}>
-                <div>
-                  <h3 className={trainingActivityCardStyles.sessionTitle}>{activeSession.name}</h3>
-                  <p className={trainingActivityCardStyles.sessionMetadata}>
-                    {activeSession.targetDurationMinutes} {t("minutes")}
-                    {activeSession.intensity ? ` · ${humanize(activeSession.intensity)}` : ""}
-                  </p>
-                </div>
-                <Badge variant={phase === "preparation" ? "info" : "warning"}>
-                  {phase === "preparation" ? t("preparation") : t("training")}
-                </Badge>
-              </div>
-              <div className={trainingActivityCardStyles.exercises}>
-                {activeSession.exercises.map((exercise) => (
-                  <TrainingExercise
-                    key={exercise.prescriptionId}
-                    exercise={exercise}
-                    sessionId={activeSession.sessionId}
-                    activityId={activity.id}
-                    role={activeSession.role}
-                    civilDate={civilDate}
-                    saveExerciseAction={
-                      activity.status === "completed" && executionEditable
-                        ? actions.saveActivityExercise
-                        : undefined
-                    }
-                    executionDraft={
-                      activeDraft?.exercises[
-                        trainingExerciseDraftKey(
-                          activeSession.role === "main" ? "main" : "preparation",
-                          exercise.exerciseId,
-                        )
-                      ]
-                    }
-                    onExecutionDraftChange={
-                      activeDraft && executionEditable
-                        ? (value) =>
-                            execution.updateExercise(
-                              trainingExerciseDraftKey(
-                                activeSession.role === "main" ? "main" : "preparation",
-                                exercise.exerciseId,
-                              ),
-                              value,
-                            )
-                        : undefined
-                    }
-                  />
-                ))}
-              </div>
-            </section>
+            </nav>
+          ) : null}
+          {dedicated && structured ? (
+            <>
+              {structured.preparation ? (
+                <Collapsible open={warmupOpen} onOpenChange={setWarmupOpen}>
+                  <CollapsibleContent className="pt-3">
+                    {renderSession(structured.preparation)}
+                  </CollapsibleContent>
+                </Collapsible>
+              ) : null}
+              {renderSession(structured.main)}
+            </>
+          ) : activeSession ? (
+            renderSession(activeSession)
           ) : phase === "preparation" && genericPreparation ? (
             <section className={trainingActivityCardStyles.session}>
               <div className={trainingActivityCardStyles.sessionHeader}>
@@ -245,7 +361,6 @@ export function TrainingActivityCard({
                     {t("optionalPreparation")}
                   </p>
                 </div>
-                <Badge variant="info">{t("preparation")}</Badge>
               </div>
               <p className={trainingActivityCardStyles.guidance}>
                 {retrospective ? t("retrospectivePreparation") : t("preparationGuidance")}
@@ -267,14 +382,16 @@ export function TrainingActivityCard({
               </div>
             </section>
           )}
-          {phase === "preparation" ? (
-            <Button type="button" onClick={() => setPhase("main")}>
-              {structured ? t("goToTraining") : t("goToActivity")}
-            </Button>
-          ) : hasPreparation ? (
-            <Button type="button" variant="outline" onClick={() => setPhase("preparation")}>
-              {t("backToWarmup")}
-            </Button>
+          {!dedicated && !preparationOnly ? (
+            phase === "preparation" ? (
+              <Button type="button" onClick={() => setPhase("main")}>
+                {structured ? t("goToTraining") : t("goToActivity")}
+              </Button>
+            ) : hasPreparation ? (
+              <Button type="button" variant="outline" onClick={() => setPhase("preparation")}>
+                {t("backToWarmup")}
+              </Button>
+            ) : null
           ) : null}
         </div>
       ) : null}

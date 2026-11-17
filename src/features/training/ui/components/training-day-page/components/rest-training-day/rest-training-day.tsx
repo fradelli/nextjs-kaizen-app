@@ -15,7 +15,7 @@ export function RestTrainingDay({ day }: RestTrainingDayProps) {
         <CardTitle>
           <h2>{t("restToday")}</h2>
         </CardTitle>
-        <CardDescription className="text-base">{t("restDescription")}</CardDescription>
+        <CardDescription>{t("restDescription")}</CardDescription>
       </CardHeader>
       <CardContent className={restTrainingDayStyles.content}>
         {day.reason ? <p className={restTrainingDayStyles.reason}>{day.reason}</p> : null}

@@ -44,13 +44,8 @@ export function TrainingExerciseForm({
           name="completed"
           value={exercise.status === "completed" ? "true" : "false"}
         />
-        <Field className={trainingExerciseFormStyles.field}>
-          <FieldLabel
-            className={trainingExerciseFormStyles.label}
-            htmlFor={`${exercise.prescriptionId}-comment`}
-          >
-            {t("comment")}
-          </FieldLabel>
+        <Field>
+          <FieldLabel htmlFor={`${exercise.prescriptionId}-comment`}>{t("comment")}</FieldLabel>
           <Input
             id={`${exercise.prescriptionId}-comment`}
             name="comment"

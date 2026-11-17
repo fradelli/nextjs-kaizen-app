@@ -52,6 +52,29 @@ afterEach(() => {
 });
 
 describe("useTrainingActivityDraft", () => {
+  it("sincroniza início, preenchimento e descarte entre duas visualizações da mesma execução", async () => {
+    const first = renderHook(() => useTrainingActivityDraft({ activity, civilDate }));
+    const second = renderHook(() => useTrainingActivityDraft({ activity, civilDate }));
+    await waitFor(() =>
+      expect(first.result.current.ready && second.result.current.ready).toBe(true),
+    );
+    act(() => first.result.current.start());
+    expect(second.result.current.draft?.activityId).toBe(activity.id);
+    act(() =>
+      first.result.current.updateExercise("main:one", {
+        sessionId: "one",
+        exerciseId: "one",
+        role: "main",
+        completed: false,
+        comment: "Dado preenchido",
+        sets: [],
+      }),
+    );
+    expect(second.result.current.draft?.exercises["main:one"]?.comment).toBe("Dado preenchido");
+    act(() => second.result.current.clear());
+    expect(first.result.current.draft).toBeNull();
+    expect(localStorage.getItem(trainingActivityDraftKey(civilDate, activity.id))).toBeNull();
+  });
   it("captures the latest exercise and one stop instant synchronously under rapid clicks", async () => {
     const { result } = renderHook(() => useTrainingActivityDraft({ activity, civilDate }));
     await waitFor(() => expect(result.current.ready).toBe(true));

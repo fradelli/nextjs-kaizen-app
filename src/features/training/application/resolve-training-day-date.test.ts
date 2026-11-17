@@ -45,17 +45,16 @@ describe("resolveTrainingDayDate", () => {
     });
   });
 
-  it("allows today plus four days and blocks later future dates", () => {
+  it("permite consultar os dias futuros além da janela de edição", () => {
     expect(resolveTrainingDayDate({ rawDate: "2026-09-20", now: saoPauloMorning })).toMatchObject({
       status: "valid",
-      canNavigateNext: false,
+      canNavigateNext: true,
       maximumFutureDate: "2026-09-20",
     });
-    expect(resolveTrainingDayDate({ rawDate: "2026-09-21", now: saoPauloMorning })).toEqual({
-      status: "invalid",
-      reason: "future_date_out_of_range",
-      todayDate: "2026-09-16",
-      maximumFutureDate: "2026-09-20",
+    expect(resolveTrainingDayDate({ rawDate: "2026-09-21", now: saoPauloMorning })).toMatchObject({
+      status: "valid",
+      civilDate: "2026-09-21",
+      canNavigateNext: true,
     });
   });
 

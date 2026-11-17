@@ -27,8 +27,9 @@ export function createTrainingSetDrafts(
 export function isTrainingSetPerformed(
   set: TrainingSetDraft,
   dose: NormalizedTrainingDose,
+  loadApplicable = false,
 ): boolean {
-  return hasPerformedTrainingSetMeasures(set, dose);
+  return hasPerformedTrainingSetMeasures(set, dose, loadApplicable);
 }
 
 export function hasTrainingSetData(set: TrainingSetDraft): boolean {

@@ -1,10 +1,9 @@
 "use client";
+import { Play, Pause, CircleCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { Popover } from "@fradelli/ui/popover";
 import { Button } from "@fradelli/ui/button";
-import { PlayIcon } from "@fradelli/ui/icons/Play";
-import { PauseIcon } from "@fradelli/ui/icons/Pause";
-import { CheckCircleIcon } from "@fradelli/ui/icons/CheckCircle";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supportsRetrospectiveTrainingRecord } from "@/features/training/domain/training-retrospective-record.rules";
@@ -24,6 +23,7 @@ export function TrainingActivityControls({
   onPrepareCompletion,
   onFinalized,
   ready = true,
+  showLabel = false,
   executionStorageError = false,
 }: TrainingActivityControlsProps) {
   const t = useTranslations("training");
@@ -39,7 +39,9 @@ export function TrainingActivityControls({
   const direct =
     supportsRetrospectiveTrainingRecord(activity.type) && !activity.startedAt && !draft;
   const status = draft?.status ?? activity.status;
-  if (!isTrainingExecutionDateEditable(civilDate) || activity.status === "skipped") return null;
+  const editable = isTrainingExecutionDateEditable(civilDate);
+  const showStart = showLabel && activity.type === "structured_training" && status === "scheduled";
+  if ((!editable && !showStart) || activity.status === "skipped") return null;
   function openCompletion() {
     if (completed || direct) setCompletion({ draft: null, completionRequestedAt: null });
     else {
@@ -50,14 +52,7 @@ export function TrainingActivityControls({
   return (
     <>
       {completed ? (
-        <Button
-          ref={trigger}
-          type="button"
-          variant="outline"
-          size="sm"
-          className="min-h-11"
-          onClick={openCompletion}
-        >
+        <Button ref={trigger} type="button" variant="outline" size="sm" onClick={openCompletion}>
           {t("correctFeedback")}
         </Button>
       ) : direct ? (
@@ -65,59 +60,80 @@ export function TrainingActivityControls({
           ref={trigger}
           type="button"
           variant="ghost"
-          size="icon"
-          className="min-h-11 min-w-11 text-status-warning hover:bg-status-warning-subtle hover:text-status-warning [&>svg]:size-4 sm:[&>svg]:size-[18px]"
+          size={showLabel ? "default" : "icon"}
+          tone="start"
           disabled={!ready}
           aria-label={t("finishNamedActivity", { name: activity.name })}
           title={t("recordPerformedActivity")}
           onClick={openCompletion}
         >
-          <CheckCircleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
+          <CircleCheck size={20} aria-hidden="true" focusable="false" />
+          {showLabel ? t("registerTraining") : null}
         </Button>
+      ) : showStart && !editable ? (
+        <Popover.Root>
+          <Popover.Trigger asChild>
+            <Button type="button" size="sm" variant="outline" tone="start" aria-disabled="true">
+              <Play aria-hidden="true" />
+              {t("startTraining")}
+            </Button>
+          </Popover.Trigger>
+          <Popover.Content align="end" className="max-w-48">
+            {t("executionDateUnavailable")}
+          </Popover.Content>
+        </Popover.Root>
       ) : (
         <>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="min-h-11 min-w-11 [&>svg]:size-4 sm:[&>svg]:size-[18px]"
-            disabled={!ready || (!draft && status !== "scheduled")}
-            aria-label={
-              status === "in_progress"
-                ? t("pauseActivity")
-                : status === "paused"
-                  ? t("resumeActivity")
-                  : activity.type === "structured_training"
-                    ? t("startTraining")
+          {(!showLabel || status === "scheduled") && (
+            <Button
+              type="button"
+              tone={showStart ? "start" : undefined}
+              variant={showStart ? "default" : "ghost"}
+              size={showStart ? "default" : "icon"}
+              disabled={!editable || !ready || (!draft && status !== "scheduled")}
+              aria-label={
+                status === "in_progress"
+                  ? t("pauseActivity")
+                  : status === "paused"
+                    ? t("resumeActivity")
+                    : activity.type === "structured_training"
+                      ? t("startTraining")
+                      : t("startActivity")
+              }
+              title={
+                status === "in_progress"
+                  ? t("pauseActivity")
+                  : status === "paused"
+                    ? t("resumeActivity")
                     : t("startActivity")
-            }
-            title={
-              status === "in_progress"
-                ? t("pauseActivity")
-                : status === "paused"
-                  ? t("resumeActivity")
-                  : t("startActivity")
-            }
-            onClick={status === "in_progress" ? onPause : status === "paused" ? onResume : onStart}
-          >
-            {status === "in_progress" ? (
-              <PauseIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
-            ) : (
-              <PlayIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
-            )}
-          </Button>
+              }
+              onClick={
+                status === "in_progress" ? onPause : status === "paused" ? onResume : onStart
+              }
+            >
+              {status === "in_progress" ? (
+                <Pause size={20} aria-hidden="true" focusable="false" />
+              ) : (
+                <Play size={20} aria-hidden="true" focusable="false" />
+              )}
+              {showStart ? t("startTraining") : null}
+            </Button>
+          )}
           {draft ? (
             <Button
               ref={trigger}
               type="button"
-              variant="ghost"
-              size="icon"
-              className="min-h-11 min-w-11 text-status-warning hover:bg-status-warning-subtle hover:text-status-warning [&>svg]:size-4 sm:[&>svg]:size-[18px]"
+              variant={showLabel ? "default" : "ghost"}
+              size={showLabel ? "default" : "icon"}
+              tone="start"
               aria-label={t("finishNamedActivity", { name: activity.name })}
               title={t("finishActivity")}
               onClick={openCompletion}
             >
-              <CheckCircleIcon size={20} weight="fill" aria-hidden="true" focusable="false" />
+              <CircleCheck size={20} aria-hidden="true" focusable="false" />
+              {showLabel
+                ? t(activity.type === "structured_training" ? "finishTraining" : "finishActivity")
+                : null}
             </Button>
           ) : null}
         </>

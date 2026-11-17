@@ -1,18 +1,22 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import type { Metadata, Viewport } from "next";
-import { Figtree, Inter } from "next/font/google";
+import { IBM_Plex_Sans, Figtree } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { AppShell } from "@/components/shared/app-shell/app-shell";
 import "./globals.css";
 
-const figtree = Figtree({ subsets: ["latin"], display: "swap", variable: "--font-figtree" });
-
-const inter = Inter({
+const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-ibm-plex-sans",
+});
+
+const figtree = Figtree({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-figtree",
 });
 
 export const viewport: Viewport = { viewportFit: "cover" };
@@ -30,16 +34,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+export default async function RootLayout({
+  children,
+  workout,
+}: Readonly<{ children: ReactNode; workout?: ReactNode }>) {
   const locale = await getLocale();
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${figtree.variable} dark kaizen-static-motion`}
+      className={`${ibmPlexSans.variable} ${figtree.variable} dark kaizen-static-motion`}
     >
       <body>
         <NextIntlClientProvider>
           <AppShell>{children}</AppShell>
+          {workout}
         </NextIntlClientProvider>
       </body>
     </html>
