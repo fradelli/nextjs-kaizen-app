@@ -8,6 +8,7 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - "@fradelli/ui@0.3.0 || 0.6.0"
+  - minimatch@11.0.9
 
 overrides:
   # GHSA-ggr8-5vv4-36mx: Prisma usa deepmerge para objetos da configuração.
@@ -20,3 +21,4 @@ overrides:
   "magicast@0.5.4>source-map-js": 1.2.2
   # GHSA-vfj7-8cjw-p6xm: fork interno com limite de profundidade; detalhes em vendor/braces/README.kaizen.md.
   "micromatch@4.0.8>braces": file:vendor/braces
+  minimatch: 11.0.9
