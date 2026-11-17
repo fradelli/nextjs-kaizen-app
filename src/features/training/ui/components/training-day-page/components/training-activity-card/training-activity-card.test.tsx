@@ -223,9 +223,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
     fireEvent.change(screen.getByLabelText(/Disposi/), { target: { value: "normal" } });
     fireEvent.change(
-      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
-        "Nota",
-      ),
+      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText("Nota"),
       { target: { value: "Preserve" } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Fechar formul\u00e1rio" }));
@@ -233,9 +231,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
     await waitFor(() =>
       expect(
-        within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
-          "Nota",
-        ),
+        within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText("Nota"),
       ).toHaveValue("Preserve"),
     );
     action.mockResolvedValueOnce({ status: "invalid", message: "Try again" });
@@ -245,9 +241,7 @@ describe("TrainingActivityCard", () => {
     expect(screen.getByLabelText("Intensidade")).toHaveValue("high");
     expect(screen.getByLabelText(/Disposi/)).toHaveValue("normal");
     expect(
-      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
-        "Nota",
-      ),
+      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText("Nota"),
     ).toHaveValue("Preserve");
     expect(screen.getByRole("dialog", { name: "Finalizar atividade" })).toBeInTheDocument();
   });
@@ -473,9 +467,7 @@ describe("TrainingActivityCard", () => {
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Salvar" }));
     fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Nota" }));
-    expect(within(screen.getByRole("dialog")).getByLabelText("Nota")).toHaveValue(
-      "Ajuste local",
-    );
+    expect(within(screen.getByRole("dialog")).getByLabelText("Nota")).toHaveValue("Ajuste local");
     expect(action).not.toHaveBeenCalled();
   });
 
