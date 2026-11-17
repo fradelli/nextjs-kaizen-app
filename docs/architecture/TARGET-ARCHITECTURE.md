@@ -1,5 +1,7 @@
 # Arquitetura alvo do Kaizen
 
+> Consulta dirigida: código → **Semântica e legibilidade / Boundaries**; React → **Organização dos componentes React / Next.js**; banco → **Organização do Prisma / Migrations**. A aparência atual segue o [guia Mira](../product/telas/guia-de-estilo.md); o contrato inicial de E04 permanece evidência histórica.
+
 ## Status
 
 - Data: 2026-09-02
@@ -306,14 +308,19 @@ Não existe REST interna, OpenAPI ou BFF separado para a própria UI.
 
 ## Rotas do P0
 
-| Rota          | Renderização                           | Acesso                                      |
-| ------------- | -------------------------------------- | ------------------------------------------- |
-| `/`           | redirect para `/dieta`                 | público                                     |
-| `/dieta`      | Server Component + ilhas de formulário | plano e execução públicos no workspace fixo |
-| `/treino`     | Server Component + ilhas de formulário | plano e execução públicos no workspace fixo |
-| `/api/health` | Route Handler Node.js                  | público, sem dados pessoais                 |
+Rotas verificadas na árvore atual; idioma não altera URLs.
 
-A data selecionada usa query string ISO `YYYY-MM-DD`. O servidor interpreta em `America/Sao_Paulo` e rejeita formato inválido.
+| Rota | Estado |
+| --- | --- |
+| `/` | Redirect para `/workout` |
+| `/workout` | Agenda/consulta semanal; Server Component e ilhas de interação |
+| `/workout/activity/[occurrenceKey]` | Detalhe direto; interceptado por `@workout/(.)workout/activity/[occurrenceKey]` na navegação |
+| `/nutrition` | Placeholder traduzido; jornada alimentar ainda não implementada |
+| `/foundations` | Galeria técnica do design system |
+
+`/dieta`, `/treino` e `/api/health` pertencem ao desenho inicial e não existem nesta árvore. Planos e rotinas do [mapa de telas](../product/telas/README.md) são escopo para detalhamento, não endpoints entregues.
+
+Data selecionada: query string ISO `YYYY-MM-DD`; visão: `view=day|week`. O servidor interpreta datas civis em `America/Sao_Paulo` e rejeita formato inválido.
 
 ## Definições importadas
 

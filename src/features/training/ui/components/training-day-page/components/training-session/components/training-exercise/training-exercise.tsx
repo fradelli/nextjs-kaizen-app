@@ -1,6 +1,8 @@
 "use client";
+import { initialTrainingExerciseDraft } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils";
 import { useState, useRef } from "react";
 import { Input } from "@fradelli/ui/input";
+import { Card, CardHeader, CardTitle } from "@fradelli/ui/card";
 import { Button } from "@fradelli/ui/button";
 import { TrainingActivityModal } from "../../../training-activity-modal/training-activity-modal";
 import {
@@ -23,6 +25,7 @@ import { TrainingLocalExerciseEditor } from "./components/training-local-exercis
 
 export function TrainingExercise({
   exercise,
+  previewSets = false,
   sessionId,
   role,
   civilDate,
@@ -45,10 +48,8 @@ export function TrainingExercise({
     ? executionDraft!.completed
     : exercise.status === "completed" || exercise.status === "skipped";
   const sets = executionDraft?.sets ?? createTrainingSetDrafts(exercise);
-  const performed = sets.filter(
-    (set) =>
-      (set.confirmed ?? isTrainingSetPerformed(set, exercise.dose)) &&
-      isTrainingSetPerformed(set, exercise.dose),
+  const performed = sets.filter((set) =>
+    isTrainingSetPerformed(set, exercise.dose, exercise.loadApplicable),
   ).length;
   const visualStatus = !completed
     ? "pending"
@@ -68,33 +69,41 @@ export function TrainingExercise({
           ? "exercisePartial"
           : "exerciseEmpty";
   return (
-    <article
-      className={`${trainingExerciseStyles.root}`}
+    <Card
+      role="article"
+      surface="solid"
+      size="sm"
       aria-labelledby={`${exercise.prescriptionId}-title`}
     >
-      <header
-        className={`${trainingExerciseStyles.header} border-l-4 pl-3 ${trainingExerciseStyles.status[visualStatus]}`}
+      <CardHeader
+        className={`${trainingExerciseStyles.header} border-l-2 pl-3 ${trainingExerciseStyles.status[visualStatus]}`}
       >
         <div className={trainingExerciseStyles.heading}>
-          <h3 id={`${exercise.prescriptionId}-title`} className={trainingExerciseStyles.title}>
-            {formatTrainingDisplayText(exercise.name)}
-          </h3>
+          <CardTitle asChild>
+            <h3 id={`${exercise.prescriptionId}-title`}>
+              {formatTrainingDisplayText(exercise.name)}
+            </h3>
+          </CardTitle>
 
           <dl className={trainingExerciseStyles.metadata}>
-            <div>
-              <dt className={trainingExerciseStyles.screenReaderOnly}>{t("prescribedSets")}</dt>
-              <dd>{t("setCount", { count: exercise.prescribedSets })}</dd>
-            </div>
-            <div>
-              <dt className={trainingExerciseStyles.screenReaderOnly}>{t("prescribedDose")}</dt>
-              <dd>{formatTrainingDisplayText(exercise.prescribedText)}</dd>
-            </div>
-            {exercise.restSeconds === null ? null : (
-              <div>
-                <dt className={trainingExerciseStyles.screenReaderOnly}>{t("rest")}</dt>
-                <dd>{t("restSeconds", { seconds: exercise.restSeconds })}</dd>
-              </div>
-            )}
+            {!completed ? (
+              <>
+                <div>
+                  <dt className={trainingExerciseStyles.screenReaderOnly}>{t("prescribedSets")}</dt>
+                  <dd>{t("setCount", { count: exercise.prescribedSets })}</dd>
+                </div>
+                <div>
+                  <dt className={trainingExerciseStyles.screenReaderOnly}>{t("prescribedDose")}</dt>
+                  <dd>{formatTrainingDisplayText(exercise.prescribedText)}</dd>
+                </div>
+                {exercise.restSeconds === null ? null : (
+                  <div>
+                    <dt className={trainingExerciseStyles.screenReaderOnly}>{t("rest")}</dt>
+                    <dd>{t("restSeconds", { seconds: exercise.restSeconds })}</dd>
+                  </div>
+                )}
+              </>
+            ) : null}
             {exercise.priorityLevel ? (
               <div>
                 <dt className={trainingExerciseStyles.screenReaderOnly}>{t("priority")}</dt>
@@ -105,7 +114,7 @@ export function TrainingExercise({
             ) : null}
           </dl>
 
-          <p className="kaizen-text-caption text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             {t(stateLabel)}
             {role === "main" ? ` · ${performed}/${sets.length}` : ""}
           </p>
@@ -136,10 +145,10 @@ export function TrainingExercise({
             action={saveExerciseAction}
           />
         ) : null}
-      </header>
+      </CardHeader>
 
       {!completed ? (
-        <div className="flex flex-wrap gap-2 kaizen-text-caption">
+        <div className="flex flex-wrap gap-2 text-xs">
           <Button
             ref={tipsTrigger}
             type="button"
@@ -262,6 +271,11 @@ export function TrainingExercise({
           draft={executionDraft}
           onChange={onExecutionDraftChange}
         />
+      ) : previewSets && role === "main" && sessionId ? (
+        <TrainingLocalExerciseEditor
+          exercise={exercise}
+          draft={initialTrainingExerciseDraft(sessionId, "main", exercise)}
+        />
       ) : !local &&
         role === "main" &&
         saveExerciseAction &&
@@ -283,6 +297,6 @@ export function TrainingExercise({
           {t("commentText", { comment: exercise.comment })}
         </p>
       ) : null}
-    </article>
+    </Card>
   );
 }

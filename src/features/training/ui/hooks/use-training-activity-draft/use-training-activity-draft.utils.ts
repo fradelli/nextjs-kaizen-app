@@ -3,13 +3,14 @@ import type {
   TrainingDayExerciseDto,
 } from "@/features/training/application/training-dto";
 import { createTrainingSetDrafts } from "../use-training-exercise-draft/use-training-exercise-draft.utils";
+import { TRAINING_ACTIVITY_DRAFT_PREFIX } from "./use-training-activity-draft.constants";
 import type {
   TrainingActivityExecutionDraft,
   TrainingExerciseExecutionDraft,
 } from "./use-training-activity-draft.types";
 
 export function trainingActivityDraftKey(civilDate: string, activityId: string): string {
-  return `kaizen:training-draft:v1:${civilDate}:${activityId}`;
+  return `${TRAINING_ACTIVITY_DRAFT_PREFIX}${civilDate}:${activityId}`;
 }
 
 export function trainingExerciseDraftKey(role: "main" | "preparation", exerciseId: string): string {
@@ -49,6 +50,7 @@ export function startTrainingActivityDraft(
   }
   return {
     version: 1,
+    activityName: activity.name,
     activityId: activity.id,
     civilDate,
     expectedRevision: activity.revision,
@@ -56,6 +58,27 @@ export function startTrainingActivityDraft(
     startedAt: now,
     intervals: [{ startedAt: now, endedAt: null }],
     exercises,
+  };
+}
+
+export function trainingActivityDraftTimerInput(draft: TrainingActivityExecutionDraft) {
+  const accumulatedActiveSeconds = draft.intervals.reduce(
+    (total, interval) =>
+      total +
+      (interval.endedAt
+        ? Math.max(
+            0,
+            Math.floor((Date.parse(interval.endedAt) - Date.parse(interval.startedAt)) / 1000),
+          )
+        : 0),
+    0,
+  );
+  return {
+    accumulatedActiveSeconds,
+    currentIntervalStartedAt:
+      draft.status === "in_progress"
+        ? (draft.intervals.findLast((interval) => interval.endedAt === null)?.startedAt ?? null)
+        : null,
   };
 }
 

@@ -1,0 +1,66 @@
+.agendaLink {
+  display: block;
+}
+
+.detailTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.75rem;
+}
+
+.detailTools {
+  align-self: start;
+}
+
+.back {
+  margin-bottom: 0.25rem;
+}
+
+.dedicated {
+  color: var(--fd-color-foreground);
+  background: var(--fd-color-background);
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 639px) {
+  .detailTop {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .detailTop > :first-child {
+    display: contents;
+  }
+
+  .detailTools {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .detailTop h2 {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  .detailTop p {
+    grid-row: 3;
+    grid-column: 1 / -1;
+  }
+
+  .back {
+    grid-row: 1;
+    grid-column: 1;
+  }
+}
+
+.dedicated [data-slot="card"] {
+  background: var(--fd-color-background);
+}
+.dedicated > header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--fd-color-background);
+}

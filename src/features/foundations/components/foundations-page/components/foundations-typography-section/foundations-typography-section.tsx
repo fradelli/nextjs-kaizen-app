@@ -11,7 +11,8 @@ export function FoundationsTypographySection() {
             <h2 id="typography-title">Tipografia e superfícies</h2>
           </CardTitle>
           <CardDescription>
-            Inter variável, contraste dark-first e hierarquia visual fornecidos pelo contrato.
+            IBM Plex Sans e Figtree, contraste dark-first e hierarquia visual fornecidos pelo
+            contrato.
           </CardDescription>
         </CardHeader>
         <CardContent className={foundationsTypographySectionStyles.grid}>

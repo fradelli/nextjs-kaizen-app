@@ -40,7 +40,7 @@ Implementação autorizada pelo usuário em 29/10/2026, com branch criada a part
 
 ## Resultado
 
-Implementação local na branch `codex/E06-T26-set-execution`, baseada em developer `ed89d0a`. Migração aditiva aplicada no banco local; nenhuma publicação ou commit realizado.
+Implementação local na branch `codex/E06-T26-set-execution`, baseada em developer `ed89d0a`. Migração aditiva aplicada no banco local; essa descrição registra a validação local original. Posteriormente, a entrega foi registrada nos commits `d927367` (implementação) e `963074f` (revisão/PR #76). O estado remoto da PR não foi reconfirmado nesta revisão.
 
 414 testes unitários/interface e 54 testes PostgreSQL aprovados; build, tipos, lint, estrutura, fronteiras, ícones e i18n aprovados. Conferência no navegador confirmou referência histórica real, grade mobile e início/controles de descanso. E06-T07/T08 incorporadas ou substituídas; mantidas como CANCELLED.
 

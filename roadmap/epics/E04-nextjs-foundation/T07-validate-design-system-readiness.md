@@ -16,7 +16,6 @@ Determinar, sem instalar o package, se a base técnica do Kaizen está pronta pa
 
 ## Entradas
 
-- `docs/implementation/tasks/E04-T07.md`
 - `docs/decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md`
 - `package.json`
 - `pnpm-lock.yaml`
@@ -78,3 +77,9 @@ Reverter somente o relatório e a atualização de status. Como a tarefa não in
 ## Resultado
 
 Concluída em 2026-09-10 com decisão NO-GO. Runtime, peers, contrato publicado, gates locais, CI remoto e rulesets foram comprovados. A integração permanece bloqueada porque a consulta ao GitHub Packages retornou `401` sem autenticação e a credencial usada pela API não possui `read:packages`. Nenhum package, token ou arquivo da aplicação foi adicionado.
+
+## Consolidação documental de 12/11/2026
+
+Preservadas avaliação sem instalação, NO-GO inicial e GO posterior no relatório original de evidência; isso não aprova releases novos.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/tasks/E04-T07.md), SHA-256 `02f79c4fda7e11d5b54c1ffb48f8b04da72a5465a802845806adea33cab0d427`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.

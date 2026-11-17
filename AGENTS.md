@@ -1,67 +1,46 @@
-# AGENTS.md
+# Contrato do Codex no Kaizen
 
-## Finalidade
-
-O Kaizen é a fonte de verdade versionada de um aplicativo pessoal de treino e alimentação. O P0 combina planos públicos aprovados com registros operacionais de um workspace único.
+O Kaizen combina planos públicos versionados com registros operacionais de treino e alimentação.
 
 ## Rota mínima de contexto
 
-Para executar uma tarefa:
+1. Leia este contrato e `roadmap/ACTIVE.md`.
+2. Abra somente a tarefa selecionada e suas `Entradas`, nas seções indicadas.
+3. Aplique instruções aninhadas da árvore alcançada: `roadmap/AGENTS.md`, `docs/AGENTS.md`, `docs/migration/AGENTS.md` e `data/AGENTS.md`.
 
-1. Leia este arquivo.
-2. Leia `roadmap/ACTIVE.md`.
-3. Leia o arquivo da tarefa apontada.
-4. Leia somente os caminhos exatos listados em `Entradas`.
-
-Não leia recursivamente `docs/`, `roadmap/` ou `data/`. Não abra `roadmap/README.md`, `CHANGELOG.md`, outros épicos ou tarefas concluídas salvo quando a tarefa exigir atualização ou auditoria. Localize primeiro títulos e referências com `rg` e carregue apenas a seção necessária.
-
-Instruções específicas existem em `roadmap/AGENTS.md`, `data/AGENTS.md` e `docs/AGENTS.md` e se aplicam somente quando o trabalho alcança essas árvores.
+Não leia árvores recursivamente. Localize títulos/caminhos com `rg`; se indisponível, use buscas direcionadas com PowerShell. Roadmap global, changelog e tarefas concluídas entram somente para planejamento, atualização de estado ou investigação histórica. Se a tarefa estiver concluída, siga a retomada sem reexecutá-la.
 
 ## Regras globais
 
-- Documentação humana usa português do Brasil e linguagem direta.
-- Separe fatos, decisões, inferências e dados ausentes; use `null` ou `unknowns` em vez de inventar.
-- Não diagnostique lesões nem apresente conteúdo alimentar não validado como prescrição profissional.
-- O repositório é público. Nunca versione identidade desnecessária, credenciais, tokens, chaves, strings de conexão, comentários pessoais ou URLs com segredo.
-- Preserve histórico e IDs estáveis. Mudanças destrutivas exigem migração explícita e rollback.
+- PT-BR; diferencie fatos, decisões, propostas e incógnitas. Não invente dados ausentes.
+- Repositório público: não versione credenciais, identidade desnecessária, contexto médico ou comentários pessoais. Não diagnostique lesões nem apresente conteúdo alimentar não validado como prescrição profissional.
+- Verifique Git antes de editar e preserve alterações locais. Preserve IDs e histórico; mudanças destrutivas exigem migração e rollback explícitos.
 - Não crie abstração, dependência, endpoint ou serviço sem consumidor na tarefa atual.
-- Implementações de código devem listar `docs/architecture/TARGET-ARCHITECTURE.md`
-  nas entradas e seguir sua seção “Semântica e legibilidade do código”. A revisão
-  semântica é critério de entrega, não substituto dos testes ou das fronteiras de segurança.
+- Next.js full-stack, PostgreSQL/Prisma; definições em Git/JSON e operação no banco. Sem backend separado ou cliente HTTP interno.
+- P0 público, sem autenticação por decisão explícita. Workspace fixo resolvido no servidor; autenticação antes de multiusuário ou dados sensíveis.
+- Datas civis: `America/Sao_Paulo`; timestamps: UTC. Server Actions validam origem, entrada, ownership e concorrência no servidor. Nunca aceite `workspace_id` do cliente.
 
-## Arquitetura do P0
+## Leitura por tarefa
 
-- Uma aplicação Next.js full-stack; não criar backend separado ou cliente HTTP interno.
-- PostgreSQL com Prisma; JSON versionado define planos e o banco guarda atribuições e execuções.
-- O P0 atual é público e sem autenticação por decisão explícita. Dados operacionais usam um workspace fixo resolvido exclusivamente no servidor; autenticação é obrigatória antes de múltiplos usuários ou dados sensíveis.
-- `America/Sao_Paulo` governa datas civis; timestamps persistidos usam UTC.
-- Server Actions são endpoints públicos: valide origem, entrada, workspace fixo e ownership no servidor. Nunca aceite `workspace_id` do cliente.
-- Tarefas que criam ou ampliam componentes React devem listar
-  `docs/architecture/TARGET-ARCHITECTURE.md` nas entradas e seguir sua seção de
-  organização de componentes e fronteiras Server/Client. Cada componente fica
-  em pasta própria; diretórios `components/` contêm pastas, não componentes soltos.
+As entradas listam `docs/architecture/TARGET-ARCHITECTURE.md` com as seções aplicáveis:
 
-As decisões completas só devem ser lidas quando listadas pela tarefa em `docs/architecture/` ou `docs/decisions/`.
+| Mudança | Seções obrigatórias |
+| --- | --- |
+| Código | Semântica e legibilidade do código; Boundaries |
+| React | Organização dos componentes React; Server Components; Client Components |
+| Mutação | Server Actions; Segurança; Transações e concorrência |
+| Prisma/banco | Organização do Prisma e configuração de banco; Migrations |
 
-Tarefas que alteram Prisma ou configuração de banco devem listar
-`docs/architecture/TARGET-ARCHITECTURE.md` nas entradas e seguir sua seção
-“Organização do Prisma e configuração de banco”. Essa é a fonte normativa dessas convenções.
+Cada componente tem pasta própria; `components/` contém pastas de componentes. Regras completas pertencem à arquitetura. Aparência: `docs/product/telas/guia-de-estilo.md`. Comportamento: documento da tela em `docs/product/telas/`. Leia decisões e planos históricos apenas quando necessários à tarefa.
 
-## Git e entrega
+## Git e validação
 
-- Trabalho novo parte de `developer` em `codex/<ID>-descricao-curta` para branches do agente.
-- PR de tarefa aponta para `developer` e usa squash; promoções `developer -> staging -> master` usam merge commit.
-- Título: `[<ID>] tipo(escopo): resumo curto`.
-- Corpo: `.github/pull_request_template.md`; marque apenas checks realmente executados.
-- Não use force push nem reescreva histórico compartilhado.
+- Trabalho novo parte de `developer` em `codex/<ID>-descricao-curta`; não recrie branch nem desfaça trabalho em andamento.
+- PR de tarefa para `developer` usa squash; promoções `developer -> staging -> master` usam merge commit. Sem force push ou reescrita compartilhada.
+- Título `[<ID>] tipo(escopo): resumo`; descrição em `.github/pull_request_template.md`. Detalhes: `docs/delivery/PULL-REQUEST-STANDARD.md`.
+- Sempre confira `git diff --check` e ausência de segredos. Documentação: links, IDs, dependências e vigência. Dados: schema, ponteiros e referências. Código: gates proporcionais em `package.json`.
+- `pnpm run ci` executa gates locais; `pnpm ci` é instalação congelada. `pnpm governance <evento.json>` valida PR/roadmap; `pnpm data:check` valida dados; `pnpm test:ci-scripts` valida os scripts.
 
-## Validação proporcional
+## Skills locais
 
-Sempre execute `git diff --check` e verifique ausência de segredos. Documentação exige links, IDs, dependências e estados coerentes. Dados exigem parse, schema, ponteiros e referências. Código acrescenta formato, lint, tipos, testes e build conforme os scripts existentes.
-
-Comandos operacionais:
-
-- `pnpm run ci`: executa os gates locais reproduzíveis, exceto a governança dependente do evento da PR; `pnpm ci` isolado é reservado pelo pnpm para instalação congelada.
-- `pnpm governance [arquivo-do-evento]`: valida direção, título, descrição, ID e estado do roadmap; no GitHub usa `GITHUB_EVENT_PATH`.
-- `pnpm data:check`: valida JSON, schemas, IDs, ponteiros e referências dos dados versionados.
-- `pnpm test:ci-scripts`: executa as regressões controladas dos validadores de CI.
+Uso exclusivo do Codex. `.agents/skills/` é instalação local Prisma ignorada pelo Git; leia somente a referência compatível com a versão instalada e a tarefa. Presença no disco não comprova descoberta automática pelo host. Vínculos de outros clientes não são requisitos do projeto.

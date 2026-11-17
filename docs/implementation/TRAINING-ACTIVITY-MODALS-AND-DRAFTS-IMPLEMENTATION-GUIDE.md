@@ -1,5 +1,7 @@
 # Modais de atividades e rascunhos locais — guia de implementação
 
+> Planejamento histórico E06-T25. Leia somente a seção necessária, incluindo diferenças implementadas na seção 17. “Ler tudo” referia-se à execução original, não à manutenção corrente. Composição atual no [guia](../product/telas/guia-de-estilo.md).
+
 ## 1. Estado e uso
 
 - Base: commit `4af510c`, branch `codex/E06-T24-activity-preparation-and-rescheduling`.

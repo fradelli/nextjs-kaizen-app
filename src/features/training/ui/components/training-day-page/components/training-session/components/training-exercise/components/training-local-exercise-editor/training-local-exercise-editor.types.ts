@@ -4,5 +4,5 @@ import type { TrainingExerciseExecutionDraft } from "@/features/training/ui/hook
 export type TrainingLocalExerciseEditorProps = Readonly<{
   exercise: TrainingDayExerciseDto;
   draft: TrainingExerciseExecutionDraft;
-  onChange: (draft: TrainingExerciseExecutionDraft) => void;
+  onChange?: (draft: TrainingExerciseExecutionDraft) => void;
 }>;

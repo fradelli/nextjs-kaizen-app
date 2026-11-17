@@ -4,6 +4,7 @@ import {
   render,
   screen,
   within,
+  waitFor,
 } from "../../../../../../../../tests/support/render-localized";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
@@ -25,7 +26,7 @@ beforeAll(() => {
 afterEach(cleanup);
 
 describe("TrainingActivityDeleteForm", () => {
-  it("confirms scheduled deletion and can cancel it", () => {
+  it("confirms scheduled deletion and can cancel it", async () => {
     renderForm(activity);
     fireEvent.click(screen.getByRole("button", { name: "Excluir atividade" }));
     expect(screen.getByRole("dialog", { name: "Excluir atividade?" })).toBeInTheDocument();
@@ -35,16 +36,18 @@ describe("TrainingActivityDeleteForm", () => {
       .filter((button) => !button.getAttribute("aria-label")?.startsWith("Fechar"));
     expect(buttons[0]).toHaveAccessibleName("Excluir atividade");
     expect(buttons[1]).toHaveAccessibleName("Manter atividade");
-    expect(screen.getByRole("button", { name: "Manter atividade" })).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Manter atividade" })).toHaveFocus(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Manter atividade" }));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("warns when a started activity is removed and hides completed deletion", () => {
+  it("blocks deletion during execution and hides completed deletion", () => {
     const { rerender } = renderForm({ ...activity, status: "paused" });
     fireEvent.click(screen.getByRole("button", { name: "Excluir atividade" }));
-    expect(screen.getByRole("alert")).toHaveTextContent("A atividade já começou");
+    expect(screen.getByRole("button", { name: "Excluir atividade" })).toBeDisabled();
 
     rerender(
       <TrainingActivityDeleteForm

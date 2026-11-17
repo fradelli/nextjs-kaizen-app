@@ -1,8 +1,8 @@
 export const trainingDayPageStyles = {
-  root: "mx-auto flex w-full max-w-5xl flex-col gap-6 py-8 sm:py-10",
-  header: "flex flex-col gap-3",
-  toolbar: "flex items-center justify-between gap-3",
-  headingRow: "flex items-center justify-between gap-3",
-  screenReaderTitle: "sr-only",
-  date: "fd-text-interface font-normal text-muted-foreground",
+  root: "flex min-h-0 w-full min-w-0 flex-1",
+  header: "flex flex-col gap-3 px-4 pt-4",
+  toolbar: "flex shrink-0 items-center gap-2",
+  headingRow: "flex min-w-0 items-center justify-between gap-2",
+  title: "sr-only",
+  date: "font-heading text-base font-semibold leading-7 text-foreground lowercase",
 } as const;

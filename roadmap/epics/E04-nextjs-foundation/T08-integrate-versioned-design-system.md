@@ -16,7 +16,6 @@ A integração só começa após o GO de prontidão de E04-T07. O package public
 
 ## Entradas
 
-- `docs/implementation/tasks/E04-T08.md`
 - `docs/implementation/evidence/E04-T07-DESIGN-SYSTEM-READINESS.md`
 - `docs/decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md`
 - `.npmrc`
@@ -102,3 +101,9 @@ Implementação e validação local concluídas em 2026-09-11 sobre a base pré-
 - CI recebeu `packages: read` somente nos quatro jobs que instalam dependências e usa `GITHUB_TOKEN` apenas no passo de instalação.
 
 A PR #30 comprovou a instalação autenticada no GitHub Actions e concluiu os seis gates obrigatórios em 2026-09-11.
+
+## Consolidação documental de 12/11/2026
+
+Registry sem segredos, CSS público/source, fonte/tema e React único eram gates iniciais. Release atual exige nova verificação; tarball é prévia.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/tasks/E04-T08.md), SHA-256 `1b2b095e2b32bab9098ea848576eab1b13afdbd0a42d1935fec49b29177ec3a0`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.

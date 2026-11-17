@@ -23,6 +23,7 @@ beforeEach(() => window.sessionStorage.clear());
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 async function ready(overrides: Partial<CompletionDraftInput> = {}) {
   const view = renderHook(() => useTrainingActivityCompletionDraft({ ...input, ...overrides }));
@@ -30,6 +31,20 @@ async function ready(overrides: Partial<CompletionDraftInput> = {}) {
   return view;
 }
 describe("completion recovery", () => {
+  it("permite avaliar e salvar a cópia local quando randomUUID não está disponível", async () => {
+    const getRandomValues = crypto.getRandomValues.bind(crypto);
+    vi.stubGlobal("crypto", { getRandomValues });
+    const view = await ready();
+    act(() => {
+      view.result.current.update({ intensity: "high", energy: "normal", comment: "HTTP local" });
+      expect(view.result.current.flush()).toBe("ok");
+    });
+    const saved = JSON.parse(sessionStorage.getItem(input.key)!);
+    expect(saved.writerId).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+    );
+    expect(saved.values.comment).toBe("HTTP local");
+  });
   it("does not recreate an excluded draft until the user changes a field", async () => {
     const view = await ready();
     act(() => {

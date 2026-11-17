@@ -5,6 +5,7 @@ import { getServerEnvironment } from "@/lib/env/server";
 import { resolveFixedWorkspace } from "@/lib/security/workspace";
 import { getPublicTrainingPlan } from "../application/get-public-training-plan";
 import { getTrainingDay } from "../application/get-training-day";
+import { getTrainingWeek } from "../application/get-training-week";
 import type {
   PublicTrainingPlanDto,
   TrainingDayDto,
@@ -35,22 +36,61 @@ export async function queryFixedWorkspaceTrainingDay(civilDate: string): Promise
   );
 }
 
+export async function queryFixedWorkspaceTrainingWeek(
+  civilDate: string,
+  dayCount = 7,
+  alignWeek = true,
+) {
+  const environment = getServerEnvironment();
+  return getTrainingWeek(
+    {
+      repository: new PrismaTrainingRepository(getDatabaseClient(), environment.APP_ENV),
+      environment: environment.APP_ENV,
+      resolveWorkspace: resolveFixedWorkspace,
+    },
+    { civilDate },
+    dayCount,
+    alignWeek,
+  );
+}
+
 export async function queryFixedWorkspaceTrainingDayPage(
   civilDate: string,
 ): Promise<TrainingDayPageQueryResult> {
   try {
     return { status: "ready", day: await queryFixedWorkspaceTrainingDay(civilDate) };
   } catch (error) {
-    if (error instanceof TrainingProjectionError) {
-      if (error.code === "TRAINING_DEFINITION_INVALID") {
-        return { status: "invalid_data", reason: "definition_invalid" };
-      }
+    return trainingProjectionFailure(error);
+  }
+}
 
-      if (error.code === "TRAINING_REFERENCE_INVALID") {
-        return { status: "invalid_data", reason: "reference_invalid" };
-      }
+export async function queryFixedWorkspaceTrainingWeekPage(
+  civilDate: string,
+  dayCount = 7,
+  alignWeek = true,
+) {
+  try {
+    return {
+      status: "ready" as const,
+      week: await queryFixedWorkspaceTrainingWeek(civilDate, dayCount, alignWeek),
+    };
+  } catch (error) {
+    return trainingProjectionFailure(error);
+  }
+}
+
+function trainingProjectionFailure(
+  error: unknown,
+): Extract<TrainingDayPageQueryResult, { status: "invalid_data" }> {
+  if (error instanceof TrainingProjectionError) {
+    if (error.code === "TRAINING_DEFINITION_INVALID") {
+      return { status: "invalid_data", reason: "definition_invalid" };
     }
 
-    throw error;
+    if (error.code === "TRAINING_REFERENCE_INVALID") {
+      return { status: "invalid_data", reason: "reference_invalid" };
+    }
   }
+
+  throw error;
 }

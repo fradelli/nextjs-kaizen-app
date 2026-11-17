@@ -1,0 +1,18 @@
+.panel {
+  position: fixed;
+  inset: auto;
+  left: var(--menu-left);
+  top: var(--menu-top);
+  width: 15rem;
+  margin: 0;
+}
+.panel:not(:popover-open) {
+  display: none;
+}
+.panel:popover-open {
+  display: grid;
+  gap: 0.25rem;
+}
+.panel > button {
+  justify-content: start;
+}

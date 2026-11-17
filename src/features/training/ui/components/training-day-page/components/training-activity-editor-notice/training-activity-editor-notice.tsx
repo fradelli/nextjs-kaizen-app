@@ -2,6 +2,7 @@
 import { useTranslations } from "next-intl";
 
 import { useEffect, useState } from "react";
+import { Alert, AlertDescription, AlertAction } from "@fradelli/ui/alert";
 import { Button } from "@fradelli/ui/button";
 import { EDITOR_NOTICE_EVENT } from "@/features/training/ui/lib/training-activity-editor-draft/training-activity-editor-draft.utils";
 export function TrainingActivityEditorNotice() {
@@ -24,14 +25,13 @@ export function TrainingActivityEditorNotice() {
     return () => window.removeEventListener(EDITOR_NOTICE_EVENT, receive);
   }, []);
   return message ? (
-    <div
-      role="status"
-      className="flex items-start justify-between gap-3 rounded-lg border border-border p-3 text-sm"
-    >
-      <p>{message}</p>
-      <Button type="button" variant="ghost" size="sm" onClick={() => setMessage("")}>
-        {t("closeNotice")}
-      </Button>
-    </div>
+    <Alert role="status">
+      <AlertDescription>{message}</AlertDescription>
+      <AlertAction>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setMessage("")}>
+          {t("closeNotice")}
+        </Button>
+      </AlertAction>
+    </Alert>
   ) : null;
 }

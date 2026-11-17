@@ -1,12 +1,23 @@
 "use client";
-import { useTranslations } from "next-intl";
 
-import { XIcon } from "@fradelli/ui/icons/X";
 import { Button } from "@fradelli/ui/button";
-import { useEffect, useId, useRef } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@fradelli/ui/dialog";
+import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { createPortal } from "react-dom";
+import { useLayoutEffect, useRef, useState } from "react";
+import { lockTrainingDialogScroll } from "../../../../lib/training-dialog-scroll-lock";
 import type { TrainingActivityModalProps } from "./training-activity-modal.types";
-import { trainingActivityModalStyles as s } from "./training-activity-modal.styles";
+
 export function TrainingActivityModal({
+  placement = "center",
   initialFocusRef,
   size = "form",
   closeLabel,
@@ -19,120 +30,82 @@ export function TrainingActivityModal({
   restoreFocusRef,
 }: TrainingActivityModalProps) {
   const t = useTranslations("training");
-  const id = useId(),
-    dialog = useRef<HTMLDialogElement>(null),
-    heading = useRef<HTMLHeadingElement>(null);
-  const backdropDown = useRef(false);
-  useEffect(() => {
-    const previous =
-      restoreFocusRef?.current ??
-      (document.activeElement instanceof HTMLElement ? document.activeElement : null);
-    const element = dialog.current;
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    if (element && !element.open) element.showModal();
-    (initialFocusRef?.current ?? heading.current)?.focus();
-    return () => {
-      if (element?.open) element.close();
-      document.body.style.overflow = overflow;
-      const target =
-        previous?.isConnected && !previous.matches(":disabled")
-          ? previous
-          : document.querySelector<HTMLElement>("#training-day-title");
-      if (target) {
-        const had = target.hasAttribute("tabindex");
-        if (!had) target.tabIndex = -1;
-        target.focus();
-        if (!had) target.removeAttribute("tabindex");
-      }
-    };
-  }, [restoreFocusRef, initialFocusRef]);
-  function outside(x: number, y: number) {
-    const bounds = dialog.current?.getBoundingClientRect();
-    return Boolean(
-      bounds && (x < bounds.left || x > bounds.right || y < bounds.top || y > bounds.bottom),
+  const [panel, setPanel] = useState<HTMLElement | null>(null);
+  const [mobile, setMobile] = useState(
+    () =>
+      typeof window !== "undefined" && (window.matchMedia?.("(width < 48rem)").matches ?? false),
+  );
+  useLayoutEffect(() => {
+    if (placement !== "right" || !window.matchMedia) return;
+    const query = window.matchMedia("(width < 48rem)");
+    const sync = () => setMobile(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, [placement]);
+  const sidePanel = placement === "right" && !mobile;
+  useLayoutEffect(() => {
+    if (sidePanel) {
+      setPanel(document.getElementById("schedule-editor-panel"));
+      return;
+    }
+    return lockTrainingDialogScroll();
+  }, [sidePanel]);
+  const heading = useRef<HTMLHeadingElement>(null);
+  if (sidePanel) {
+    if (!panel) return null;
+    return createPortal(
+      <aside
+        aria-label={title}
+        className="relative flex h-full min-w-0 flex-col gap-2 bg-background px-3 py-2"
+      >
+        <div className="min-h-0 overflow-y-auto">
+          <section aria-label={title} className="border-b border-border pb-3">
+            {children}
+            {footer && <footer className="flex flex-wrap justify-end gap-2">{footer}</footer>}
+          </section>
+        </div>
+      </aside>,
+      panel,
     );
   }
   return (
-    <dialog
-      ref={dialog}
-      className={size === "confirmation" ? s.confirmation : s.root}
-      aria-labelledby={`${id}-title`}
-      aria-describedby={description ? `${id}-description` : undefined}
-      onKeyDown={(event) => {
-        if (
-          event.key !== "Tab" ||
-          !(event.target instanceof Element) ||
-          event.target.closest("dialog") !== event.currentTarget
-        )
-          return;
-        const items = [
-          ...event.currentTarget.querySelectorAll<HTMLElement>(
-            'button,input:not([type="hidden"]),select,textarea,a[href],[tabindex]',
-          ),
-        ].filter(
-          (item) =>
-            item.closest("dialog") === event.currentTarget &&
-            item.tabIndex >= 0 &&
-            !item.matches(":disabled") &&
-            item.getClientRects().length > 0,
-        );
-        const first = items[0],
-          last = items.at(-1),
-          active = document.activeElement;
-        if (!first) {
-          event.preventDefault();
-          heading.current?.focus();
-        } else if (event.shiftKey && (active === first || !items.includes(active as HTMLElement))) {
-          event.preventDefault();
-          last?.focus();
-        } else if (!event.shiftKey && (active === last || !items.includes(active as HTMLElement))) {
-          event.preventDefault();
-          first.focus();
-        }
-      }}
-      onCancel={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        if (!busy) onRequestClose();
-      }}
-      onPointerDown={(event) => {
-        backdropDown.current =
-          event.target === event.currentTarget && outside(event.clientX, event.clientY);
-      }}
-      onClick={(event) => {
-        if (backdropDown.current && outside(event.clientX, event.clientY) && !busy)
-          onRequestClose();
-        backdropDown.current = false;
+    <Dialog
+      open
+      onOpenChange={(open) => {
+        if (!open && !busy) onRequestClose();
       }}
     >
-      <div className={s.layout}>
-        <header className={s.header}>
-          <div>
-            <h2 id={`${id}-title`} ref={heading} tabIndex={-1} className={s.title}>
-              {title}
-            </h2>
-            {description ? (
-              <p id={`${id}-description`} className={s.description}>
-                {description}
-              </p>
-            ) : null}
-          </div>
+      <DialogContent
+        showCloseButton={false}
+        initialFocus={initialFocusRef ?? heading}
+        finalFocus={restoreFocusRef}
+        className={`flex max-h-[calc(100dvh-1rem)] flex-col overflow-hidden ${size === "form" ? "sm:max-w-lg" : "sm:max-w-md"}`}
+      >
+        <DialogHeader className={placement === "right" ? "relative h-6" : "relative pr-10"}>
+          <DialogTitle
+            className={placement === "right" ? "sr-only" : undefined}
+            ref={heading}
+            tabIndex={-1}
+          >
+            {title}
+          </DialogTitle>
+          {description ? <DialogDescription>{description}</DialogDescription> : null}
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className={s.close}
+            className="absolute right-0 top-0"
             aria-label={closeLabel ?? t("closeForm")}
             disabled={busy}
             onClick={onRequestClose}
           >
-            <XIcon size={20} weight="bold" aria-hidden="true" focusable="false" />
+            <X aria-hidden="true" />
           </Button>
-        </header>
-        <div className={s.body}>{children}</div>
-        <footer className={s.footer}>{footer}</footer>
-      </div>
-    </dialog>
+        </DialogHeader>
+        <div className="min-h-0 overflow-y-auto overscroll-contain">{children}</div>
+        {footer ? <DialogFooter>{footer}</DialogFooter> : null}
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -18,7 +18,7 @@ import type { TrainingActivityCompletionDialogProps } from "./training-activity-
 const draftMessages = {
   loading: "loadingFeedback",
   clean: "saveOnConfirmation",
-  stored: "draftStored",
+
   restored: "feedbackRestored",
   storage_error: "feedbackStorageFailed",
   stale: "activityChanged",
@@ -68,7 +68,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
           setNeedsReload(true);
         return result;
       } catch {
-        setNeedsReload(true);
+        if (mode !== "complete" || !props.completionRequestedAt) setNeedsReload(true);
         return {
           status: "invalid",
           message: t("saveUnconfirmedPreserved"),
@@ -114,7 +114,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
             <Button
               type="button"
               variant="ghost"
-              className="min-h-11 text-status-destructive"
+              tone="danger"
               disabled={locked || draft.status === "external_change"}
               onClick={() => draft.discard()}
             >
@@ -127,7 +127,6 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
             ref={confirmationTrigger}
             type="submit"
             form={id}
-            className="min-h-11"
             pending={locked}
             pendingLabel={t("saving")}
             disabled={!draft.ready || blocked || confirming || closeError}
@@ -137,9 +136,15 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
         </>
       }
     >
-      <p role="status" className="py-2 fd-text-interface text-muted-foreground">
-        {changed ? t("executionChanged") : t(draftMessages[draft.status])}
-      </p>
+      {(changed || draft.status !== "stored") && (
+        <p role="status" className="py-2 fd-text-interface text-muted-foreground">
+          {changed
+            ? t("executionChanged")
+            : draft.status === "stored"
+              ? null
+              : t(draftMessages[draft.status])}
+        </p>
+      )}
       {closeError ? (
         <div role="alert" className="grid gap-3 py-3">
           <p>
@@ -149,7 +154,7 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
             <Button
               type="button"
               variant="ghost"
-              className="min-h-11 text-status-destructive"
+              tone="danger"
               onClick={() => {
                 draft.release();
                 onClose();
@@ -242,14 +247,12 @@ export function TrainingActivityCompletionDialog(props: TrainingActivityCompleti
                 ref={backButton}
                 type="button"
                 variant="outline"
-                className="min-h-11"
                 onClick={() => setConfirming(false)}
               >
                 {t("back")}
               </Button>
               <Button
                 type="button"
-                className="min-h-11"
                 disabled={locked}
                 onClick={() => {
                   confirmed.current = true;

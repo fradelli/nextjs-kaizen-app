@@ -1,11 +1,122 @@
 # Changelog
 
+## 2026-11-14 — Executor e diálogos Mira
+
+- Executor modal consistente após reload, superfície escura uniforme e ações superiores com mesma geometria. Clique externo recolhe o treino.
+- Duração abre controles de pausa. Resumo exclui aquecimentos e usa carga unilateral por lado. Séries realizadas dependem das medidas válidas, com destaque de linha e ✓ dedicado ao descanso.
+- Campos E/D ou L/R lado a lado, Switch Mira do pacote e diálogos inferiores no mobile. Barra usa variantes oficiais e preserva o halo do indicador.
+- 64 testes direcionados e 18 integrações PostgreSQL aprovados. Build e checks estáticos aprovados. Navegador em 1440, 390 e 320 px. Candidato local do DS, com release seguindo o fluxo próprio.
+
+
+## 2026-11-13 — Barra de retomada flutuante pelo design system
+
+- Item Mira, indicador de status, ícone e alvo de toque consumidos do candidato
+  local do DS. Indicador verde pulsa durante execução e fica estático ao pausar
+  ou solicitar movimento reduzido.
+- Barra sobreposta ao conteúdo, acima da navegação móvel, sem padding condicional
+  que encolha a agenda. Descarte e retomada continuam independentes.
+- Validação em 1440, 390 e 320 px; 21 testes direcionados, build e checks estáticos
+  aprovados. Candidato local, sem release ou deploy. Ajustes do executor e nova
+  regra de contagem documentados como pendentes, sem mudança funcional nesta entrega.
+
+## 2026-11-13 — Preparação da migração Mira e primeiro Select
+
+- E10-T09 registrada com plano de conclusão e retomada verificável.
+- Candidato local com Select instalado pelo pnpm; aquecimento do formulário usa
+  o export público e preserva sugestões, rascunho e payload.
+- Banco local atualizado; formulário validado em desktop e mobile emulado com
+  envio real e retorno de foco. Build e checks estáticos aprovados, 68 testes
+  direcionados aprovados. Release e migração integral permanecem pendentes.
+- Popover de opções interceptando cliques na exclusão aninhada registrado como
+  achado da agenda; exclusão por teclado confirmada.
+
+
+## 2026-11-12 — Consolidação documental e contexto do Codex
+
+- Roteiro por tarefa/seção, vigência visual e rotas atuais documentados; referências Prisma locais fora do versionamento.
+- Pacotes E04, resumo diário e contexto consolidado substituídos por fontes específicas com origens imutáveis no relatório único.
+- Código, dados, dependências e trabalho visual paralelo preservados; nenhuma publicação nesta entrega.
+## 12/11/2026 - Revisão local da adoção do design system
+
+- Execução dedicada mantém a prévia bloqueada e o contador parado antes do início, com campos de séries compostos por Field e Input.
+- Aquecimento usa Collapsible ao lado do treino principal; rotina só de aquecimento permanece aberta e acessível pela rota de detalhe existente.
+- Títulos interativos da agenda recebem CardTitle diretamente. Exemplos das fundações incluem os controles realmente exportados pelo artefato local, e os ícones do aplicativo usam Lucide.
+- 475 testes aprovados, cobertura de branches de 80,19%; lint, tipos, formato, estrutura e traduções aprovados. Build e aceite visual desktop/mobile bloqueados pelo carregamento nativo do SWC no ambiente.
+- Inventário e pendências de distribuição registrados em [componentes compartilhados](docs/product/telas/componentes-shadcn.md). Nenhuma publicação realizada.
+
+## 12/11/2026 — Cursor padrão nos controles
+
+- Botões, links com aparência de botão e controles de divulgação usam a seta padrão. O hover, o foco visível e o acionamento por toque continuam indicando interação.
+
+## 11/11/2026 — Semana fixa e referência visual da agenda
+
+- Desktop consulta sempre domingo a sábado, com sete colunas de largura constante. No celular, permanece visível apenas o dia selecionado.
+- Navegação por dia no celular e por semana no desktop. Cabeçalho mensal, marcador vermelho para hoje e diferenciação sutil dos fins de semana.
+- Agenda usa as fontes IBM Plex Sans e Figtree, controles de data em Lucide e sombras discretas nos eventos.
+
+## 11/11/2026 — Cores de ações
+
+- Padrão compartilhado por finalidade: menta para iniciar, lilás para adicionar e amarelo para a seleção de hoje.
+- Estados de interação e indisponibilidade derivados das mesmas cores.
+
+## 11/11/2026 — Agenda e navegação
+
+- Rotas principais em inglês, com redirecionamento das URLs anteriores e preservação da data.
+- Navegação somente por ícones acessíveis, com calendário para Meu Dia.
+- Data acima dos controles compactos de navegação e título de Meu Dia visualmente oculto.
+- Grade visual com linhas e rótulos de hora em hora. Novos horários planejados em blocos de 15 minutos. Estimativas são arredondadas para cima ao reservar o intervalo.
+- Validação de horários no formulário e no servidor. Duração real continua registrada com precisão.
+- 57 testes de formulário, cálculo de horários, navegação e grade aprovados.
+
+## 2026-11-11 — sessões de segundos na agenda
+
+- Sessões concluídas preservam a precisão dos intervalos registrados na grade, inclusive quando início e fim caem no mesmo minuto.
+- Marcadores compactos e lista “Menos de 1 min” permitem localizar e abrir sessões breves sem aumentar sua duração real.
+- Horários corrigidos, recuperação de rascunhos e cálculo das sobreposições permanecem preservados.
+
+## 2026-11-11 — avaliação em rede local
+
+- Corrigido bloqueio do formulário de avaliação em acesso HTTP por IP, quando o navegador não disponibiliza `crypto.randomUUID`.
+- Identificadores dos rascunhos de avaliação e edição usam aleatoriedade criptográfica compatível com esse acesso, mantendo o formato UUID e a identificação de escritas concorrentes.
+
+## 2026-11-11 — recuperação de cópias locais após conclusão
+
+- Agenda e detalhe reconhecem cópias locais que correspondem à execução já concluída, limpando a barra de retomada sem gravar no banco.
+- Divergências e falta da avaliação da aba impedem a limpeza automática; o detalhe orienta a conferir o resultado antes do descarte.
+- Estado concluído bloqueia retomada local por eventos antigos e início acidental de outro cronômetro para a mesma ocorrência.
+
+## 2026-11-11 — treino sobre a agenda e reenvio da finalização
+
+- Rota paralela abre o executor sobre a página de origem, com retorno pelo histórico e acesso direto pela URL.
+- Descanso e diálogos internos compartilham o contexto da sobreposição e liberam a rolagem ao fechar.
+- Repetição idêntica de uma finalização reconhece o resultado salvo; dados divergentes continuam protegidos por conflito.
+- Falha na resposta preserva o snapshot e permite reenviar a finalização com o encerramento original.
+
+## 2026-11-11 — retomada global e menu de atividades
+
+- Card de retomada recupera o treino local ao navegar entre páginas e confirma o descarte da execução.
+- Menu de três pontos reúne mudança de dia ou horário e exclusão da ocorrência, com bloqueio durante execução.
+- Executor dedicado concentra controles de execução; agenda recupera a posição de rolagem por data.
+- Testes cobrem sincronização, falhas de armazenamento, descarte e preservação de uma execução pausada no PostgreSQL.
+
+## 2026-11-10 — grade responsiva do Meu Dia
+
+- Grade de 24 horas conectada às atividades reais, com um dia no celular e os dias restantes da semana no desktop.
+- Posicionamento proporcional, sobreposições, itens sem intervalo e lista acessível pelo cabeçalho do dia.
+- Tema grafite, categorias pastel e relógio local com marcador e contraste por passagem do tempo.
+
+## 2026-11-10 — consulta semanal do Meu Dia
+
+- Consulta de uma data até sábado com programação calculada sem persistência pela visita.
+- Ocorrências previstas usam identidade comum à consulta e à gravação; exclusões permanecem ocultas.
+- Mutações rejeitadas revertem efeitos parciais. Consulta futura cobre a semana completa.
+- Validação com 24 testes unitários, 27 testes de PostgreSQL descartável, lint, tipos e formatação.
+
 ## 2026-10-29 — execução independente de séries
 
 - Confirmação local por série, aquecimentos e séries adicionais, com envio ao finalizar o treino.
 - Descanso recuperável com ajustes de 15 segundos; referência anterior por tipo e histórico durante execução.
 - Layout compacto com faixa de estado, toggle e dicas em dialog; contratos e migração preservam registros legados.
-
 
 ## 2026-10-29 — interface em português e inglês
 

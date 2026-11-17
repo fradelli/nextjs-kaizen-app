@@ -259,7 +259,6 @@ As convenções completas estão em [AGENTS.md](AGENTS.md).
 | Quais planos estão selecionados           | [Treino](data/active.json) e [alimentação](data/nutrition/active.json)                 |
 | Quais verificações foram realizadas       | [Diário operacional](docs/worklog/index.md)                                            |
 | Como atualizar planos                     | [Guia de atualização dos dados de treino](docs/guides/UPDATING-TRAINING-DATA.md)       |
-| Como a aparência pode evoluir             | [Proposta visual](docs/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md)         |
+| Como a aparência pode evoluir             | [Guia visual vigente](docs/product/telas/guia-de-estilo.md)         |
 
-O [contexto consolidado](kaizen-project-context.md) preserva uma análise histórica;
-confirme informações de implementação no código e no roadmap atual.
+A [revisão documental](docs/documentation-review.md) preserva consolidações e fontes históricas; consulte produto, arquitetura e tarefa conforme a pergunta.

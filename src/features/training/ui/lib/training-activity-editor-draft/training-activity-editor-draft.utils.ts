@@ -1,3 +1,4 @@
+import { createTrainingDraftId } from "../training-draft-id";
 import type {
   AvailablePublicTrainingPlanDto,
   TrainingActivityDto,
@@ -142,7 +143,7 @@ export function createActivityEditorDraft(
     context,
     values,
     writerId,
-    writeId: crypto.randomUUID(),
+    writeId: createTrainingDraftId(),
     updatedAt: now.toISOString(),
     expiresAt: new Date(now.getTime() + 7 * 86400000).toISOString(),
   };

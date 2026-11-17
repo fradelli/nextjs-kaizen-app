@@ -142,6 +142,7 @@ export type TrainingActivityDto = Readonly<{
 }>;
 
 type TrainingDayActivitiesDto = Readonly<{
+  plannedRestReason?: string | null;
   activities: readonly TrainingActivityDto[];
 }>;
 

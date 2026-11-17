@@ -3,6 +3,7 @@ import type { TrainingFormAction } from "@/features/training/ui/training-action.
 import type { TrainingActivityExecutionDraft } from "@/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.types";
 
 export type TrainingActivityControlsProps = Readonly<{
+  showLabel?: boolean;
   civilDate: string;
   executionStorageError?: boolean;
   activity: TrainingActivityDto;

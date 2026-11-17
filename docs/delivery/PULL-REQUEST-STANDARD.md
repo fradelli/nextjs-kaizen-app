@@ -23,7 +23,7 @@ Exemplos:
 Regras:
 
 - o ID deve existir em `roadmap/README.md` e ser a tarefa principal;
-- tipos permitidos: `feat`, `fix`, `hotfix`, `docs`, `refactor`, `test`, `ci`, `chore`, `build`, `perf`, `style` e `revert`;
+- tipos permitidos: `feat`, `fix`, `docs`, `refactor`, `test`, `ci`, `chore`, `build`, `perf` e `style`;
 - escopo usa letras minúsculas, números e hífen;
 - não existe prefixo `NO-JIRA`: toda entrega deve possuir uma tarefa local;
 - quando uma PR abranger itens relacionados, somente o principal vai no título; os demais ficam em `Observações`.
@@ -33,10 +33,10 @@ Regras:
 Formato obrigatório para branches temporárias:
 
 ```text
-<prefixo>/E00-T01-descricao-curta
+codex/E00-T01-descricao-curta
 ```
 
-Prefixos permitidos: `feature`, `fix`, `hotfix`, `docs`, `refactor`, `test`, `ci`, `chore`, `rc` e `codex`. O slug usa kebab-case minúsculo.
+O validador atual aceita somente `codex` em branches de tarefa. O slug usa kebab-case minúsculo. Ampliar prefixos ou tipos exige mudança própria no contrato.
 
 ## Descrição
 
@@ -62,6 +62,8 @@ Preencha todas as seções com evidências da PR. Não deixe placeholders, não 
 | `master` | `staging` | merge commit |
 
 Branches protegidas não retornam para `developer`. Promoções usam o template especializado e registram SHA de origem, ambiente, evidência e rollback.
+
+Contrato executável: `scripts/validate-governance.mjs`. Este guia reflete o comportamento implementado; `hotfix` e `revert` não são tipos aceitos atualmente.
 
 ## Validação proporcional
 

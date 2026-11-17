@@ -3,9 +3,16 @@
 
 @source "../../node_modules/@fradelli/ui/dist";
 
-/* O Kaizen usa os estados visuais da família sem movimento animado. */
+a[href] {
+  cursor: default;
+}
+
+/* As camadas solares respeitam a preferência de movimento no CSS do logo. */
 html.kaizen-static-motion,
-html.kaizen-static-motion *:not([data-kaizen-solar-layer]),
+html.kaizen-static-motion
+  *:not([data-slot="status-indicator"][data-pulse="true"]):not([data-slot="dialog-content"]):not(
+    [data-slot="alert-dialog-content"]
+  ):not([data-kaizen-solar-layer]),
 html.kaizen-static-motion *::before,
 html.kaizen-static-motion *::after,
 html.kaizen-static-motion dialog::backdrop {
@@ -14,22 +21,8 @@ html.kaizen-static-motion dialog::backdrop {
   transition: none !important;
 }
 
-/* Escala responsiva compartilhada; campos preservam 16px para foco no mobile. */
-.kaizen-text-title {
-  @apply text-sm sm:text-base;
-}
-.kaizen-text-body {
-  @apply text-xs sm:text-sm;
-}
-.kaizen-text-caption {
-  @apply text-xs sm:text-sm;
-}
-.kaizen-text-body input {
-  font-size: 1rem;
-}
-
 :root {
-  --kaizen-mobile-nav-height: calc(2.75rem + 2 * var(--fd-space-2) + 2px);
-  --kaizen-mobile-nav-bottom: calc(var(--fd-space-2) + env(safe-area-inset-bottom, 0px));
+  --kaizen-mobile-nav-height: calc(4rem + env(safe-area-inset-bottom, 0px));
+  --kaizen-mobile-nav-bottom: var(--kaizen-mobile-nav-height);
   --kaizen-rest-panel-height: 9rem;
 }

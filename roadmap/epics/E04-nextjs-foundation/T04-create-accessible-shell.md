@@ -16,7 +16,6 @@ Shell, páginas, rotas, marca e composição pertencem ao Kaizen. Tokens, tipogr
 
 ## Entradas
 
-- `docs/implementation/tasks/E04-T04.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `docs/decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md`
 - `docs/product/P0.md`
@@ -71,3 +70,9 @@ com navegação Dieta/Treino isolada em uma ilha Client, landmarks acessíveis,
 skip link, rota ativa, layout mobile-first e placeholders sem dados de domínio.
 Os gates locais e a validação manual passaram; a padronização estrutural das
 páginas existentes segue separada em E04-T09.
+
+## Consolidação documental de 12/11/2026
+
+Shell/layout pertencem ao Kaizen; primitives/estados genéricos ao pacote. Ownership permanece na arquitetura e decisão do DS.
+
+[Pacote original integral](https://github.com/fradelli/nextjs-kaizen-app/blob/fd2269d2eaa7d55cfea724631f12fa6505d37b32/docs/implementation/tasks/E04-T04.md), SHA-256 `1d745a46e69ca978eb4076ebff4b9b670bbf97b370af1fbfcb8da7b9861c1266`. Comandos, critérios, riscos e rollback registram aquela base e não são receita para reinstalar a aplicação atual. Pendências não viraram aprovações nesta consolidação.
