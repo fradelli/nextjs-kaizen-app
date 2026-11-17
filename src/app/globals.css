@@ -5,7 +5,7 @@
 
 /* O Kaizen usa os estados visuais da família sem movimento animado. */
 html.kaizen-static-motion,
-html.kaizen-static-motion *,
+html.kaizen-static-motion *:not([data-kaizen-solar-layer]),
 html.kaizen-static-motion *::before,
 html.kaizen-static-motion *::after,
 html.kaizen-static-motion dialog::backdrop {
