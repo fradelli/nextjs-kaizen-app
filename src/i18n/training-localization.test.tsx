@@ -18,14 +18,14 @@ afterEach(cleanup);
 describe("localized training interface", () => {
   it.each([
     ["en", english, "Schedule", "Today", "Intensity", "Note", "High"],
-    ["pt-BR", portuguese, "Agenda", "Hoje", "Intensidade", "ComentÃ¡rio", "Alta"],
+    ["pt-BR", portuguese, "Agenda", "Hoje", "Intensidade", "Nota", "Alta"],
   ] as const)(
     "renders dates, navigation and editable feedback in %s",
     (locale, messages, title, today, intensity, comment, high) => {
       let values = {
         intensity: "" as "" | "high",
         energy: "" as const,
-        comment: "AnotaÃ§Ã£o pessoal",
+        comment: "Anotação pessoal",
       };
       render(
         <NextIntlClientProvider locale={locale} messages={messages} timeZone="America/Sao_Paulo">
@@ -55,7 +55,7 @@ describe("localized training interface", () => {
       expect(screen.getByText(messages.common.initialStructure)).toBeInTheDocument();
       expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
       expect(screen.getByRole("button", { name: today })).toBeDisabled();
-      expect(screen.getByRole("textbox", { name: comment })).toHaveValue("AnotaÃ§Ã£o pessoal");
+      expect(screen.getByRole("textbox", { name: comment })).toHaveValue("Anotação pessoal");
       fireEvent.change(screen.getByRole("combobox", { name: intensity }), {
         target: { value: "high" },
       });
@@ -76,7 +76,7 @@ describe("localized training interface", () => {
       <NextIntlClientProvider locale="en" messages={english}>
         <TrainingActionFeedback
           pending={false}
-          state={{ status: "invalid", message: "Informe uma carga vÃ¡lida." }}
+          state={{ status: "invalid", message: "Informe uma carga válida." }}
         />
       </NextIntlClientProvider>,
     );
