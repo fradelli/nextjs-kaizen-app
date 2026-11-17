@@ -51,10 +51,7 @@ export function TrainingLocalExerciseEditor({
       rest,
       sets: draft.sets.map((x) => ({
         ...x,
-        confirmed:
-          x.setNumber === set.setNumber
-            ? confirmed
-            : (x.confirmed ?? false),
+        confirmed: x.setNumber === set.setNumber ? confirmed : (x.confirmed ?? false),
       })),
     });
   }
@@ -74,8 +71,7 @@ export function TrainingLocalExerciseEditor({
       sets: [
         ...draft.sets.map((x) => ({
           ...x,
-          confirmed:
-            x.confirmed ?? false,
+          confirmed: x.confirmed ?? false,
         })),
         set,
       ],
