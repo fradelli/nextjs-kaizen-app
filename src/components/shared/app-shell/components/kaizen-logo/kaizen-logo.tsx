@@ -1,5 +1,5 @@
 import Image from "next/image";
-import solarIcon from "./solar.png";
+const solarIcon = "/brand/kaizen-solar.png";
 import styles from "./kaizen-logo.module.css";
 
 export function KaizenLogo() {
