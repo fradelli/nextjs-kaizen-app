@@ -121,6 +121,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E09-T07 | PLANNED     | [Migrar documentação e entrega para inglês](epics/E09-future-evolution/T07-migrate-documentation-to-english.md)                                | E09-T05                               |
 | E09-T08 | PLANNED     | [Validar experiência multilíngue](epics/E09-future-evolution/T08-validate-multilingual-experience.md)                                          | E09-T06, E09-T07                      |
 | E09-T09 | DONE | [Internacionalizar interface atual em português e inglês](epics/E09-future-evolution/T09-localize-current-interface.md) | — |
+| E09-T10 | READY | [Integrar catálogo de exercícios e equipamentos](epics/E09-future-evolution/T10-integrate-exercise-catalog.md) | — |
 | E10-T01 | DONE | [Integrar a linguagem visual do portfólio no Kaizen](epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md) | E06-T25 |
 | E10-T02 | DONE | [Player e registro de atividade em modal](epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md) | E10-T01 |
 

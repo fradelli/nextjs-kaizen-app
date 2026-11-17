@@ -101,7 +101,10 @@ else if (mode === "--apply") {
             throw new Error("O pacote já foi substituído por uma versão posterior.");
           return "já aplicado";
         }
-        await tx.catalogSport.createMany({ data: sportModalities.map(namePt => ({ namePt })), skipDuplicates: true });
+        await tx.catalogSport.createMany({
+          data: sportModalities.map((namePt) => ({ namePt })),
+          skipDuplicates: true,
+        });
         for (const row of equipmentRows)
           await tx.catalogEquipment.upsert({ where: { id: row.id }, create: row, update: row });
         for (const row of exerciseRows)
