@@ -1,0 +1,92 @@
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 1;
+}
+
+/* O disco da arte oficial ocupa cerca de 52% do quadro. */
+.disc {
+  position: absolute;
+  inset: 24%;
+  overflow: hidden;
+  background: var(--fd-color-category-yellow-solid, #f2cf63);
+  opacity: var(--solar-gold, 0.83);
+  mask-image: linear-gradient(to bottom, black 60%, rgb(0 0 0 / 65%));
+  border-radius: 50%;
+}
+
+.halo,
+.light {
+  position: absolute;
+  inset: 0;
+}
+
+.halo {
+  color: var(--solar-halo, var(--fd-color-category-yellow-solid, #f2cf63));
+  background: radial-gradient(
+    circle closest-side,
+    transparent 48%,
+    currentColor 54%,
+    transparent 85%
+  );
+}
+
+.light {
+  background: radial-gradient(
+    ellipse closest-side,
+    var(--fd-color-category-yellow-solid, #f2cf63),
+    transparent
+  );
+  mix-blend-mode: screen;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .disc {
+    transition: opacity 650ms ease-in-out;
+  }
+  .light {
+    animation: sunlight 11s ease-in-out infinite;
+  }
+  .halo {
+    transition: color 650ms ease-in-out;
+    animation: breathe 9s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes sunlight {
+  0%,
+  100% {
+    transform: translate(-15%, -12%);
+    opacity: 0.2;
+  }
+  38% {
+    transform: translate(12%, -4%);
+    opacity: 0.36;
+  }
+  72% {
+    transform: translate(-2%, 14%);
+    opacity: 0.26;
+  }
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.12;
+  }
+  to {
+    opacity: 0.24;
+  }
+}
+
+a:is(:focus-visible, :active) .glow {
+  --solar-gold: 0.04;
+  --solar-halo: var(--fd-color-category-orange-solid, #f0a866);
+}
+
+@media (hover: hover) {
+  a:hover .glow {
+    --solar-gold: 0.04;
+    --solar-halo: var(--fd-color-category-orange-solid, #f0a866);
+  }
+}
