@@ -1,0 +1,48 @@
+model CatalogEquipment {
+  id String @id
+  namePt String
+  details Json
+  requirements CatalogRequirement[]
+}
+
+model CatalogExercise {
+  id String @id
+  namePt String
+  nameEn String
+  primaryGroups String[]
+  researchStatus String
+  calisthenics String
+  anatomy Json
+  profile Json
+  aliases CatalogExerciseAlias[]
+  requirements CatalogRequirement[]
+  @@index([primaryGroups], type: Gin)
+}
+
+model CatalogExerciseAlias {
+  id String @id
+  exerciseId String
+  exercise CatalogExercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  @@index([exerciseId])
+}
+
+model CatalogRequirement {
+  exerciseId String
+  configuration Int
+  equipmentId String
+  optional Boolean
+  exercise CatalogExercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  equipment CatalogEquipment @relation(fields: [equipmentId], references: [id], onDelete: Restrict)
+  @@id([exerciseId, configuration, equipmentId])
+  @@index([equipmentId])
+}
+
+model CatalogImport {
+  id String @id
+  appliedAt DateTime @default(now()) @db.Timestamptz(6)
+  metadata Json
+}
+
+model CatalogSport {
+  namePt String @id
+}

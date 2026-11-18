@@ -26,6 +26,8 @@
     "test:ci-scripts": "node --test scripts/validate-governance.test.mjs scripts/validate-data.test.mjs scripts/validate-component-structure.test.mjs scripts/validate-layer-boundaries.test.mjs scripts/validate-ui-icons.test.mjs",
     "governance": "node scripts/validate-governance.mjs",
     "data:check": "node scripts/validate-data.mjs",
+    "catalog:check": "pnpm db:generate && pnpm data:check && node --import tsx scripts/seed-catalog.mjs --check",
+    "catalog:apply": "pnpm catalog:check && node --import tsx scripts/seed-catalog.mjs --apply",
     "data:import": "pnpm db:generate && node --conditions=react-server --import tsx scripts/import-versioned-plan-definitions.ts",
     "data:check:persisted": "pnpm db:generate && node --conditions=react-server --import tsx scripts/validate-persisted-data.ts",
     "workspace:ensure": "node --conditions=react-server --import tsx scripts/ensure-fixed-workspace.ts",

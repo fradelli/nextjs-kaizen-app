@@ -591,7 +591,59 @@ export function validateData({ repositoryRoot = process.cwd() } = {}) {
     ...walkJsonFiles(resolve(root, "schemas")),
   ];
   const { documents, errors } = parseJsonFiles(root, files);
-  return [...errors, ...validateDocuments({ documents, repositoryRoot: root })].sort();
+  const catalogErrors = validateCatalogRequirements(documents);
+  return [
+    ...errors,
+    ...catalogErrors,
+    ...validateDocuments({ documents, repositoryRoot: root }),
+  ].sort();
+}
+
+function validateCatalogRequirements(documents) {
+  const exercises = documents.get("data/catalogs/exercicios.json")?.itens;
+  const equipment = documents.get("data/catalogs/equipamentos.json")?.itens;
+  if (!Array.isArray(exercises) || !Array.isArray(equipment)) {
+    return ["Catálogo de exercícios ou equipamentos ausente ou inválido."];
+  }
+  const ids = new Set(equipment.map((item) => item.id));
+  const errors = [];
+  for (const exercise of exercises) {
+    const requirements = exercise.perfil_catalogo?.requisitos_de_equipamentos;
+    if (typeof exercise.nome_en !== "string" || !exercise.nome_en.trim()) {
+      errors.push(`Catálogo: ${exercise.id} sem nome em inglês.`);
+    }
+    const configs = requirements?.configuracoes;
+    if (!Array.isArray(configs) || !configs.length) {
+      errors.push(`Catálogo: ${exercise.id} sem configuração de equipamentos.`);
+      continue;
+    }
+    for (const config of configs) {
+      if (!Array.isArray(config?.obrigatorios) || !Array.isArray(config?.opcionais)) {
+        errors.push(`Catálogo: configuração inválida em ${exercise.id}.`);
+        continue;
+      }
+      const references = [...config.obrigatorios, ...config.opcionais];
+      if (references.some((id) => !ids.has(id)) || new Set(references).size !== references.length) {
+        errors.push(`Catálogo: equipamento desconhecido ou repetido em ${exercise.id}.`);
+      }
+      if (
+        Object.keys(config.caracteristicas_exigidas ?? {}).some(
+          (id) => !config.obrigatorios.includes(id),
+        )
+      ) {
+        errors.push(`Catálogo: característica sem equipamento obrigatório em ${exercise.id}.`);
+      }
+      if (
+        !config.obrigatorios.length &&
+        requirements.estado !== "sem_equipamento_obrigatorio_proposto"
+      ) {
+        errors.push(
+          `Catálogo: explicitar a ausência de equipamento obrigatório em ${exercise.id}.`,
+        );
+      }
+    }
+  }
+  return errors;
 }
 
 function run() {
