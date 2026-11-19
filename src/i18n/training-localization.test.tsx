@@ -17,8 +17,8 @@ afterEach(cleanup);
 
 describe("localized training interface", () => {
   it.each([
-    ["en", english, "Schedule", "Today", "Intensity", "Comment", "High"],
-    ["pt-BR", portuguese, "Agenda", "Hoje", "Intensidade", "Comentário", "Alta"],
+    ["en", english, "Schedule", "Today", "Intensity", "Note", "High"],
+    ["pt-BR", portuguese, "Agenda", "Hoje", "Intensidade", "Nota", "Alta"],
   ] as const)(
     "renders dates, navigation and editable feedback in %s",
     (locale, messages, title, today, intensity, comment, high) => {

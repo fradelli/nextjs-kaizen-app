@@ -25,6 +25,7 @@ describe("AppShell", () => {
     );
 
     expect(screen.getByRole("banner")).toBeInTheDocument();
+    expect(screen.getByText("kaizen")).toBeVisible();
     expect(screen.getByRole("link", { name: "Kaizen — início" })).toHaveAttribute("href", "/");
     expect(screen.queryByText(/- kaizen/i)).not.toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();

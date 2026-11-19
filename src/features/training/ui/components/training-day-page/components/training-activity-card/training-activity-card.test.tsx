@@ -223,9 +223,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.change(screen.getByLabelText("Intensidade"), { target: { value: "high" } });
     fireEvent.change(screen.getByLabelText(/Disposi/), { target: { value: "normal" } });
     fireEvent.change(
-      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
-        "Coment\u00e1rio",
-      ),
+      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText("Nota"),
       { target: { value: "Preserve" } },
     );
     fireEvent.click(screen.getByRole("button", { name: "Fechar formul\u00e1rio" }));
@@ -233,9 +231,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Finalizar atividade:/ }));
     await waitFor(() =>
       expect(
-        within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
-          "Coment\u00e1rio",
-        ),
+        within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText("Nota"),
       ).toHaveValue("Preserve"),
     );
     action.mockResolvedValueOnce({ status: "invalid", message: "Try again" });
@@ -245,9 +241,7 @@ describe("TrainingActivityCard", () => {
     expect(screen.getByLabelText("Intensidade")).toHaveValue("high");
     expect(screen.getByLabelText(/Disposi/)).toHaveValue("normal");
     expect(
-      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText(
-        "Coment\u00e1rio",
-      ),
+      within(screen.getByRole("dialog", { name: "Finalizar atividade" })).getByLabelText("Nota"),
     ).toHaveValue("Preserve");
     expect(screen.getByRole("dialog", { name: "Finalizar atividade" })).toBeInTheDocument();
   });
@@ -466,16 +460,14 @@ describe("TrainingActivityCard", () => {
     expect(within(exerciseCard!).getByText(/Não realizado/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole("switch", { name: "Reabrir exercício para edição" }));
     expect(within(exerciseCard!).getByText(/Em aberto/)).toBeInTheDocument();
-    fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Comentário" }));
+    fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Nota" }));
     const dialog = screen.getByRole("dialog");
-    fireEvent.change(within(dialog).getByLabelText("Comentário"), {
+    fireEvent.change(within(dialog).getByLabelText("Nota"), {
       target: { value: "Ajuste local" },
     });
     fireEvent.click(within(dialog).getByRole("button", { name: "Salvar" }));
-    fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Comentário" }));
-    expect(within(screen.getByRole("dialog")).getByLabelText("Comentário")).toHaveValue(
-      "Ajuste local",
-    );
+    fireEvent.click(within(exerciseCard!).getByRole("button", { name: "Nota" }));
+    expect(within(screen.getByRole("dialog")).getByLabelText("Nota")).toHaveValue("Ajuste local");
     expect(action).not.toHaveBeenCalled();
   });
 
@@ -500,7 +492,10 @@ describe("TrainingActivityCard", () => {
     expect(check).not.toBeChecked();
     fireEvent.click(check);
     expect(check).toBeChecked();
-    fireEvent.click(screen.getByRole("button", { name: "+ Aquecimento" }));
+    fireEvent.click(screen.getByRole("button", { name: "Adicionar série" }));
+    const addSetDialog = screen.getByRole("dialog");
+    fireEvent.click(within(addSetDialog).getByRole("button", { name: "Aquecimento" }));
+    fireEvent.click(within(addSetDialog).getByRole("button", { name: "Adicionar série" }));
     expect(screen.getByLabelText("Aquecimento 1")).toHaveTextContent("W");
     fireEvent.click(screen.getByRole("switch", { name: "Concluir exercício" }));
     expect(screen.getByText(/Parcial/)).toBeInTheDocument();
@@ -662,7 +657,7 @@ describe("TrainingActivityCard", () => {
     fireEvent.click(screen.getByText("Corrigir avaliação"));
     expect(screen.queryByLabelText("Intensidade")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Disposição durante a atividade")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Comentário")).toBeInTheDocument();
+    expect(screen.getByLabelText("Nota")).toBeInTheDocument();
   });
 
   it("edits a completed exercise only after an explicit correction submission", async () => {

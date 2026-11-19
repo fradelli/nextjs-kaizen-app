@@ -23,7 +23,7 @@ export function AppShell({ children }: AppShellProps) {
             prefetch={false}
           >
             <KaizenLogo />
-            <span className="font-heading text-2xl font-semibold leading-tight md:text-[26px]">
+            <span className="font-[family-name:var(--font-figtree)] text-2xl font-semibold leading-tight md:text-[26px]">
               kaizen
             </span>
           </Link>
