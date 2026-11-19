@@ -1,0 +1,48 @@
+.card {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  gap: 0;
+  display: block;
+  overflow: hidden;
+  background: var(--event-background, var(--fd-color-surface-elevated));
+  border-color: var(--event-border, var(--fd-color-border));
+  border-left-width: var(--event-edge, 0px);
+  color: var(--fd-color-foreground);
+  border-radius: var(--fd-radius-sm, 4px);
+  font-size: var(--fd-font-size-xs);
+}
+.card[data-elapsed] {
+  --event-border: var(--event-background);
+  filter: saturate(0.55);
+}
+.open {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  gap: 0;
+  padding: var(--fd-space-1, 4px) var(--fd-space-2, 8px);
+  white-space: normal;
+  color: inherit;
+}
+.title {
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: start;
+}
+.time {
+  font-size: 0.625rem;
+  line-height: 1.2;
+}
+.nested {
+  position: absolute;
+  left: 8px;
+  right: 4px;
+  min-height: 18px;
+  z-index: 2;
+}

@@ -7,6 +7,7 @@ export function TrainingDayPage({
   dateResolution,
   view = "week",
   onCountChange,
+  onNavigate,
   children,
   controls,
   summary,
@@ -39,7 +40,12 @@ export function TrainingDayPage({
                 : t("invalidDateDescription")}
             </p>
             <div className={trainingDayPageStyles.toolbar}>
-              <TrainingDateNavigation dateResolution={dateResolution} view={view} onCountChange={onCountChange} />
+              <TrainingDateNavigation
+                dateResolution={dateResolution}
+                view={view}
+                onCountChange={onCountChange}
+                onNavigate={onNavigate}
+              />
               {controls}
             </div>
           </div>

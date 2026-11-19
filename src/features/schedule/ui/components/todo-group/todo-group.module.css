@@ -1,0 +1,19 @@
+.group {
+  --todo-group-color: var(--fd-color-muted-foreground);
+  --todo-row-hover: color-mix(in srgb, var(--todo-group-color) 24%, var(--fd-color-background));
+  --todo-row-background: color-mix(
+    in srgb,
+    var(--todo-group-color) 14%,
+    var(--fd-color-background)
+  );
+}
+
+.heading {
+  background-color: color-mix(in srgb, var(--todo-group-color) 35%, var(--fd-color-background));
+}
+
+@media (hover: hover) {
+  .heading:hover {
+    background-color: color-mix(in srgb, var(--todo-group-color) 45%, var(--fd-color-background));
+  }
+}

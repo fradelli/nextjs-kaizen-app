@@ -1,4 +1,6 @@
 "use client";
+import { ControlTooltip } from "@/components/shared/control-tooltip/control-tooltip";
+
 import { PanelRight, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -58,22 +60,23 @@ export function TrainingActivityEditor(props: TrainingActivityEditorProps) {
   return (
     <>
       {props.shortcutOnly && (
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
-          tone="neutral"
-          ref={triggerRef}
-          aria-label={t("activityPanel")}
-          title={t("activityPanel")}
-          className="max-md:hidden"
-          data-schedule-panel-trigger
-          aria-controls="schedule-editor-panel"
-          aria-expanded={open}
-          onClick={() => setOpen((current) => !current)}
-        >
-          <PanelRight size={12} aria-hidden="true" />
-        </Button>
+        <ControlTooltip label={t("activityPanel")}>
+          <Button
+            type="button"
+            size="icon"
+            variant="ghost"
+            tone="neutral"
+            ref={triggerRef}
+            aria-label={t("activityPanel")}
+            className="max-md:hidden"
+            data-schedule-panel-trigger
+            aria-controls="schedule-editor-panel"
+            aria-expanded={open}
+            onClick={() => setOpen((current) => !current)}
+          >
+            <PanelRight size={12} aria-hidden="true" />
+          </Button>
+        </ControlTooltip>
       )}
       {!props.shortcutOnly && (
         <Button

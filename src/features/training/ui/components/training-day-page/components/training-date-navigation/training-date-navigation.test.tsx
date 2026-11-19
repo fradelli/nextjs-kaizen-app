@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -8,11 +9,15 @@ import {
 import { resolveTrainingDayDate } from "@/features/training/application/resolve-training-day-date";
 import { TrainingDateNavigation } from "./training-date-navigation";
 
-const { push } = vi.hoisted(() => ({ push: vi.fn() }));
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push }) }));
+const { push, search } = vi.hoisted(() => ({ push: vi.fn(), search: { value: "" } }));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push }),
+  useSearchParams: () => new URLSearchParams(search.value),
+}));
 
 beforeEach(() => {
   push.mockClear();
+  search.value = "";
   vi.stubGlobal(
     "matchMedia",
     vi.fn(() => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() })),
@@ -34,9 +39,26 @@ describe("calendar keyboard navigation", () => {
     fireEvent.keyDown(window, { key: "t" });
     expect(push).toHaveBeenLastCalledWith("/workout?date=2026-11-12&view=week");
     fireEvent.keyDown(window, { key: "d" });
-    expect(push).toHaveBeenLastCalledWith("/workout?date=2026-11-10&view=day");
+    expect(push).toHaveBeenLastCalledWith("/workout?days=1&view=day&date=2026-11-10");
     fireEvent.keyDown(window, { key: "w" });
-    expect(push).toHaveBeenLastCalledWith("/workout?date=2026-11-10&view=week");
+    expect(push).toHaveBeenLastCalledWith("/workout?days=7&view=week&date=2026-11-10");
+  });
+
+  it("labels a custom range by its day count and resets Week to seven days", () => {
+    search.value = "days=8&view=week";
+    const change = vi.fn();
+    render(<TrainingDateNavigation dateResolution={dateResolution} onCountChange={change} />);
+    expect(screen.getByRole("button", { name: /8 dias/ })).toBeInTheDocument();
+    fireEvent.keyDown(window, { key: "w" });
+    expect(change).toHaveBeenCalledWith(7);
+  });
+
+  it("uses the design-system tooltip rather than a native title on Today", async () => {
+    render(<TrainingDateNavigation dateResolution={dateResolution} />);
+    const today = screen.getByRole("link", { name: "Hoje" });
+    expect(today).not.toHaveAttribute("title");
+    act(() => today.focus());
+    expect(await screen.findByText("T", { selector: "kbd" })).toBeVisible();
   });
 
   it("keeps typing and keyboard interactions inside forms, dialogs and menus local", () => {

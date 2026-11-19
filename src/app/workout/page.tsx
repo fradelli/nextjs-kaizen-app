@@ -1,10 +1,15 @@
-import { CalendarRange } from "./calendar-range";
+import {
+  mutateScheduleAction,
+  loadTodoLists,
+  loadTodos,
+  loadCalendarTrainingDay,
+} from "./schedule-actions";
+import { CalendarRange } from "@/features/schedule/ui/components/calendar-range/calendar-range";
 import { redirect } from "next/navigation";
 
 import { resolveTrainingDayDate } from "@/features/training/application/resolve-training-day-date";
-import { queryFixedWorkspaceTrainingWeekPage } from "@/features/training/data/training-queries";
+import { queryCalendarPage } from "@/features/schedule/data/query-calendar-page";
 import { InvalidTrainingDate } from "@/features/training/ui/components/training-day-page/components/invalid-training-date/invalid-training-date";
-import { TrainingDayContent } from "@/features/training/ui/components/training-day-page/components/training-day-content/training-day-content";
 import { TrainingDayPage } from "@/features/training/ui/components/training-day-page/training-day-page";
 import {
   addTrainingActivityAction,
@@ -31,10 +36,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
   if (dateResolution.status === "invalid") {
     return (
       <TrainingDayPage dateResolution={dateResolution}>
-        <InvalidTrainingDate
-          todayDate={dateResolution.todayDate}
-          reason={dateResolution.reason}
-        />
+        <InvalidTrainingDate todayDate={dateResolution.todayDate} reason={dateResolution.reason} />
       </TrainingDayPage>
     );
   }
@@ -45,7 +47,7 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     );
   }
 
-  const trainingWeekResult = await queryFixedWorkspaceTrainingWeekPage(
+  const snapshot = await queryCalendarPage(
     dateResolution.civilDate,
     view === "day" ? 1 : dayCount,
     rawDays === undefined,
@@ -57,19 +59,15 @@ export default async function TrainingPage({ searchParams }: TrainingPageProps) 
     saveActivityExercise: saveTrainingActivityExerciseAction,
     deleteActivity: deleteTrainingActivityAction,
   };
-  if (trainingWeekResult.status === "ready") {
-    return (
-      <CalendarRange
-        key={trainingWeekResult.week.startDate}
-        initialDays={trainingWeekResult.week.days}
-        resolution={dateResolution}
-        actions={actions}
-      />
-    );
-  }
   return (
-    <TrainingDayPage dateResolution={dateResolution} view={view}>
-      <TrainingDayContent reason={trainingWeekResult.reason} />
-    </TrainingDayPage>
+    <CalendarRange
+      {...snapshot}
+      resolution={dateResolution}
+      actions={actions}
+      mutate={mutateScheduleAction}
+      loadLists={loadTodoLists}
+      loadTodos={loadTodos}
+      loadTrainingDay={loadCalendarTrainingDay}
+    />
   );
 }
