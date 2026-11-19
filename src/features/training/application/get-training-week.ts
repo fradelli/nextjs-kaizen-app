@@ -14,13 +14,23 @@ export async function getTrainingWeek(
   const date = new Date(selectedDate);
   if (alignWeek && dayCount === 7) date.setUTCDate(date.getUTCDate() - date.getUTCDay());
   const workspace = await dependencies.resolveWorkspace();
+  const dates = Array.from({ length: dayCount }, (_, offset) => {
+    const day = new Date(date);
+    day.setUTCDate(day.getUTCDate() + offset);
+    return toCivilDateString(day);
+  });
   const days: TrainingDayDto[] = [];
-  for (let offset = 0; offset < dayCount; offset++) {
-    const civilDate = toCivilDateString(date);
+  // Independent reads have separate transactions; bound concurrency to protect the DB pool.
+  for (let offset = 0; offset < dates.length; offset += 4) {
     days.push(
-      await getTrainingDay({ ...dependencies, resolveWorkspace: () => workspace }, { civilDate }),
+      ...(await Promise.all(
+        dates
+          .slice(offset, offset + 4)
+          .map((civilDate) =>
+            getTrainingDay({ ...dependencies, resolveWorkspace: () => workspace }, { civilDate }),
+          ),
+      )),
     );
-    date.setUTCDate(date.getUTCDate() + 1);
   }
   return Object.freeze({
     startDate: days[0]!.civilDate,
