@@ -1,4 +1,6 @@
 "use client";
+import { ControlTooltip } from "@/components/shared/control-tooltip/control-tooltip";
+
 import { Play, Pause, CircleCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -56,20 +58,21 @@ export function TrainingActivityControls({
           {t("correctFeedback")}
         </Button>
       ) : direct ? (
-        <Button
-          ref={trigger}
-          type="button"
-          variant="ghost"
-          size={showLabel ? "default" : "icon"}
-          tone="start"
-          disabled={!ready}
-          aria-label={t("finishNamedActivity", { name: activity.name })}
-          title={t("recordPerformedActivity")}
-          onClick={openCompletion}
-        >
-          <CircleCheck size={20} aria-hidden="true" focusable="false" />
-          {showLabel ? t("registerTraining") : null}
-        </Button>
+        <ControlTooltip label={t("recordPerformedActivity")}>
+          <Button
+            ref={trigger}
+            type="button"
+            variant="ghost"
+            size={showLabel ? "default" : "icon"}
+            tone="start"
+            disabled={!ready}
+            aria-label={t("finishNamedActivity", { name: activity.name })}
+            onClick={openCompletion}
+          >
+            <CircleCheck size={20} aria-hidden="true" focusable="false" />
+            {showLabel ? t("registerTraining") : null}
+          </Button>
+        </ControlTooltip>
       ) : showStart && !editable ? (
         <Popover.Root>
           <Popover.Trigger asChild>
@@ -85,56 +88,60 @@ export function TrainingActivityControls({
       ) : (
         <>
           {(!showLabel || status === "scheduled") && (
-            <Button
-              type="button"
-              tone={showStart ? "start" : undefined}
-              variant={showStart ? "default" : "ghost"}
-              size={showStart ? "default" : "icon"}
-              disabled={!editable || !ready || (!draft && status !== "scheduled")}
-              aria-label={
-                status === "in_progress"
-                  ? t("pauseActivity")
-                  : status === "paused"
-                    ? t("resumeActivity")
-                    : activity.type === "structured_training"
-                      ? t("startTraining")
-                      : t("startActivity")
-              }
-              title={
+            <ControlTooltip
+              label={
                 status === "in_progress"
                   ? t("pauseActivity")
                   : status === "paused"
                     ? t("resumeActivity")
                     : t("startActivity")
               }
-              onClick={
-                status === "in_progress" ? onPause : status === "paused" ? onResume : onStart
-              }
             >
-              {status === "in_progress" ? (
-                <Pause size={20} aria-hidden="true" focusable="false" />
-              ) : (
-                <Play size={20} aria-hidden="true" focusable="false" />
-              )}
-              {showStart ? t("startTraining") : null}
-            </Button>
+              <Button
+                type="button"
+                tone={showStart ? "start" : undefined}
+                variant={showStart ? "default" : "ghost"}
+                size={showStart ? "default" : "icon"}
+                disabled={!editable || !ready || (!draft && status !== "scheduled")}
+                aria-label={
+                  status === "in_progress"
+                    ? t("pauseActivity")
+                    : status === "paused"
+                      ? t("resumeActivity")
+                      : activity.type === "structured_training"
+                        ? t("startTraining")
+                        : t("startActivity")
+                }
+                onClick={
+                  status === "in_progress" ? onPause : status === "paused" ? onResume : onStart
+                }
+              >
+                {status === "in_progress" ? (
+                  <Pause size={20} aria-hidden="true" focusable="false" />
+                ) : (
+                  <Play size={20} aria-hidden="true" focusable="false" />
+                )}
+                {showStart ? t("startTraining") : null}
+              </Button>
+            </ControlTooltip>
           )}
           {draft ? (
-            <Button
-              ref={trigger}
-              type="button"
-              variant={showLabel ? "default" : "ghost"}
-              size={showLabel ? "default" : "icon"}
-              tone="start"
-              aria-label={t("finishNamedActivity", { name: activity.name })}
-              title={t("finishActivity")}
-              onClick={openCompletion}
-            >
-              <CircleCheck size={20} aria-hidden="true" focusable="false" />
-              {showLabel
-                ? t(activity.type === "structured_training" ? "finishTraining" : "finishActivity")
-                : null}
-            </Button>
+            <ControlTooltip label={t("finishActivity")}>
+              <Button
+                ref={trigger}
+                type="button"
+                variant={showLabel ? "default" : "ghost"}
+                size={showLabel ? "default" : "icon"}
+                tone="start"
+                aria-label={t("finishNamedActivity", { name: activity.name })}
+                onClick={openCompletion}
+              >
+                <CircleCheck size={20} aria-hidden="true" focusable="false" />
+                {showLabel
+                  ? t(activity.type === "structured_training" ? "finishTraining" : "finishActivity")
+                  : null}
+              </Button>
+            </ControlTooltip>
           ) : null}
         </>
       )}

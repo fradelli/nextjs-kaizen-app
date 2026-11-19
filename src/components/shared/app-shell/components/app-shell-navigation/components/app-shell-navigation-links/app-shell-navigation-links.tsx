@@ -1,3 +1,4 @@
+import { ControlTooltip } from "@/components/shared/control-tooltip/control-tooltip";
 import { useTranslations } from "next-intl";
 import { CalendarDays, Utensils } from "lucide-react";
 import { NavigationItem } from "@fradelli/ui/navigation-item";
@@ -12,18 +13,19 @@ export function AppShellNavigationLinks({ items }: AppShellNavigationLinksProps)
         {items.map((item) => (
           <li key={item.href}>
             <NavigationItem asChild size="icon">
-              <Link
-                title={t(item.href === "/workout" ? "training" : "nutrition")}
-                href={item.destination}
-                aria-label={t(item.href === "/workout" ? "training" : "nutrition")}
-                aria-current={item.isActive ? "page" : undefined}
-              >
-                {item.href === "/workout" ? (
-                  <CalendarDays size={14} aria-hidden="true" focusable="false" />
-                ) : (
-                  <Utensils size={14} aria-hidden="true" focusable="false" />
-                )}
-              </Link>
+              <ControlTooltip label={t(item.href === "/workout" ? "training" : "nutrition")}>
+                <Link
+                  href={item.destination}
+                  aria-label={t(item.href === "/workout" ? "training" : "nutrition")}
+                  aria-current={item.isActive ? "page" : undefined}
+                >
+                  {item.href === "/workout" ? (
+                    <CalendarDays size={14} aria-hidden="true" focusable="false" />
+                  ) : (
+                    <Utensils size={14} aria-hidden="true" focusable="false" />
+                  )}
+                </Link>
+              </ControlTooltip>
             </NavigationItem>
           </li>
         ))}

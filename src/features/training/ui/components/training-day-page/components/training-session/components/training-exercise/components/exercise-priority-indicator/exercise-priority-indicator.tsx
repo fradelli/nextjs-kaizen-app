@@ -1,3 +1,4 @@
+import { ControlTooltip } from "@/components/shared/control-tooltip/control-tooltip";
 import { useTranslations } from "next-intl";
 import { exercisePriorityIndicatorStyles } from "./exercise-priority-indicator.styles";
 import type { ExercisePriorityIndicatorProps } from "./exercise-priority-indicator.types";
@@ -13,25 +14,22 @@ export function ExercisePriorityIndicator({ level }: ExercisePriorityIndicatorPr
 
   const label = t(PRIORITY_LABELS[level]);
   return (
-    <span
-      className={exercisePriorityIndicatorStyles.root}
-      role="img"
-      aria-label={label}
-      title={label}
-    >
-      <span>{t("priorityLabel")}</span>
-      <span className={exercisePriorityIndicatorStyles.bars} aria-hidden="true">
-        {[1, 2, 3].map((position) => (
-          <span
-            key={position}
-            className={`${exercisePriorityIndicatorStyles.bar} ${
-              position <= level
-                ? exercisePriorityIndicatorStyles.active
-                : exercisePriorityIndicatorStyles.inactive
-            }`}
-          />
-        ))}
+    <ControlTooltip label={label}>
+      <span className={exercisePriorityIndicatorStyles.root} role="img" aria-label={label}>
+        <span>{t("priorityLabel")}</span>
+        <span className={exercisePriorityIndicatorStyles.bars} aria-hidden="true">
+          {[1, 2, 3].map((position) => (
+            <span
+              key={position}
+              className={`${exercisePriorityIndicatorStyles.bar} ${
+                position <= level
+                  ? exercisePriorityIndicatorStyles.active
+                  : exercisePriorityIndicatorStyles.inactive
+              }`}
+            />
+          ))}
+        </span>
       </span>
-    </span>
+    </ControlTooltip>
   );
 }
