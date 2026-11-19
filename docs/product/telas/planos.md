@@ -54,3 +54,11 @@ Não é necessário implementar a agenda inteira para testar a primeira jornada 
 ## Decisões propostas para esta página
 
 Salvar explicitamente, permitir criar um plano sem ativá-lo e manter a página consultável durante um treino são escolhas desta proposta. Para a primeira entrega, recomenda-se permitir salvar planos ainda em montagem pelo nome e exigir um treino prescrito utilizável para ativação. Uma sessão composta apenas de preparação consultiva também pode ser utilizável. Validar nome, referências e consistência de todas as séries presentes antes de salvar; o formulário mantém localmente a linha ainda incompleta após erro.
+
+## Sequência de treinos e programação opcional
+
+O editor permite ordenar os treinos do plano, por exemplo A → B → C → A, e salvar sem escolher datas. A tela do plano mostra o próximo treino. Quem quiser sugestões na agenda pode configurar uma cadência, como dois dias de treino e um de descanso, a data inicial e os dias indisponíveis, como domingo. A agenda também admite horários fixos para quem usa uma rotina semanal.
+
+Regra aprovada: a finalização do treino esperado avança a sequência uma vez. Abrir a prévia, deixar passar uma data ou descartar o treino mantém o próximo item. O calendário projeta as próximas sugestões supondo que a pessoa seguirá a cadência e recalcula a partir do que ela realizou. Depois de dois treinos em dias consecutivos, reservar um dia de descanso. Qualquer dia sem treino, inclusive um domingo indisponível, interrompe a contagem de dias consecutivos.
+
+Exemplo com início na quinta: quinta A, sexta B, sábado descanso, domingo indisponível, segunda C, terça A. Se a pessoa faltar na sexta, sábado oferece B. Domingo encerra a sequência de dias consecutivos e segunda oferece C. Após B, concluir A no lugar de C oferece “Só desta vez” (C continua pendente e depois começa outra volta em A) ou “Alterar a sequência” (revisar a lista e salvar a ordem futura). O histórico registra A. Um descanso após A e os dias indisponíveis adiam a sugestão de B até a primeira data permitida.

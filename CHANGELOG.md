@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-11-18 — Desempenho e organização da agenda
+
+- Mutações de atividades comuns, grupos e to-dos retornam atualizações direcionadas, preservando cache/paginação e revisão, sem refresh global da agenda.
+- Grade organizada na feature schedule, com seleção por coluna e leitura resumida de treino; detalhes do executor são carregados ao abrir.
+- Cache de datas com limite de memória/concorrência e navegação local; escritas de exclusão e classificação usam lotes com histórico.
+- [Registro técnico e limites de validação](docs/implementation/AGENDA-PERFORMANCE-E-ORGANIZACAO.md). Testes e navegador não executados nesta etapa, por orientação do usuário.
+
+## 2026-11-17 — Interface de atividades e tarefas da agenda
+
+- Painel esquerdo de listas e to-dos, editor lateral no desktop e inferior no mobile.
+- Atividades com horário ou data, reservas de tarefa, checkbox compartilhado, mudança de lista e edição de cores usando componentes Mira.
+- Diálogos de movimento e exclusão integram as políticas aprovadas. Feedback de erro usa Toast incorporado ao candidato local do design system.
+- Recarga e preservação da tarefa após mover/excluir o pai verificadas no navegador. Recorrência e drag and drop seguem em incrementos próprios.
+
+## 2026-11-17 — Persistência inicial da agenda
+
+- Schema aditivo para listas, tarefas e reservas, histórico por revisão e recibos de operação.
+- Casos de uso transacionais para reserva, conclusão, troca de lista, movimento e exclusão com manutenção ou remoção dos itens.
+- Consulta por intervalo encontra reservas fora do horário do pai. Integrações PostgreSQL cobrem concorrência, reenvio, rollback e preservação de histórico. A integração visual segue pendente.
+
 ## 2026-11-14 — Executor e diálogos Mira
 
 - Executor modal consistente após reload, superfície escura uniforme e ações superiores com mesma geometria. Clique externo recolhe o treino.

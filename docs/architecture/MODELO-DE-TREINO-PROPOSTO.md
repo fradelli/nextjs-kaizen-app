@@ -18,6 +18,8 @@ Enquanto houver treino em andamento, inclusive pausado, a edição direta do pla
 
 O workspace fixo do P0 é a fronteira de propriedade e representa um único praticante. O servidor resolve o workspace. Uma sessão reutilizável pertence ao workspace. Cada inclusão dela num plano ganha um vínculo próprio. “Nos próximos” atinge as próximas ocorrências **daquele vínculo**, inclusive em outros dias da semana que usam o mesmo vínculo. Outra inclusão da mesma sessão mantém a própria revisão. A agenda resolve a revisão vigente ao iniciar. Uma ocorrência iniciada fixa sua revisão original para sempre. Uma prévia futura ainda não iniciada acompanha mudanças. A data civil usa America/Sao_Paulo e instantes usam UTC.
 
+Para planos sequenciais, o vínculo Treino_plano também possui posição ordenada única por plano. A agenda pode referenciar o plano com cadência, data inicial e dias indisponíveis, ou um vínculo específico para horário fixo. A projeção identifica o treino previsto pela ordem. Ao iniciar, a ocorrência fixa o vínculo escolhido. A conclusão idempotente é a referência para avançar a sequência. Ao concluir outro treino, a pessoa pode manter o item pendente ou revisar e salvar a ordem futura. Ver [sequência e programação](../product/telas/planos.md#sequência-de-treinos-e-programação-opcional).
+
 ~~~mermaid
 erDiagram
     WORKSPACE ||--o{ PLANO : possui
@@ -30,7 +32,8 @@ erDiagram
     EXERCICIO ||--o{ ITEM : identifica
     ITEM ||--o{ SERIE : prescreve
     SERIE ||--|{ ETAPA : detalha
-    TREINO_PLANO ||--o{ AGENDA : programa
+    PLANO ||--o{ AGENDA : programa
+    TREINO_PLANO o|--o{ AGENDA : fixa
     AGENDA o|--o{ OCORRENCIA : origina
     TREINO_PLANO o|--o{ OCORRENCIA : referencia
     REVISAO o|--o{ OCORRENCIA : original
@@ -55,7 +58,7 @@ IDs são opacos. FKs de objetos privados devem garantir pertencimento ao mesmo w
 | Item, uma participação de exercício no bloco | PK id, FK bloco e exercício, chave lógica, posição, nome e contrato congelados, instruções, modo consultivo ou mensurável. | Preservar dois usos do mesmo movimento e o sentido histórico de seus campos. |
 | Serie, uma série prescrita | PK id, FK item, chave lógica, posição, tipo aquecimento/trabalho/drop, volta opcional, descanso em segundos ≥ 0. | Prescrever individualmente e contar uma série por conjunto. |
 | Etapa, uma dose de uma série | PK id, FK série, chave lógica, posição, alvos tipados, carga alvo e unidade opcionais. Uma ou mais por série. | Registrar cada redução e prescrever valores ou faixas sem interpretar texto na UI. |
-| Agenda, uma regra de horário | PK id, FK treino_plano, início e fim civis, dias da semana, intervalo em semanas, hora local, fuso e duração. Permite data única. | Projetar a semana sem criar linhas ao consultar. Alterar padrão encerra vigência e cria sucessor. |
+| Agenda, uma regra de horário | PK id, FK plano, FK treino_plano opcional para horário fixo, cadência e dias indisponíveis para sequência, início e fim civis, dias da semana, intervalo em semanas, hora local, fuso e duração. Permite data única. | Projetar a semana sem criar linhas ao consultar. Alterar padrão encerra vigência e cria sucessor. |
 | Ocorrencia, uma atividade concreta ou exceção de agenda | PK id, FK workspace, FKs opcionais agenda, treino_plano e revisão original. Chave única (agenda, data civil original) para agendadas. Data/hora exibidas, estado, título, categoria, início/fim reais, avaliação, nota geral, versão, chave e assinatura de finalização, composição final congelada. | Cancelar ou mover uma data sem recriá-la, iniciar, bloquear, concluir e ler histórico. Atividade avulsa admite composição própria e ausência de vínculo. |
 | Resultado, um exercício efetivamente apresentado na execução concluída | PK id, FK ocorrência, chave lógica de execução única na ocorrência, movimento de catálogo, referência lógica ao item original opcional, ordem real, nota e séries/etapas realizadas em documento tipado. | Ler histórico por exercício e ocorrência. As medidas filhas são sempre consumidas nesse contexto. |
 | Pausa, um intervalo de interrupção | PK id, FK ocorrência, início e fim, dentro da execução sem sobreposição. | Recalcular duração ativa e apresentar pausas. |

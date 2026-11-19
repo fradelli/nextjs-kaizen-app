@@ -1,0 +1,40 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Meu Dia · Sequência de treinos</title>
+<style>
+*{box-sizing:border-box}body{margin:24px auto;padding:0 16px;max-width:1000px;background:#191919;color:#eee;font:16px/1.5 system-ui}button,select,a{font:inherit;color:inherit;background:#303034;border:1px solid #555;border-radius:6px;padding:5px}a{color:#dbc9ff}button{cursor:pointer}.scroll{overflow:auto}.grid{min-width:650px;display:grid;grid-template-columns:95px repeat(5,1fr)}.cell{border:1px solid #444;padding:4px;min-height:45px}.band{position:relative;height:44px}.pile{background:#272729;position:absolute;inset:0 0 auto;max-height:42px;overflow:hidden;padding:3px}.band:hover,.band:focus-within,.band.open{z-index:2}.band:hover .pile,.band:focus-within .pile,.band.open .pile{max-height:none}.card{background:#65537a;width:100%;margin:1px 0;text-align:left}.actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}dialog{color:inherit;background:#29292c;border:1px solid #555}dialog::backdrop{background:#0008}
+</style>
+<a href="meu-dia-grade.html">← Meu Dia</a><h1>Agenda de treinos</h1><label>Cenário <select id="scenario"><option>Definir horário</option><option>Seguir a sequência</option><option>Treinar fora de ordem</option></select></label><p id="context"></p><div class="scroll"><div class="grid" id="grid"></div></div><div class="actions" id="actions"></div><p role="status" id="status"></p>
+<dialog id="edit"><form method="dialog"><h2 id="title"></h2><label>Dia <select id="day"></select></label><label>Hora <select id="hour"></select></label><div class="actions"><button value="cancel">Cancelar</button><button value="save">Aplicar</button></div></form></dialog>
+<script>
+const days=['Quinta','Sexta','Sábado','Domingo','Segunda'];
+const times=['Sem horário',...Array.from({length:24},(_,i)=>String(i).padStart(2,'0')+'h')];
+const statusText=document.querySelector('#status');
+let events=[],editing;
+function options(select,values){values.forEach((v,i)=>select.add(new Option(v,i)))}
+options(day,days);options(hour,times);
+function moveEvent(item,d,t){item.d=d;item.t=t;draw();statusText.textContent=item.name+' · '+days[d]+' · '+times[t]}
+function draw(){
+ grid.replaceChildren();
+ function cell(text){const c=document.createElement('div');c.className='cell';c.textContent=text;grid.append(c);return c}
+ cell('');days.forEach(cell);
+ times.forEach((time,t)=>{cell(time);days.forEach((dayName,d)=>{
+ const slot=cell('');slot.ondragover=e=>e.preventDefault();slot.ondrop=e=>{e.preventDefault();const item=events.find(v=>v.name===e.dataTransfer.getData('text/plain'));if(item)moveEvent(item,d,t)};
+ const stack=document.createElement('div');slot.append(stack);const items=events.filter(v=>v.d===d&&v.t===t);
+ if(!t){slot.classList.add('band');stack.className='pile'}
+ items.forEach((item,i)=>{const b=document.createElement('button');b.className='card';b.draggable=true;b.textContent=item.name;b.ondragstart=e=>e.dataTransfer.setData('text/plain',item.name);b.onclick=()=>{editing=item;title.textContent=item.name;day.value=d;hour.value=t;edit.showModal()};stack.append(b);
+ if(!t&&!i&&items.length>1){b.style.width='66%';const more=document.createElement('button');more.textContent='+'+(items.length-1);more.onclick=()=>slot.classList.toggle('open');stack.append(more)}})
+ })})
+}
+edit.onclose=()=>{if(edit.returnValue==='save')moveEvent(editing,Number(day.value),Number(hour.value))};
+function action(label,fn){const b=document.createElement('button');b.textContent=label;b.onclick=fn;actions.append(b)}
+function setup(){
+ const n=scenario.selectedIndex;actions.replaceChildren();statusText.textContent='';
+ context.textContent=['B está previsto para quinta. Arraste o cartão ou toque para escolher dia e hora.','Sexta é dia de A. Após A há um dia de descanso. Domingo está indisponível.','B foi concluído. O próximo treino previsto é C.'][n];
+ events=n===0?['Treino B','Alongamento','Caminhada'].map(name=>({name,d:0,t:0})):[{name:n===1?'Treino A':'Treino C',d:1,t:0}];
+ if(n===1)action('Concluir A na sexta',()=>{events[0].name='A concluído';events.push({name:'Descanso',d:2,t:0},{name:'Treino B',d:4,t:0});actions.replaceChildren();draw();statusText.textContent='Próximo treino: B na segunda.'});
+ if(n===2)action('Concluir A no lugar de C',()=>{events[0].name='A concluído';draw();actions.replaceChildren();statusText.textContent='Você fez A no lugar de C. Como quer seguir?';
+ action('Só desta vez',()=>{actions.replaceChildren();statusText.textContent='Próximo: C. Depois: A → B → C.'});
+ action('Alterar a sequência',()=>{actions.replaceChildren();const order=document.createElement('select');order.setAttribute('aria-label','Nova sequência');options(order,['B → A → C','B → C → A']);actions.append(order);action('Salvar sequência',()=>{statusText.textContent='Sequência salva: '+order.selectedOptions[0].text+'. Próximo: '+(order.selectedIndex?'B':'C')+'.';actions.replaceChildren()})})});
+ draw()
+}
+scenario.onchange=setup;setup();
+</script></html>
