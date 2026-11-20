@@ -185,34 +185,32 @@ describe("legacy schedule compatibility", () => {
       dailyTrainingAssignment: { findUnique: vi.fn().mockResolvedValue(null) },
       trainingDayActivity: { findMany: vi.fn().mockResolvedValue([]) },
       planActivation: {
-        findFirst: vi
-          .fn()
-          .mockResolvedValue({
-            trainingPlan: {
-              id: "plan",
-              trainingSessionDefinition_plan: options.main
-                ? [
-                    {
-                      id: "main",
-                      sessionId: "strength",
-                      assignmentRole: "main",
-                      name: "Strength",
-                      targetDurationMinutes: 45,
-                      compatiblePreparationSessionIds: [],
-                    },
-                  ]
-                : [],
-              weeklySchedule: {
-                weekend_game: {
-                  enabled: options.enabled ?? true,
-                  day: "saturday",
-                  start_time: "12:00",
-                },
-                planning_defaults: { footvolley_duration_minutes: options.duration ?? 60 },
-                models: { saturday_game: entries, sunday_game: entries },
+        findFirst: vi.fn().mockResolvedValue({
+          trainingPlan: {
+            id: "plan",
+            trainingSessionDefinition_plan: options.main
+              ? [
+                  {
+                    id: "main",
+                    sessionId: "strength",
+                    assignmentRole: "main",
+                    name: "Strength",
+                    targetDurationMinutes: 45,
+                    compatiblePreparationSessionIds: [],
+                  },
+                ]
+              : [],
+            weeklySchedule: {
+              weekend_game: {
+                enabled: options.enabled ?? true,
+                day: "saturday",
+                start_time: "12:00",
               },
+              planning_defaults: { footvolley_duration_minutes: options.duration ?? 60 },
+              models: { saturday_game: entries, sunday_game: entries },
             },
-          }),
+          },
+        }),
       },
     } as unknown as Prisma.TransactionClient;
   }
