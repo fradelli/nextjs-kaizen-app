@@ -1,0 +1,9 @@
+.row {
+  background-color: var(--todo-row-background, transparent);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background-color: var(--todo-row-hover, var(--fd-color-surface-interactive));
+  }
+}

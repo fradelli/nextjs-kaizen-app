@@ -1,3 +1,4 @@
+import { projectTrainingCalendarActivity } from "./project-training-calendar-activity";
 import type {
   TrainingAssignmentSnapshot,
   TrainingActivitySnapshot,
@@ -133,41 +134,14 @@ export async function getTrainingDay(
 
 function projectTrainingActivity(activity: TrainingActivitySnapshot): TrainingActivityDto {
   const currentInterval = activity.intervals.find((interval) => interval.endedAt === null) ?? null;
-  const accumulatedActiveSeconds = activity.intervals.reduce((total, interval) => {
-    if (!interval.endedAt) return total;
-    return (
-      total + Math.max(0, Date.parse(interval.endedAt) - Date.parse(interval.startedAt)) / 1000
-    );
-  }, 0);
   return Object.freeze({
-    id: activity.id,
-    type: activity.type,
     source: activity.source,
     role: activity.role,
-    name: activity.name,
     sport: activity.sport,
-    status: activity.status,
-    plannedStartTime:
-      activity.plannedStartMinute === null ? null : formatMinuteOfDay(activity.plannedStartMinute),
-    plannedEndTime:
-      activity.plannedEndMinute === null ? null : formatMinuteOfDay(activity.plannedEndMinute),
-    plannedDurationMinutes:
-      activity.plannedStartMinute === null || activity.plannedEndMinute === null
-        ? null
-        : activity.plannedEndMinute - activity.plannedStartMinute,
-    actualStartTime:
-      activity.actualStartMinute === null ? null : formatMinuteOfDay(activity.actualStartMinute),
-    actualEndTime:
-      activity.actualEndMinute === null ? null : formatMinuteOfDay(activity.actualEndMinute),
-    actualDurationMinutes:
-      activity.actualStartMinute === null || activity.actualEndMinute === null
-        ? null
-        : activity.actualEndMinute - activity.actualStartMinute,
+    ...projectTrainingCalendarActivity(activity),
     startedAt: activity.startedAt,
     completedAt: activity.completedAt,
-    accumulatedActiveSeconds: Math.floor(accumulatedActiveSeconds),
     currentIntervalStartedAt: currentInterval?.startedAt ?? null,
-    intervals: activity.intervals,
     intensity: activity.intensity,
     energy: activity.energy,
     comment: activity.comment,

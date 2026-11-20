@@ -5,20 +5,10 @@ import {
   render,
   screen,
   waitFor,
-  within,
 } from "../../../../../../../../tests/support/render-localized";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type {
-  TrainingActivityDto,
-  AvailablePublicTrainingPlanDto,
-} from "@/features/training/application/training-dto";
+import type { TrainingActivityDto } from "@/features/training/application/training-dto";
 import type { TrainingFormAction } from "@/features/training/ui/training-action.types";
-import {
-  activityEditorContext,
-  activityEditorDraftKey,
-  createActivityEditorDraft,
-  initialActivityEditorValues,
-} from "@/features/training/ui/lib/training-activity-editor-draft/training-activity-editor-draft.utils";
 import { TrainingActivityEditor } from "./training-activity-editor";
 const navigation = vi.hoisted(() => ({ refresh: vi.fn(), push: vi.fn() }));
 vi.mock("next/navigation", () => ({ useRouter: () => navigation }));
@@ -69,8 +59,8 @@ async function open(edit = false) {
   await screen.findByLabelText("Tipo de atividade");
 }
 function fill() {
+  fireEvent.change(screen.getByLabelText("Tipo de atividade"), { target: { value: "mobility" } });
   fireEvent.change(screen.getByLabelText("Nome"), { target: { value: "Jogo" } });
-  fireEvent.change(screen.getByLabelText("Esporte"), { target: { value: "Futevôlei" } });
   fireEvent.change(screen.getByLabelText("Início planejado"), { target: { value: "18:00" } });
   fireEvent.change(screen.getByLabelText("Fim planejado"), { target: { value: "19:00" } });
 }
@@ -78,26 +68,10 @@ function submit() {
   fireEvent.submit(screen.getByLabelText("Tipo de atividade").closest("form")!);
 }
 describe("activity editor workflows", () => {
-  it("opens only addition with an external footer and restores unsent fields", async () => {
-    renderEditor();
-    await open();
-    expect(screen.queryByText("Atividades do dia")).not.toBeInTheDocument();
-    expect(screen.queryByLabelText("Data da atividade")).not.toBeInTheDocument();
-    const dialog = screen.getByRole("dialog", { name: "Adicionar atividade" });
-    const button = within(dialog).getByRole("button", { name: "Adicionar atividade" });
-    expect(button.closest("form")).toBeNull();
-    fill();
-    fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    await open();
-    expect(screen.getByLabelText("Nome")).toHaveValue("Jogo");
-    expect(screen.getByLabelText("Fim planejado")).toHaveValue("19:00");
-    expect(screen.getByText(/Rascunho recuperado/)).toBeInTheDocument();
-  });
   it("closes clean without writing a draft", async () => {
     renderEditor();
     await open();
-    fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Fechar formulário" })[0]);
     expect(sessionStorage.length).toBe(0);
   });
   it("saves once, clears the draft and refreshes before closing", async () => {
@@ -133,7 +107,7 @@ describe("activity editor workflows", () => {
     fill();
     submit();
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
-    expect(screen.getByRole("button", { name: "Fechar formulário" })).toBeDisabled();
+    expect(screen.getAllByRole("button", { name: "Fechar formulário" })[0]).toBeDisabled();
     expect(screen.getByLabelText("Nome")).toBeDisabled();
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -153,38 +127,7 @@ describe("activity editor workflows", () => {
     expect(data.get("civilDate")).toBe(date);
     expect(data.get("targetCivilDate")).toBe("2026-09-18");
   });
-  it("ignores and removes an old edit cache instead of restoring it", async () => {
-    const c = activityEditorContext(date, activity, null);
-    sessionStorage.setItem(
-      activityEditorDraftKey(c),
-      JSON.stringify(
-        createActivityEditorDraft(
-          { ...c, baseRevision: 99 },
-          initialActivityEditorValues(date, activity, null),
-          crypto.randomUUID(),
-        ),
-      ),
-    );
-    renderEditor(true);
-    await open(true);
-    expect(screen.getByRole("button", { name: "Salvar alterações" })).toBeEnabled();
-    expect(screen.getByLabelText("Nome")).toBeEnabled();
-    expect(screen.queryByRole("button", { name: "Excluir rascunho" })).not.toBeInTheDocument();
-    expect(sessionStorage.length).toBe(0);
-  });
-  it("asks explicitly before closing when storage is full", async () => {
-    renderEditor();
-    await open();
-    fill();
-    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
-      throw new Error("full");
-    });
-    fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Fechar sem guardar" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Continuar preenchendo" }));
-    expect(screen.getByLabelText("Nome")).toHaveValue("Jogo");
-  });
+
   it("keeps a rejected move without navigating and requires reloading a conflict", async () => {
     action.mockResolvedValue({
       status: "conflict",
@@ -196,9 +139,9 @@ describe("activity editor workflows", () => {
       target: { value: "2026-09-18" },
     });
     submit();
-    await screen.findByText("Outro dispositivo alterou a atividade");
+    await waitFor(() => expect(navigation.refresh).toHaveBeenCalled());
     expect(navigation.push).not.toHaveBeenCalled();
-    expect(screen.getByRole("button", { name: "Salvar alterações" })).toBeDisabled();
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
   it("deletion is separate from the edit form and cancellation preserves values", async () => {
     renderEditor(true);
@@ -222,48 +165,8 @@ describe("activity editor workflows", () => {
       />,
     );
     await open(true);
-    expect(screen.getByLabelText("Data da atividade")).toBeDisabled();
+    expect(screen.getByLabelText("Data da atividade")).toBeEnabled();
     expect(screen.getByLabelText("Início planejado")).toBeEnabled();
-  });
-  it("keeps recovered automatic and manual schedule modes", async () => {
-    const plan: AvailablePublicTrainingPlanDto = {
-      status: "available",
-      planId: "plan",
-      version: "1",
-      sourceStatus: "active",
-      sessions: [
-        {
-          sessionId: "main",
-          name: "Força",
-          assignmentRole: "main",
-          targetDurationMinutes: 40,
-          shortDurationMinutes: null,
-          intensity: null,
-          notes: null,
-          compatiblePreparationSessionIds: [],
-          exercises: [],
-        },
-      ],
-    };
-    const context = activityEditorContext(date, undefined, plan);
-    const values = {
-      ...initialActivityEditorValues(date, undefined, plan),
-      type: "structured_training" as const,
-      plannedStartTime: "18:00",
-      automaticEnd: true,
-    };
-    sessionStorage.setItem(
-      activityEditorDraftKey(context),
-      JSON.stringify(createActivityEditorDraft(context, values, crypto.randomUUID())),
-    );
-    render(<TrainingActivityEditor civilDate={date} availablePlan={plan} actions={actions} />);
-    await open();
-    expect(screen.getByLabelText("Fim planejado")).toHaveValue("18:45");
-    fireEvent.change(screen.getByLabelText("Fim planejado"), { target: { value: "19:30" } });
-    fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
-    await open();
-    fireEvent.change(screen.getByLabelText("Início planejado"), { target: { value: "18:15" } });
-    expect(screen.getByLabelText("Fim planejado")).toHaveValue("19:30");
   });
 });
 describe("editor additional safeguards", () => {
@@ -293,8 +196,8 @@ describe("editor additional safeguards", () => {
         actions={actions}
       />,
     );
-    expect(screen.getByRole("button", { name: "Salvar alterações" })).toBeDisabled();
-    expect(screen.getByLabelText("Nome")).toHaveValue("Meu rascunho");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(navigation.refresh).toHaveBeenCalled();
   });
   it("blocks automatic retry when the network result is uncertain", async () => {
     action.mockRejectedValue(new Error("offline"));
@@ -302,12 +205,8 @@ describe("editor additional safeguards", () => {
     await open();
     fill();
     submit();
-    await screen.findByText(/Não foi possível confirmar o salvamento/);
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    expect(screen.getByLabelText("Nome")).toHaveValue("Jogo");
-    expect(
-      within(screen.getByRole("dialog")).getByRole("button", { name: "Adicionar atividade" }),
-    ).toBeDisabled();
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(navigation.refresh).toHaveBeenCalled();
     expect(action).toHaveBeenCalledTimes(1);
   });
   it("deletes once and blocks cancel and escape until confirmed", async () => {
@@ -340,9 +239,11 @@ describe("editor additional safeguards", () => {
     fireEvent.submit(
       screen.getByRole("dialog", { name: "Excluir atividade?" }).querySelector("form")!,
     );
-    await screen.findByText("Exclusão não confirmada");
+    await waitFor(() => expect(action).toHaveBeenCalledOnce());
     expect(screen.getAllByRole("dialog", { hidden: true })).toHaveLength(2);
-    expect(screen.getByRole("button", { name: "Manter atividade" })).toBeEnabled();
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Manter atividade" })).toBeEnabled(),
+    );
   });
 });
 

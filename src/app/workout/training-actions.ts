@@ -1,5 +1,6 @@
 "use server";
 
+import { plannedClockPattern } from "@/features/training/domain/training-schedule-time";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { z } from "zod";
@@ -31,8 +32,8 @@ const activitySchema = z.object({
       value === "automatic" ? undefined : value === "none" || value === "" ? null : value,
     z.string().min(1).nullable().optional(),
   ),
-  plannedStartTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
-  plannedEndTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  plannedStartTime: z.string().regex(plannedClockPattern),
+  plannedEndTime: z.string().regex(plannedClockPattern),
 });
 const activityControlSchema = z.object({
   completionRequestedAt: z.preprocess(
@@ -211,10 +212,7 @@ async function executeMutation<Schema extends z.ZodType<Record<string, unknown>>
   if (dateResolution.status === "invalid") {
     return {
       status: "invalid",
-      message:
-        dateResolution.reason === "future_date_out_of_range"
-          ? `Só é possível alterar a programação até ${dateResolution.maximumFutureDate}.`
-          : "A data informada é inválida.",
+      message: "A data informada é inválida.",
       field: "civilDate",
     };
   }

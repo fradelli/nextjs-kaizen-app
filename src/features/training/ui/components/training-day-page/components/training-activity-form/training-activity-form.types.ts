@@ -6,6 +6,7 @@ import type { TrainingActivityEditorValues } from "@/features/training/ui/lib/tr
 import type { TrainingFormAction } from "@/features/training/ui/training-action.types";
 
 export type TrainingActivityFormProps = Readonly<{
+  onPanelClose?: () => void;
   startedLocally?: boolean;
   editor?: Readonly<{
     formId: string;

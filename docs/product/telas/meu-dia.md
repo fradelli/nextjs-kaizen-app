@@ -59,3 +59,11 @@ O card global de retomada aparece fora do detalhe do treino, acima da barra infe
 Para rascunhos antigos simultâneos, priorizar o que está em andamento e, em seguida, o início mais recente. Os demais rascunhos continuam armazenados. Na agenda, o menu de três pontos reúne mudar dia ou horário e excluir a ocorrência. Ele aparece nos cards com espaço suficiente e na lista do dia, acessível pelo cabeçalho. Durante uma execução, essas ações ficam bloqueadas. A posição da grade é recuperada por data na mesma sessão do navegador.
 
 Verificar se o usuário encontra como registrar o futevôlei, retomar a musculação e descartar somente a execução. Conferir se a rotina preparatória aparece como item independente e se a última ação da lista continua acessível com a barra inferior visível. Aplicar as [medidas comuns](medidas.md) e validar o retorno a partir da [execução existente](execucao.md).
+
+## Atividades com dia definido e horário em aberto
+
+Todas as atividades datadas sem hora aparecem na faixa **Sem horário**, entre os cabeçalhos dos dias e a primeira linha de horas. Cada coluna mostra um cartão compacto e a quantidade adicional. Hover, toque no contador ou foco pelo teclado expandem a pilha vertical sobre a grade, sem deslocar os horários.
+
+Arrastar para uma célula de horas define dia e hora daquela ocorrência. Soltar na faixa remove o horário e conserva a data de destino. A edição por toque ou teclado fornece as mesmas opções. Mover uma ocorrência entre dias mantém sua identidade e dispensa pergunta de escopo. A previsão usa a data escolhida, evita duplicar o treino e passa a usar a data real após a conclusão.
+
+[Wireframe dos três cenários de agenda e sequência](agenda-sequencia.html)

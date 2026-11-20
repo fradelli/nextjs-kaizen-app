@@ -4,7 +4,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { resolveTrainingDayDate } from "../../../application/resolve-training-day-date";
 import { TrainingDayPage } from "./training-day-page";
 
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 afterEach(cleanup);
 
@@ -52,7 +55,7 @@ describe("TrainingDayPage", () => {
     expect(screen.getByText("A data informada não é válida.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Hoje" })).toHaveAttribute(
       "href",
-      "/workout?date=2026-09-16",
+      "/workout?date=2026-09-16&view=week",
     );
     expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Seguinte" })).toBeDisabled();

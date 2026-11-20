@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Planos de treino · Wireframe Kaizen</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#191919;color:#f3f1ef;font:16px/1.5 "IBM Plex Sans",system-ui,sans-serif}main,header div{max-width:900px;margin:auto;padding:24px}header{border-bottom:1px solid #434345}header div,.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}header strong,h1,h2{font-family:Figtree,system-ui,sans-serif}header strong,h1{font-size:24px}h2{font-size:20px}h1,h2,h3,p{margin:0}section,article,details{margin-top:18px}article,details{padding:18px;border:1px solid #49484c;border-radius:10px;background:#212123}small,label{color:#dad7df}button,a{color:#ebe7ef}button,input,select{font:inherit;padding:8px 12px;border:1px solid #545258;border-radius:6px;background:#29292c;color:inherit}button,summary{cursor:pointer}.primary{background:#bca7e8;color:#211a2c}.active{color:#f2cf63}label{display:grid;gap:4px}input,select{width:100%}.series{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:12px;margin-top:12px}summary{font-weight:600}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #bca7e8}form>label{margin:18px 0}footer{margin-top:24px} [hidden]{display:none!important}@media(max-width:600px){main,header div{padding:16px}.series{grid-template-columns:1fr 1fr}button,summary{min-height:44px}article,details{padding:12px}}
+</style>
+<header><div><strong>kaizen</strong><span class="active">Planos</span></div></header>
+<main id="app"></main>
+<dialog id="picker"><div class="row"><h2 id="panelTitle"></h2><button onclick="picker.close()" aria-label="Fechar">✕</button></div><div id="panel"></div></dialog>
+<style>
+.grip{display:inline-grid;place-items:center;width:44px;height:44px;cursor:grab;touch-action:none;user-select:none;color:#bca7e8}.drop-target{outline:2px solid #bca7e8}
+dialog{color:inherit;background:#212123;border:1px solid #555;border-radius:12px;width:min(520px,95vw);max-height:90dvh;padding:22px}dialog::backdrop{background:#0009}
+.stack{display:grid;gap:12px;margin:16px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.check{display:flex;align-items:center;gap:10px;padding:8px}.check input{width:auto}.series{align-items:end;border-top:1px solid #414145;padding-top:12px}button:disabled{opacity:.4}input,select{min-width:0}option{color:white;background:#29292c}
+@media(max-width:600px){dialog{margin:0;width:100%;max-width:100%;height:100dvh;max-height:100dvh;border:0;border-radius:0}}
+</style>
+<script>
+const dbKey='kaizen.planos.wireframe.v2';
+const data=JSON.parse(localStorage.getItem(dbKey)||'{"plans":[],"groups":[],"group":"","visited":false}');
+const catalog=[
+ {name:'Agachamento com barra',body:'Pernas',gear:['Barra','Anilhas','Rack']},
+ {name:'Afundo com halteres',body:'Pernas',gear:['Halteres'],side:true},
+ {name:'Flexão de braços',body:'Peito',gear:[],bodyweight:true},
+ {name:'Remada com halter',body:'Costas',gear:['Halteres'],side:true},
+ {name:'Elevação lateral',body:'Ombros',gear:['Halteres']},
+ {name:'Barra fixa',body:'Costas',gear:['Barra fixa'],bodyweight:true}
+];
+const presets={'Academia de bairro':['Barra','Anilhas','Halteres'],'Academia grande':['Barra','Anilhas','Rack','Halteres','Barra fixa'],'Treino em casa':['Halteres'],'Calistenia':['Barra fixa'],'Selecionar manualmente':[]};
+const app=document.querySelector('#app'), picker=document.querySelector('#picker'), panel=document.querySelector('#panel');
+let draft,workout,selected,query,bodyPart,all;
+const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function store(){localStorage.setItem(dbKey,JSON.stringify(data))}
+function list(){
+ app.innerHTML='<div class="row"><h1>Planos de treino</h1><button class="primary" onclick="edit()">Criar plano</button></div>'+
+ (data.plans.length?data.plans.map((p,i)=>`<article class="row"><div><h2>${esc(p.name)}</h2><small>${p.workouts.length} treinos</small></div><button onclick="edit(${i})">Abrir</button></article>`).join(''):'<p>Nenhum plano criado.</p>');
+}
+function edit(i){draft=i===undefined?{id:crypto.randomUUID(),name:'',workouts:[],schedule:false}:structuredClone(data.plans[i]);plan()}
+function plan(){
+ app.innerHTML=`<button onclick="leave()">← Planos</button><h1>Editar plano</h1><label>Nome do plano<input id="name" value="${esc(draft.name)}" oninput="draft.name=this.value"></label><section class="row"><h2>Sequência de treinos</h2><button onclick="addWorkout()">Adicionar treino</button></section>`+
+ draft.workouts.map((w,i)=>`<article class="row" data-position="${i}"><strong><span class="grip" title="Arrastar treino" onpointerdown="startReorder(event)">⠿</span> ${i+1}. ${esc(w.name)}</strong><div class="actions"><button aria-label="Subir treino" ${i?'':'disabled'} onclick="move(${i},-1)">↑</button><button aria-label="Descer treino" ${i+1<draft.workouts.length?'':'disabled'} onclick="move(${i},1)">↓</button><button onclick="openWorkout(${i})">Abrir treino</button></div></article>`).join('')+
+ `<details><summary>Programação opcional</summary><label class="check"><input type="checkbox" ${draft.schedule?'checked':''} onchange="draft.schedule=this.checked">Sugerir dois dias de treino e um de descanso</label><label class="check"><input type="checkbox" ${draft.noSunday?'checked':''} onchange="draft.noSunday=this.checked">Domingo indisponível</label></details><footer><button class="primary" onclick="save()">Salvar plano</button></footer>`;
+}
+function leave(){if(confirm('Sair do editor e descartar alterações não salvas?'))list()}
+function save(){if(!draft.name.trim()){document.querySelector('#name').focus();return}const index=data.plans.findIndex(p=>p.id===draft.id);if(index<0)data.plans.push(draft);else data.plans[index]=draft;store();list()}
+function move(i,offset){
+ const [item]=draft.workouts.splice(i,1);
+ draft.workouts.splice(i+offset,0,item);
+ plan();
+}
+function startReorder(event){
+ if(!event.isPrimary || event.button!==0)return;
+ const grip=event.currentTarget;
+ const from=Number(grip.closest('article').dataset.position);
+ grip.setPointerCapture(event.pointerId);
+ function target(e){return document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-position]')}
+ function clear(){app.querySelector('.drop-target')?.classList.remove('drop-target')}
+ grip.onpointermove=e=>{clear();target(e)?.classList.add('drop-target')};
+ grip.onlostpointercapture=()=>{clear();grip.onpointermove=null;grip.onpointerup=null};
+ grip.onpointerup=e=>{
+  const row=target(e);
+  clear();
+  if(row && Number(row.dataset.position)!==from)move(from,Number(row.dataset.position)-from);
+ };
+}
+function addWorkout(){draft.workouts.push({name:'Treino '+(draft.workouts.length+1),items:[]});openWorkout(draft.workouts.length-1)}
+function openWorkout(i){workout=draft.workouts[i];renderWorkout()}
+function newSet(){return {type:'Trabalho',reps:'',load:'',rest:''}}
+function renderWorkout(){
+ app.innerHTML=`<button onclick="plan()">← Voltar ao plano</button><h1>Montar treino</h1><label>Nome do treino<input value="${esc(workout.name)}" oninput="workout.name=this.value"></label><section class="row"><h2>Exercícios</h2><button class="primary" onclick="openCatalog()">Adicionar exercícios</button></section>`;
+ workout.items.forEach((item,i)=>{
+ const ex=catalog[item.exercise],card=document.createElement('article');card.innerHTML='<h2>'+esc(ex.name)+'</h2>';
+ item.sets.forEach((s,j)=>{
+ const row=document.createElement('div');row.className='series';
+ row.innerHTML=`<label>Série ${j+1}<select><option>Trabalho</option><option>Aquecimento</option></select></label>`;
+ const type=row.querySelector('select');type.value=s.type;type.onchange=()=>s.type=type.value;
+ for(const [key,label] of [['reps',ex.side?'Repetições por lado':'Repetições'],['load',ex.side?'Carga por lado (kg)':'Carga (kg)'],['rest','Descanso (s)']]){
+ if(key==='load'&&ex.bodyweight)continue;
+ const field=document.createElement('label');field.textContent=label;const input=document.createElement('input');input.type='number';input.min=key==='reps'?1:0;input.step=key==='load'?'any':'1';input.value=s[key];input.oninput=()=>s[key]=input.value;field.append(input);row.append(field)}
+ const remove=document.createElement('button');remove.textContent='Remover série '+(j+1);remove.onclick=()=>{item.sets.splice(j,1);renderWorkout()};row.append(remove);card.append(row)});
+ const add=document.createElement('button');add.textContent='Adicionar série';add.onclick=()=>{item.sets.push(newSet());renderWorkout()};card.append(add);app.append(card)});
+}
+function openCatalog(){selected=new Set();query='';bodyPart='Todos';all=false;picker.showModal();if(!data.visited){panelTitle.textContent='Quais equipamentos você tem?';panel.innerHTML='<div class="actions"><button onclick="groupForm(false)">Configurar equipamentos</button><button onclick="browse()">Ver todos os exercícios</button></div>'}else browse()}
+function groupForm(editing){
+ const g=editing?data.groups.find(g=>g.id===data.group):null;
+ panelTitle.textContent='Equipamentos disponíveis';
+ panel.innerHTML=`<div class="stack"><label>Sugestão inicial<select id="preset">${Object.keys(presets).map(k=>'<option>'+k+'</option>').join('')}</select></label><label>Nome do grupo<input id="groupName" value="${esc(g?.name||'Minha academia')}"></label><div id="equipment"></div><div class="actions"><button onclick="browse()">Voltar</button><button id="saveGroup" class="primary">Salvar e usar</button></div></div>`;
+ function checks(items){equipment.innerHTML=presets['Academia grande'].map(k=>`<label class="check"><input type="checkbox" value="${k}" ${items.includes(k)?'checked':''}>${k}</label>`).join('')}
+ checks(g?.gear||presets[preset.value]);preset.onchange=()=>checks(presets[preset.value]);saveGroup.onclick=()=>{if(!groupName.value.trim()){groupName.focus();return}const group=g||{id:crypto.randomUUID()};group.name=groupName.value.trim();group.gear=[...equipment.querySelectorAll(':checked')].map(x=>x.value);if(!g)data.groups.push(group);data.group=group.id;browse()};
+}
+function browse(){
+ data.visited=true;store();panelTitle.textContent='Adicionar exercícios';
+ panel.innerHTML=`<div class="stack"><label>Grupo de equipamentos<select id="groups"><option value="">Todos os equipamentos</option>${data.groups.map(g=>`<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('')}</select></label><div class="actions"><button onclick="groupForm(false)">Criar grupo</button>${data.group?'<button onclick="groupForm(true)">Editar grupo</button>':''}</div><label>Buscar exercício<input id="search"></label><label>Parte do corpo<select id="muscle">${['Todos',...new Set(catalog.map(e=>e.body))].map(x=>'<option>'+x+'</option>').join('')}</select></label>${data.group?'<label class="check"><input id="showAll" type="checkbox">Mostrar também incompatíveis</label>':''}<div id="results"></div><button id="insert" class="primary"></button></div>`;
+ groups.value=data.group;groups.onchange=()=>{data.group=groups.value;browse()};search.value=query;search.oninput=()=>{query=search.value;resultsList()};muscle.value=bodyPart;muscle.onchange=()=>{bodyPart=muscle.value;resultsList()};if(data.group){showAll.checked=all;showAll.onchange=()=>{all=showAll.checked;resultsList()}}
+ insert.onclick=()=>{for(const exercise of selected)workout.items.push({exercise,sets:[newSet()]});picker.close();renderWorkout()};resultsList()
+}
+function resultsList(){
+ results.replaceChildren();const group=data.groups.find(g=>g.id===data.group);
+ catalog.forEach((ex,i)=>{const missing=group?ex.gear.filter(k=>!group.gear.includes(k)):[];
+ if((missing.length&&!all)||(bodyPart!=='Todos'&&ex.body!==bodyPart)||!ex.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()))return;
+ const label=document.createElement('label');label.className='check';const box=document.createElement('input');box.type='checkbox';box.checked=selected.has(i);box.onchange=()=>{if(box.checked)selected.add(i);else selected.delete(i);count()};label.append(box,ex.name+(missing.length?' · Falta '+missing.join(', '):''));results.append(label)});
+ if(!results.children.length)results.textContent='Nenhum exercício com esses filtros.';count()
+}
+function count(){insert.disabled=!selected.size;insert.textContent='Adicionar '+selected.size+' exercício(s)'}
+list();
+</script></html>

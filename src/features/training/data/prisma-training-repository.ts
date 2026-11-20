@@ -5,7 +5,6 @@ import {
 } from "./ensure-scheduled-training-day";
 import {
   activityScheduleInclude,
-  hasTrainingActivityProgress,
   recordTrainingActivityReschedule,
 } from "./training-activity-rescheduling";
 import { parseTrainingExerciseBlock } from "./parse-training-exercise-block";
@@ -313,12 +312,6 @@ export class PrismaTrainingRepository implements TrainingRepository {
           if (!existing) return conflictOrMissingActivity(transaction, input);
           const targetDate = input.targetCivilDate ?? input.civilDate;
           const moving = targetDate !== input.civilDate;
-          if (moving && hasTrainingActivityProgress(existing)) {
-            return invalid(
-              "Só é possível mudar a data de atividades ainda não iniciadas, incluindo o aquecimento.",
-              "targetCivilDate",
-            );
-          }
           const preservePreparation =
             input.type === existing.type &&
             input.type !== "structured_training" &&
@@ -345,19 +338,6 @@ export class PrismaTrainingRepository implements TrainingRepository {
                 }
               : await resolveActivityDefinition(transaction, input);
           if ("status" in definition) return definition;
-          const removingGenericPreparation =
-            input.preparationSessionId === null && existing.preparations.length > 0;
-          if (
-            (definition.preparationSessionDefinitionId !==
-              existing.preparationSessionDefinitionId ||
-              removingGenericPreparation) &&
-            hasTrainingActivityProgress(existing)
-          ) {
-            return invalid(
-              "O aquecimento de uma atividade já iniciada deve ser preservado.",
-              "preparationSessionId",
-            );
-          }
           if (moving)
             await ensureScheduledTrainingDayInTransaction(transaction, {
               workspaceId: input.workspaceId,

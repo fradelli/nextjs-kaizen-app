@@ -1,4 +1,5 @@
 "use client";
+import { ControlTooltip } from "@/components/shared/control-tooltip/control-tooltip";
 
 import { ChevronUp, ChevronDown, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -184,19 +185,20 @@ export function TrainingInlineActivityCard({
           <div className="min-w-0 flex-1">
             {dedicated ? (
               <Button tone="general" variant="default" size="icon" className={styles.back} asChild>
-                <Link
-                  href={`/workout?date=${encodeURIComponent(civilDate)}`}
-                  onClick={(event) => {
-                    if (closeOverlay) {
-                      event.preventDefault();
-                      closeOverlay();
-                    }
-                  }}
-                  aria-label={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
-                  title={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
-                >
-                  <ArrowLeft size={20} aria-hidden="true" focusable="false" />
-                </Link>
+                <ControlTooltip label={closeOverlay ? t("backToPreviousPage") : t("backToDay")}>
+                  <Link
+                    href={`/workout?date=${encodeURIComponent(civilDate)}`}
+                    onClick={(event) => {
+                      if (closeOverlay) {
+                        event.preventDefault();
+                        closeOverlay();
+                      }
+                    }}
+                    aria-label={closeOverlay ? t("backToPreviousPage") : t("backToDay")}
+                  >
+                    <ArrowLeft size={20} aria-hidden="true" focusable="false" />
+                  </Link>
+                </ControlTooltip>
               </Button>
             ) : null}
             {!dedicated && (
@@ -254,7 +256,7 @@ export function TrainingInlineActivityCard({
               onFinalized={execution.clear}
               ready={execution.ready && executionEditable}
             />
-            {!dedicated && status !== "completed" && agendaEditable ? (
+            {!dedicated && agendaEditable ? (
               <TrainingActivityEditor
                 civilDate={civilDate}
                 activity={activity}

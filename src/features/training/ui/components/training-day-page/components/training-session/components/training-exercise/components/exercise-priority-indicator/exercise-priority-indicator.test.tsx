@@ -18,7 +18,7 @@ describe("ExercisePriorityIndicator", () => {
     render(<ExercisePriorityIndicator level={level} />);
 
     const indicator = screen.getByRole("img", { name: label });
-    expect(indicator).toHaveAttribute("title", label);
+    expect(indicator).not.toHaveAttribute("title");
     expect(indicator).toHaveTextContent("Prioridade:");
     expect(indicator.querySelectorAll(".bg-status-warning")).toHaveLength(level);
     expect(indicator.className).not.toContain("red");

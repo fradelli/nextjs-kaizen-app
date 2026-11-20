@@ -1,9 +1,7 @@
 const TRAINING_TIME_ZONE = "America/Sao_Paulo";
 
-export function isTrainingAgendaDateEditable(civilDate: string, now = new Date()): boolean {
-  if (!isCivilDate(civilDate)) return false;
-  const today = getTodayCivilDate(now);
-  return civilDate >= shiftCivilDate(today, -1) && civilDate <= shiftCivilDate(today, 4);
+export function isTrainingAgendaDateEditable(civilDate: string): boolean {
+  return isCivilDate(civilDate);
 }
 
 export function isTrainingExecutionDateEditable(civilDate: string, now = new Date()): boolean {
@@ -33,9 +31,4 @@ function isCivilDate(value: string): boolean {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const parsed = new Date(`${value}T00:00:00.000Z`);
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
-}
-
-export function getTrainingAgendaDateWindow(now = new Date()) {
-  const today = getTodayCivilDate(now);
-  return { minimumDate: shiftCivilDate(today, -1), maximumDate: shiftCivilDate(today, 4) };
 }

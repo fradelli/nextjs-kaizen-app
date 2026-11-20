@@ -1,0 +1,183 @@
+.scroller {
+  --hour-height: 48px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior-y: contain;
+  overflow-anchor: none;
+  scrollbar-width: none;
+}
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+.untimedRow {
+  display: grid;
+  grid-template-columns: 3.5rem repeat(var(--day-count), minmax(0, 1fr));
+  position: sticky;
+  top: 2rem;
+  z-index: 4;
+  background: var(--fd-color-background);
+}
+.untimedDay {
+  height: calc(var(--hour-height) / 2);
+  overflow: hidden;
+  padding: 1px 3px;
+  border-left: 1px solid var(--fd-color-border);
+}
+.untimedDay:hover,
+.untimedDay:focus-within {
+  height: auto;
+  min-height: calc(var(--hour-height) / 2);
+  overflow: visible;
+}
+.untimedCard {
+  height: calc(var(--hour-height) / 2 - 2px);
+  margin-bottom: 2px;
+}
+.scroller:not([data-positioned]) {
+  visibility: hidden;
+}
+.scroller:focus-visible {
+  outline: 2px solid var(--fd-color-focus-ring);
+  outline-offset: 2px;
+}
+.dayHeaders,
+.columns,
+.dayNotes {
+  display: grid;
+  grid-template-columns: 3.5rem repeat(var(--day-count), minmax(0, 1fr));
+}
+.dayHeaders {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--fd-color-background);
+  border-bottom: 1px solid var(--fd-color-border);
+}
+.dayHeaders time {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 2rem;
+  font-family: inherit;
+  font-size: calc(var(--fd-font-size-xs) * 5 / 6);
+  line-height: var(--fd-font-line-height-xs);
+  font-weight: 400;
+  color: var(--fd-color-muted-foreground);
+}
+.weekday {
+  text-transform: lowercase;
+}
+.dayHeaders time[data-future] {
+  color: color-mix(in srgb, var(--fd-color-muted-foreground) 75%, var(--fd-color-foreground));
+}
+.dayHeaders time[aria-current="date"] {
+  color: var(--color-white, white);
+  font-weight: 600;
+}
+.dayHeaders time[aria-current] .dayNumber {
+  display: inline-grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  place-items: center;
+  border-radius: var(--radius-sm, 4px);
+  background: var(--fd-color-status-destructive-solid);
+  color: inherit;
+}
+.day,
+.axis {
+  position: relative;
+  height: calc(24 * var(--hour-height));
+  min-width: 0;
+}
+.day {
+  --day-surface: var(--fd-color-surface);
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      var(--fd-color-border) 0 1px,
+      transparent 1px var(--hour-height)
+    ),
+    var(--day-surface);
+  border-left: 1px solid var(--fd-color-border);
+}
+.day[data-weekend] {
+  --day-surface: var(--fd-color-surface-elevated);
+}
+.axis > span,
+.nowLabel {
+  position: absolute;
+  inset-inline-end: var(--fd-space-1);
+  font-variant-numeric: tabular-nums;
+  transform: translateY(-50%);
+  font-size: calc(var(--fd-font-size-xs) * 5 / 6);
+  line-height: var(--fd-font-line-height-xs);
+  color: var(--fd-color-muted-foreground);
+}
+.axis .elapsedHour {
+  color: var(--fd-color-muted-foreground);
+}
+.axis > span[hidden] {
+  display: none;
+}
+.axis .nowLabel {
+  background: var(--fd-color-status-destructive-solid);
+  color: var(--fd-color-status-destructive-foreground);
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 600;
+  z-index: 4;
+}
+.slot {
+  position: absolute;
+  min-width: 0;
+  container-type: size;
+}
+.nowLine {
+  position: absolute;
+  inset-inline: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--fd-color-status-destructive-solid) 28%, transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+.day[data-today] > .nowLine {
+  height: 2px;
+  background: var(--fd-color-status-destructive-solid);
+}
+.dayList {
+  display: grid;
+  gap: 1rem;
+}
+.scroller[data-view="day"] .dayHeaders,
+.scroller[data-view="day"] .columns,
+.dayNotes[data-view="day"] {
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+}
+.scroller[data-view="day"] .unselectedDay,
+.dayNotes[data-view="day"] .unselectedDay {
+  display: none;
+}
+@media (width < 48rem) {
+  .scroller {
+    --hour-height: 44px;
+  }
+  .dayHeaders,
+  .columns,
+  .dayNotes {
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+  }
+  .dayHeaders .unselectedDay {
+    display: none;
+  }
+  .dayHeaders .selectedDay {
+    grid-column: 2;
+  }
+  .selectedDay {
+    grid-column: 2;
+  }
+  .unselectedDay {
+    display: none;
+  }
+}

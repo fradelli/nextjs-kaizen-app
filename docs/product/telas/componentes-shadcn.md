@@ -1,5 +1,10 @@
 # Componentes compartilhados do Kaizen
 
+O pacote consumido atualmente está registrado no manifesto e no lockfile em
+`vendor/fradelli-ui-mira-executor-verified.tgz`. Os nomes de outras prévias
+abaixo identificam etapas históricas da migração.
+
+
 > Plano de adoção, não segunda fonte de regras visuais. O [guia](guia-de-estilo.md) define a direção local. Inventários de exports e “uso atual” são checkpoints: reconfirme-os na versão instalada. Propostas de base ou expansão não viram decisões globais aprovadas por este inventário.
 
 O preset `b1HwjY1BI0` orienta a aparência. O código dos componentes escolhidos entra no repositório do design system. O pacote `@fradelli/ui` distribui os componentes, as fontes e os tokens semânticos para os aplicativos. A atualização de uma receita do shadcn passa por revisão no pacote antes da publicação. [Modelo de distribuição](https://ui.shadcn.com/docs)

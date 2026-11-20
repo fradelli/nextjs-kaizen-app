@@ -28,6 +28,21 @@ function createSchema(id, required = []) {
 
 function createValidFixture() {
   repositoryRoot = join(tmpdir(), `kaizen-data-${process.pid}-${Date.now()}-${Math.random()}`);
+  writeJson("data/catalogs/equipamentos.json", { itens: [{ id: "halter" }] });
+  writeJson("data/catalogs/exercicios.json", {
+    itens: [
+      {
+        id: "rosca_com_halter",
+        nome_en: "Dumbbell curl",
+        perfil_catalogo: {
+          requisitos_de_equipamentos: {
+            estado: "configuracoes_propostas",
+            configuracoes: [{ obrigatorios: ["halter"], opcionais: [] }],
+          },
+        },
+      },
+    ],
+  });
   mkdirSync(join(repositoryRoot, "docs", "guides"), { recursive: true });
   writeFileSync(join(repositoryRoot, "docs", "guides", "TRAINING-GUIDE.md"), "# Treino\n");
   writeFileSync(join(repositoryRoot, "docs", "guides", "NUTRITION.md"), "# Nutrição\n");

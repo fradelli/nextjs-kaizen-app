@@ -1,5 +1,11 @@
 # Execução de séries e referência histórica
 
+> Nova decisão aprovada em 13/11/2026: [contagem por medidas](#contagem-por-medidas--13112026).
+> Ela substitui a exigência histórica de ✓ para contar a série, mas ainda precisa
+> de implementação e validação próprias. A migração da barra não altera esse contrato.
+
+> A proposta original foi posteriormente autorizada e implementada em [E06-T26](../../roadmap/epics/E06-training-execution/T26-set-execution.md). A abertura abaixo registra o checkpoint da pesquisa. Pendências explícitas não se tornam aprovadas por esta nota; conferir resultado e código.
+
 ## Estado e limites
 
 Proposta em revisão em 29/10/2026. Não autoriza implementação nem altera decisões aprovadas. Pesquisa documental e quatro capturas fornecidas pelo usuário são referências, não instruções de execução. D1 tem a correspondência por tipo aprovada; D2 e o núcleo de D3 estão aprovados. Descanso em mobile/desktop, adição de séries por tipo e ajustes de layout foram solicitados explicitamente. Casos de borda indicados abaixo continuam pendentes. Prioridade atual: fechar regras antes de detalhar a implementação.
@@ -215,3 +221,38 @@ Adicionado `src/app/icon.svg` pela convenção de metadata do Next.js, com os ca
 Ajuste de legibilidade aprovado: painel flutuante em duas linhas, tempo em 64px e controles abaixo. Mantida posição acima do menu no mobile e reserva de rolagem ampliada; substitui a apresentação compacta anterior.
 
 Correção de posicionamento: no mobile, o painel sobrepõe o menu inferior durante o descanso, em vez de ocupar uma faixa adicional acima dele. Tamanho preservado.
+
+## Cabeçalho do executor — layout aprovado em 13/11/2026
+
+- Manter a seta de voltar à esquerda. À direita, posicionar **Aquecimento** e **Finalizar treino** lado a lado, nessa ordem. Mover o botão de aquecimento existente e substituir o ícone de finalizar por um botão com texto. Usar o mesmo estilo de botão Mira exportado por `@fradelli/ui`, com cores distintas para as ações.
+- Exibir o título do treino uma única vez, na seção abaixo. Remover do cabeçalho a cópia do título e a linha com horário, duração prevista, aquecimento incluído e status.
+- Logo abaixo das ações, mostrar o resumo com tempo de treino em destaque, volume e séries realizadas.
+- Retirar **Pausar** do cabeçalho. A ação fica no [diálogo de duração](#duração-e-pausa-do-treino--13112026), aberto pelo tempo do treino no resumo.
+
+### Duração e pausa do treino — 13/11/2026
+
+Decisão de interação para o pacote de ajustes em planejamento, com implementação pendente.
+
+- O tempo de treino em destaque no resumo funciona como acionador do diálogo **Duração do treino**, acessível por clique, toque e teclado. Usar as primitivas oficiais Mira disponibilizadas por `@fradelli/ui`.
+- O diálogo mostra a duração ativa acumulada, atualizada enquanto o treino está em andamento, e a data e o horário de início. Os períodos de pausa ficam excluídos da duração ativa.
+- Durante a execução, exibir **Pausar treino**. Quando pausado, exibir o estado **Pausado** e **Retomar treino** no mesmo lugar, preservando o tempo acumulado.
+- Abrir e fechar o diálogo preserva o estado do cronômetro. Ao fechar, devolver o foco ao tempo que o abriu. A pausa depende da ação explícita no diálogo.
+- Manter a distinção entre duração do treino e tempo de descanso. O diálogo controla a duração ativa; a regra vigente do cronômetro de descanso continua sendo a registrada no checkpoint anterior.
+
+Decisão posterior para todos os diálogos do Kaizen. No mobile, o painel sobe da borda inferior e permanece ancorado nela. No desktop, o diálogo fica centralizado. O [plano de implementação dos ajustes](AJUSTES-DO-EXECUTOR-MIRA.md) detalha a composição pelo design system, as etapas e os critérios de aceite.
+
+## Contagem por medidas — 13/11/2026
+
+Decisão explícita posterior do proprietário, ainda não implementada nesta etapa:
+medidas obrigatórias preenchidas e válidas bastam para contar uma série realizada.
+Carga só é exigida quando aplicável; valores válidos de carga zero continuam
+possíveis. Na unilateral, ambos os lados são necessários. O ✓ serve somente para
+iniciar o descanso e não condiciona contagem, completude ou conclusão da série.
+Isso substitui as decisões anteriores que vinculavam realização ao ✓.
+
+A revisão funcional deve abranger domínio, rascunhos, projeção, servidor,
+persistência, histórico e agregações. Confirmar descanso não deve inventar medidas.
+Preservar a distinção entre ausência e zero e a compatibilidade com registros
+antigos; não reinterpretar silenciosamente dados históricos. Cenários de medidas
+apagadas, incompletas ou inválidas, ambos os lados, aquecimento e finalização
+precisam de regressões antes de declarar essa mudança entregue.

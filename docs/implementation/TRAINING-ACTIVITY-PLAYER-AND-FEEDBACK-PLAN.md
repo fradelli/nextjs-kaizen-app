@@ -1,5 +1,7 @@
 # Player da atividade, registro em modal e estados de interação
 
+> Especificação histórica E10-T02. Aparência no [guia](../product/telas/guia-de-estilo.md), comportamento recente em [execução](../product/telas/execucao.md). Não reaplicar patches por linhas antigas.
+
 ## 1. Execução autorizada e contrato final
 
 Implementação autorizada em 27/10/2026 e continuada em 28/10/2026. A fundação

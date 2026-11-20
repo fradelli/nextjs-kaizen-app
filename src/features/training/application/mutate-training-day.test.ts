@@ -45,8 +45,8 @@ describe("training mutation date boundary", () => {
       );
     },
   );
-  it.each(["2026-09-27", "2026-09-30"])(
-    "allows agenda mutations but rejects execution on future date %s",
+  it.each(["2026-09-24", "2026-09-27", "2026-09-30", "2026-10-01"])(
+    "allows agenda mutations but rejects execution outside execution dates: %s",
     async (civilDate) => {
       const d = dependencies();
       const expected = { status: "invalid", field: "civilDate" };
@@ -77,8 +77,8 @@ describe("training mutation date boundary", () => {
     },
   );
 
-  it.each(["2026-09-24", "2026-10-01"])(
-    "rejects every mutation outside the agenda window on %s",
+  it.each(["2026-02-30", "invalid"])(
+    "rejects every mutation for an invalid civil date %s",
     async (civilDate) => {
       const d = dependencies();
       const expected = { status: "invalid", field: "civilDate" };
@@ -107,7 +107,7 @@ describe("training mutation date boundary", () => {
 });
 
 describe("activity rescheduling date boundary", () => {
-  it.each(["2026-09-24", "2026-10-01", "2026-02-30"])(
+  it.each(["2026-02-30", "invalid"])(
     "rejects invalid destination %s before accessing the repository",
     async (targetCivilDate) => {
       const d = dependencies();
@@ -119,7 +119,7 @@ describe("activity rescheduling date boundary", () => {
       expect(d.repository.updateTrainingActivity).not.toHaveBeenCalled();
     },
   );
-  it.each(["2026-09-25", "2026-09-30"])(
+  it.each(["2026-09-24", "2026-09-25", "2026-09-30", "2026-10-01"])(
     "passes an allowed destination %s with server workspace",
     async (targetCivilDate) => {
       const d = dependencies();
@@ -131,11 +131,11 @@ describe("activity rescheduling date boundary", () => {
       );
     },
   );
-  it("does not move an activity whose source date is locked even if destination is allowed", async () => {
+  it("rejects an invalid source date even if destination is allowed", async () => {
     const d = dependencies();
     await expect(
       updateTrainingActivity(d, {
-        civilDate: "2026-09-24",
+        civilDate: "2026-02-30",
         targetCivilDate: "2026-09-26",
       } as Parameters<typeof updateTrainingActivity>[1]),
     ).resolves.toMatchObject({ status: "invalid", field: "civilDate" });

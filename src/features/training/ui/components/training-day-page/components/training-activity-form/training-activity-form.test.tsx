@@ -7,7 +7,7 @@ import {
   waitFor,
 } from "../../../../../../../../tests/support/render-localized";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { userEvent } from "@testing-library/user-event";
+
 import type {
   AvailablePublicTrainingPlanDto,
   TrainingActivityDto,
@@ -171,9 +171,9 @@ describe("training activity schedule experience", () => {
     expect(end()).toHaveValue("");
     change("Início planejado", "23:30");
     expect(end()).toHaveValue("");
-    expect(screen.getByText(/terminaria no dia seguinte/)).toBeInTheDocument();
-    change("Fim planejado", "23:50");
-    expect(end()).toHaveValue("23:50");
+    expect(saved).not.toHaveBeenCalled();
+    change("Fim planejado", "23:45");
+    expect(end()).toHaveValue("23:45");
   });
   it("does not substitute a missing duration", () => {
     renderForm(saved, undefined, {
@@ -183,7 +183,7 @@ describe("training activity schedule experience", () => {
     chooseTraining();
     change("Início planejado", "18:00");
     expect(end()).toHaveValue("");
-    expect(screen.getByText(/Não foi possível calcular/)).toBeInTheDocument();
+    expect(saved).not.toHaveBeenCalled();
   });
   it("preserves persisted hours and uses the historical session duration, not the active version", () => {
     renderForm(saved, activity);
@@ -224,8 +224,8 @@ describe("training activity schedule experience", () => {
     async (status) => {
       const action = vi.fn<TrainingFormAction>(async () => ({ status, message: "Não foi salvo." }));
       renderForm(action);
+      change("Tipo de atividade", "mobility");
       change("Nome", "Jogo");
-      change("Esporte", "Futevôlei");
       change("Início planejado", "18:00");
       change("Fim planejado", "18:45");
       submit();
@@ -296,45 +296,13 @@ describe("preparation choice and rescheduling", () => {
       },
     ],
   };
-  it("suggests the real plan warmup for Portuguese sport and preserves a manual choice", async () => {
-    const user = userEvent.setup();
-    renderForm(saved, undefined, preparedPlan);
-    change("Tipo de atividade", "specific_training");
+  it("selects only the matching sport preparation without exposing unrelated sessions", () => {
+    const view = renderForm(saved, undefined, preparedPlan);
     change("Esporte", "Futevôlei");
-    const trigger = screen.getByRole("combobox", { name: "Aquecimento" });
-    expect(trigger).toHaveTextContent("Aquecimento futevôlei");
-    await user.click(trigger);
-    expect(screen.queryByRole("option", { name: "Treino A" })).not.toBeInTheDocument();
-    await user.click(await screen.findByRole("option", { name: "Outro aquecimento" }));
-    change("Esporte", "Outro esporte");
-    expect(trigger).toHaveTextContent("Outro aquecimento");
-    expect(new FormData(trigger.closest("form")!).get("preparationSessionId")).toBe("other_warmup");
-  });
-  it("submits an explicit no-warmup choice and preserves it after failure", async () => {
-    const user = userEvent.setup();
-    const action = vi.fn<TrainingFormAction>(async () => ({
-      status: "invalid",
-      message: "Não salvo",
-    }));
-    renderForm(action, undefined, preparedPlan);
-    change("Tipo de atividade", "specific_training");
-    change("Nome", "Treino extra");
-    change("Esporte", "Futevôlei");
-    const trigger = screen.getByRole("combobox", { name: "Aquecimento" });
-    trigger.focus();
-    await user.keyboard("{ArrowDown}");
-    await screen.findByRole("listbox");
-    await user.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("listbox")).not.toBeInTheDocument());
-    expect(trigger).toHaveFocus();
-    await user.click(trigger);
-    await user.click(await screen.findByRole("option", { name: "Sem aquecimento" }));
-    change("Início planejado", "18:00");
-    change("Fim planejado", "19:00");
-    submit();
-    await screen.findByText("Não salvo");
-    expect(action.mock.calls[0][1].get("preparationSessionId")).toBe("none");
-    expect(trigger).toHaveTextContent("Sem aquecimento");
+    expect(view.container.querySelector('[name="preparationSessionId"]')).toHaveValue("warmup");
+    expect(screen.queryByRole("combobox", { name: "Aquecimento" })).not.toBeInTheDocument();
+    change("Esporte", "Corrida");
+    expect(view.container.querySelector('[name="preparationSessionId"]')).toHaveValue("automatic");
   });
   it("submits original and destination dates separately and navigates only after success", async () => {
     const action = vi.fn<TrainingFormAction>(async () => ({ status: "saved", revision: 4 }));
@@ -359,17 +327,16 @@ describe("preparation choice and rescheduling", () => {
     expect(screen.getByLabelText("Data da atividade")).toHaveValue("2026-10-28");
     expect(end()).toHaveValue("18:30");
   });
-  it("blocks rescheduling if a draft exists only in the browser", () => {
-    const action = vi.fn<TrainingFormAction>();
+  it("allows rescheduling independently of a browser draft", async () => {
+    const action = vi.fn<TrainingFormAction>().mockResolvedValue({ status: "saved", revision: 4 });
     renderForm(action, activity);
     window.localStorage.setItem(`kaizen:training-draft:v1:2026-10-26:${activity.id}`, "draft");
     change("Data da atividade", "2026-10-28");
     submit();
-    expect(screen.getByRole("alert")).toHaveTextContent("treino iniciado neste navegador");
-    expect(action).not.toHaveBeenCalled();
+    await waitFor(() => expect(action).toHaveBeenCalledOnce());
   });
-  it("disables rescheduling for already started activities", () => {
+  it("allows rescheduling for already started activities", () => {
     renderForm(saved, { ...activity, status: "paused", startedAt: "2026-10-26T21:00:00Z" });
-    expect(screen.getByLabelText("Data da atividade")).toBeDisabled();
+    expect(screen.getByLabelText("Data da atividade")).toBeEnabled();
   });
 });

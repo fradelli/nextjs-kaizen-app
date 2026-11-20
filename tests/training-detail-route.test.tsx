@@ -7,6 +7,8 @@ const { queryDay, notFound } = vi.hoisted(() => ({
   }),
 }));
 
+vi.mock("@/app/workout/page", () => ({ default: () => null }));
+
 vi.mock("next/navigation", () => ({ notFound }));
 vi.mock("@/features/training/data/training-queries", () => ({
   queryFixedWorkspaceTrainingDayPage: queryDay,

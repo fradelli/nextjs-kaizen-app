@@ -91,6 +91,7 @@ export async function readScheduledTrainingDay(
   transaction: Prisma.TransactionClient,
   input: FindTrainingDayInput,
   now: Date = new Date(),
+  activePlan?: ActiveTrainingPlan | null,
 ) {
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Sao_Paulo",
@@ -99,12 +100,13 @@ export async function readScheduledTrainingDay(
     day: "2-digit",
   }).format(now);
   if (input.civilDate < today && !isTrainingExecutionDateEditable(input.civilDate, now)) return;
-  return loadScheduledTrainingDay(transaction, input);
+  return loadScheduledTrainingDay(transaction, input, activePlan);
 }
 
 async function loadScheduledTrainingDay(
   transaction: Prisma.TransactionClient,
   input: FindTrainingDayInput,
+  activePlan?: ActiveTrainingPlan | null,
 ) {
   const civilDate = toCivilDateDatabaseValue(input.civilDate);
   const existingAssignment = await transaction.dailyTrainingAssignment.findUnique({
@@ -113,7 +115,10 @@ async function loadScheduledTrainingDay(
   });
   if (existingAssignment) return;
 
-  const plan = await loadActiveTrainingPlanForSchedule(transaction, input.environment);
+  const plan =
+    activePlan === undefined
+      ? await loadActiveTrainingPlanForSchedule(transaction, input.environment)
+      : activePlan;
   if (!plan) return;
   if (!plan.weeklySchedule) return;
 
@@ -231,7 +236,7 @@ export async function ensureScheduledTrainingDayInTransaction(
   }
 }
 
-async function loadActiveTrainingPlanForSchedule(
+export async function loadActiveTrainingPlanForSchedule(
   client: Prisma.TransactionClient,
   environment: FindTrainingDayInput["environment"],
 ) {

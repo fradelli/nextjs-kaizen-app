@@ -1,0 +1,114 @@
+model WorkoutPlan {
+  id String @id @db.Uuid
+  workspaceId String @map("workspace_id") @db.Uuid
+  name String @db.Text
+  revision Int @default(0)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  workouts PlannedWorkout[]
+  @@unique([workspaceId, id])
+  @@map("workout_plan")
+}
+
+model PlannedWorkout {
+  id String @id @db.Uuid
+  workspaceId String @map("workspace_id") @db.Uuid
+  planId String @map("plan_id") @db.Uuid
+  position Int
+  plan WorkoutPlan @relation(fields: [workspaceId, planId], references: [workspaceId, id], onDelete: Restrict)
+  versions WorkoutPrescriptionVersion[]
+  @@unique([workspaceId, id])
+  @@unique([planId, position])
+  @@map("planned_workout")
+}
+
+model WorkoutPrescriptionVersion {
+  id String @id @db.Uuid
+  workspaceId String @map("workspace_id") @db.Uuid
+  workoutId String @map("workout_id") @db.Uuid
+  revision Int
+  name String @db.Text
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  workout PlannedWorkout @relation(fields: [workspaceId, workoutId], references: [workspaceId, id], onDelete: Restrict)
+  blocks WorkoutPrescriptionBlock[]
+  @@unique([workoutId, revision])
+  @@map("workout_prescription_version")
+}
+
+model WorkoutPrescriptionBlock {
+  id String @id @db.Uuid
+  versionId String @map("version_id") @db.Uuid
+  logicalId String @map("logical_id") @db.Uuid
+  position Int
+  phase String @db.Text
+  mode String @db.Text
+  version WorkoutPrescriptionVersion @relation(fields: [versionId], references: [id], onDelete: Restrict)
+  exercises WorkoutPrescriptionExercise[]
+  @@unique([versionId, position])
+  @@unique([versionId, logicalId])
+  @@map("workout_prescription_block")
+}
+
+model WorkoutPrescriptionExercise {
+  id String @id @db.Uuid
+  blockId String @map("block_id") @db.Uuid
+  logicalId String @map("logical_id") @db.Uuid
+  catalogExerciseId String @map("catalog_exercise_id")
+  position Int
+  name String @db.Text
+  measurementContract Json @map("measurement_contract") @db.JsonB
+  notes String? @db.Text
+  block WorkoutPrescriptionBlock @relation(fields: [blockId], references: [id], onDelete: Restrict)
+  catalogExercise CatalogExercise @relation(fields: [catalogExerciseId], references: [id], onDelete: Restrict)
+  sets WorkoutPrescriptionSet[]
+  @@unique([blockId, position])
+  @@unique([blockId, logicalId])
+  @@map("workout_prescription_exercise")
+}
+
+model WorkoutPrescriptionSet {
+  id String @id @db.Uuid
+  exerciseId String @map("exercise_id") @db.Uuid
+  logicalId String @map("logical_id") @db.Uuid
+  position Int
+  kind String @db.Text
+  restSeconds Int @map("rest_seconds")
+  exercise WorkoutPrescriptionExercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  stages WorkoutPrescriptionStage[]
+  @@unique([exerciseId, position])
+  @@unique([exerciseId, logicalId])
+  @@map("workout_prescription_set")
+}
+
+model WorkoutPrescriptionStage {
+  id String @id @db.Uuid
+  setId String @map("set_id") @db.Uuid
+  logicalId String @map("logical_id") @db.Uuid
+  position Int
+  targets Json @db.JsonB
+  loadKg Decimal? @map("load_kg") @db.Decimal(10, 3)
+  set WorkoutPrescriptionSet @relation(fields: [setId], references: [id], onDelete: Restrict)
+  @@unique([setId, position])
+  @@unique([setId, logicalId])
+  @@map("workout_prescription_stage")
+}
+
+model EquipmentGroup {
+  id String @id @db.Uuid
+  workspaceId String @map("workspace_id") @db.Uuid
+  name String @db.Text
+  revision Int @default(0)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  equipment EquipmentGroupItem[]
+  @@unique([workspaceId, id])
+  @@map("equipment_group")
+}
+
+model EquipmentGroupItem {
+  groupId String @map("group_id") @db.Uuid
+  equipmentId String @map("equipment_id")
+  group EquipmentGroup @relation(fields: [groupId], references: [id], onDelete: Restrict)
+  equipment CatalogEquipment @relation(fields: [equipmentId], references: [id], onDelete: Restrict)
+  @@id([groupId, equipmentId])
+  @@map("equipment_group_item")
+}
