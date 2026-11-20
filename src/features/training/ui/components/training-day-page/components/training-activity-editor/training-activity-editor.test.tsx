@@ -241,7 +241,9 @@ describe("editor additional safeguards", () => {
     );
     await waitFor(() => expect(action).toHaveBeenCalledOnce());
     expect(screen.getAllByRole("dialog", { hidden: true })).toHaveLength(2);
-    expect(screen.getByRole("button", { name: "Manter atividade" })).toBeEnabled();
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Manter atividade" })).toBeEnabled(),
+    );
   });
 });
 
