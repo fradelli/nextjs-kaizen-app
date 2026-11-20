@@ -57,6 +57,25 @@ const reservation: ScheduleReservation = {
   colorKey: "lilac",
 };
 describe("calendar card interactions", () => {
+  it("uses refreshed reservation state and keeps a future untimed card active", () => {
+    state.reservationsById.set("r", {
+      ...reservation,
+      title: "Updated task",
+      completed: true,
+      colorKey: null,
+    });
+    const view = render(<ScheduleCard reservation={reservation} date="2026-11-17" />);
+    expect(screen.getByRole("checkbox")).toBeChecked();
+    expect(screen.getByText("Updated task")).toBeInTheDocument();
+    view.rerender(
+      <ScheduleCard
+        activity={{ ...activity, startsAt: null, endsAt: null, colorKey: null }}
+        date="2099-11-17"
+      />,
+    );
+    expect(screen.getByText("Work").closest("[data-elapsed]")).toBeNull();
+  });
+
   it.each(["purple", "lilac", null, "unknown"])("opens activity with color %s", (colorKey) => {
     render(<ScheduleCard activity={{ ...activity, colorKey }} date="2026-11-17" />);
     fireEvent.click(screen.getByRole("button", { name: /Work/ }));
