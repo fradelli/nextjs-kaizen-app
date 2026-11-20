@@ -32,6 +32,12 @@ function setup() {
   return { ...hook, props, report };
 }
 describe("task cache consistency", () => {
+  it("does not request more tasks for a group with no cached page", async () => {
+    const { result, props } = setup();
+    await act(() => result.current.loadTasks("unknown", true));
+    expect(props.loadTodos).not.toHaveBeenCalled();
+  });
+
   it("merges revisions and moves tasks between groups without stale duplicates", () => {
     const { result } = setup();
     act(() => result.current.upsertGroup(group("b")));
