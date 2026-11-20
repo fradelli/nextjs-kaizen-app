@@ -18,10 +18,25 @@ describe("daily schedule clipping", () => {
     const activities = [
       { ...row, id: "untimed", scheduledDate: "2026-11-17" },
       { ...row, id: "other", scheduledDate: "2026-11-18" },
-      { ...row, id: "inside", startsAt: "2026-11-17T12:00:00Z", endsAt: "2026-11-17T13:00:00Z" },
-      { ...row, id: "before", startsAt: "2026-11-16T12:00:00Z", endsAt: "2026-11-17T03:00:00Z" },
-      { ...row, id: "after", startsAt: "2026-11-18T03:00:00Z", endsAt: "2026-11-18T04:00:00Z" },
-      { ...row, id: "open", startsAt: "2026-11-17T12:00:00Z" },
+      {
+        ...row,
+        id: "inside",
+        startsAt: "2026-11-17T12:00:00.000Z",
+        endsAt: "2026-11-17T13:00:00.000Z",
+      },
+      {
+        ...row,
+        id: "before",
+        startsAt: "2026-11-16T12:00:00.000Z",
+        endsAt: "2026-11-17T03:00:00.000Z",
+      },
+      {
+        ...row,
+        id: "after",
+        startsAt: "2026-11-18T03:00:00.000Z",
+        endsAt: "2026-11-18T04:00:00.000Z",
+      },
+      { ...row, id: "open", startsAt: "2026-11-17T12:00:00.000Z" },
     ];
     expect(
       scheduleForDate({ activities, reservations: [] }, "2026-11-17").activities.map((a) => a.id),
