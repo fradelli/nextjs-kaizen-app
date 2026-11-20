@@ -5,6 +5,7 @@ vi.mock("server-only", () => ({}));
 import {
   readScheduledTrainingDay,
   ensureScheduledTrainingDay,
+  ensureScheduledTrainingDayInTransaction,
 } from "./ensure-scheduled-training-day";
 
 afterEach(() => vi.useRealTimers());
@@ -250,5 +251,37 @@ describe("legacy schedule compatibility", () => {
     await expect(
       readScheduledTrainingDay(client("game", "12:00", { empty: true }), input, now),
     ).rejects.toThrow();
+  });
+});
+
+describe("materialization idempotency", () => {
+  it("keeps an existing daily activity without querying or writing a plan", async () => {
+    const findFirst = vi.fn().mockResolvedValue({ id: "existing" });
+    const create = vi.fn();
+    const transaction = {
+      trainingDayActivity: { findFirst, create },
+      dailyTrainingAssignment: { create },
+    } as unknown as Prisma.TransactionClient;
+    await ensureScheduledTrainingDayInTransaction(transaction, {
+      workspaceId: "workspace",
+      civilDate: parseCivilDate("2026-11-10"),
+      environment: "local",
+    });
+    expect(findFirst).toHaveBeenCalledOnce();
+    expect(create).not.toHaveBeenCalled();
+  });
+  it("does not write when there is no active plan", async () => {
+    const create = vi.fn();
+    const transaction = {
+      trainingDayActivity: { findFirst: vi.fn().mockResolvedValue(null), create },
+      dailyTrainingAssignment: { findUnique: vi.fn().mockResolvedValue(null), create },
+      planActivation: { findFirst: vi.fn().mockResolvedValue(null) },
+    } as unknown as Prisma.TransactionClient;
+    await ensureScheduledTrainingDayInTransaction(transaction, {
+      workspaceId: "workspace",
+      civilDate: parseCivilDate("2026-11-10"),
+      environment: "local",
+    });
+    expect(create).not.toHaveBeenCalled();
   });
 });
