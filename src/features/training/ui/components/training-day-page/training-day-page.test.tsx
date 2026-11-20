@@ -55,7 +55,7 @@ describe("TrainingDayPage", () => {
     expect(screen.getByText("A data informada não é válida.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Hoje" })).toHaveAttribute(
       "href",
-      "/workout?date=2026-09-16",
+      "/workout?date=2026-09-16&view=week",
     );
     expect(screen.getByRole("button", { name: "Anterior" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Seguinte" })).toBeDisabled();

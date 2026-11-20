@@ -1,4 +1,5 @@
 "use client";
+import { Plus } from "lucide-react";
 import { useCallback, useEffect, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -327,7 +328,7 @@ export function TrainingDateNavigation({
             aria-label={t("moreDays")}
             onClick={() => changeCount(visibleCount + 1)}
           >
-            +
+            <Plus aria-hidden="true" />
           </Button>
         </PopoverContent>
       </PopoverRoot>
