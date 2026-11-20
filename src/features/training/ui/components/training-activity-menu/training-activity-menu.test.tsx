@@ -56,12 +56,14 @@ afterEach(() => {
   vi.useRealTimers();
 });
 describe("TrainingActivityMenu", () => {
-  it("indica a leitura do rascunho antes de disponibilizar ações", () => {
+  it("permite edição durante a leitura local e aguarda para excluir", () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-11-11T15:00:00Z"));
     state.ready = false;
     render(<TrainingActivityMenu activity={activity} civilDate="2026-11-11" actions={actions} />);
-    expect(screen.getByText("Verificando execução local...")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Mudar dia ou horário", hidden: true }),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/Finalize ou descarte/)).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Excluir atividade", hidden: true }),
@@ -83,16 +85,16 @@ describe("TrainingActivityMenu", () => {
       screen.getByRole("button", { name: "Excluir atividade", hidden: true }),
     ).toBeInTheDocument();
   });
-  it("bloqueia as ações para uma execução local ativa", () => {
+  it("permite editar uma execução local ativa sem oferecer exclusão", () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-11-11T15:00:00Z"));
     state.active = true;
     render(<TrainingActivityMenu activity={activity} civilDate="2026-11-11" actions={actions} />);
     fireEvent.click(screen.getByRole("button", { name: "Opções de Vôlei" }));
-    expect(screen.getByText(/Finalize ou descarte/)).toBeInTheDocument();
+    expect(screen.queryByText(/Finalize ou descarte/)).not.toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Mudar dia ou horário", hidden: true }),
-    ).not.toBeInTheDocument();
+    ).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Excluir atividade", hidden: true }),
     ).not.toBeInTheDocument();

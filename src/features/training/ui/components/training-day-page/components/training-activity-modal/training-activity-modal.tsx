@@ -30,7 +30,9 @@ export function TrainingActivityModal({
   restoreFocusRef,
 }: TrainingActivityModalProps) {
   const t = useTranslations("training");
-  const [panel, setPanel] = useState<HTMLElement | null>(null);
+  const [panel] = useState(() =>
+    typeof document === "undefined" ? null : document.getElementById("schedule-editor-panel"),
+  );
   const [mobile, setMobile] = useState(
     () =>
       typeof window !== "undefined" && (window.matchMedia?.("(width < 48rem)").matches ?? false),
@@ -43,12 +45,9 @@ export function TrainingActivityModal({
     query.addEventListener("change", sync);
     return () => query.removeEventListener("change", sync);
   }, [placement]);
-  const sidePanel = placement === "right" && !mobile;
+  const sidePanel = placement === "right" && !mobile && panel !== null;
   useLayoutEffect(() => {
-    if (sidePanel) {
-      setPanel(document.getElementById("schedule-editor-panel"));
-      return;
-    }
+    if (sidePanel) return;
     return lockTrainingDialogScroll();
   }, [sidePanel]);
   const heading = useRef<HTMLHeadingElement>(null);

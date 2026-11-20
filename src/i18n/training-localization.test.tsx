@@ -11,7 +11,10 @@ import { TrainingActionFeedback } from "@/features/training/ui/components/traini
 import { formatTrainingShortDate } from "@/features/training/ui/components/training-day-page/training-day-page.utils";
 import { createTranslator } from "next-intl";
 
-vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(),
+}));
 
 afterEach(cleanup);
 

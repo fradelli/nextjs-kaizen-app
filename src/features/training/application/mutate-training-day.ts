@@ -23,8 +23,7 @@ export function addTrainingActivity(
   dependencies: MutationDependencies,
   input: Omit<AddTrainingActivityCommand, "workspaceId" | "civilDate"> & { civilDate: string },
 ): Promise<TrainingMutationResult> {
-  if (!isTrainingAgendaDateEditable(input.civilDate))
-    return agendaDateLocked();
+  if (!isTrainingAgendaDateEditable(input.civilDate)) return agendaDateLocked();
   return dependencies.repository.addTrainingActivity({
     ...input,
     civilDate: parseCivilDate(input.civilDate),
@@ -69,12 +68,8 @@ export function updateTrainingActivity(
     targetCivilDate?: string;
   },
 ): Promise<TrainingMutationResult> {
-  if (!isTrainingAgendaDateEditable(input.civilDate))
-    return agendaDateLocked();
-  if (
-    input.targetCivilDate &&
-    !isTrainingAgendaDateEditable(input.targetCivilDate)
-  ) {
+  if (!isTrainingAgendaDateEditable(input.civilDate)) return agendaDateLocked();
+  if (input.targetCivilDate && !isTrainingAgendaDateEditable(input.targetCivilDate)) {
     return Promise.resolve({
       status: "invalid",
       field: "targetCivilDate",
@@ -95,8 +90,7 @@ export function deleteTrainingActivity(
     civilDate: string;
   },
 ): Promise<TrainingMutationResult> {
-  if (!isTrainingAgendaDateEditable(input.civilDate))
-    return agendaDateLocked();
+  if (!isTrainingAgendaDateEditable(input.civilDate)) return agendaDateLocked();
   return dependencies.repository.deleteTrainingActivity({
     ...input,
     civilDate: parseCivilDate(input.civilDate),
