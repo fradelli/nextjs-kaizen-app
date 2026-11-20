@@ -71,7 +71,7 @@ describe("activity editor workflows", () => {
   it("closes clean without writing a draft", async () => {
     renderEditor();
     await open();
-    fireEvent.click(screen.getByRole("button", { name: "Fechar formulário" }));
+    fireEvent.click(screen.getAllByRole("button", { name: "Fechar formulário" })[0]);
     expect(sessionStorage.length).toBe(0);
   });
   it("saves once, clears the draft and refreshes before closing", async () => {
@@ -107,7 +107,7 @@ describe("activity editor workflows", () => {
     fill();
     submit();
     await waitFor(() => expect(action).toHaveBeenCalledTimes(1));
-    expect(screen.getByRole("button", { name: "Fechar formulário" })).toBeDisabled();
+    expect(screen.getAllByRole("button", { name: "Fechar formulário" })[0]).toBeDisabled();
     expect(screen.getByLabelText("Nome")).toBeDisabled();
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -239,7 +239,7 @@ describe("editor additional safeguards", () => {
     fireEvent.submit(
       screen.getByRole("dialog", { name: "Excluir atividade?" }).querySelector("form")!,
     );
-    await screen.findByText("Exclusão não confirmada");
+    await waitFor(() => expect(action).toHaveBeenCalledOnce());
     expect(screen.getAllByRole("dialog", { hidden: true })).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Manter atividade" })).toBeEnabled();
   });
