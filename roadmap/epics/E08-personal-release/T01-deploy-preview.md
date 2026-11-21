@@ -12,7 +12,7 @@ Conectar o projeto à Vercel e publicar um preview verificável sem promover pro
 
 ## Entradas
 
-- `docs/implementation/E08.md`
+- `docs/plans/release/E08.md`
 - `docs/decisions/PRIVACY-AND-OPERATIONS.md`
 - `docs/decisions/PUBLIC-SINGLE-WORKSPACE-MODE.md`
 - `docs/decisions/CI-CD-GOVERNANCE.md`

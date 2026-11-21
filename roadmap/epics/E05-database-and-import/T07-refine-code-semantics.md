@@ -15,7 +15,7 @@ verificadas automaticamente.
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `src/features/plan-definition-import/domain/plan-definition-import.types.ts`
 - `src/features/plan-definition-import/domain/plan-definition-source.types.ts`
 - `src/features/plan-definition-import/domain/plan-definition-import.error.ts`

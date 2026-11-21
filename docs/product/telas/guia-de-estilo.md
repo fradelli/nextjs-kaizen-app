@@ -65,9 +65,9 @@ ação independente, com confirmação, sem elementos interativos aninhados.
 - Carga indisponível usa Input desabilitado: sem foco, edição, cursor de texto ou
   abertura de teclado. O contrato de envio é preservado pelo domínio consumidor.
 
-A implementação destes ajustes segue o [plano do executor](../../implementation/AJUSTES-DO-EXECUTOR-MIRA.md). A nova
+A implementação destes ajustes segue o [plano do executor](../../plans/design-system/AJUSTES-DO-EXECUTOR-MIRA.md). A nova
 regra de contagem por medidas e ✓ exclusivo para descanso está registrada no
-[plano de execução de séries](../../implementation/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md#contagem-por-medidas--13112026).
+[plano de execução de séries](../../plans/training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md#contagem-por-medidas--13112026).
 
 ## Revisão antes de publicar
 

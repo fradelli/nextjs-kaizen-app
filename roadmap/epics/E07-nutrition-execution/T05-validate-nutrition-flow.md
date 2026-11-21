@@ -12,7 +12,7 @@ Validar o fluxo completo de consulta e registro alimentar antes da publicação.
 
 ## Entradas
 
-- `docs/implementation/E07.md`
+- `docs/plans/nutrition/E07.md`
 - `docs/product/P0.md`
 - `src/features/nutrition/`
 - `src/lib/security/`

@@ -12,7 +12,7 @@ Criar projeções server-side separadas do plano público e da dieta operacional
 
 ## Entradas
 
-- `docs/implementation/E07.md`
+- `docs/plans/nutrition/E07.md`
 - `docs/product/P0.md`
 - `docs/architecture/DATA-MODEL.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`

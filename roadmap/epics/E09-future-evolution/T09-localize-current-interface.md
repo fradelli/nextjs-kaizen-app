@@ -13,8 +13,8 @@ Antecipação autorizada pelo usuário em 29/10/2026. A interface atual pode ava
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
-- `docs/implementation/I18N-PT-EN-PLAN.md`
-- `docs/implementation/I18N-UI-IMPLEMENTATION.md`
+- `docs/plans/i18n/I18N-PT-EN-PLAN.md`
+- `docs/evidence/i18n/I18N-UI-IMPLEMENTATION.md`
 - `src/i18n/locale.ts`
 - `src/i18n/request.ts`
 - `src/i18n/next-intl.d.ts`
@@ -101,4 +101,4 @@ Antecipação autorizada pelo usuário em 29/10/2026. A interface atual pode ava
 
 ## Resultado
 
-290 mensagens em cada idioma. 408 testes passaram, build de produção aprovado e seis cenários HTTP confirmaram idioma inicial e metadados. Lint, tipos, estrutura, fronteiras, ícones e integridade de dados aprovados. Detalhes e limites em [I18N-UI-IMPLEMENTATION.md](../../../docs/implementation/I18N-UI-IMPLEMENTATION.md).
+290 mensagens em cada idioma. 408 testes passaram, build de produção aprovado e seis cenários HTTP confirmaram idioma inicial e metadados. Lint, tipos, estrutura, fronteiras, ícones e integridade de dados aprovados. Detalhes e limites em [I18N-UI-IMPLEMENTATION.md](../../../docs/evidence/i18n/I18N-UI-IMPLEMENTATION.md).

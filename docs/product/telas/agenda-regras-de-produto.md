@@ -97,4 +97,4 @@ Ao alterar uma ocorrência de plano, oferecer “Somente esta” e “Esta e as 
 
 ## 7. Próximas decisões
 
-Usar o [prompt de pesquisa](../PROMPT-PESQUISA-AGENDA.md) para decidir recorrência de tarefas e hábitos, registro de tempo real, organização de grupos e tags e casos de agendamento ainda ambíguos. Depois da aprovação, desenhar o modelo de dados a partir das regras, comparar com o banco existente e validar primeiro o percurso lista → bloco → conclusão. O gesto de arrastar pode ser acrescentado sobre esse mesmo fluxo.
+Usar o [prompt de pesquisa](../../research/PROMPT-PESQUISA-AGENDA.md) para decidir recorrência de tarefas e hábitos, registro de tempo real, organização de grupos e tags e casos de agendamento ainda ambíguos. Depois da aprovação, desenhar o modelo de dados a partir das regras, comparar com o banco existente e validar primeiro o percurso lista → bloco → conclusão. O gesto de arrastar pode ser acrescentado sobre esse mesmo fluxo.

@@ -19,7 +19,7 @@ Criar sessão, autorização e pareamento antes de qualquer leitura ou mutação
 
 ## Entradas
 
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `docs/decisions/PRIVACY-AND-OPERATIONS.md`
 - `docs/decisions/PUBLIC-SINGLE-WORKSPACE-MODE.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`

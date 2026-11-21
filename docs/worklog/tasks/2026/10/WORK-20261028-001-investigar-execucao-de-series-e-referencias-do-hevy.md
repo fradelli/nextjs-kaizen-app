@@ -54,7 +54,7 @@ Confrontar regras atuais com benchmark e preparar decisões antes de fechar plan
 
 ### 2026-10-29
 
-- Atividade: Comparadas quatro capturas com a implementação e documentado plano provisório em docs/implementation/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md.
+- Atividade: Comparadas quatro capturas com a implementação e documentado plano provisório, hoje em docs/plans/training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md.
 - Achado: Projeção persistida usa qualquer medida positiva, divergindo do predicado por dose que exige ambos os lados ou todas as direções. Capturas não comprovam confirmação por série.
 - Decisão: Manter decisões D1-D7 pendentes; nenhuma implementação autorizada nesta etapa. Histórico de execução não equivale à proveniência documental E06-T04.
 - Evidência: Plano contém arquivos, responsabilidades, etapas, compatibilidade v1/legado, rollback e critérios de validação.

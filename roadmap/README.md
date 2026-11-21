@@ -2,6 +2,8 @@
 
 Este arquivo é a fonte canônica do status de todos os épicos e tarefas. Não é necessário abrir cada tarefa para descobrir o que foi concluído.
 
+Os [planos por assunto](../docs/plans/README.md) complementam as tarefas sem duplicar seus estados. Planos sem vínculo formal estão identificados nos índices; sua existência não autoriza implementação nem altera a fila.
+
 ## Protocolo de leitura
 
 1. Leia `AGENTS.md`.

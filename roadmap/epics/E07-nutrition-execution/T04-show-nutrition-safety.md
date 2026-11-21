@@ -12,7 +12,7 @@ Exibir versão, origem, unknowns e ressalvas do conteúdo alimentar.
 
 ## Entradas
 
-- `docs/implementation/E07.md`
+- `docs/plans/nutrition/E07.md`
 - `data/nutrition/active.json`
 - `data/nutrition/reviews/e02-t03-review-metadata.json`
 - `docs/guides/NUTRITION.md`

@@ -12,7 +12,7 @@ Provar joins, constraints, versão ativa e proveniência contra banco real de te
 
 ## Entradas
 
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `docs/architecture/DATA-MODEL.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `prisma/schema.prisma`

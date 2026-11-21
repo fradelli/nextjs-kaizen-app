@@ -12,7 +12,7 @@ Tornar visíveis a versão ativa, a origem e o histórico documental do treino.
 
 ## Entradas
 
-- `docs/implementation/E06.md`
+- `docs/history/implementation/E06.md`
 - `data/active.json`
 - `data/plans/`
 - `data/reviews/`

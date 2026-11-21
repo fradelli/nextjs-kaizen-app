@@ -50,7 +50,7 @@ Definir locale automático, catálogos e tradução de dados versionados
 
 ## Resultado final
 
-- Plano detalhado de i18n entregue em docs/implementation/I18N-PT-EN-PLAN.md, sem implementação
+- Plano detalhado de i18n entregue em docs/plans/i18n/I18N-PT-EN-PLAN.md, sem implementação
 
 ## Próximos passos
 

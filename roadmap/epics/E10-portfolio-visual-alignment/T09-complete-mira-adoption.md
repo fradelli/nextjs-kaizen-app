@@ -13,7 +13,7 @@ preservando comportamento, persistência e composição específica do Kaizen.
 
 ## Entradas
 
-- `docs/implementation/MIRA-DESIGN-SYSTEM-MIGRATION-PLAN.md` — sequência, fronteiras e aceite.
+- `docs/plans/design-system/MIRA-DESIGN-SYSTEM-MIGRATION-PLAN.md` — sequência, fronteiras e aceite.
 - `docs/product/telas/guia-de-estilo.md` — contrato visual vigente.
 - `docs/product/telas/componentes-shadcn.md` — inventário e evidências por fluxo.
 - `docs/product/telas/agenda-padroes-visuais.md` — geometria e interações da agenda.
@@ -91,4 +91,4 @@ barra/reconciliação, build e checks estáticos aprovados. Evidências e hash n
 inventário. O aplicativo permanece local na porta 3100, servido pelo build
 de produção durante esta conferência; não há publicação ou deploy.
 
-Pacote do executor entregue localmente em 14/11/2026. Decisões e evidências estão em `docs/implementation/AJUSTES-DO-EXECUTOR-MIRA.md`. Inclui regras de contagem/volume, Switch Mira, diálogos responsivos, cabeçalho, tabela e abertura modal consistente. Release e adoção integral continuam nas subtarefas da migração.
+Pacote do executor entregue localmente em 14/11/2026. Decisões e evidências estão em `docs/plans/design-system/AJUSTES-DO-EXECUTOR-MIRA.md`. Inclui regras de contagem/volume, Switch Mira, diálogos responsivos, cabeçalho, tabela e abertura modal consistente. Release e adoção integral continuam nas subtarefas da migração.

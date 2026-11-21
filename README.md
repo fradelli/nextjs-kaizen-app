@@ -136,7 +136,7 @@ pnpm dev
 
 A importação usa, por padrão, os arquivos do commit `HEAD`, e não alterações
 pendentes. Confira o resultado do importador; detalhes de importação e ativação
-estão no [guia de persistência](docs/implementation/E05.md).
+estão no [guia de persistência](docs/operations/E05.md).
 
 Abra [Treino no ambiente local](http://localhost:3000/treino).
 
@@ -248,6 +248,8 @@ As convenções completas estão em [AGENTS.md](AGENTS.md).
 </details>
 
 ## Documentação
+
+Comece pelo [índice da documentação](docs/README.md), consulte os [planos por assunto](docs/plans/README.md) ou o [catálogo completo](docs/CATALOG.md). Novos documentos seguem o [padrão documental](docs/DOCUMENTATION-STANDARD.md).
 
 | Quero entender…                           | Onde consultar                                                                         |
 | ----------------------------------------- | -------------------------------------------------------------------------------------- |

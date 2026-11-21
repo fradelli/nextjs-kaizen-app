@@ -16,7 +16,7 @@ A integração só começa após o GO de prontidão de E04-T07. O package public
 
 ## Entradas
 
-- `docs/implementation/evidence/E04-T07-DESIGN-SYSTEM-READINESS.md`
+- `docs/evidence/design-system/E04-T07-DESIGN-SYSTEM-READINESS.md`
 - `docs/decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md`
 - `.npmrc`
 - `package.json`

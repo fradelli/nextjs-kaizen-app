@@ -12,7 +12,7 @@ Demonstrar recuperação dos dados em PostgreSQL local antes de depender de um p
 
 ## Entradas
 
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `docs/decisions/PRIVACY-AND-OPERATIONS.md`
 - `compose.yaml`

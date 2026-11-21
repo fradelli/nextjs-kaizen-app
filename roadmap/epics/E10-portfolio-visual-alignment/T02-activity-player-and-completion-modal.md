@@ -14,9 +14,9 @@ também a superfície e o contorno interativo das dicas de execução.
 
 ## Entradas
 
-- `docs/implementation/TRAINING-ACTIVITY-PLAYER-AND-FEEDBACK-PLAN.md`
-- `docs/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md`
-- `docs/implementation/ICONOGRAPHY-STANDARDIZATION-PLAN.md`
+- `docs/history/implementation/TRAINING-ACTIVITY-PLAYER-AND-FEEDBACK-PLAN.md`
+- `docs/history/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md`
+- `docs/history/implementation/ICONOGRAPHY-STANDARDIZATION-PLAN.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.tsx`
@@ -68,7 +68,7 @@ Validação: 389 testes da aplicação, 53 integrações PostgreSQL, 41 testes d
 qualidade/tipos/build e auditoria aprovados. Chromium confirmou as jornadas, erro de
 rede, recuperação/foco e larguras 320/390/768/1440px. Dispositivo físico segue na E06-T14.
 
-Evidências e limites: [relatório da implementação](../../../docs/implementation/TRAINING-PLAYER-VALIDATION-2026-10-28.md).
+Evidências e limites: [relatório da implementação](../../../docs/evidence/design-system/TRAINING-PLAYER-VALIDATION-2026-10-28.md).
 
 ## Achado confirmado no navegador
 

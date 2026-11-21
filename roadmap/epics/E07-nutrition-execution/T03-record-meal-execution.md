@@ -12,7 +12,7 @@ Apresentar as opções aprovadas e registrar o resultado real de cada refeição
 
 ## Entradas
 
-- `docs/implementation/E07.md`
+- `docs/plans/nutrition/E07.md`
 - `docs/product/P0.md`
 - `data/nutrition/active.json`
 - `src/lib/security/authorization.ts`

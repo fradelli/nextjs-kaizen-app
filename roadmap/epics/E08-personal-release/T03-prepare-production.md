@@ -12,7 +12,7 @@ Preparar banco, variáveis, branch e configuração de produção sem liberar o 
 
 ## Entradas
 
-- `docs/implementation/E08.md`
+- `docs/plans/release/E08.md`
 - `docs/decisions/PRIVACY-AND-OPERATIONS.md`
 - `docs/operations/BACKUP-AND-RESTORE.md`
 - `.github/workflows/`

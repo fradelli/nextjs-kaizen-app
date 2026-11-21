@@ -14,7 +14,7 @@ Importar a fundação documental sem duplicar ou alterar silenciosamente os dado
 
 - `AGENTS.md`
 - `.github/pull_request_template.md`
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `docs/decisions/DATA-SOURCE-TRANSITION.md`
 - `docs/migration/MIGRATION-MANIFEST.md`
 - `data/active.json`
@@ -100,7 +100,7 @@ de scripts, formato, lint, estrutura, tipos, dados, build e auditoria sem findin
 Testes verificam versão nova com ID estável, conflito, rollback real, concorrência,
 referências alimentares, ponteiros inválidos, ciclos e preservação operacional.
 
-Documentação operacional em `docs/implementation/E05.md`. Não foram alterados
+Documentação operacional em `docs/operations/E05.md`. Não foram alterados
 planos JSON, schemas, migration, shells, dados pessoais ou infraestrutura externa.
 A validação Docker continua pendente na E05-T02; a autorização de sequência
 não a declara concluída.
