@@ -1,8 +1,10 @@
 # Interface da agenda — passo a passo
 
+> Consulte a [reconciliação da agenda](RECONCILIATION.md) para distinguir código integrado, validações pendentes e propostas. Os vínculos abaixo cobrem o recorte de agenda.
+
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md).
 
 **Checkpoint histórico de 17/11/2026, anterior à entrega da interface:** complementa o [roteiro geral](AGENDA-ROTEIRO-DE-IMPLEMENTACAO.md). A tela semanal e o editor de treino existem. A nova Server Action está em src/app/workout/schedule-actions.ts. Naquele checkpoint, os painéis de to-dos e os cards de reservas ainda precisavam ser implementados. O estado posterior está registrado abaixo e em desempenho e organização.
 

@@ -1,8 +1,10 @@
 # Roteiro de implementação da agenda
 
+> Consulte a [reconciliação da agenda](RECONCILIATION.md) para distinguir código integrado, validações pendentes e propostas. Os vínculos abaixo cobrem o recorte de agenda.
+
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md), [E11-T07](../../../roadmap/epics/E11-schedule-evolution/T07-plan-recurrence-and-time-records.md), [E11-T08](../../../roadmap/epics/E11-schedule-evolution/T08-define-overlap-presentation.md).
 
 Planejamento de execução em 17/11/2026. Regras na [agenda](../../product/telas/agenda-regras-de-produto.md), relações no [modelo conceitual](../../architecture/MODELO-CONCEITUAL-DA-AGENDA.md) e constraints no [plano físico](../../architecture/AGENDA-TABELAS-E-CONSULTAS-PROPOSTAS.md). Cada etapa termina com um resultado verificável.
 

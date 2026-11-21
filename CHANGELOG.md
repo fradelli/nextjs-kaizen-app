@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-21 — Visão geral e reconciliação dos demais planos
+
+- [Visão geral por área](roadmap/OVERVIEW.md) e [reconciliação](docs/plans/RECONCILIATION.md) distinguem entregas registradas, validações residuais e trabalho futuro.
+- Treino, catálogo, Mira, alimentação, idiomas e publicação ligados às fontes existentes; lacunas de tarefas e divergências documentais explícitas. Nenhum estado, dependência ou código de aplicação alterado nesta etapa.
+
+## 2026-11-21 — Reconciliação dos planos da agenda
+
+- [Mapa de código integrado e trabalho restante](docs/plans/agenda/RECONCILIATION.md), com limites das evidências.
+- E11 reúne oito tarefas planejadas; vínculos nos planos e índices atualizados. Estados anteriores e tarefa selecionada preservados. Nenhuma alteração de aplicação ou dependência.
+
 ## 2026-11-21 — Organização documental por finalidade e assunto
 
 - Planos agrupados por assunto; relatórios e artefatos reunidos em evidências; diagnósticos substituídos identificados como histórico; prompts separados em pesquisa.

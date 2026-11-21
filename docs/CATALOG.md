@@ -149,3 +149,11 @@ Navegação por finalidade. Este catálogo não replica estados de tarefas; cons
 | [Título da validação](templates/EVIDENCE.md) | `docs/templates/EVIDENCE.md` |
 | [Título do plano](templates/PLAN.md) | `docs/templates/PLAN.md` |
 | [Diário operacional](worklog/index.md) | `docs/worklog/index.md` |
+
+## Reconciliação de planos
+
+| Documento | Caminho |
+| --- | --- |
+| [Reconciliação da agenda](plans/agenda/RECONCILIATION.md) | `docs/plans/agenda/RECONCILIATION.md` |
+| [Reconciliação dos planos do Kaizen](plans/RECONCILIATION.md) | `docs/plans/RECONCILIATION.md` |
+| [Visão geral do planejamento](../roadmap/OVERVIEW.md) | `roadmap/OVERVIEW.md` |

@@ -1,5 +1,7 @@
 # Planos — Internacionalização
 
+Consulte a [reconciliação de escopo e evidências](../RECONCILIATION.md#internacionalização) antes de retomar as etapas.
+
 Leia somente o plano e as seções necessários. Etapas históricas e propostas estão identificadas nos documentos; consulte o roadmap para o status das tarefas.
 
 | Documento | Tarefas citadas diretamente |

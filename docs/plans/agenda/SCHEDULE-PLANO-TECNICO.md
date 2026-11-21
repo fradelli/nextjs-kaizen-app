@@ -1,8 +1,10 @@
 # Plano técnico da Schedule
 
+> Consulte a [reconciliação da agenda](RECONCILIATION.md) para distinguir código integrado, validações pendentes e propostas. Os vínculos abaixo cobrem o recorte de agenda.
+
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md), [E11-T07](../../../roadmap/epics/E11-schedule-evolution/T07-plan-recurrence-and-time-records.md), [E11-T08](../../../roadmap/epics/E11-schedule-evolution/T08-define-overlap-presentation.md).
 
 Este é o roteiro de implementação proposto na base anterior. A organização posterior da grade está em [Desempenho e organização](../../evidence/agenda/AGENDA-PERFORMANCE-E-ORGANIZACAO.md); a descrição de dois drawers abaixo é histórica, substituída pelo painel direito registrado em [Interface da agenda](AGENDA-INTERFACE-PASSO-A-PASSO.md). As [regras de produto e cenários de aceite](AJUSTES-DA-AGENDA.md) são a referência para comportamento. A primeira entrega cobre consulta semanal, exceções, atividades avulsas, to-dos, blocos e dois drawers. Todas as operações usam clique, toque ou teclado. A primeira fatia demonstrável é mover uma única ocorrência de treino entre semanas e reabrir a agenda.
 

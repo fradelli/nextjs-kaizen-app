@@ -4,6 +4,8 @@
 - **Área:** Catálogo.
 - **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
 
+> Reconciliação de 21/11/2026: Base de importação não equivale a aprovação editorial. Há divergência de versionamento com o plano de autoria a resolver explicitamente. [Escopo e evidências](../RECONCILIATION.md#catálogo).
+
 > Estado reconciliado: migração e primeira carga possuem implementação local em **Uso da primeira seed**. **Estado e evidências** conserva checkpoint anterior; aprovação editorial, modalidades e integração ao editor continuam pendentes. Não recriar schema/importador pelo texto histórico.
 
 ## Uso da primeira seed

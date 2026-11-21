@@ -4,6 +4,8 @@
 - **Área:** Treino.
 - **Tarefas relacionadas:** [E06-T26](../../../roadmap/epics/E06-training-execution/T26-set-execution.md)
 
+> Reconciliação de 21/11/2026: Checkpoints de outubro e decisões de novembro coexistem; consultar a entrega posterior antes de repetir etapas. [Escopo e evidências](../RECONCILIATION.md#treino).
+
 > Registro da decisão aprovada em 13/11/2026: [contagem por medidas](#contagem-por-medidas--13112026).
 > Ela substitui a exigência histórica de ✓ para contar a série. A implementação e validação eram pendentes naquele checkpoint; a entrega posterior está registrada em [Ajustes do executor Mira](../design-system/AJUSTES-DO-EXECUTOR-MIRA.md). A migração da barra, isoladamente, não altera esse contrato.
 

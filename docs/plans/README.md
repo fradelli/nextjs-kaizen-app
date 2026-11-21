@@ -2,6 +2,8 @@
 
 Planos registram solução, sequência e decisões pendentes. Sua presença não comprova aprovação nem implementação. Status de tarefas permanece no [roadmap](../../roadmap/README.md). Use o [modelo de plano](../templates/PLAN.md).
 
+Comece pela [reconciliação geral](RECONCILIATION.md) ou pela [visão geral do projeto](../../roadmap/OVERVIEW.md).
+
 | Assunto | Entrada |
 | --- | --- |
 | Agenda | [Planos da agenda](agenda/README.md) |

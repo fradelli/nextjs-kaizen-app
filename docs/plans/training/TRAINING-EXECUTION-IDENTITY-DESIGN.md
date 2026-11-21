@@ -4,6 +4,8 @@
 - **Área:** Treino.
 - **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
 
+> Reconciliação de 21/11/2026: Proposta de identidade; a entrega E06-T26 não comprova todo este desenho. [Escopo e evidências](../RECONCILIATION.md#treino).
+
 **Estado:** proposta para revisão. Os nomes abaixo descrevem responsabilidades e não fixam tabelas Prisma. O objetivo é conseguir responder, mesmo após editar um plano: o que foi prescrito, o que mudou durante a sessão e o que foi realmente confirmado?
 
 ## Desenho proposto

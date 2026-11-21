@@ -4,6 +4,8 @@
 - **Área:** Internacionalização.
 - **Tarefas relacionadas:** [E09-T09](../../../roadmap/epics/E09-future-evolution/T09-localize-current-interface.md)
 
+> Reconciliação de 21/11/2026: A entrega da interface não encerra tradução editorial ou política de idioma do repositório. [Escopo e evidências](../RECONCILIATION.md#internacionalização).
+
 Status: proposta de implementação, baseada no repositório em 29/10/2026. Este documento entrega planejamento; não é um pacote de código pronto para copiar. Não houve alteração de aplicação ou banco.
 
 Atualização de execução: a interface atual foi implementada e validada; escopo, evidências e limites em [I18N-UI-IMPLEMENTATION.md](../../evidence/i18n/I18N-UI-IMPLEMENTATION.md). A estratégia de banco abaixo permanece uma proposta para conciliar com o catálogo novo.

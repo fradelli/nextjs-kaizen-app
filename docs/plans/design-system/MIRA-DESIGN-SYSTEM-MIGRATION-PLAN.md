@@ -4,6 +4,8 @@
 - **Área:** Design system.
 - **Tarefas relacionadas:** [E10-T09](../../../roadmap/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md)
 
+> Reconciliação de 21/11/2026: Entrega local do executor não encerra adoção integral nem comprova publicação do design system. [Escopo e evidências](../RECONCILIATION.md#design-system).
+
 Planejamento solicitado em 13/11/2026. Este documento organiza a execução;
 o [guia de estilo](../../product/telas/guia-de-estilo.md) continua sendo a fonte
 visual e o [inventário](../../product/telas/componentes-shadcn.md) registra a adoção.

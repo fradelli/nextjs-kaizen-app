@@ -1,8 +1,10 @@
 # Plano de drag and drop da agenda
 
+> Consulte a [reconciliação da agenda](RECONCILIATION.md) para distinguir código integrado, validações pendentes e propostas. Os vínculos abaixo cobrem o recorte de agenda.
+
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md).
 
 Registro de 20/11/2026. Direção técnica: `@dnd-kit/react` na grade própria, com Pointer Events para seleção de intervalos e redimensionamento. O primeiro incremento e sua POC são descritos abaixo; funcionalidades e critérios ainda não executados permanecem pendentes.
 
@@ -141,4 +143,4 @@ A alternativa sem arraste deve respeitar a experiência do painel direito e não
 
 ## Evidência e próxima ação
 
-Esta entrega registra o plano e seu recorte; nenhuma dependência, schema, componente ou comando foi alterado. POC, medições e critérios acima continuam por executar. Próxima ação: vincular o trabalho a uma tarefa formal do roadmap e iniciar a POC isolada conforme o recorte, preservando as decisões pendentes.
+Esta entrega registra o plano e seu recorte; nenhuma dependência, schema, componente ou comando foi alterado. POC, medições e critérios acima continuam por executar. O trabalho está vinculado ao E11. Próxima etapa prevista: validar a base em E11-T01 e depois executar a POC em E11-T02, quando a tarefa for selecionada. Esta reconciliação não inicia implementação.

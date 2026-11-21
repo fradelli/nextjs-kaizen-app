@@ -4,6 +4,8 @@
 - **Área:** Design system.
 - **Tarefas relacionadas:** [E10-T09](../../../roadmap/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md)
 
+> Reconciliação de 21/11/2026: A verificação de 14/11 cobre o pacote descrito naquele checkpoint; a próxima rodada proposta e o candidato atual exigem avaliação própria. [Escopo e evidências](../RECONCILIATION.md#design-system).
+
 Plano para o agente implementador. A implementação foi autorizada pelo proprietário em 13/11/2026. As etapas abaixo formam um único pacote de produto, com verificações intermediárias para localizar regressões. O código de partida inclui alterações locais nos dois repositórios. Conferir o diff antes de trabalhar e preservar essas alterações.
 
 ## Entradas e decisões aprovadas

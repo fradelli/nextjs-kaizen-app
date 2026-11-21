@@ -4,6 +4,8 @@
 - **Área:** Treino.
 - **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
 
+> Reconciliação de 21/11/2026: Base parcial registrada; autoria completa e identidade ainda precisam de recorte formal no backlog. [Escopo e evidências](../RECONCILIATION.md#treino).
+
 Planejamento técnico de 17 de novembro de 2026. A primeira entrega termina quando um plano criado na aplicação pode ser salvo, reaberto pela URL, editado e consultado após recarga. A [experiência aprovada](../../product/telas/planos.md), o [wireframe](../../product/telas/planos-wireframe.html) e o [modelo proposto](../../architecture/MODELO-DE-TREINO-PROPOSTO.md) são as referências de produto. Os nomes de arquivos e contratos abaixo são propostas para implementação.
 
 ## Entrega e fronteiras

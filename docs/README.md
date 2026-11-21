@@ -6,6 +6,7 @@ Este é o ponto de entrada da documentação. Escolha o assunto antes de abrir d
 
 | Pergunta | Fonte |
 | --- | --- |
+| Como navegar pelo planejamento por área? | [Visão geral do Kaizen](../roadmap/OVERVIEW.md) e [reconciliação dos planos](plans/RECONCILIATION.md) |
 | O que falta e o que foi concluído? | [Roadmap](../roadmap/README.md): único status canônico das tarefas |
 | Qual trabalho foi selecionado? | [Retomada](../roadmap/ACTIVE.md): tarefa selecionada e contexto, não uma fila automática |
 | Como o produto deve funcionar? | [P0](product/P0.md) e [telas](product/telas/README.md) |

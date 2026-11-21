@@ -1,8 +1,10 @@
 # Plano de implementação do Meu Dia e da revisão visual da execução
 
+> Consulte a [reconciliação da agenda](RECONCILIATION.md) para distinguir código integrado, validações pendentes e propostas. Os vínculos abaixo cobrem o recorte de agenda.
+
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md), [E11-T08](../../../roadmap/epics/E11-schedule-evolution/T08-define-overlap-presentation.md).
 
 > Diagnóstico e fases da base anterior. Consulta semanal, grade, retomada e sobreposição têm entregas posteriores no [diário](../../worklog/index.md) e nas [telas](../../product/telas/README.md). `/treino` abaixo é histórico; rota atual `/workout`. Fases restantes não estão concluídas por esta nota.
 

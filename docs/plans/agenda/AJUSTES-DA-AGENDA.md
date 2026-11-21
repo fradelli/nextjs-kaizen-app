@@ -1,8 +1,10 @@
 # Ajustes da agenda
 
+> Consulte a [reconciliação da agenda](RECONCILIATION.md) para distinguir código integrado, validações pendentes e propostas. Os vínculos abaixo cobrem o recorte de agenda.
+
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md), [E11-T07](../../../roadmap/epics/E11-schedule-evolution/T07-plan-recurrence-and-time-records.md), [E11-T08](../../../roadmap/epics/E11-schedule-evolution/T08-define-overlap-presentation.md).
 
 Plano em formação para uma entrega conjunta. Referência vigente da interface em [Padrões visuais da agenda](../../product/telas/agenda-padroes-visuais.md).
 
