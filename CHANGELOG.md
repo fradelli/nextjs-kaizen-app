@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-22 — Visualização do roadmap com o design system
+
+- A página de `roadmap/view/` passa a usar `@fradelli/ui` (preset Mira), o logo solar, IBM Plex Sans, Figtree e o tema escuro do Kaizen, com as mesmas telas e controles.
+- Continua fora do app Next e abre do disco depois de `pnpm roadmap:view`. `vite` declarado na versão já presente no lockfile. Nenhum estado alterado.
+
 ## 2026-11-22 — Visualização local do roadmap
 
 - `pnpm roadmap:view` gera uma página local, sem servidor nem rede, com visão geral, épicos, matriz onda × status, kanban, tarefas e documentos navegáveis.

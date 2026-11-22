@@ -142,7 +142,10 @@ describe("buildRoadmapData", () => {
 describe("KaizenMarkdown", () => {
   const context = {};
   runInNewContext(
-    readFileSync(resolve(repositoryRootOfScripts, "roadmap", "view", "markdown.js"), "utf8"),
+    readFileSync(
+      resolve(repositoryRootOfScripts, "roadmap", "view", "src", "markdown-renderer.js"),
+      "utf8",
+    ),
     context,
   );
   const { render } = context.KaizenMarkdown;
