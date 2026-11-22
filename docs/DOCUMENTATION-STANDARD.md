@@ -57,4 +57,4 @@ O catálogo e os índices organizam navegação, sem copiar contagens de status 
 
 `pnpm docs:check` verifica o cabeçalho comum, a presença no catálogo, os links locais, as seções obrigatórias das tarefas e as dependências. Numa reorganização, `pnpm docs:preservation --base <commit>` confirma que nenhuma linha de Markdown da base sumiu; substituições intencionais são declaradas num JSON (`--replacements`), como na [evidência da E00-T09](evidence/documentation/E00-T09-DOCUMENTATION-STANDARDIZATION.md).
 
-Esta mudança não introduz sincronização automática, CLI de status nem painel. A futura central pode consumir essas fontes sem manter uma segunda versão do planejamento.
+Esta mudança não introduz sincronização automática, CLI de status nem painel. A futura central pode consumir essas fontes sem manter uma segunda versão do planejamento. Desde a E00-T10, `pnpm roadmap:view` gera uma visualização local somente de leitura dessas fontes (`roadmap/view/`), sem segunda versão de estado.

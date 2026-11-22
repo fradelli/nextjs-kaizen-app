@@ -23,6 +23,9 @@ skills-lock.json
 .claude/skills/
 .windsurf/skills/
 
+# Dados gerados da visualização local do roadmap (contêm o caminho local do repositório).
+/roadmap/view/data.js
+
 # Artefatos locais de diagnóstico
 /.tmp/
 /.tmp-*.log

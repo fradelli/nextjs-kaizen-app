@@ -31,6 +31,7 @@ Repositório público com branches, documentação, publicação de conteúdo e 
 | E00-T07 | E03-T05 | Contexto otimizado e dependências saneadas |
 | E00-T08 | E00-T07 | Documentação consolidada e contexto dirigido do Codex |
 | [E00-T09](T09-standardize-documentation.md) | E00-T08 | Documentação existente padronizada e verificável por script |
+| [E00-T10](T10-create-local-roadmap-view.md) | E00-T09 | Roadmap, tarefas e documentos navegáveis numa página local |
 
 Os status ficam exclusivamente em `roadmap/README.md`.
 
