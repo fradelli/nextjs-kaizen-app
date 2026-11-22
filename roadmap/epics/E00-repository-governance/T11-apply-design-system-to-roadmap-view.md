@@ -20,8 +20,9 @@ Refazer a visualização local do roadmap da E00-T10 com o design system do Kaiz
 ## Entregáveis
 
 - `roadmap/view/` como página React empacotada pelo Vite: `index.html`, `vite.config.mjs` e `src/` (componentes, telas, rotas e renderizador Markdown).
-- Componentes de `@fradelli/ui`: Card, Badge, StatusIndicator, NavigationItem, Button, Input, NativeSelect, Switch, Label, Tooltip, Collapsible, Item e Kbd; ícones Lucide.
+- Componentes de `@fradelli/ui`: Table (matriz), Progress (progresso dos épicos), Card, Badge, StatusIndicator, NavigationItem, Button, Input, NativeSelect, Switch, Label, Tooltip, Collapsible, Item e Kbd; ícones Lucide.
 - Logo solar do aplicativo, com a mesma folha de estilos do `KaizenLogo`, e o favicon do Kaizen.
+- Table e Progress acrescentados ao design system a partir das receitas oficiais Mira (Base UI) e consumidos pelo pacote local `vendor/fradelli-ui-mira-table-progress.tgz`.
 - `vite` 8.2.4 declarado como devDependency, na versão que o lockfile já tinha pelo Vitest.
 - `pnpm roadmap:view` gera os dados e o build em `roadmap/view/dist/` (fora do Git).
 
@@ -51,6 +52,7 @@ Refazer a visualização local do roadmap da E00-T10 com o design system do Kaiz
 - App próprio de roadmap e controle de tarefas multiprojeto, planejado para depois.
 - Rota no app Next.
 - Mudar estados pela página.
+- Componente de prosa no design system: o registro Base do shadcn/ui não tem receita de tipografia, prosa ou Markdown; o estilo do texto dos documentos continua local (`roadmap/view/src/styles.css`). A barra empilhada por status também continua local, porque o Progress representa um único valor.
 - Corrigir o `pnpm i18n:check`, que já falhava em `src/` antes desta tarefa (`training-activity-form`, `training-date-navigation` e `app-shell`).
 
 ## Resultado

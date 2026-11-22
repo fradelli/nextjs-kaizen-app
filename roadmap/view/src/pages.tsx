@@ -6,7 +6,18 @@ import { Input } from "@fradelli/ui/input";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "@fradelli/ui/item";
 import { Label } from "@fradelli/ui/label";
 import { NativeSelect, NativeSelectOption } from "@fradelli/ui/native-select";
+import { Progress, ProgressLabel, ProgressValue } from "@fradelli/ui/progress";
 import { Switch } from "@fradelli/ui/switch";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@fradelli/ui/table";
 import { ChevronDown, ExternalLink, Copy } from "lucide-react";
 import {
   MarkdownArticle,
@@ -156,12 +167,14 @@ export function OverviewPage({ data, index, linker }: PageProps) {
                 <CardTitle>{epic.title}</CardTitle>
                 <CardDescription>{epic.result}</CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-col gap-2">
-                <StackedBar counts={epic.counts} order={data.statusOrder} />
-                <span className="text-xs text-muted-foreground">
-                  {epic.counts.DONE} de {epic.total - epic.counts.CANCELLED} concluídas
-                  {epic.counts.CANCELLED ? ` · ${epic.counts.CANCELLED} canceladas` : ""}
-                </span>
+              <CardContent>
+                <Progress value={Math.round(epic.progress * 100)}>
+                  <ProgressLabel className="text-muted-foreground">
+                    {epic.counts.DONE} de {epic.total - epic.counts.CANCELLED} concluídas
+                    {epic.counts.CANCELLED ? ` · ${epic.counts.CANCELLED} canceladas` : ""}
+                  </ProgressLabel>
+                  <ProgressValue />
+                </Progress>
               </CardContent>
             </Card>
           </a>
@@ -367,32 +380,35 @@ export function MatrixPage({ data }: PageProps) {
       </PageHeader>
       <FilterBar data={data} filters={filters} onChange={setFilters} finalLabel="Mostrar finalizadas" />
       <Card size="sm">
-        <CardContent className="overflow-x-auto">
-          <table className="w-full min-w-[56rem] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-border text-left">
-                <th className="p-2 font-semibold">Onda</th>
+        <CardContent>
+          <Table className="min-w-[56rem]">
+            <TableCaption className="sr-only">Tarefas por onda e status</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">Onda</TableHead>
                 {data.statusOrder.map((status) => (
-                  <th key={status} className="p-2 font-semibold whitespace-nowrap">
+                  <TableHead key={status} scope="col">
                     <span className="inline-flex items-center gap-2">
                       <span className={`status-fill-${status} inline-block size-2.5 rounded-sm`} />
                       {STATUS_LABEL[status]}
                     </span>
-                  </th>
+                  </TableHead>
                 ))}
-                <th className="p-2 text-right font-semibold whitespace-nowrap">Total · concluídas</th>
-              </tr>
-            </thead>
-            <tbody>
+                <TableHead scope="col" className="text-right">
+                  Total · concluídas
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {wavesOf(tasks).map((wave) => {
                 const row = tasks.filter((task) => task.wave === wave);
                 return (
-                  <tr key={wave} className="border-b border-border align-top">
-                    <th scope="row" className="p-2 text-left font-semibold whitespace-nowrap">
+                  <TableRow key={wave}>
+                    <TableHead scope="row" className="align-top">
                       {waveLabel(wave)}
-                    </th>
+                    </TableHead>
                     {data.statusOrder.map((status) => (
-                      <td key={status} className="p-2">
+                      <TableCell key={status} className="align-top whitespace-normal">
                         <div className="flex flex-wrap gap-1">
                           {row
                             .filter((task) => task.status === status)
@@ -400,39 +416,39 @@ export function MatrixPage({ data }: PageProps) {
                               <TaskChip key={task.id} task={task} active={data.active.task === task.id} />
                             ))}
                         </div>
-                      </td>
+                      </TableCell>
                     ))}
-                    <td className="p-2 text-right whitespace-nowrap">
+                    <TableCell className="text-right align-top">
                       {row.length} ·{" "}
                       {percent(
                         row.filter((task) => task.status === "DONE").length,
                         row.filter((task) => task.status !== "CANCELLED").length,
                       )}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
               {!tasks.length ? (
-                <tr>
-                  <td colSpan={data.statusOrder.length + 2} className="p-4 text-muted-foreground">
+                <TableRow>
+                  <TableCell colSpan={data.statusOrder.length + 2} className="text-muted-foreground">
                     Nenhuma tarefa com esses filtros.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : null}
-            </tbody>
-            <tfoot>
-              <tr className="font-semibold">
-                <td className="p-2">Total</td>
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell>Total</TableCell>
                 {data.statusOrder.map((status) => (
-                  <td key={status} className="p-2">
+                  <TableCell key={status}>
                     {counts[status]}{" "}
                     <span className="font-normal text-muted-foreground">({percent(counts[status], tasks.length)})</span>
-                  </td>
+                  </TableCell>
                 ))}
-                <td className="p-2 text-right">{tasks.length}</td>
-              </tr>
-            </tfoot>
-          </table>
+                <TableCell className="text-right">{tasks.length}</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
         </CardContent>
       </Card>
       <p className="mt-3 text-xs text-muted-foreground">
