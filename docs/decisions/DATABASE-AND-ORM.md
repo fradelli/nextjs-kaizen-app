@@ -1,5 +1,9 @@
 # Banco de dados e ORM
 
+- **Tipo:** Decisão.
+- **Área:** Banco de dados.
+- **Tarefas relacionadas:** [E03-T04](../../roadmap/epics/E03-product-and-architecture/T04-define-target-architecture.md), [E03-T05](../../roadmap/epics/E03-product-and-architecture/T05-approve-implementation-guide.md).
+
 ## Status
 
 - Data: 2026-09-02

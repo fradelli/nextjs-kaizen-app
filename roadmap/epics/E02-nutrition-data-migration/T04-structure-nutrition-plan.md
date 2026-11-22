@@ -2,6 +2,7 @@
 id: E02-T04
 epic: E02
 depends_on: [E02-T03]
+external: ["decisões aprovadas"]
 ---
 
 # Estruturar plano alimentar

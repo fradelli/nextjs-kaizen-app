@@ -6,6 +6,10 @@ depends_on: [E10-T03]
 
 # Uniformizar estrutura visual dos diálogos
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -14,6 +18,22 @@ depends_on: [E10-T03]
 - `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.styles.ts`
 - `src/features/training/ui/components/training-day-page/components/training-activity-completion-dialog/training-activity-completion-dialog.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-editor-content/training-activity-editor-content.tsx`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa.
 
 ## Resultado
 

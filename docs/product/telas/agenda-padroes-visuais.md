@@ -1,5 +1,9 @@
 # Agenda, botões e foco — revisão para o design system
 
+- **Tipo:** Produto.
+- **Área:** Agenda.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 > Vigência: aparência no [guia](guia-de-estilo.md), comportamento em [Meu Dia](meu-dia.md). Este documento preserva diagnóstico e experimentos da migração em andamento. Em conflito de cores, fontes, ícones ou receitas, siga o guia. Arraste, painel lateral e tooltip temporizado continuam propostas onde identificados. Conteúdo preservado durante a edição visual paralela.
 
 **Estado:** primeira aplicação visual e da navegação semanal em andamento. A seleção por arraste e o painel lateral descritos adiante continuam planejados.

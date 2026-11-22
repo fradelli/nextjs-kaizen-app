@@ -1,5 +1,9 @@
 # Prompt de exploração do novo logo do Kaizen
 
+- **Tipo:** Pesquisa.
+- **Área:** Identidade visual.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Use este prompt para iniciar a exploração visual. A lista combina os tokens da prévia local atual de `@fradelli/ui` com as cores semânticas aprovadas para o Kaizen. A prévia ainda não representa uma versão publicada do pacote.
 
 ## Prompt

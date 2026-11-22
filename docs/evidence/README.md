@@ -8,6 +8,7 @@ Relatórios registram uma base e uma validação específica; não são planos d
 - [Prontidão histórica do design system](design-system/E04-T07-DESIGN-SYSTEM-READINESS.md).
 - [Pesquisa histórica de ícones](design-system/PHOSPHOR-CATALOG-EXPORT-ANALYSIS.md).
 - [Evidências e limites do treino](TRAINING-EVIDENCE-AND-LIMITS.md).
+- [Padronização da documentação existente (E00-T09)](documentation/E00-T09-DOCUMENTATION-STANDARDIZATION.md).
 
 Capturas e observações JSON permanecem junto dos relatórios do design system. Fontes e artefatos foram preservados; conferir a data antes de usar como referência atual.
 

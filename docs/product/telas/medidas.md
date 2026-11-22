@@ -1,5 +1,9 @@
 # Geometria e áreas de toque do Kaizen
 
+- **Tipo:** Produto.
+- **Área:** Design system.
+- **Tarefas relacionadas:** [E06-T14](../../../roadmap/epics/E06-training-execution/T14-add-mobile-bottom-navigation.md).
+
 Tipografia, ícones, densidade visual, cores e variantes pertencem ao [guia de estilo](guia-de-estilo.md). `@fradelli/ui` fornece as receitas. Aqui ficam requisitos de interação específicos do produto.
 
 ## Toque e legibilidade

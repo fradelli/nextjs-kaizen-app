@@ -1,5 +1,9 @@
 # Arquitetura alvo do Kaizen
 
+- **Tipo:** Arquitetura.
+- **Área:** Arquitetura geral.
+- **Tarefas relacionadas:** [E03-T04](../../roadmap/epics/E03-product-and-architecture/T04-define-target-architecture.md), [E04-T06](../../roadmap/epics/E04-nextjs-foundation/T06-adopt-shared-design-system-decision.md), [E03-T05](../../roadmap/epics/E03-product-and-architecture/T05-approve-implementation-guide.md), [E04-T01](../../roadmap/epics/E04-nextjs-foundation/T01-scaffold-nextjs.md).
+
 > Consulta dirigida: código → **Semântica e legibilidade / Boundaries**; React → **Organização dos componentes React / Next.js**; banco → **Organização do Prisma / Migrations**. A aparência atual segue o [guia Mira](../product/telas/guia-de-estilo.md); o contrato inicial de E04 permanece evidência histórica.
 
 ## Status

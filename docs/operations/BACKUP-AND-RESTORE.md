@@ -1,5 +1,9 @@
 # Backup e restauração local
 
+- **Tipo:** Operação.
+- **Área:** Banco de dados.
+- **Tarefas relacionadas:** [E08-T03](../../roadmap/epics/E08-personal-release/T03-prepare-production.md), [E08-T04](../../roadmap/epics/E08-personal-release/T04-validate-operations-and-rollback.md).
+
 ## Finalidade
 
 Este runbook comprova que o banco do Kaizen pode ser recuperado entre duas

@@ -26,6 +26,7 @@ privacidade, contratos, riscos, entradas exatas e critério de sucesso.
 | E09-T06 | E09-T05                     | Produto e conteúdo canônico internacionalizados               |
 | E09-T07 | E09-T05                     | Documentação e fluxo de entrega migrados para inglês          |
 | E09-T08 | E09-T06, E09-T07            | Experiência multilíngue e fallback validados                  |
+| [E09-T09](T09-localize-current-interface.md) | — | Interface atual internacionalizada em português e inglês (antecipada) |
 
 Sono e atividades gerais entram antes do i18n para que as quatro jornadas do
 produto — treino, alimentação, sono e atividades — compartilhem o mesmo contrato

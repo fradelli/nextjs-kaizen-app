@@ -36,3 +36,4 @@ Status canônico no [roadmap](../../README.md). Esta tabela completa a navegaç�
 | [E10-T05](T05-unify-dialog-behavior.md) | E10-T04 | Unificar comportamento dos diálogos |
 | [E10-T06](T06-session-form-drafts.md) | E10-T05 | Rascunhos de formulário por sessão |
 | [E10-T07](T07-fix-draft-review.md) | E10-T06 | Corrigir achados da revisão de rascunhos |
+| [E10-T08](T08-today-navigation.md) | E10-T07 | Ajustar Hoje e entrada do aplicativo |

@@ -1,5 +1,9 @@
 # Guia da programação de setembro de 2026
 
+- **Tipo:** Guia.
+- **Área:** Treino.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 A vigência é determinada por [data/active.json](../../data/active.json); este guia descreve a versão referenciada abaixo.
 
 O [plano versionado](../../data/plans/2026-09-training-v1-1.json) define Treino 1 às 17h de terça, Treino 2 às 17h de quinta e Treino 3 às 17h de sexta. A meta de 40 minutos por sessão inclui o aquecimento; não é uma duração validada.

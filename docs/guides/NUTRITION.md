@@ -1,5 +1,9 @@
 # Guia do plano alimentar
 
+- **Tipo:** Guia.
+- **Área:** Alimentação.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Este guia explica como localizar e interpretar o plano alimentar vigente. A fonte canônica é o JSON apontado por [`data/nutrition/active.json`](../../data/nutrition/active.json); se este texto divergir dos dados, prevalece o JSON.
 
 ## Situação atual

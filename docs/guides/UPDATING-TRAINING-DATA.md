@@ -1,5 +1,9 @@
 # Como atualizar os dados de treino
 
+- **Tipo:** Guia.
+- **Área:** Treino.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Este guia descreve o fluxo operacional do Kaizen. Os dados canônicos prevalecem sobre exemplos de texto ou pedidos sugeridos.
 
 ## Fronteira de privacidade

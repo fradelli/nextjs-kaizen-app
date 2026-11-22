@@ -168,6 +168,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Validate versioned data
         run: pnpm data:check
+      - name: Validate documentation standard
+        run: pnpm docs:check
 
   backup-restore:
     name: Backup restore

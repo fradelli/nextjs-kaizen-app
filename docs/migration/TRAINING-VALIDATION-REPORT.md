@@ -1,5 +1,9 @@
 # Relatório de validação da fundação de treino
 
+- **Tipo:** Migração.
+- **Área:** Treino.
+- **Tarefas relacionadas:** [E02-T01](../../roadmap/epics/E02-nutrition-data-migration/T01-inventory-nutrition-inputs.md).
+
 ## Resultado
 
 - Data do gate: `2026-09-01`.

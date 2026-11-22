@@ -1,5 +1,9 @@
 # Transição da fonte de verdade
 
+- **Tipo:** Decisão.
+- **Área:** Dados.
+- **Tarefas relacionadas:** [E03-T02](../../roadmap/epics/E03-product-and-architecture/T02-define-source-of-truth-transition.md), [E03-T03](../../roadmap/epics/E03-product-and-architecture/T03-define-privacy-and-operations.md), [E05-T05](../../roadmap/epics/E05-database-and-import/T05-validate-backup-and-restore.md).
+
 ## Status
 
 - Data: 2026-09-02

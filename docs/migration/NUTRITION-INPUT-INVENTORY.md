@@ -1,5 +1,9 @@
 # Inventário de entradas alimentares
 
+- **Tipo:** Migração.
+- **Área:** Alimentação.
+- **Tarefas relacionadas:** [E02-T02](../../roadmap/epics/E02-nutrition-data-migration/T02-preserve-original-diet.md), [E02-T06](../../roadmap/epics/E02-nutrition-data-migration/T06-validate-nutrition-foundation.md), [E03-T01](../../roadmap/epics/E03-product-and-architecture/T01-define-p0-journeys.md), [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E02-T03](../../roadmap/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md).
+
 ## Resultado corrigido
 
 - Data da correção: `2026-09-01`.

@@ -1,5 +1,9 @@
 # Guia de estilo para o @fradelli/ui
 
+- **Tipo:** Produto.
+- **Área:** Design system.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 > Fonte local de integração visual atual: Mira/Lucide/IBM Plex Sans/Figtree. Componentes e tokens pertencem ao design system; comportamento pertence às telas. A aparência histórica de vidro/Phosphor não prevalece. O worktree consome prévia por tarball local: isso não comprova release publicado. Antes da entrega, consumir versão exata publicada, atualizar lockfile no trabalho de código e validar instalação limpa, teclado/toque e desktop/mobile. Esta revisão não altera dependências nem publica o pacote.
 
 Diretriz aprovada para a reconstrução do pacote. O Kaizen é o aplicativo de referência para esta etapa. O guia descreve o resultado desejado e serve para adoção posterior nos demais aplicativos.

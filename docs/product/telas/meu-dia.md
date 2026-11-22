@@ -1,5 +1,9 @@
 # Meu Dia
 
+- **Tipo:** Produto.
+- **Área:** Agenda.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Sessões registradas com menos de um minuto mantêm a precisão dos horários reais. A grade mostra marcadores compactos, e o botão “Menos de 1 min” abre uma lista filtrada com áreas de toque confortáveis. A apresentação não aumenta a duração registrada nem substitui os horários por aqueles previstos no plano.
 
 [Mapa de navegação](README.md) · [Wireframe de celular e desktop](meu-dia.svg) · [Explorar as 24 horas](meu-dia-grade.html)

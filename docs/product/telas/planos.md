@@ -1,5 +1,9 @@
 # Página de planos · experiência e primeira jornada
 
+- **Tipo:** Produto.
+- **Área:** Autoria de planos.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Proposta de produto para implementação. Complementa o [modelo de treino](../../architecture/MODELO-DE-TREINO-PROPOSTO.md). A unidade de edição é o plano do workspace. A unidade de prescrição é a série de um exercício.
 
 ## 1. Entrar, escolher e administrar

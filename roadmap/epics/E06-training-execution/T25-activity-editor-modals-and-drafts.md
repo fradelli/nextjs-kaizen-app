@@ -12,6 +12,22 @@ O botão + abre somente o formulário de inclusão; o lápis no card abre soment
 edição daquela atividade. Manter os campos condicionais existentes e ações no rodapé,
 com recuperação de preenchimento local independente dos rascunhos de execução.
 
+## Entradas
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Entrada principal».
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Validação».
+
 ## Entrada principal
 
 `docs/history/implementation/TRAINING-ACTIVITY-MODALS-AND-DRAFTS-IMPLEMENTATION-GUIDE.md`.
@@ -36,6 +52,10 @@ com recuperação de preenchimento local independente dos rascunhos de execuçã
 - [x] Envio, fechamento, exclusão e falhas com proteção de dados e foco.
 - [x] Datas, aquecimento e execução mantêm regras existentes.
 - [x] Qualidade, testes, build e roteiro de navegador aprovados.
+
+## Resultado
+
+Não registrado na versão original desta tarefa.
 
 ## Validação
 

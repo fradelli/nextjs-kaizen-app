@@ -34,6 +34,14 @@ as variantes recebidas foram excluídas desta versão por decisão do usuário.
 - Variantes reserva não aprovadas ficam fora da ficha ativa; sessões aprovadas podem ser adicionadas manualmente.
 - Validação das referências e prévia de uma semana antes da ativação.
 
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Fora de escopo
 
 - Inventar exercícios, prescrições ou horários ausentes.

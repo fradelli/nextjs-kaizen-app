@@ -20,17 +20,18 @@
 | Evidência | `evidence/<assunto>/` | Base/data, procedimento, resultado, artefatos e limitações |
 | Histórico | `history/` | Base original, motivo da classificação e referência posterior |
 | Pesquisa | `research/` | Pergunta, fontes e resultado esperado; não declarar suas hipóteses aprovadas |
+| Migração | `migration/` | Origem, manifesto, inventário e relatórios de validação da migração |
 | Guia/operação | `guides/` ou `operations/` | Pré-condições, procedimento e verificação; rollback quando aplicável |
 
 ## Cabeçalho comum
 
-Depois do título H1, documentos de plano, evidência e histórico usam uma lista curta:
+Depois do título H1, todo documento de conteúdo em `docs/` usa uma lista curta. Ficam fora os índices (`README.md`, `CATALOG.md`), as instruções (`AGENTS.md`), este padrão, os modelos e o diário gerado (`worklog/`). Até a E00-T09 o cabeçalho era exigido só de planos, evidências e histórico:
 
-- **Tipo:** Plano, Evidência ou Histórico.
+- **Tipo:** Plano, Evidência, Histórico, Produto, Arquitetura, Decisão, Guia, Operação, Pesquisa ou Migração.
 - **Área:** assunto do documento.
 - **Tarefas relacionadas:** links para IDs existentes, ou “Vínculo formal pendente”.
 
-Esse cabeçalho classifica o documento, não duplica status. Não inventar responsáveis, prazos, estimativas, aprovações nem vínculos. Documentos históricos preservam seus corpos e títulos de seção para não romper referências.
+Sem tarefa citada, “Tarefas relacionadas” registra “Vínculo formal não identificado; não inferir status de tarefa.”. Na padronização da E00-T09, os vínculos foram os IDs que o próprio documento já citava. Decisões mantêm também os campos do [modelo de decisão](templates/DECISION.md). Esse cabeçalho classifica o documento, não duplica status. Não inventar responsáveis, prazos, estimativas, aprovações nem vínculos. Documentos históricos preservam seus corpos e títulos de seção para não romper referências.
 
 ## Estado atual e histórico
 
@@ -53,5 +54,7 @@ Não exigir um formato novo para o corpo de todo documento histórico: preservar
 ## Manutenção e verificação
 
 O catálogo e os índices organizam navegação, sem copiar contagens de status ou percentuais. Novos documentos precisam aparecer no catálogo e no índice de assunto apropriado. Verificar destinos locais, IDs/dependências, preservação de conteúdo e `git diff --check`.
+
+`pnpm docs:check` verifica o cabeçalho comum, a presença no catálogo, os links locais, as seções obrigatórias das tarefas e as dependências. Numa reorganização, `pnpm docs:preservation --base <commit>` confirma que nenhuma linha de Markdown da base sumiu; substituições intencionais são declaradas num JSON (`--replacements`), como na [evidência da E00-T09](evidence/documentation/E00-T09-DOCUMENTATION-STANDARDIZATION.md).
 
 Esta mudança não introduz sincronização automática, CLI de status nem painel. A futura central pode consumir essas fontes sem manter uma segunda versão do planejamento.

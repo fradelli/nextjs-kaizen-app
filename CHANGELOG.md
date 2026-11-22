@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-22 — Padronização da documentação existente
+
+- Todas as tarefas com as sete seções do modelo; ausências marcadas como não registradas, com a seção equivalente quando existe. Nenhuma seção renomeada ou movida.
+- Cabeçalho comum (tipo, área e tarefas relacionadas) em todos os documentos de conteúdo; condições externas no frontmatter; tabelas dos épicos alinhadas às dependências.
+- `pnpm docs:check` e `pnpm docs:preservation` mantêm o padrão e comprovam a preservação. [Evidência](docs/evidence/documentation/E00-T09-DOCUMENTATION-STANDARDIZATION.md). Estados, prioridade e tarefa selecionada preservados.
+
 ## 2026-11-21 — Visão geral e reconciliação dos demais planos
 
 - [Visão geral por área](roadmap/OVERVIEW.md) e [reconciliação](docs/plans/RECONCILIATION.md) distinguem entregas registradas, validações residuais e trabalho futuro.

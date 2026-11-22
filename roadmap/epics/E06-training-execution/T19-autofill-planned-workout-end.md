@@ -33,6 +33,18 @@ informado e da duração da sessão selecionada, sem exigir cálculo manual.
 - `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.utils.test.ts`
 - `src/features/training/ui/components/training-day-page/components/training-activity-form/training-activity-form.test.tsx`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Plano detalhado proposto — 26/10/2026».
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Regras confirmadas
 
 - Usar a duração da sessão carregada do plano, nunca um valor fixo na interface.

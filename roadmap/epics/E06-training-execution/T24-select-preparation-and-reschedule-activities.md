@@ -45,6 +45,18 @@ alterar a data de atividades não iniciadas, preservando horários e aquecimento
 - `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.utils.ts`
 - `tests/integration/training-activity-scheduling.test.ts`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Implementação e segurança
 
 - O seletor oferece apenas sessões de preparação públicas e o servidor valida

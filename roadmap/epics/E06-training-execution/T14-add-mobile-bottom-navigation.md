@@ -35,6 +35,18 @@ Hoje os acessos principais ficam no topo. A mudança visual é transversal ao ap
 - `src/components/shared/app-shell/components/app-shell-navigation/components/app-shell-navigation-links/app-shell-navigation-links.types.ts`
 - `src/components/shared/app-shell/components/app-shell-navigation/components/app-shell-navigation-routes/app-shell-navigation-routes.tsx`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - Em mobile, Treino e Dieta aparecem fixos na parte inferior com indicação clara da rota ativa e respeito à área segura do dispositivo.

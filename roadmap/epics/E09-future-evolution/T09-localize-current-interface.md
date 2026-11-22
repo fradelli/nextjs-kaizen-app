@@ -10,6 +10,10 @@ depends_on: []
 
 Antecipação autorizada pelo usuário em 29/10/2026. A interface atual pode avançar antes do catálogo novo e das jornadas futuras. Esta entrega não conclui E09-T05/E09-T06/E09-T08 nem altera a política de documentação em português.
 
+## Objetivo
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Autorização e escopo».
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -89,6 +93,22 @@ Antecipação autorizada pelo usuário em 29/10/2026. A interface atual pode ava
 - `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.ts`
 - `src/features/training/ui/hooks/use-training-activity-editor-draft/use-training-activity-editor-draft.test.tsx`
 - `src/features/training/ui/hooks/use-training-exercise-draft/use-training-exercise-draft.utils.ts`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Passos e critérios de aceite».
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Passos e critérios de aceite».
 
 ## Passos e critérios de aceite
 

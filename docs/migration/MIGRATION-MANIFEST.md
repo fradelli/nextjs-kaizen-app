@@ -1,5 +1,9 @@
 # Manifesto de migração
 
+- **Tipo:** Migração.
+- **Área:** Migração.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 ## Finalidade
 
 Este manifesto é a allowlist dos artefatos que podem sair do legado privado. E01 registra a fundação de treino e E02 registra a fonte alimentar preservada, sempre a partir de snapshots fixados e sem usar o worktree como origem.

@@ -9,7 +9,7 @@ Plano alimentar do dia consultável, com escolha, cumprimento, alternativa e com
 | Tarefa  | Depende de | Resultado                                         |
 | ------- | ---------- | ------------------------------------------------- |
 | E07-T01 | E05-T05    | Projeção do plano e da execução do workspace fixo |
-| E07-T02 | E07-T01    | Página de dieta do dia                            |
+| E07-T02 | E07-T01, E04-T04 | Página de dieta do dia                            |
 | E07-T03 | E07-T02    | Escolhas, cumprimento e comentários               |
 | E07-T04 | E07-T03    | Segurança e proveniência                          |
 | E07-T05 | E07-T04    | Fluxo validado                                    |

@@ -10,6 +10,10 @@ depends_on: [E06-T03, E09-T09]
 
 Implementação autorizada pelo usuário em 29/10/2026, com branch criada a partir de developer atualizada.
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -30,6 +34,14 @@ Implementação autorizada pelo usuário em 29/10/2026, com branch criada a part
 - Layout mobile compacto, dicas em dialog e toggle de finalização preservado.
 - Faixa e texto de estado; verde exige todas as séries realizadas.
 - Compatibilidade de registros e rascunhos existentes e português/inglês.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
 
 ## Critérios de aceite
 
