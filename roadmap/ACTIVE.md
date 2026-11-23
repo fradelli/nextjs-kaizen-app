@@ -9,7 +9,9 @@
 ## Retomada e trabalhos paralelos
 
 - Base da reorganização: `27536ef`, integração da agenda pela PR #86; histórico local também registra a integração Mira em `b37c215` pela PR #84. Isso não encerra automaticamente a E10-T09 nem comprova release do design system ou produção.
-- Branch da organização documental: `codex/E00-T08-documentation-planning`, criada a partir do checkpoint documental `b0fe6e9` da branch `codex/E06-drag-and-drop-agenda`. A reorganização documental não inicia a implementação do drag and drop.
+- E00-T08 a E00-T11 integradas em `developer` pelas PRs #87 a #90 (até `e0834f3`): organização e padronização documental e a [visualização local do roadmap](epics/E00-repository-governance/T11-apply-design-system-to-roadmap-view.md), aberta com `pnpm roadmap:view`. A reorganização documental não inicia a implementação do drag and drop.
+- `@fradelli/ui` vem do pacote local `vendor/fradelli-ui-mira-table-progress.tgz`, gerado de um commit do design system (`698b828`) sem versão publicada. Trocar pela versão publicada quando existir.
+- App próprio de roadmap e central multiprojeto: proposta sem tarefa nem plano registrados. Não iniciar sem tarefa aprovada.
 - E06-T26 conserva os commits e resultados originais na própria tarefa. Não repetir implementação a partir dos checkpoints antigos.
 - O plano de [drag and drop](../docs/plans/agenda/AGENDA-DRAG-AND-DROP.md) está vinculado ao [E11](epics/E11-schedule-evolution/README.md), sem iniciar sua execução. A [organização documental](../docs/REORGANIZATION-2026-11.md) preserva status e dependências existentes.
 - E06-T23: implementação entregue, jornada manual completa pendente. E06-T14: teclado virtual/área segura em aparelho físico pendentes.
