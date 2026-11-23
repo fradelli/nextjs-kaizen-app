@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const taskBranchPattern = /^codex\/(E\d{2}-T\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const taskBranchPattern = /^claude\/(E\d{2}-T\d{2})-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const taskTitlePattern =
   /^\[(E\d{2}-T\d{2})\] (?:build|chore|ci|docs|feat|fix|perf|refactor|style|test)\([a-z0-9-]+\): .+$/;
 const dependabotTitlePattern = /^build\(deps(?:-dev)?\): .+$/;
@@ -284,7 +284,7 @@ export function validateGovernance({ event, repositoryRoot = process.cwd() }) {
   const titleMatch = title.match(taskTitlePattern);
 
   if (!branchMatch) {
-    errors.push("Branch de tarefa deve seguir codex/E00-T01-descricao-curta.");
+    errors.push("Branch de tarefa deve seguir claude/E00-T01-descricao-curta.");
   }
 
   if (!titleMatch) {

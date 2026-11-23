@@ -243,7 +243,7 @@ alteração local em um commit ou backup recuperável.
 
 O fluxo de entrega é `branch de tarefa → developer → staging → master`.
 Tarefas entram em `developer` por squash; promoções usam merge commit.
-As convenções completas estão em [AGENTS.md](AGENTS.md).
+As convenções completas estão em [CLAUDE.md](CLAUDE.md).
 
 </details>
 

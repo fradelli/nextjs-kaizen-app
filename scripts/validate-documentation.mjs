@@ -19,7 +19,7 @@ const headerFields = ["Tipo", "Área", "Tarefas relacionadas"];
 // Índices, instruções, modelos e o próprio padrão não levam o cabeçalho comum.
 const headerExemptNames = new Set([
   "README.md",
-  "AGENTS.md",
+  "CLAUDE.md",
   "CATALOG.md",
   "DOCUMENTATION-STANDARD.md",
 ]);
@@ -268,7 +268,7 @@ function validateLinks(repositoryRoot, errors) {
   const files = [
     ...walk(resolve(repositoryRoot, "docs"), (name) => name.endsWith(".md")),
     ...walk(resolve(repositoryRoot, "roadmap"), (name) => name.endsWith(".md")),
-    ...["AGENTS.md", "README.md", "CHANGELOG.md"]
+    ...["CLAUDE.md", "README.md", "CHANGELOG.md"]
       .map((name) => resolve(repositoryRoot, name))
       .filter((path) => existsSync(path)),
   ];

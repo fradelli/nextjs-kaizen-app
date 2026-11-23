@@ -25,7 +25,7 @@
 
 ## Cabeçalho comum
 
-Depois do título H1, todo documento de conteúdo em `docs/` usa uma lista curta. Ficam fora os índices (`README.md`, `CATALOG.md`), as instruções (`AGENTS.md`), este padrão, os modelos e o diário gerado (`worklog/`). Até a E00-T09 o cabeçalho era exigido só de planos, evidências e histórico:
+Depois do título H1, todo documento de conteúdo em `docs/` usa uma lista curta. Ficam fora os índices (`README.md`, `CATALOG.md`), as instruções (`CLAUDE.md`), este padrão, os modelos e o diário gerado (`worklog/`). Até a E00-T09 o cabeçalho era exigido só de planos, evidências e histórico:
 
 - **Tipo:** Plano, Evidência, Histórico, Produto, Arquitetura, Decisão, Guia, Operação, Pesquisa ou Migração.
 - **Área:** assunto do documento.

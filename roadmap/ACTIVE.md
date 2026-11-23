@@ -16,7 +16,7 @@
 - O plano de [drag and drop](../docs/plans/agenda/AGENDA-DRAG-AND-DROP.md) está vinculado ao [E11](epics/E11-schedule-evolution/README.md), sem iniciar sua execução. A [organização documental](../docs/REORGANIZATION-2026-11.md) preserva status e dependências existentes.
 - E06-T23: implementação entregue, jornada manual completa pendente. E06-T14: teclado virtual/área segura em aparelho físico pendentes.
 - E06-T22 e E06-T25 permanecem concluídas; detalhes nas respectivas tarefas.
-- Auditoria técnica de 2026-11-23 sobre `developer` (`364c71f`) registrada como E00-T12 a E00-T16 e no [E12](epics/E12-code-health/README.md). E00-T12 vem antes das demais porque o validador de governança só aceita branches `codex/`. Nenhuma delas substitui a tarefa selecionada sem decisão do responsável.
+- Auditoria técnica de 2026-11-23 sobre `developer` (`364c71f`) registrada como E00-T12 a E00-T16 e no [E12](epics/E12-code-health/README.md). E00-T12 concluída: o agente suportado passa a ser o Claude Code, com contratos em `CLAUDE.md` e branches `claude/<ID>-descricao`. Nenhuma delas substitui a tarefa selecionada sem decisão do responsável.
 
 O [diário operacional](../docs/worklog/index.md) registra sessões; seus estados não substituem o status canônico do roadmap.
 

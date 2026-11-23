@@ -6,7 +6,7 @@ Navegação por finalidade. Este catálogo não replica estados de tarefas; cons
 
 | Documento | Caminho |
 | --- | --- |
-| [Instruções da documentação](AGENTS.md) | `docs/AGENTS.md` |
+| [Instruções da documentação](CLAUDE.md) | `docs/CLAUDE.md` |
 | [Revisão e consolidação da documentação do Kaizen](documentation-review.md) | `docs/documentation-review.md` |
 | [Padrão da documentação](DOCUMENTATION-STANDARD.md) | `docs/DOCUMENTATION-STANDARD.md` |
 | [Documentação do Kaizen](README.md) | `docs/README.md` |
@@ -133,7 +133,7 @@ Navegação por finalidade. Este catálogo não replica estados de tarefas; cons
 
 | Documento | Caminho |
 | --- | --- |
-| [Instruções da migração](migration/AGENTS.md) | `docs/migration/AGENTS.md` |
+| [Instruções da migração](migration/CLAUDE.md) | `docs/migration/CLAUDE.md` |
 | [Manifesto de migração](migration/MIGRATION-MANIFEST.md) | `docs/migration/MIGRATION-MANIFEST.md` |
 | [Inventário de entradas alimentares](migration/NUTRITION-INPUT-INVENTORY.md) | `docs/migration/NUTRITION-INPUT-INVENTORY.md` |
 | [Relatório de validação da fundação alimentar](migration/NUTRITION-VALIDATION-REPORT.md) | `docs/migration/NUTRITION-VALIDATION-REPORT.md` |

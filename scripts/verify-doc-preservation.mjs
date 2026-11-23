@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 // de cada Markdown na base continua existindo no mesmo arquivo da árvore atual.
 // Substituições intencionais ficam declaradas num JSON com { file, old, new }.
 
-const scopes = ["docs", "roadmap", "AGENTS.md", "README.md", "CHANGELOG.md"];
+const scopes = ["docs", "roadmap", "CLAUDE.md", "README.md", "CHANGELOG.md"];
 
 function git(repositoryRoot, args) {
   return execFileSync("git", args, {

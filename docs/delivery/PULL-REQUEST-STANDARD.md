@@ -37,10 +37,10 @@ Regras:
 Formato obrigatório para branches temporárias:
 
 ```text
-codex/E00-T01-descricao-curta
+claude/E00-T01-descricao-curta
 ```
 
-O validador atual aceita somente `codex` em branches de tarefa. O slug usa kebab-case minúsculo. Ampliar prefixos ou tipos exige mudança própria no contrato.
+O validador aceita somente `claude` em branches de tarefa desde a E00-T12; branches `codex/` anteriores permanecem apenas no histórico. O slug usa kebab-case minúsculo. Ampliar prefixos ou tipos exige mudança própria no contrato.
 
 ## Descrição
 

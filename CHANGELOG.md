@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-23 — Claude Code como agente de desenvolvimento
+
+- Contratos de agente renomeados de `AGENTS.md` para `CLAUDE.md` na raiz e em `roadmap/`, `docs/`, `docs/migration/` e `data/`; o contrato raiz deixa de citar o Codex.
+- O validador de governança aceita somente branches `claude/<ID>-descricao`; padrão de PR e decisão de branching atualizados.
+- Instalações locais de outros agentes (`.agents/`, `.windsurf/`, `skills-lock.json`) removidas; skills do Prisma ficam em `.claude/skills/`, fora do Git.
+- Auditoria técnica registrada como E00-T12 a E00-T16 e no épico [E12](roadmap/epics/E12-code-health/README.md).
+
 ## 2026-11-22 — Visualização do roadmap com o design system
 
 - A página de `roadmap/view/` passa a usar `@fradelli/ui` (preset Mira), o logo solar, IBM Plex Sans, Figtree e o tema escuro do Kaizen, com as mesmas telas e controles.

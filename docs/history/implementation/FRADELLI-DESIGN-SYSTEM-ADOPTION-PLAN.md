@@ -34,7 +34,7 @@ na base auditada, não um inventário de defeitos ainda abertos.
 
 ### 2.1 Fontes consultadas
 
-- [Instruções do Kaizen](../../../AGENTS.md), [instruções de documentação](../../AGENTS.md),
+- [Instruções do Kaizen](../../../CLAUDE.md), [instruções de documentação](../../CLAUDE.md),
   [tarefa ativa](../../../roadmap/ACTIVE.md) e [E06-T25](../../../roadmap/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md).
 - [Arquitetura e ownership](../../architecture/TARGET-ARCHITECTURE.md),
   [adoção do DS](../../decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md), manifests, lockfiles,

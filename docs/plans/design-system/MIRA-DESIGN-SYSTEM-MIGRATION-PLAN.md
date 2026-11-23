@@ -29,7 +29,7 @@ avançar por lotes sem alegar que o catálogo inteiro já foi entregue.
 
 ## Entradas e responsabilidades
 
-- `AGENTS.md` e `roadmap/ACTIVE.md`: estado de retomada e preservação do trabalho.
+- `CLAUDE.md` e `roadmap/ACTIVE.md`: estado de retomada e preservação do trabalho.
 - `docs/architecture/TARGET-ARCHITECTURE.md`: Semântica e legibilidade do código,
   Boundaries, Organização dos componentes React, Server Components e Client Components.
 - `docs/product/telas/guia-de-estilo.md`: decisões visuais vigentes.
