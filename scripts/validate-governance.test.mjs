@@ -74,7 +74,7 @@ function taskPullRequest(overrides = {}) {
     pull_request: {
       base: { ref: "developer" },
       body: validBody,
-      head: { ref: "codex/E04-T05-configure-minimal-ci" },
+      head: { ref: "claude/E04-T05-configure-minimal-ci" },
       title: "[E04-T05] ci(workflow): configurar CI mínimo",
       user: { login: "maintainer" },
       ...overrides,
@@ -91,6 +91,20 @@ afterEach(() => {
 describe("validateGovernance", () => {
   test("aceita PR de tarefa válida", () => {
     assert.deepEqual(validateGovernance({ event: taskPullRequest(), repositoryRoot }), []);
+  });
+
+  test("rejeita branch de tarefa com prefixo diferente de claude", () => {
+    for (const ref of [
+      "codex/E04-T05-configure-minimal-ci",
+      "feature/E04-T05-configure-minimal-ci",
+    ]) {
+      const errors = validateGovernance({
+        event: taskPullRequest({ head: { ref } }),
+        repositoryRoot,
+      });
+
+      assert.ok(errors.some((error) => error.includes("claude/E00-T01-descricao-curta")));
+    }
   });
 
   test("rejeita divergência entre branch e título", () => {

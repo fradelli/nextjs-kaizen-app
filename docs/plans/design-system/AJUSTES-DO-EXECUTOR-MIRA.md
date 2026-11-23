@@ -10,7 +10,7 @@ Plano para o agente implementador. A implementação foi autorizada pelo proprie
 
 ## Entradas e decisões aprovadas
 
-Ler os contratos AGENTS.md dos dois repositórios, a [tarefa ativa](../../../roadmap/ACTIVE.md), o [guia visual](../../product/telas/guia-de-estilo.md) e as [decisões recentes do executor](../training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md#cabeçalho-do-executor--layout-aprovado-em-13112026). As decisões de novembro sobre contagem prevalecem sobre o histórico de outubro. Componentes, variantes, estados, tokens e movimento vêm de receitas Mira exportadas pelo design system. Composição da tela, textos e regras de treino pertencem ao Kaizen.
+Ler os contratos de agente dos dois repositórios (`CLAUDE.md` no Kaizen; `AGENTS.md` no design system), a [tarefa ativa](../../../roadmap/ACTIVE.md), o [guia visual](../../product/telas/guia-de-estilo.md) e as [decisões recentes do executor](../training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md#cabeçalho-do-executor--layout-aprovado-em-13112026). As decisões de novembro sobre contagem prevalecem sobre o histórico de outubro. Componentes, variantes, estados, tokens e movimento vêm de receitas Mira exportadas pelo design system. Composição da tela, textos e regras de treino pertencem ao Kaizen.
 
 Decisões aprovadas em 13/11/2026. Aquecimentos são excluídos do numerador, denominador e volume do resumo. Carga unilateral é por lado. Uma série de 10 kg com 8 repetições à esquerda e 10 à direita soma 180 kg. A implementação do pacote foi autorizada. Preservar a interpretação de registros antigos.
 

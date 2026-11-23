@@ -1,4 +1,4 @@
-# Contrato do Codex no Kaizen
+# Contrato do Claude no Kaizen
 
 O Kaizen combina planos públicos versionados com registros operacionais de treino e alimentação.
 
@@ -6,7 +6,7 @@ O Kaizen combina planos públicos versionados com registros operacionais de trei
 
 1. Leia este contrato e `roadmap/ACTIVE.md`.
 2. Abra somente a tarefa selecionada e suas `Entradas`, nas seções indicadas.
-3. Aplique instruções aninhadas da árvore alcançada: `roadmap/AGENTS.md`, `docs/AGENTS.md`, `docs/migration/AGENTS.md` e `data/AGENTS.md`.
+3. Aplique as instruções aninhadas da árvore alcançada: `roadmap/CLAUDE.md`, `docs/CLAUDE.md`, `docs/migration/CLAUDE.md` e `data/CLAUDE.md`. O Claude Code as carrega ao ler arquivos dessas pastas.
 
 Navegação documental em `docs/README.md`; planos por assunto em `docs/plans/README.md`. Consulte o catálogo apenas para localizar fontes, sem carregar todos os documentos.
 
@@ -37,12 +37,12 @@ Cada componente tem pasta própria; `components/` contém pastas de componentes.
 
 ## Git e validação
 
-- Trabalho novo parte de `developer` em `codex/<ID>-descricao-curta`; não recrie branch nem desfaça trabalho em andamento.
+- Trabalho novo parte de `developer` em `claude/<ID>-descricao-curta`; não recrie branch nem desfaça trabalho em andamento.
 - PR de tarefa para `developer` usa squash; promoções `developer -> staging -> master` usam merge commit. Sem force push ou reescrita compartilhada.
 - Título `[<ID>] tipo(escopo): resumo`; descrição em `.github/pull_request_template.md`. Detalhes: `docs/delivery/PULL-REQUEST-STANDARD.md`.
 - Sempre confira `git diff --check` e ausência de segredos. Documentação: links, IDs, dependências e vigência. Dados: schema, ponteiros e referências. Código: gates proporcionais em `package.json`.
 - `pnpm run ci` executa gates locais; `pnpm ci` é instalação congelada. `pnpm governance <evento.json>` valida PR/roadmap; `pnpm data:check` valida dados; `pnpm test:ci-scripts` valida os scripts.
 
-## Skills locais
+## Agente e skills locais
 
-Uso exclusivo do Codex. `.agents/skills/` é instalação local Prisma ignorada pelo Git; leia somente a referência compatível com a versão instalada e a tarefa. Presença no disco não comprova descoberta automática pelo host. Vínculos de outros clientes não são requisitos do projeto.
+O Claude Code é o único agente de desenvolvimento suportado. `.claude/skills/` guarda instalações locais (como as skills do Prisma), ignoradas pelo Git; use somente a referência compatível com a versão instalada e a tarefa. Presença no disco não comprova que a skill foi carregada. `.claude/settings.local.json` é pessoal e não é versionado.

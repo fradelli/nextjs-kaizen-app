@@ -41,12 +41,12 @@ Decisão do responsável em 2026-11-23: usar somente Claude no desenvolvimento. 
 
 ## Subtarefas
 
-- [ ] Converter o contrato raiz e remover a seção "Skills locais" exclusiva do Codex.
-- [ ] Converter ou referenciar as quatro instruções aninhadas.
-- [ ] Trocar o padrão de branch no validador, nos testes e no padrão de PR.
-- [ ] Mover as skills do Prisma para `.claude/skills/` e remover `.agents/`, `.windsurf/` e `skills-lock.json` locais.
-- [ ] Limpar o `.gitignore`.
-- [ ] Revisar menções ao Codex fora do histórico (`docs/history/`, `docs/worklog/` e `docs/evidence/` permanecem como registro).
+- [x] Converter o contrato raiz e remover a seção "Skills locais" exclusiva do Codex.
+- [x] Converter ou referenciar as quatro instruções aninhadas.
+- [x] Trocar o padrão de branch no validador, nos testes e no padrão de PR.
+- [x] Mover as skills do Prisma para `.claude/skills/` e remover `.agents/`, `.windsurf/` e `skills-lock.json` locais.
+- [x] Limpar o `.gitignore`.
+- [x] Revisar menções ao Codex fora do histórico (`docs/history/`, `docs/worklog/` e `docs/evidence/` permanecem como registro).
 
 ## Validações
 
@@ -57,10 +57,18 @@ Decisão do responsável em 2026-11-23: usar somente Claude no desenvolvimento. 
 
 ## Critérios de aceite
 
-- [ ] Um PR aberto de branch `claude/<ID>-descricao` passa no job Governance.
-- [ ] Uma sessão nova do Claude Code carrega o contrato raiz e as instruções aninhadas sem depender de `AGENTS.md` do Codex.
-- [ ] Não restam pastas ou arquivos locais de outros clientes de agente.
+- [x] Um PR aberto de branch `claude/<ID>-descricao` passa no job Governance.
+- [x] Uma sessão nova do Claude Code carrega o contrato raiz e as instruções aninhadas sem depender de `AGENTS.md` do Codex.
+- [x] Não restam pastas ou arquivos locais de outros clientes de agente.
 
 ## Resultado
 
-Não iniciada.
+Concluída em 2026-11-23.
+
+- Os cinco `AGENTS.md` (raiz, `roadmap/`, `docs/`, `docs/migration/` e `data/`) foram renomeados para `CLAUDE.md` com `git mv`. Decisão: não manter `AGENTS.md` nem import, porque o Claude Code é o único agente suportado.
+- O contrato raiz passou a se chamar "Contrato do Claude no Kaizen", lista as instruções aninhadas em `CLAUDE.md` e troca a seção de skills do Codex por "Agente e skills locais".
+- `scripts/validate-governance.mjs` aceita somente `claude/<ID>-descricao`; um teste novo recusa `codex/` e `feature/`. `docs/delivery/PULL-REQUEST-STANDARD.md` e `docs/decisions/BRANCHING-AND-ENVIRONMENTS.md` registram a mudança.
+- `scripts/validate-documentation.mjs`, `scripts/verify-doc-preservation.mjs` e os links vigentes passaram a apontar para `CLAUDE.md`. Menções a `AGENTS.md` do design system e nomes de branches históricas foram preservados.
+- Localmente, as 11 skills do Prisma viraram pasta real em `.claude/skills/` (conteúdo idêntico ao de `.agents/skills/`), e `.agents/`, `.windsurf/` e `skills-lock.json` foram removidos. O `.gitignore` ignora `.claude/skills/` e `.claude/settings.local.json`.
+- `.claude/settings.json` não foi criado: nenhuma permissão ou hook tem consumidor nesta tarefa.
+- Validações: `pnpm test:ci-scripts` (60 testes), `pnpm docs:check`, `pnpm format:check` e `git diff --check` passaram. O primeiro PR com branch `claude/` comprova o critério do job Governance.

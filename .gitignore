@@ -16,12 +16,9 @@ test-results/
 Thumbs.db
 pnpm-debug.log*
 
-# Referências locais do Codex, sem relação com dependências do app.
-.agents/skills/
-skills-lock.json
-# Vínculos locais de clientes não utilizados; preservar instalação existente.
+# Instalação local do Claude Code (skills e preferências pessoais).
 .claude/skills/
-.windsurf/skills/
+.claude/settings.local.json
 
 # Dados gerados da visualização local do roadmap (contêm o caminho local do repositório).
 /roadmap/view/public/data.js

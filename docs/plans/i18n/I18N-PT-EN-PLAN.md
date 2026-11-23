@@ -14,7 +14,7 @@ Atualização de execução: a interface atual foi implementada e validada; esco
 
 Entregar interface e conteúdo editorial em português brasileiro e inglês, escolhidos automaticamente pelo idioma preferido do navegador. O navegador informa preferências, normalmente herdadas do sistema; uma aplicação web não consegue garantir acesso direto à configuração do sistema operacional.
 
-Requisito confirmado: inglês e português, com detecção automática. Recomendações deste plano: `pt-BR` e `en`, inglês como fallback para idiomas não suportados e seletor opcional Automático / Português / English. Espanhol fica fora desta primeira entrega. Documentação humana continua em português conforme AGENTS.md; English-first para documentação não foi solicitado.
+Requisito confirmado: inglês e português, com detecção automática. Recomendações deste plano: `pt-BR` e `en`, inglês como fallback para idiomas não suportados e seletor opcional Automático / Português / English. Espanhol fica fora desta primeira entrega. Documentação humana continua em português conforme CLAUDE.md; English-first para documentação não foi solicitado.
 
 ## 2. Diagnóstico do projeto
 
