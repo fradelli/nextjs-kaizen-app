@@ -19,6 +19,18 @@ Executar a UX aprovada na E06-T09 para o descanso prescrito entre séries, sem c
 - `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-timer/training-activity-timer.tsx`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - O botão explícito inicia a contagem do descanso prescrito para o exercício.

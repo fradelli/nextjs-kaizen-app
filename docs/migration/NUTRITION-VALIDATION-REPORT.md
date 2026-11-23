@@ -1,5 +1,9 @@
 # Relatório de validação da fundação alimentar
 
+- **Tipo:** Migração.
+- **Área:** Alimentação.
+- **Tarefas relacionadas:** [E02-T06](../../roadmap/epics/E02-nutrition-data-migration/T06-validate-nutrition-foundation.md), [E03-T01](../../roadmap/epics/E03-product-and-architecture/T01-define-p0-journeys.md).
+
 ## Resultado
 
 - Tarefa: `E02-T06`

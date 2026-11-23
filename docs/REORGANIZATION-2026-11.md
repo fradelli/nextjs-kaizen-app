@@ -1,5 +1,9 @@
 # Reorganização documental — novembro de 2026
 
+- **Tipo:** Evidência.
+- **Área:** Documentação.
+- **Tarefas relacionadas:** [E06-T21](../roadmap/epics/E06-training-execution/T21-design-external-training-plan-import.md), [E04-T07](../roadmap/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md).
+
 ## Escopo e preservação
 
 Reorganização autorizada pelo proprietário, iniciada em 20/11 e concluída documentalmente em 21/11/2026. Base: `27536ef`. O trabalho reorganiza pastas, cabeçalhos, navegação e referências; não modifica regras de produto, status de tarefas ou código de aplicação.

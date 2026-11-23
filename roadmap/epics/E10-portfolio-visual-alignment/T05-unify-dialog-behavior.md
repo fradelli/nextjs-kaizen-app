@@ -6,6 +6,10 @@ depends_on: [E10-T04]
 
 # Unificar comportamento dos diálogos
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -13,6 +17,22 @@ depends_on: [E10-T04]
 - `src/features/training/ui/components/training-day-page/components/training-activity-modal/training-activity-modal.types.ts`
 - `src/features/training/ui/components/training-day-page/components/training-activity-delete-form/training-activity-delete-form.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-completion-dialog/training-activity-completion-dialog.tsx`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa.
 
 ## Resultado
 

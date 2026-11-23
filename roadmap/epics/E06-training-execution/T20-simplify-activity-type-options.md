@@ -28,6 +28,18 @@ por decisão do usuário, sem eliminar dados históricos ou atividades da agenda
 - `prisma/models/training.prisma`
 - `data/schedule.json`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Regras confirmadas
 
 - Não oferecer Treino específico ao adicionar uma nova atividade.

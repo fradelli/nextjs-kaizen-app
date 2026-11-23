@@ -47,6 +47,14 @@ também a superfície e o contorno interativo das dicas de execução.
 - Captura consistente da pausa, cache da avaliação e recuperação em falhas.
 - Servidor e regressões alinhados às decisões aprovadas, sem migration presumida.
 
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Critérios de aceite
 
 - [x] Player representa os estados e mantém as transições aprovadas.

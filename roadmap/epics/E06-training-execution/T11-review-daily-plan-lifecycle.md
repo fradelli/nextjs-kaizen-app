@@ -25,6 +25,18 @@ A E06-T03 guarda a agenda semanal na versão do plano e materializa somente a da
 - `src/app/treino/page.tsx`
 - `src/features/training/data/prisma-training-repository.ts`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Entregáveis e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Entregáveis e impactos
 
 - Fluxo atual comprovado: template semanal, acesso ao dia, criação, persistência, proteção contra duplicação e retorno à UI.

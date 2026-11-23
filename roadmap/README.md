@@ -47,6 +47,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E00-T05 | DONE        | [Registrar proveniência do legado](epics/E00-repository-governance/T05-register-legacy-provenance.md)                                          | E00-T04, E00-T06                      |
 | E00-T07 | DONE        | [Otimizar contexto e sanear dependências pré-MVP](epics/E00-repository-governance/T07-optimize-agent-context.md)                               | E03-T05                               |
 | E00-T08 | DONE | [Consolidar documentação e contexto do Codex](epics/E00-repository-governance/T08-consolidate-documentation.md) | E00-T07 |
+| E00-T09 | DONE | [Padronizar a documentação existente](epics/E00-repository-governance/T09-standardize-documentation.md) | E00-T08 |
 | E01-T01 | DONE        | [Congelar snapshot de origem](epics/E01-training-data-migration/T01-freeze-source-snapshot.md)                                                 | E00-T05                               |
 | E01-T02 | DONE        | [Migrar dados canônicos de treino](epics/E01-training-data-migration/T02-migrate-canonical-training-data.md)                                   | E01-T01                               |
 | E01-T03 | DONE        | [Migrar histórico de treino](epics/E01-training-data-migration/T03-migrate-training-history.md)                                                | E01-T02                               |

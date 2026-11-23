@@ -41,6 +41,14 @@ ao cliente o snapshot Git, UUIDs internos ou dependências do domínio alimentar
   Excel reutiliza o mesmo contrato e não ganha persistência própria.
 - Divisão das tarefas de implementação após aprovação das decisões.
 
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Fora de escopo
 
 - Implementar upload, endpoint, Server Action, componentes, parser Excel ou

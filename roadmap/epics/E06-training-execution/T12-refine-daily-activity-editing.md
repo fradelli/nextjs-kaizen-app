@@ -39,6 +39,18 @@ Na E06-T03 já há inclusão, edição de horário/tipo e exclusão lógica de a
 - `data/training-execution-metadata.json`
 - `schemas/exercise-library.schema.json`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - É possível cancelar um jogo do dia, mover um treino para outro horário e adicionar outra atividade, sem mudar a agenda semanal.

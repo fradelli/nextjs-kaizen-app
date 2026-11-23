@@ -6,12 +6,32 @@ depends_on: [E10-T06]
 
 # Corrigir achados da revisão de rascunhos
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `src/features/training/ui/hooks/use-training-activity-completion-draft/use-training-activity-completion-draft.ts`
 - `src/features/training/ui/hooks/use-training-activity-editor-draft/use-training-activity-editor-draft.ts`
 - `src/features/training/ui/components/training-day-page/components/training-activity-modal/training-activity-modal.styles.ts`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa.
 
 ## Resultado
 

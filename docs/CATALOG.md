@@ -90,6 +90,7 @@ Navegação por finalidade. Este catálogo não replica estados de tarefas; cons
 | [Validação da integração visual e do registro de treino](evidence/design-system/TRAINING-PLAYER-VALIDATION-2026-10-28.md) | `docs/evidence/design-system/TRAINING-PLAYER-VALIDATION-2026-10-28.md` |
 | [Internacionalização da interface](evidence/i18n/I18N-UI-IMPLEMENTATION.md) | `docs/evidence/i18n/I18N-UI-IMPLEMENTATION.md` |
 | [Evidências](evidence/README.md) | `docs/evidence/README.md` |
+| [E00-T09 — Padronização da documentação existente](evidence/documentation/E00-T09-DOCUMENTATION-STANDARDIZATION.md) | `docs/evidence/documentation/E00-T09-DOCUMENTATION-STANDARDIZATION.md` |
 | [Evidências e limites do treino](evidence/TRAINING-EVIDENCE-AND-LIMITS.md) | `docs/evidence/TRAINING-EVIDENCE-AND-LIMITS.md` |
 
 ## Histórico

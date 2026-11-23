@@ -23,6 +23,18 @@ A ativação troca a versão ativa, e as atividades do dia preservam `source` e 
 - `src/features/training/data/prisma-training-repository.ts`
 - `roadmap/epics/E06-training-execution/T11-review-daily-plan-lifecycle.md`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - Atividades estruturadas futuras originadas do plano antigo deixam de ser apresentadas como vigentes conforme estratégia aprovada.

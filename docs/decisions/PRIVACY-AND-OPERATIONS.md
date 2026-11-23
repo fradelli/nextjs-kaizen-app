@@ -1,5 +1,9 @@
 # Privacidade e operação do MVP
 
+- **Tipo:** Decisão.
+- **Área:** Privacidade e operação.
+- **Tarefas relacionadas:** [E03-T03](../../roadmap/epics/E03-product-and-architecture/T03-define-privacy-and-operations.md), [E08-T03](../../roadmap/epics/E08-personal-release/T03-prepare-production.md), [E05-T05](../../roadmap/epics/E05-database-and-import/T05-validate-backup-and-restore.md), [E05-T06](../../roadmap/epics/E05-database-and-import/T06-implement-personal-access.md), [E08-T01](../../roadmap/epics/E08-personal-release/T01-deploy-preview.md), [E08-T02](../../roadmap/epics/E08-personal-release/T02-protect-access.md).
+
 > Consulta dirigida: acesso atual → [workspace público](PUBLIC-SINGLE-WORKSPACE-MODE.md); recuperação local → [runbook](../operations/BACKUP-AND-RESTORE.md). Pareamento/cookie são desenho histórico adiado. Decisões operacionais não comprovam produção configurada.
 
 ## Status

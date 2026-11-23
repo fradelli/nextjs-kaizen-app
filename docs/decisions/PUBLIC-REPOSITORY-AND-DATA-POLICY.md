@@ -1,5 +1,9 @@
 # Política do repositório público e dos dados
 
+- **Tipo:** Decisão.
+- **Área:** Privacidade e operação.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 > Esta política governa exposição no Git. Acesso operacional foi alterado explicitamente por [workspace público](PUBLIC-SINGLE-WORKSPACE-MODE.md); referências originais a ambientes protegidos não comprovam autenticação ativa.
 
 ## Status

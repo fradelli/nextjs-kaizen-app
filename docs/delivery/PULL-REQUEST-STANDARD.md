@@ -1,5 +1,9 @@
 # Padrão de pull request
 
+- **Tipo:** Guia.
+- **Área:** Governança.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 ## Objetivo
 
 Manter PRs curtas, rastreáveis pelo roadmap e verificáveis sem depender de Jira. O formato deriva do Sandicts, substituindo `KAN-123` pelo ID local da tarefa e removendo campos corporativos que não existem no Kaizen.

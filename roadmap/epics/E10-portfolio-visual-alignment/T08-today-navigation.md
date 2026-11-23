@@ -6,6 +6,10 @@ depends_on: [E10-T07]
 
 # Ajustar Hoje e entrada do aplicativo
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -13,6 +17,22 @@ depends_on: [E10-T07]
 - `src/components/shared/app-shell/app-shell.tsx`
 - `src/features/training/ui/components/training-day-page/training-day-page.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-date-navigation/training-date-navigation.tsx`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa.
 
 ## Resultado
 

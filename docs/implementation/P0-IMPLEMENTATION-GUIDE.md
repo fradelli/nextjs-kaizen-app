@@ -1,5 +1,9 @@
 # Índice de implementação do P0
 
+- **Tipo:** Guia.
+- **Área:** Implementação.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Comece pelo contrato raiz, tarefa selecionada e entradas por seção. Este índice não duplica versões, regras nem status.
 
 A organização geral está no [índice documental](../README.md). Os [planos por assunto](../plans/README.md) distinguem etapas futuras dos [relatórios de evidência](../evidence/README.md) e do [histórico](../history/README.md).

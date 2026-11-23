@@ -2,9 +2,12 @@
 id: E00-T01
 epic: E00
 depends_on: []
+external: []
 ---
 
 # Nome da tarefa
+
+<!-- `depends_on` lista somente IDs de tarefas. `external` lista condições que não são tarefas (ex.: "dieta fornecida") e pode ser omitido quando vazio. As sete seções abaixo são obrigatórias; seções próprias da tarefa podem ser acrescentadas entre elas. Seção sem conteúdo registra "Não registrado na versão original desta tarefa." -->
 
 ## Objetivo
 

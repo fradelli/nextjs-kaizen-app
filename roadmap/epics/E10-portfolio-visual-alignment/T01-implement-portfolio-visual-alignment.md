@@ -26,6 +26,18 @@ animações ou elementos decorativos.
 - `src/components/shared/feature-placeholder/feature-placeholder.tsx`
 - `src/features/training/ui/components/training-day-page/training-day-page.styles.ts`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Escopo
 
 - Concluir o catálogo completo e os estados genéricos de Button no DS conforme os planos.

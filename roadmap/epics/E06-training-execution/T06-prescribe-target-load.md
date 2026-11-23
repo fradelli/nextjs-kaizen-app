@@ -24,6 +24,18 @@ Na implementação proposta pela E06-T03, a execução guarda `loadKg` por séri
 - `src/features/training/application/training-dto.ts`
 - `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/training-exercise.tsx`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - Uma prescrição pode definir a mesma carga para todas as séries ou uma carga específica para cada série.

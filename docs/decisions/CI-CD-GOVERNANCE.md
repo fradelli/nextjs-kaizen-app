@@ -1,5 +1,9 @@
 # Governança de CI/CD
 
+- **Tipo:** Decisão.
+- **Área:** Governança.
+- **Tarefas relacionadas:** [E00-T01](../../roadmap/epics/E00-repository-governance/T01-initialize-repository-and-branches.md), [E04-T05](../../roadmap/epics/E04-nextjs-foundation/T05-configure-minimal-ci.md), [E08-T01](../../roadmap/epics/E08-personal-release/T01-deploy-preview.md), [E08-T03](../../roadmap/epics/E08-personal-release/T03-prepare-production.md).
+
 ## Status
 
 - Data: 2026-08-30

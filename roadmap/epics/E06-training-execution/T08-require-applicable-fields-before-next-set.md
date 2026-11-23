@@ -22,6 +22,18 @@ Na E06-T03, o avanço já exige medida positiva da série atual e trata `0` como
 - `src/features/training/data/prisma-training-repository.ts`
 - `src/features/training/application/training-dto.ts`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - Repetições ou medidas aplicáveis devem ser positivas para liberar a série seguinte; vazio e `0` não liberam.

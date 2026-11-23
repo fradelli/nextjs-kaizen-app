@@ -19,6 +19,22 @@ compatibilidade e integrar a PR antes da E06-T19.
 - `.github/workflows/ci.yml`
 - `.github/pull_request_template.md`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Validação e integração».
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa.
+
 ## Evidência inicial
 
 `pnpm audit --json`: 19 achados, sendo 3 baixos, 10 moderados, 4 altos e 2 críticos.

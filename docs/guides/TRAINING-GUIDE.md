@@ -1,5 +1,9 @@
 # Guia de consulta do treino
 
+- **Tipo:** Guia.
+- **Área:** Treino.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Este guia orienta a consulta. Prescrição, sessões, doses e agenda da versão corrente pertencem ao plano indicado por [data/active.json](../../data/active.json), não a uma lista fixa neste documento.
 
 ## Como consultar

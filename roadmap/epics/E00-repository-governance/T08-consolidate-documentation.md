@@ -10,6 +10,10 @@ depends_on: [E00-T07]
 
 Plano documental aprovado pelo proprietário em 12/11/2026. Uso exclusivo do Codex. Preservar migração visual paralela; sem commit, push, publicação, banco ou dependências.
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/documentation-review.md` — inventário, critérios e plano aprovado.
@@ -17,6 +21,18 @@ Plano documental aprovado pelo proprietário em 12/11/2026. Uso exclusivo do Cod
 - `docs/architecture/TARGET-ARCHITECTURE.md` — rotas, componentes e Prisma.
 - `docs/product/telas/guia-de-estilo.md` — direção visual atual.
 - `scripts/validate-governance.mjs` — contrato existente; somente leitura.
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
 
 ## Critérios de aceite
 

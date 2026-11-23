@@ -34,6 +34,14 @@ no fim de semana.
 - Validação de esquema, importação e testes de dias com múltiplas atividades,
   descanso, ausência de horário e referências inválidas.
 
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Fora de escopo
 
 - Importar o novo treino pessoal, limpar o banco ou criar editor visual de planos.

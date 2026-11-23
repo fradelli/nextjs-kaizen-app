@@ -28,6 +28,14 @@ limpo após preparar a nova programação, sem perder dados fora do escopo aprov
 - Execução transacional ou procedimento recuperável e verificação do estado vazio.
   A importação/ativação e a leitura da nova semana pertencem à E06-T16.
 
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Fora de escopo
 
 - Excluir qualquer dado antes de definir escopo, obter backup e aprovação.

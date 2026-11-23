@@ -1,5 +1,9 @@
 # Revisão e consolidação da documentação do Kaizen
 
+- **Tipo:** Evidência.
+- **Área:** Documentação.
+- **Tarefas relacionadas:** [E00-T08](../roadmap/epics/E00-repository-governance/T08-consolidate-documentation.md), [E06-T26](../roadmap/epics/E06-training-execution/T26-set-execution.md), [E04-T01](../roadmap/epics/E04-nextjs-foundation/T01-scaffold-nextjs.md), [E04-T02](../roadmap/epics/E04-nextjs-foundation/T02-configure-static-quality.md), [E04-T03](../roadmap/epics/E04-nextjs-foundation/T03-create-server-only-boundary.md), [E04-T04](../roadmap/epics/E04-nextjs-foundation/T04-create-accessible-shell.md), [E04-T05](../roadmap/epics/E04-nextjs-foundation/T05-configure-minimal-ci.md), [E04-T06](../roadmap/epics/E04-nextjs-foundation/T06-adopt-shared-design-system-decision.md), [E04-T07](../roadmap/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md), [E04-T08](../roadmap/epics/E04-nextjs-foundation/T08-integrate-versioned-design-system.md), [E04-T09](../roadmap/epics/E04-nextjs-foundation/T09-standardize-react-page-structure.md), [E06-T09](../roadmap/epics/E06-training-execution/T09-design-rest-timer-experience.md), [E09-T05](../roadmap/epics/E09-future-evolution/T05-design-i18n-and-english-policy.md), [E02-T03](../roadmap/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md), [E06-T21](../roadmap/epics/E06-training-execution/T21-design-external-training-plan-import.md).
+
 Plano aprovado em 12/11/2026; execução E00-T08. Este é o único relatório da revisão. O inventário inicial foi substituído por evidências verificadas e pelo registro das alterações. Não é contexto padrão para tarefas de implementação.
 
 ## Alcance e proteção do trabalho

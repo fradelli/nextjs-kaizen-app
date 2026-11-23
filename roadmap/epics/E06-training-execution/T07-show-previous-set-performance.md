@@ -23,6 +23,18 @@ A E06-T03 persiste exercícios e séries por atividade, mas a leitura do dia con
 - `src/features/training/application/training-dto.ts`
 - `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.tsx`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Comportamento esperado
 
 - A série 1 mostra a série 1 da última execução concluída do mesmo exercício; a série 2 mostra a série 2, e assim por diante.

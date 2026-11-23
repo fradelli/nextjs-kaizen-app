@@ -1,5 +1,9 @@
 # Evidências e limites do treino
 
+- **Tipo:** Evidência.
+- **Área:** Treino.
+- **Tarefas relacionadas:** [E01-T04](../../roadmap/epics/E01-training-data-migration/T04-migrate-human-documentation.md).
+
 Conteúdo migrado do snapshot de 2026-08-30. As referências e interpretações abaixo foram preservadas como base documental; a E01-T04 não realizou nova revisão sistemática.
 
 ## Limite principal

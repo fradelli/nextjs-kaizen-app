@@ -1,5 +1,9 @@
 # Modelo de dados de treino do Kaizen
 
+- **Tipo:** Arquitetura.
+- **Área:** Treino.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Proposta de arquitetura · 14 de novembro de 2026 · planejamento
 
 ## 1. Contrato de produto

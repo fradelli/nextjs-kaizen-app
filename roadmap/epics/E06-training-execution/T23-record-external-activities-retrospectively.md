@@ -12,6 +12,10 @@ Registro direto de práticas esportivas e treinos específicos em hoje e ontem,
 sem cronômetro, horários reais ou aquecimento obrigatório. Preparação opcional
 consultável; formulário de registro somente no fim do cartão expandido.
 
+## Objetivo
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo implementado».
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -24,6 +28,26 @@ consultável; formulário de registro somente no fim do cartão expandido.
 - `src/features/training/ui/components/training-day-page/components/training-activity-controls/training-activity-controls.tsx`
 - `prisma/migrations/20261004120000_allow_retrospective_external_activity/migration.sql`
 - `tests/integration/training-mutations.test.ts`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Escopo implementado».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Aceite e resultado».
+
+## Resultado
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Aceite e resultado».
 
 ## Aceite e resultado
 

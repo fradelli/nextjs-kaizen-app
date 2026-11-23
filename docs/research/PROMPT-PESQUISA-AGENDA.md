@@ -1,5 +1,9 @@
 # Prompt para pesquisar as decisões pendentes da agenda do Kaizen
 
+- **Tipo:** Pesquisa.
+- **Área:** Agenda.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Pesquise como produtos de agenda e produtividade resolvem as decisões abaixo. Escreva em português do Brasil para uma equipe pequena que vai aprovar regras de produto antes de desenhar o banco. Quero decisões verificáveis por exemplos de uso. Dispense código, schemas, bibliotecas e planos de implementação.
 
 ## Para quem estamos construindo

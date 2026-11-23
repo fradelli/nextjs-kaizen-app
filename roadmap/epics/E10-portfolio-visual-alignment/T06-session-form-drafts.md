@@ -6,6 +6,10 @@ depends_on: [E10-T05]
 
 # Rascunhos de formulário por sessão
 
+## Objetivo
+
+Não registrado na versão original desta tarefa.
+
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
@@ -14,6 +18,22 @@ depends_on: [E10-T05]
 - `src/features/training/ui/components/training-day-page/components/training-activity-editor-content/training-activity-editor-content.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-completion-dialog/training-activity-completion-dialog.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-completion-form/training-activity-completion-form.styles.ts`
+
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
+## Critérios de aceite
+
+Não registrado na versão original desta tarefa.
 
 ## Resultado
 

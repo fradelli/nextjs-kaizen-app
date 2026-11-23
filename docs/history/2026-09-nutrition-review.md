@@ -1,5 +1,9 @@
 # Revisão alimentar E02-T03
 
+- **Tipo:** Histórico.
+- **Área:** Alimentação.
+- **Tarefas relacionadas:** [E02-T03](../../roadmap/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md), [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md).
+
 ## Status
 
 Revisão concluída em `2026-09-02`, sem plano alimentar aprovado.

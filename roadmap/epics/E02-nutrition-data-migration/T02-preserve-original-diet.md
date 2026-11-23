@@ -2,6 +2,7 @@
 id: E02-T02
 epic: E02
 depends_on: [E02-T01]
+external: ["dieta fornecida"]
 ---
 
 # Preservar dieta original

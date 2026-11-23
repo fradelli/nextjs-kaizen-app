@@ -8,7 +8,7 @@ Aplicação Next.js mínima, sem features de negócio, com boundaries, gates de 
 
 | Tarefa | Depende de | Resultado |
 | --- | --- | --- |
-| E04-T01 | E03-T05 | Scaffold validado |
+| E04-T01 | E03-T05, E00-T07 | Scaffold validado |
 | E04-T02 | E04-T01 | Qualidade estática |
 | E04-T06 | E04-T02 | Decisão de adoção e arquitetura atualizadas |
 | E04-T03 | E04-T02 | Boundary server-only |

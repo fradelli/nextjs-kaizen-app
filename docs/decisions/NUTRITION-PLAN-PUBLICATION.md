@@ -1,5 +1,9 @@
 # Publicação do plano alimentar pessoal
 
+- **Tipo:** Decisão.
+- **Área:** Alimentação.
+- **Tarefas relacionadas:** [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E02-T05](../../roadmap/epics/E02-nutrition-data-migration/T05-create-nutrition-contracts.md).
+
 ## Status
 
 - Data: 2026-09-02

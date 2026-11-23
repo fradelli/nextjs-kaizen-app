@@ -26,6 +26,14 @@ Reanalisar com o usuário e implementar a condução de blocos A/B, usando a com
 - Comportamento explícito para exercícios zerados, interrupção e correção posterior.
 - Testes de ordem, restauração, séries por lado e conclusão parcial.
 
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Fora de escopo
 
 - Alterar a ficha ou inventar doses, descansos e progressões.

@@ -25,6 +25,18 @@ Definir a UX mobile e acessível de um contador regressivo para o descanso presc
 - `src/features/training/ui/components/training-day-page/components/training-session/components/training-exercise/components/training-local-exercise-editor/training-local-exercise-editor.tsx`
 - `src/features/training/ui/components/training-day-page/components/training-activity-timer/training-activity-timer.tsx`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Entregáveis e impactos».
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa.
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Entregáveis e impactos
 
 - Fluxo visual de posição, abertura, foco, anúncios acessíveis, atualização de tempo, conclusão, reinício e fechamento.

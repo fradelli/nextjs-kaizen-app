@@ -1,5 +1,9 @@
 # Agenda do Kaizen — regras de produto aprovadas
 
+- **Tipo:** Produto.
+- **Área:** Agenda.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Decisões de 16 de novembro de 2026. Este documento descreve o comportamento desejado. A agenda e o executor de treinos existem. O fluxo completo de to-dos descrito abaixo é requisito de produto. A aprovação destas regras não comprova sua implementação.
 
 ## 1. O que o usuário organiza

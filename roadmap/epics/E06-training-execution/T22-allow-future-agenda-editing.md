@@ -38,6 +38,18 @@ ser confirmada antes da implementação, sem assumir que o bloqueio é apenas vi
 - `src/features/training/ui/hooks/use-training-activity-draft/use-training-activity-draft.ts`
 - `tests/integration/training-mutations.test.ts`
 
+## Entregáveis
+
+Não registrado na versão original desta tarefa.
+
+## Subtarefas
+
+Não registrado na versão original desta tarefa; conteúdo equivalente na seção «Plano da tarefa».
+
+## Validações
+
+Não registrado na versão original desta tarefa.
+
 ## Regras aprovadas
 
 - Amanhã até hoje + 4 dias: permitir inclusão, exclusão e edição do planejamento.

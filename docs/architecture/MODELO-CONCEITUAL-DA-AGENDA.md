@@ -1,5 +1,9 @@
 # Modelo conceitual da agenda
 
+- **Tipo:** Arquitetura.
+- **Área:** Agenda.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Proposta para revisão de produto em 17/11/2026. Parte das [regras da agenda](../product/telas/agenda-regras-de-produto.md), das decisões R01–R05 da especificação consolidada de 16/11 e da decisão posterior sobre a grade de 15 minutos. Os nomes representam conceitos do produto. O desenho físico das tabelas e a comparação com o sistema atual vêm depois da aprovação.
 
 ## Relações

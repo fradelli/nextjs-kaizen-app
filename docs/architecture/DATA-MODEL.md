@@ -1,5 +1,9 @@
 # Modelo de dados do P0
 
+- **Tipo:** Arquitetura.
+- **Área:** Banco de dados.
+- **Tarefas relacionadas:** [E05-T01](../../roadmap/epics/E05-database-and-import/T01-design-relational-model.md), [E05-T02](../../roadmap/epics/E05-database-and-import/T02-configure-database-and-migrations.md), [E05-T04](../../roadmap/epics/E05-database-and-import/T04-test-persisted-integrity.md), [E05-T06](../../roadmap/epics/E05-database-and-import/T06-implement-personal-access.md).
+
 > Desenho relacional inicial de E05-T01: as 18 entidades abaixo não são inventário exaustivo do banco atual. Confira [modelos](../../prisma/models) e [migrations](../../prisma/migrations). A operação evoluiu para `TrainingDayActivity`, intervalos e resultados de atividade/séries; o modelo antigo de execução permanece histórico conforme **Modelo conceitual / Treino** na [arquitetura](TARGET-ARCHITECTURE.md). O catálogo acrescenta `CatalogEquipment`, `CatalogExercise`, `CatalogExerciseAlias`, `CatalogRequirement` e `CatalogImport`, descritos no [plano do catálogo](../plans/catalog/CATALOG-IMPORT-PLAN.md). `PairingRateLimit` no schema não comprova autenticação ativa; vale a decisão de workspace público. Esta nota não autoriza migration ou remoção de legado.
 
 ## Status e fontes

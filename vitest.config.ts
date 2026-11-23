@@ -17,6 +17,7 @@ export default defineConfig({
       "scripts/validate-component-structure.test.mjs",
       "scripts/validate-layer-boundaries.test.mjs",
       "scripts/validate-ui-icons.test.mjs",
+      "scripts/validate-documentation.test.mjs",
       "tests/integration/**",
       "src/generated/prisma/**",
     ],

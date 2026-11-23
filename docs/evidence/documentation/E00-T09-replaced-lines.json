@@ -1,0 +1,42 @@
+[
+  {
+    "file": "roadmap/epics/E04-nextjs-foundation/README.md",
+    "old": "| E04-T01 | E03-T05 | Scaffold validado |",
+    "new": "| E04-T01 | E03-T05, E00-T07 | Scaffold validado |"
+  },
+  {
+    "file": "roadmap/epics/E06-training-execution/README.md",
+    "old": "| E06-T02 | E06-T01    | Página de treino do dia                                  |",
+    "new": "| E06-T02 | E06-T01, E04-T04 | Página de treino do dia                                  |"
+  },
+  {
+    "file": "roadmap/epics/E07-nutrition-execution/README.md",
+    "old": "| E07-T02 | E07-T01    | Página de dieta do dia                            |",
+    "new": "| E07-T02 | E07-T01, E04-T04 | Página de dieta do dia                            |"
+  },
+  {
+    "file": "docs/DOCUMENTATION-STANDARD.md",
+    "old": "Depois do título H1, documentos de plano, evidência e histórico usam uma lista curta:",
+    "new": "Depois do título H1, todo documento de conteúdo em `docs/` usa uma lista curta. Ficam fora os índices (`README.md`, `CATALOG.md`), as instruções (`AGENTS.md`), este padrão, os modelos e o diário gerado (`worklog/`). Até a E00-T09 o cabeçalho era exigido só de planos, evidências e histórico:"
+  },
+  {
+    "file": "docs/DOCUMENTATION-STANDARD.md",
+    "old": "- **Tipo:** Plano, Evidência ou Histórico.",
+    "new": "- **Tipo:** Plano, Evidência, Histórico, Produto, Arquitetura, Decisão, Guia, Operação, Pesquisa ou Migração."
+  },
+  {
+    "file": "docs/DOCUMENTATION-STANDARD.md",
+    "old": "Esse cabeçalho classifica o documento, não duplica status. Não inventar responsáveis, prazos, estimativas, aprovações nem vínculos. Documentos históricos preservam seus corpos e títulos de seção para não romper referências.",
+    "new": "Sem tarefa citada, “Tarefas relacionadas” registra “Vínculo formal não identificado; não inferir status de tarefa.”. Na padronização da E00-T09, os vínculos foram os IDs que o próprio documento já citava. Decisões mantêm também os campos do [modelo de decisão](templates/DECISION.md). Esse cabeçalho classifica o documento, não duplica status. Não inventar responsáveis, prazos, estimativas, aprovações nem vínculos. Documentos históricos preservam seus corpos e títulos de seção para não romper referências."
+  },
+  {
+    "file": "roadmap/AGENTS.md",
+    "old": "- IDs `E00-T01` são estáveis e dependências usam somente IDs existentes, sem ciclos.",
+    "new": "- IDs `E00-T01` são estáveis e dependências usam somente IDs existentes, sem ciclos. Condições que não são tarefas ficam em `external` no frontmatter e aparecem com o mesmo texto na coluna de dependências do índice."
+  },
+  {
+    "file": "roadmap/AGENTS.md",
+    "old": "Confirme IDs únicos, dependências existentes, ausência de ciclos, links válidos, no máximo uma tarefa `IN_PROGRESS`, alinhamento do ponteiro ativo e checklists coerentes com tarefas concluídas.",
+    "new": "Confirme IDs únicos, dependências existentes, ausência de ciclos, links válidos, no máximo uma tarefa `IN_PROGRESS`, alinhamento do ponteiro ativo e checklists coerentes com tarefas concluídas. `pnpm docs:check` verifica seções, dependências iguais no frontmatter, no índice e na tabela do épico, cabeçalhos, catálogo e links."
+  }
+]

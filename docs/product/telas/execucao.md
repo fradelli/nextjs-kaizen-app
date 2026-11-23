@@ -1,5 +1,9 @@
 # Execução do treino estruturado
 
+- **Tipo:** Produto.
+- **Área:** Execução de treino.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 [Mapa de telas](README.md) · [Wireframe de execução](execucao.svg) · [Referência visual do Meu Dia](meu-dia.md)
 
 ## Escopo visual

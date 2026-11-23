@@ -1,5 +1,9 @@
 # Branches e ambientes
 
+- **Tipo:** Decisão.
+- **Área:** Governança.
+- **Tarefas relacionadas:** [E00-T01](../../roadmap/epics/E00-repository-governance/T01-initialize-repository-and-branches.md).
+
 > Esclarecimento operacional aprovado em 12/11/2026: o prefixo genérico abaixo registra a decisão original. A governança implementada aceita somente `codex/<ID>-descricao-curta`; veja o [padrão de PR](../delivery/PULL-REQUEST-STANDARD.md). Direções e métodos de merge permanecem válidos.
 
 ## Status

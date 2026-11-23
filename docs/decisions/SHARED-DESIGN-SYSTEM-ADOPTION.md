@@ -1,5 +1,9 @@
 # Adoção do Design System compartilhado
 
+- **Tipo:** Decisão.
+- **Área:** Design system.
+- **Tarefas relacionadas:** [E04-T06](../../roadmap/epics/E04-nextjs-foundation/T06-adopt-shared-design-system-decision.md), [E03-T04](../../roadmap/epics/E03-product-and-architecture/T04-define-target-architecture.md), [E04-T01](../../roadmap/epics/E04-nextjs-foundation/T01-scaffold-nextjs.md), [E04-T07](../../roadmap/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md), [E04-T08](../../roadmap/epics/E04-nextjs-foundation/T08-integrate-versioned-design-system.md), [E04-T04](../../roadmap/epics/E04-nextjs-foundation/T04-create-accessible-shell.md), [E03-T05](../../roadmap/epics/E03-product-and-architecture/T05-approve-implementation-guide.md), [E04-T02](../../roadmap/epics/E04-nextjs-foundation/T02-configure-static-quality.md), [E04-T05](../../roadmap/epics/E04-nextjs-foundation/T05-configure-minimal-ci.md).
+
 > Evolução visual de 12/11/2026: o [guia aprovado no Kaizen](../product/telas/guia-de-estilo.md) substitui a aparência inicial por Mira/Lucide/IBM Plex Sans/Figtree. Ownership, imports públicos e distribuição por release permanecem. O contrato `0.1.0` abaixo é histórico. Tarball local é prévia da migração, não release para entrega. A decisão normativa externa não foi reconfirmada nesta revisão.
 
 ## Status

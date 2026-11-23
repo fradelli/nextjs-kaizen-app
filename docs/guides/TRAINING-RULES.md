@@ -1,5 +1,9 @@
 # Regras de domínio do treino
 
+- **Tipo:** Guia.
+- **Área:** Treino.
+- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+
 Este documento resume as regras de treino herdadas do snapshot privado. A governança do repositório continua definida em [`AGENTS.md`](../../AGENTS.md); este guia trata somente do domínio.
 
 ## Fontes de verdade
