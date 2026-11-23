@@ -18,7 +18,7 @@ importers:
   .:
     dependencies:
       '@fradelli/ui':
-        specifier: file:vendor\fradelli-ui-mira-table-progress.tgz
+        specifier: file:vendor/fradelli-ui-mira-table-progress.tgz
         version: file:vendor/fradelli-ui-mira-table-progress.tgz(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.5)
       '@prisma/adapter-pg':
         specifier: 7.10.1

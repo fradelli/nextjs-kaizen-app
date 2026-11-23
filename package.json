@@ -40,7 +40,7 @@
     "i18n:check": "node scripts/validate-i18n.mjs"
   },
   "dependencies": {
-    "@fradelli/ui": "file:vendor\\fradelli-ui-mira-table-progress.tgz",
+    "@fradelli/ui": "file:vendor/fradelli-ui-mira-table-progress.tgz",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
     "lucide-react": "^1.71.0",
