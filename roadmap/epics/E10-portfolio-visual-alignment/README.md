@@ -24,3 +24,15 @@ não autoriza recriar estilos genéricos localmente quando faltar um export.
 - Complementos locais reproduzem estilos estáticos do portfólio quando não houver contrato público equivalente.
 - Conteúdo e comportamento de Dieta/Treino permanecem próprios do Kaizen.
 - Não copiar animações, fundo estrelado, partículas ou ilustrações.
+
+## Tarefas complementares registradas
+
+Status canônico no [roadmap](../../README.md). Esta tabela completa a navegação sem alterar prioridade ou dependências.
+
+| Tarefa | Depende de | Resultado |
+| --- | --- | --- |
+| [E10-T03](T03-dialog-actions.md) | E10-T02 | Corrigir navegação e padronizar ações dos diálogos |
+| [E10-T04](T04-dialog-structure.md) | E10-T03 | Uniformizar estrutura visual dos diálogos |
+| [E10-T05](T05-unify-dialog-behavior.md) | E10-T04 | Unificar comportamento dos diálogos |
+| [E10-T06](T06-session-form-drafts.md) | E10-T05 | Rascunhos de formulário por sessão |
+| [E10-T07](T07-fix-draft-review.md) | E10-T06 | Corrigir achados da revisão de rascunhos |

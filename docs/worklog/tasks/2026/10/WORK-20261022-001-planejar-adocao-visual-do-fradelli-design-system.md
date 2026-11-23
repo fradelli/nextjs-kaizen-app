@@ -48,7 +48,7 @@ Produzir plano único com diagnóstico, migração visual estática e validaçã
 - Atividade: Inspecionados Kaizen, referências locais e apresentação pública no navegador.
 - Achado: Kaizen consome 0.3.0; portfólio local consome 0.5.0. Ausência de contrato público por aplicação para zero movimento.
 - Decisão: Plano recomenda contrato compartilhado estático, vidro externo e superfícies sólidas internas.
-- Evidência: docs/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md
+- Evidência: docs/history/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md
 - Próximo passo: Concluir verificação documental; implementação depende de autorização explícita.
 
 ### 2026-10-22

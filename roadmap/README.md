@@ -2,6 +2,10 @@
 
 Este arquivo é a fonte canônica do status de todos os épicos e tarefas. Não é necessário abrir cada tarefa para descobrir o que foi concluído.
 
+Os [planos por assunto](../docs/plans/README.md) complementam as tarefas sem duplicar seus estados. Planos sem vínculo formal estão identificados nos índices; sua existência não autoriza implementação nem altera a fila.
+
+[Visão geral por área](OVERVIEW.md) · [Reconciliação de escopo e evidências](../docs/plans/RECONCILIATION.md)
+
 ## Protocolo de leitura
 
 1. Leia `AGENTS.md`.
@@ -29,6 +33,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E08 | PLANNED     | [Publicação pessoal](epics/E08-personal-release/README.md)              | Local, preview e produção verificados                                   |
 | E09 | PLANNED     | [Evolução futura](epics/E09-future-evolution/README.md)                 | Backlog posterior ao MVP pessoal                                        |
 | E10 | IN_PROGRESS | [Alinhamento visual com o portfólio](epics/E10-portfolio-visual-alignment/README.md) | Base histórica entregue; conclusão da adoção Mira em andamento |
+| E11 | PLANNED | [Evolução da agenda](epics/E11-schedule-evolution/README.md) | Validar base integrada e evoluir interações preservando histórico |
 
 ## Todas as tarefas
 
@@ -123,20 +128,21 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E09-T09 | DONE | [Internacionalizar interface atual em português e inglês](epics/E09-future-evolution/T09-localize-current-interface.md) | — |
 | E10-T01 | DONE | [Integrar a linguagem visual do portfólio no Kaizen](epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md) | E06-T25 |
 | E10-T02 | DONE | [Player e registro de atividade em modal](epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md) | E10-T01 |
-
 | E10-T03 | DONE | [Corrigir navegação e padronizar ações dos diálogos](epics/E10-portfolio-visual-alignment/T03-dialog-actions.md) | E10-T02 |
-
 | E10-T04 | DONE | [Uniformizar estrutura visual dos diálogos](epics/E10-portfolio-visual-alignment/T04-dialog-structure.md) | E10-T03 |
-
 | E10-T05 | DONE | [Unificar comportamento dos diálogos](epics/E10-portfolio-visual-alignment/T05-unify-dialog-behavior.md) | E10-T04 |
-
 | E10-T06 | DONE | [Rascunhos de formulário por sessão](epics/E10-portfolio-visual-alignment/T06-session-form-drafts.md) | E10-T05 |
-
 | E10-T07 | DONE | [Corrigir achados da revisão de rascunhos](epics/E10-portfolio-visual-alignment/T07-fix-draft-review.md) | E10-T06 |
-
 | E10-T08 | DONE | [Ajustar Hoje e entrada do aplicativo](epics/E10-portfolio-visual-alignment/T08-today-navigation.md) | E10-T07 |
-
 | E10-T09 | IN_PROGRESS | [Concluir adoção do design system Mira](epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md) | E10-T08 |
+| E11-T01 | PLANNED | [Validar a base integrada da agenda](epics/E11-schedule-evolution/T01-validate-integrated-schedule.md) | — |
+| E11-T02 | PLANNED | [Validar a POC de seleção e drag and drop](epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md) | E11-T01 |
+| E11-T03 | PLANNED | [Integrar os gestos aprovados à persistência](epics/E11-schedule-evolution/T03-persist-calendar-interactions.md) | E11-T02 |
+| E11-T04 | PLANNED | [Mover e redimensionar uma reserva individual](epics/E11-schedule-evolution/T04-edit-individual-reservations.md) | E11-T03 |
+| E11-T05 | PLANNED | [Vincular e desvincular atividades comuns](epics/E11-schedule-evolution/T05-link-common-activities.md) | E11-T03 |
+| E11-T06 | PLANNED | [Definir as extensões de interação da agenda](epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md) | — |
+| E11-T07 | PLANNED | [Detalhar recorrência e registros de tempo](epics/E11-schedule-evolution/T07-plan-recurrence-and-time-records.md) | — |
+| E11-T08 | PLANNED | [Definir apresentação de sobreposições e agrupador](epics/E11-schedule-evolution/T08-define-overlap-presentation.md) | — |
 
 ## Regra de atualização
 

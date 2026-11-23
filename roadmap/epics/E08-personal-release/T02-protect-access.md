@@ -12,7 +12,7 @@ Comprovar no preview o modo público com workspace único e endurecer as proteç
 
 ## Entradas
 
-- `docs/implementation/E08.md`
+- `docs/plans/release/E08.md`
 - `docs/decisions/PRIVACY-AND-OPERATIONS.md`
 - `docs/decisions/PUBLIC-SINGLE-WORKSPACE-MODE.md`
 - `src/lib/security/workspace.ts`

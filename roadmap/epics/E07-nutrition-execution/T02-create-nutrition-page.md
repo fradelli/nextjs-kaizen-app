@@ -12,7 +12,7 @@ Exibir a estrutura da data, permitir escolher o tipo do dia e navegar com boa le
 
 ## Entradas
 
-- `docs/implementation/E07.md`
+- `docs/plans/nutrition/E07.md`
 - `docs/product/P0.md`
 - `src/features/nutrition/application/nutrition-dto.ts`
 - `src/app/dieta/page.tsx`

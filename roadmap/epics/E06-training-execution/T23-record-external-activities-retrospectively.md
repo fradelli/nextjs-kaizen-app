@@ -15,7 +15,7 @@ consultável; formulário de registro somente no fim do cartão expandido.
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
-- `src/app/treino/training-actions.ts`
+- `src/app/workout/training-actions.ts`
 - `src/features/training/application/mutate-training-day.ts`
 - `src/features/training/application/training-mutation.types.ts`
 - `src/features/training/data/prisma-training-repository.ts`

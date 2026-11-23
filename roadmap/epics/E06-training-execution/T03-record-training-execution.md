@@ -12,7 +12,7 @@ Permitir executar a programação diária definida pelo plano, salvando prepara�
 
 ## Entradas
 
-- `docs/implementation/E06.md`
+- `docs/history/implementation/E06.md`
 - `docs/product/P0.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `data/exercises.json`

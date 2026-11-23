@@ -14,9 +14,9 @@ animações ou elementos decorativos.
 
 ## Entradas
 
-- `docs/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md`
-- `docs/implementation/ICONOGRAPHY-STANDARDIZATION-PLAN.md`
-- `docs/implementation/TRAINING-ACTIVITY-PLAYER-AND-FEEDBACK-PLAN.md`
+- `docs/history/implementation/FRADELLI-DESIGN-SYSTEM-ADOPTION-PLAN.md`
+- `docs/history/implementation/ICONOGRAPHY-STANDARDIZATION-PLAN.md`
+- `docs/history/implementation/TRAINING-ACTIVITY-PLAYER-AND-FEEDBACK-PLAN.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `docs/decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md`
 - `package.json` e `pnpm-lock.yaml`

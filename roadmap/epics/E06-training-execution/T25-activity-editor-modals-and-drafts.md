@@ -14,7 +14,7 @@ com recuperação de preenchimento local independente dos rascunhos de execuçã
 
 ## Entrada principal
 
-`docs/implementation/TRAINING-ACTIVITY-MODALS-AND-DRAFTS-IMPLEMENTATION-GUIDE.md`.
+`docs/history/implementation/TRAINING-ACTIVITY-MODALS-AND-DRAFTS-IMPLEMENTATION-GUIDE.md`.
 
 ## Decisões e integração
 

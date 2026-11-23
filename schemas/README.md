@@ -9,8 +9,8 @@ comprova segurança clínica, eficácia ou adequação individual.
 | Schema                                                                             | Dados                                                                             | Garantias                                                          |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | [exercise-library.schema.json](exercise-library.schema.json)                       | [data/exercises.json](../data/exercises.json)                                     | Estrutura da biblioteca, IDs snake_case e evidência                |
-| [training-plan.schema.json](training-plan.schema.json)                             | [data/plans/](../data/plans/)                                                     | Versão, status, sessões e estrutura de prescrição                  |
-| [nutrition-plan.schema.json](nutrition-plan.schema.json)                           | [data/nutrition/plans/](../data/nutrition/plans/)                                 | Aprovação, proveniência, tipos de dia, refeições, opções e limites |
+| [training-plan.schema.json](training-plan.schema.json)                             | [data/plans/](../data/plans)                                                     | Versão, status, sessões e estrutura de prescrição                  |
+| [nutrition-plan.schema.json](nutrition-plan.schema.json)                           | [data/nutrition/plans/](../data/nutrition/plans)                                 | Aprovação, proveniência, tipos de dia, refeições, opções e limites |
 | [training-execution-metadata.schema.json](training-execution-metadata.schema.json) | [data/training-execution-metadata.json](../data/training-execution-metadata.json) | Medição, carga, unidade, doses normalizadas e cobertura revisada   |
 
 ## Metadados de execução

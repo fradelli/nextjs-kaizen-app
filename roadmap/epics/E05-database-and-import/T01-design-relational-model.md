@@ -12,7 +12,7 @@ Modelar somente entidades, relações e constraints exigidas pelo P0.
 
 ## Entradas
 
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `docs/product/P0.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `docs/decisions/DATABASE-AND-ORM.md`

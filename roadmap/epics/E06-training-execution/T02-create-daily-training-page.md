@@ -12,7 +12,7 @@ Exibir treino, mobilidade, descanso ou estado não atribuído da data com leitur
 
 ## Entradas
 
-- `docs/implementation/E06.md`
+- `docs/history/implementation/E06.md`
 - `docs/product/P0.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`
 - `src/features/training/application/training-dto.ts`

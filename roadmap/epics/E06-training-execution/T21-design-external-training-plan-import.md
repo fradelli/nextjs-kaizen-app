@@ -15,7 +15,7 @@ ao cliente o snapshot Git, UUIDs internos ou dependências do domínio alimentar
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
-- `docs/implementation/E06-T21-external-training-plan-import.md`
+- `docs/plans/training/E06-T21-external-training-plan-import.md`
 - `schemas/training-plan.schema.json`
 - `schemas/training-execution-metadata.schema.json`
 - `src/features/plan-definition-import/domain/plan-definition-source.types.ts`

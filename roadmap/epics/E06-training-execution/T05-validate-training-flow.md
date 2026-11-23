@@ -12,7 +12,7 @@ Validar o fluxo completo de consulta e execução de treino antes da publicaçã
 
 ## Entradas
 
-- `docs/implementation/E06.md`
+- `docs/history/implementation/E06.md`
 - `docs/product/P0.md`
 - `src/features/training/`
 - `src/lib/security/`

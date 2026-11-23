@@ -8,6 +8,8 @@ O Kaizen combina planos públicos versionados com registros operacionais de trei
 2. Abra somente a tarefa selecionada e suas `Entradas`, nas seções indicadas.
 3. Aplique instruções aninhadas da árvore alcançada: `roadmap/AGENTS.md`, `docs/AGENTS.md`, `docs/migration/AGENTS.md` e `data/AGENTS.md`.
 
+Navegação documental em `docs/README.md`; planos por assunto em `docs/plans/README.md`. Consulte o catálogo apenas para localizar fontes, sem carregar todos os documentos.
+
 Não leia árvores recursivamente. Localize títulos/caminhos com `rg`; se indisponível, use buscas direcionadas com PowerShell. Roadmap global, changelog e tarefas concluídas entram somente para planejamento, atualização de estado ou investigação histórica. Se a tarefa estiver concluída, siga a retomada sem reexecutá-la.
 
 ## Regras globais

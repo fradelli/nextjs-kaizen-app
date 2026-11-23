@@ -1,6 +1,6 @@
 # Agenda — tabelas, integridade e consultas propostas
 
-Proposta técnica de 17/11/2026 para revisão. Baseada nas [regras aprovadas](../product/telas/agenda-regras-de-produto.md) e no [mapa de refatoração](../implementation/MAPA-DE-REFATORACAO-DA-AGENDA.md). Esta entrega especifica o desenho físico. A implementação deve validar as constraints com PostgreSQL e medir os planos de consulta.
+Proposta técnica de 17/11/2026 para revisão. Baseada nas [regras aprovadas](../product/telas/agenda-regras-de-produto.md) e no [mapa de refatoração](../history/implementation/MAPA-DE-REFATORACAO-DA-AGENDA.md). Esta entrega especifica o desenho físico. A implementação deve validar as constraints com PostgreSQL e medir os planos de consulta.
 
 O banco local foi iniciado e consultado em modo de leitura. Sua última migration aplicada é 20261115230000_sport_catalog. A migration 20261117010000_workout_plan_prescriptions está no checkout e ainda não consta aplicada. Coordenar a chave de integração com esse trabalho antes da migration da agenda.
 

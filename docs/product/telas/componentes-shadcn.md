@@ -11,14 +11,14 @@ O preset `b1HwjY1BI0` orienta a aparência. O código dos componentes escolhidos
 
 ## Inventário e adoção proposta
 
-O [plano de conclusão da migração Mira](../../implementation/MIRA-DESIGN-SYSTEM-MIGRATION-PLAN.md)
+O [plano de conclusão da migração Mira](../../plans/design-system/MIRA-DESIGN-SYSTEM-MIGRATION-PLAN.md)
 organiza a retomada após o diagnóstico de permissões de 13/11/2026, com fases,
 responsabilidades, validações e critérios de entrega. Os checkpoints abaixo
 preservam as evidências históricas e não descrevem necessariamente o ambiente atual.
 
 ### Executor e diálogos — 14/11/2026
 
-O [plano do executor](../../implementation/AJUSTES-DO-EXECUTOR-MIRA.md#verificação-local--14112026) registra a entrega e o hash do candidato atual. Switch foi substituído pela receita oficial Base Mira no DS. Item elevado e icon-touch foram retirados. Botões usam variantes oficiais e os diálogos do produto recebem apresentação responsiva pelo pacote. O checkpoint seguinte descreve a prévia anterior.
+O [plano do executor](../../plans/design-system/AJUSTES-DO-EXECUTOR-MIRA.md#verificação-local--14112026) registra a entrega e o hash do candidato atual. Switch foi substituído pela receita oficial Base Mira no DS. Item elevado e icon-touch foram retirados. Botões usam variantes oficiais e os diálogos do produto recebem apresentação responsiva pelo pacote. O checkpoint seguinte descreve a prévia anterior.
 
 ### Barra persistente por Item Mira — 13/11/2026
 

@@ -12,7 +12,7 @@ Comprovar monitoramento mínimo, backup, restauração e retorno à versão ante
 
 ## Entradas
 
-- `docs/implementation/E08.md`
+- `docs/plans/release/E08.md`
 - `docs/decisions/PRIVACY-AND-OPERATIONS.md`
 - `docs/operations/BACKUP-AND-RESTORE.md`
 - Ambiente de produção preparado em E08-T03.

@@ -12,7 +12,7 @@ Promover a versão validada para produção e encerrar o MVP pessoal de Dieta e 
 
 ## Entradas
 
-- `docs/implementation/E08.md`
+- `docs/plans/release/E08.md`
 - `docs/decisions/PUBLIC-SINGLE-WORKSPACE-MODE.md`
 - `.github/PULL_REQUEST_TEMPLATE/release-promotion.md`
 - Runbook e evidências aprovados em E08-T04.

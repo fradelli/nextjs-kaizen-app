@@ -40,7 +40,7 @@ Determinar, sem instalar o package, se a base técnica do Kaizen está pronta pa
 
 ## Entregáveis
 
-- `docs/implementation/evidence/E04-T07-DESIGN-SYSTEM-READINESS.md`
+- `docs/evidence/design-system/E04-T07-DESIGN-SYSTEM-READINESS.md`
 - Matriz de compatibilidade, checklist dos gates e decisão GO/NO-GO.
 
 ## Subtarefas

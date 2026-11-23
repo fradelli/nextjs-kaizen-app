@@ -1,11 +1,32 @@
 # Changelog
 
+## 2026-11-21 — Visão geral e reconciliação dos demais planos
+
+- [Visão geral por área](roadmap/OVERVIEW.md) e [reconciliação](docs/plans/RECONCILIATION.md) distinguem entregas registradas, validações residuais e trabalho futuro.
+- Treino, catálogo, Mira, alimentação, idiomas e publicação ligados às fontes existentes; lacunas de tarefas e divergências documentais explícitas. Nenhum estado, dependência ou código de aplicação alterado nesta etapa.
+
+## 2026-11-21 — Reconciliação dos planos da agenda
+
+- [Mapa de código integrado e trabalho restante](docs/plans/agenda/RECONCILIATION.md), com limites das evidências.
+- E11 reúne oito tarefas planejadas; vínculos nos planos e índices atualizados. Estados anteriores e tarefa selecionada preservados. Nenhuma alteração de aplicação ou dependência.
+
+## 2026-11-21 — Organização documental por finalidade e assunto
+
+- Planos agrupados por assunto; relatórios e artefatos reunidos em evidências; diagnósticos substituídos identificados como histórico; prompts separados em pesquisa.
+- [Índice geral](docs/README.md), [catálogo](docs/CATALOG.md), [padrão e modelos](docs/DOCUMENTATION-STANDARD.md) e [mapa da reorganização](docs/REORGANIZATION-2026-11.md).
+- Caminhos e notas de vigência reconciliados. IDs, estados das tarefas e regras de produto preservados; nenhuma implementação de aplicação ou dependência adicionada.
+
+## 2026-11-20 — Plano de drag and drop da agenda
+
+- [Plano de implementação](docs/plans/agenda/AGENDA-DRAG-AND-DROP.md) com recorte inicial, pontos de integração, POC sem escrita no banco e critérios de aceite.
+- Resize superior, gestos multidia no mobile e semântica de treinos concluídos permanecem decisões pendentes. Nenhuma implementação ou dependência adicionada nesta entrega.
+
 ## 2026-11-18 — Desempenho e organização da agenda
 
 - Mutações de atividades comuns, grupos e to-dos retornam atualizações direcionadas, preservando cache/paginação e revisão, sem refresh global da agenda.
 - Grade organizada na feature schedule, com seleção por coluna e leitura resumida de treino; detalhes do executor são carregados ao abrir.
 - Cache de datas com limite de memória/concorrência e navegação local; escritas de exclusão e classificação usam lotes com histórico.
-- [Registro técnico e limites de validação](docs/implementation/AGENDA-PERFORMANCE-E-ORGANIZACAO.md). Testes e navegador não executados nesta etapa, por orientação do usuário.
+- [Registro técnico e limites de validação](docs/evidence/agenda/AGENDA-PERFORMANCE-E-ORGANIZACAO.md). Testes e navegador não executados nesta etapa, por orientação do usuário.
 
 ## 2026-11-17 — Interface de atividades e tarefas da agenda
 

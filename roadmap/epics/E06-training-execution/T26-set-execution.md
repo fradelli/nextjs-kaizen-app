@@ -13,7 +13,7 @@ Implementação autorizada pelo usuário em 29/10/2026, com branch criada a part
 ## Entradas
 
 - `docs/architecture/TARGET-ARCHITECTURE.md`
-- `docs/implementation/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md`
+- `docs/plans/training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md`
 - `prisma/models/training.prisma`
 - `src/features/training/application/training-dto.ts`
 - `src/features/training/application/training-mutation.types.ts`

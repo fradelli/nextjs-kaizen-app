@@ -85,3 +85,11 @@ com nova revisão antes de implementar. E06-T04 e E06-T05 continuam necessários
 - [ ] Mobilidade e descanso não criam exercícios artificiais.
 - [ ] Dados ausentes são apresentados sem inferências.
 - [ ] Origem e versão do plano são rastreáveis.
+
+## Tarefas complementares registradas
+
+Status canônico no [roadmap](../../README.md). Esta tabela completa a navegação sem alterar prioridade ou dependências.
+
+| Tarefa | Depende de | Resultado |
+| --- | --- | --- |
+| [E06-T26](T26-set-execution.md) | E06-T03, E09-T09 | Execução independente de séries e histórico |

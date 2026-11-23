@@ -12,7 +12,7 @@ Criar projeções server-side separadas para leitura pública do plano e leitura
 
 ## Entradas
 
-- `docs/implementation/E06.md`
+- `docs/history/implementation/E06.md`
 - `docs/product/P0.md`
 - `docs/architecture/DATA-MODEL.md`
 - `docs/architecture/TARGET-ARCHITECTURE.md`

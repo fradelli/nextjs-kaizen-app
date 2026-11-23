@@ -18,7 +18,7 @@ Configurar o banco e o ORM aprovados com migrations reproduzíveis.
 - `tests/integration/database.test.ts`
 - `tests/integration/import-versioned-plan-definitions.test.ts`
 - `tests/integration/fixtures/import-database.fixture.ts`
-- `docs/implementation/E05.md`
+- `docs/operations/E05.md`
 - `docs/architecture/DATA-MODEL.md`
 - `docs/decisions/DATABASE-AND-ORM.md`
 - `data/training-execution-metadata.json`
