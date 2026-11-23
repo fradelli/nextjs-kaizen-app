@@ -11,9 +11,9 @@
     "dev": "pnpm db:generate && pnpm workspace:ensure && next dev",
     "build": "pnpm db:generate && next build",
     "start": "next start",
-    "format": "prettier --write src messages scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
-    "format:check": "prettier --check src messages scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
-    "lint": "eslint src scripts tests prisma/*.ts eslint.config.mjs next.config.ts prisma.config.ts vitest.config.ts vitest.integration.config.ts vitest.setup.ts --max-warnings=0",
+    "format": "prettier --write src roadmap/view/src roadmap/view/vite.config.mjs messages scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
+    "format:check": "prettier --check src roadmap/view/src roadmap/view/vite.config.mjs messages scripts tests .github prisma/*.ts *.json *.ts *.mjs *.yaml",
+    "lint": "eslint src roadmap/view/src roadmap/view/vite.config.mjs scripts tests prisma/*.ts eslint.config.mjs next.config.ts prisma.config.ts vitest.config.ts vitest.integration.config.ts vitest.setup.ts --max-warnings=0",
     "typecheck": "pnpm db:generate && tsc --noEmit",
     "test": "pnpm db:generate && vitest run",
     "test:coverage": "pnpm db:generate && vitest run --coverage",
@@ -28,7 +28,7 @@
     "data:check": "node scripts/validate-data.mjs",
     "docs:check": "node scripts/validate-documentation.mjs",
     "docs:preservation": "node scripts/verify-doc-preservation.mjs",
-    "roadmap:view": "node scripts/build-roadmap-view.mjs",
+    "roadmap:view": "node scripts/build-roadmap-view.mjs && vite build --config roadmap/view/vite.config.mjs",
     "catalog:check": "pnpm db:generate && pnpm data:check && node --import tsx scripts/seed-catalog.mjs --check",
     "catalog:apply": "pnpm catalog:check && node --import tsx scripts/seed-catalog.mjs --apply",
     "data:import": "pnpm db:generate && node --conditions=react-server --import tsx scripts/import-versioned-plan-definitions.ts",
@@ -40,22 +40,23 @@
     "i18n:check": "node scripts/validate-i18n.mjs"
   },
   "dependencies": {
-    "@fradelli/ui": "file:vendor/fradelli-ui-mira-color-swatch.tgz",
+    "@fradelli/ui": "file:vendor/fradelli-ui-mira-table-progress.tgz",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
+    "lucide-react": "^1.71.0",
     "next": "16.4.6",
     "next-intl": "4.15.1",
     "pg": "8.23.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "server-only": "0.0.1",
-    "zod": "4.6.7",
-    "lucide-react": "^1.71.0"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.5",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.7",
     "@types/node": "26.6.6",
     "@types/pg": "8.23.1",
     "@types/react": "19.3.0",
@@ -72,7 +73,7 @@
     "tailwindcss": "4.3.5",
     "tsx": "4.23.15",
     "typescript": "6.0.3",
-    "vitest": "4.1.12",
-    "@testing-library/user-event": "14.6.7"
+    "vite": "8.2.4",
+    "vitest": "4.1.12"
   }
 }

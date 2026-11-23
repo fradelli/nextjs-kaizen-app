@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-// Gera roadmap/view/data.js para a visualização local do roadmap (roadmap/view/index.html).
+// Gera roadmap/view/public/data.js para a visualização local do roadmap (roadmap/view/, feita com @fradelli/ui).
 // Fontes: tarefas de roadmap/epics, estados de roadmap/README.md, ponteiro de roadmap/ACTIVE.md
 // e documentos de docs/. Todo cálculo fica aqui; a página só desenha. O arquivo gerado é local
 // (ignorado pelo Git) e é refeito a cada execução.
@@ -279,7 +279,7 @@ export function buildRoadmapData(repositoryRoot = process.cwd()) {
 function run() {
   const repositoryRoot = process.cwd();
   const data = buildRoadmapData(repositoryRoot);
-  const output = resolve(repositoryRoot, "roadmap", "view", "data.js");
+  const output = resolve(repositoryRoot, "roadmap", "view", "public", "data.js");
   mkdirSync(dirname(output), { recursive: true });
   writeFileSync(
     output,
@@ -289,7 +289,7 @@ function run() {
     `Roadmap gerado: ${data.tasks.length} tarefas, ${data.epics.length} épicos e ${data.documents.length} documentos.`,
   );
   console.log(
-    `Abra ${pathToFileURL(resolve(repositoryRoot, "roadmap", "view", "index.html")).href}`,
+    `Depois do build, abra ${pathToFileURL(resolve(repositoryRoot, "roadmap", "view", "dist", "index.html")).href}`,
   );
 }
 
