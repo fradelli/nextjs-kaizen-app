@@ -22,7 +22,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 
 | ID  | Status      | Épico                                                                   | Resultado                                                               |
 | --- | ----------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| E00 | DONE | [Governança do repositório](epics/E00-repository-governance/README.md)  | Repositório público governado, contexto otimizado e legado rastreável   |
+| E00 | READY | [Governança do repositório](epics/E00-repository-governance/README.md)  | Repositório público governado, contexto otimizado para Claude e legado rastreável   |
 | E01 | DONE        | [Migração de treino](epics/E01-training-data-migration/README.md)       | Fundação de treino migrada e validada                                   |
 | E02 | DONE        | [Migração de alimentação](epics/E02-nutrition-data-migration/README.md) | Plano alimentar revisado, versionado e validado                         |
 | E03 | DONE        | [Produto e arquitetura](epics/E03-product-and-architecture/README.md)   | P0, arquitetura e guia de implementação aprovados                       |
@@ -34,6 +34,7 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E09 | PLANNED     | [Evolução futura](epics/E09-future-evolution/README.md)                 | Backlog posterior ao MVP pessoal                                        |
 | E10 | IN_PROGRESS | [Alinhamento visual com o portfólio](epics/E10-portfolio-visual-alignment/README.md) | Base histórica entregue; conclusão da adoção Mira em andamento |
 | E11 | PLANNED | [Evolução da agenda](epics/E11-schedule-evolution/README.md) | Validar base integrada e evoluir interações preservando histórico |
+| E12 | PLANNED | [Saúde técnica do código](epics/E12-code-health/README.md) | Código alinhado à arquitetura após a auditoria técnica |
 
 ## Todas as tarefas
 
@@ -50,6 +51,11 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E00-T09 | DONE | [Padronizar a documentação existente](epics/E00-repository-governance/T09-standardize-documentation.md) | E00-T08 |
 | E00-T10 | DONE | [Criar a visualização local do roadmap](epics/E00-repository-governance/T10-create-local-roadmap-view.md) | E00-T09 |
 | E00-T11 | DONE | [Aplicar o design system à visualização do roadmap](epics/E00-repository-governance/T11-apply-design-system-to-roadmap-view.md) | E00-T10 |
+| E00-T12 | READY | [Migrar a governança do agente de Codex para Claude](epics/E00-repository-governance/T12-migrate-agent-governance-to-claude.md) | — |
+| E00-T13 | PLANNED | [Remover artefatos e arquivos sem uso do repositório](epics/E00-repository-governance/T13-remove-unused-repository-artifacts.md) | E00-T12 |
+| E00-T14 | PLANNED | [Analisar a documentação para uso pelo Claude](epics/E00-repository-governance/T14-analyze-documentation-for-claude.md) | E00-T12 |
+| E00-T15 | PLANNED | [Aplicar a reorganização documental aprovada](epics/E00-repository-governance/T15-apply-approved-documentation-reorganization.md) | E00-T14 |
+| E00-T16 | READY | [Fortalecer os gates de CI](epics/E00-repository-governance/T16-strengthen-ci-gates.md) | — |
 | E01-T01 | DONE        | [Congelar snapshot de origem](epics/E01-training-data-migration/T01-freeze-source-snapshot.md)                                                 | E00-T05                               |
 | E01-T02 | DONE        | [Migrar dados canônicos de treino](epics/E01-training-data-migration/T02-migrate-canonical-training-data.md)                                   | E01-T01                               |
 | E01-T03 | DONE        | [Migrar histórico de treino](epics/E01-training-data-migration/T03-migrate-training-history.md)                                                | E01-T02                               |
@@ -146,6 +152,19 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E11-T06 | PLANNED | [Definir as extensões de interação da agenda](epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md) | — |
 | E11-T07 | PLANNED | [Detalhar recorrência e registros de tempo](epics/E11-schedule-evolution/T07-plan-recurrence-and-time-records.md) | — |
 | E11-T08 | PLANNED | [Definir apresentação de sobreposições e agrupador](epics/E11-schedule-evolution/T08-define-overlap-presentation.md) | — |
+| E12-T01 | PLANNED | [Sanear dependências e overrides](epics/E12-code-health/T01-sanitize-dependencies-and-overrides.md) | E00-T13 |
+| E12-T02 | PLANNED | [Aplicar headers de segurança e páginas de erro e carregamento](epics/E12-code-health/T02-add-security-headers-and-route-states.md) | — |
+| E12-T03 | PLANNED | [Alinhar a agenda às fronteiras da arquitetura](epics/E12-code-health/T03-align-schedule-with-architecture-boundaries.md) | — |
+| E12-T04 | PLANNED | [Unificar os schemas Zod entre cliente e servidor](epics/E12-code-health/T04-unify-zod-schemas.md) | E12-T03 |
+| E12-T05 | PLANNED | [Substituir mensagens de erro em texto por códigos tipados](epics/E12-code-health/T05-replace-text-errors-with-typed-codes.md) | E12-T04 |
+| E12-T06 | PLANNED | [Remover o refresh duplicado após mutações](epics/E12-code-health/T06-remove-duplicate-refresh-after-mutations.md) | — |
+| E12-T07 | PLANNED | [Dividir o repositório de treino e mover as regras para o domínio](epics/E12-code-health/T07-split-training-repository.md) | E12-T05 |
+| E12-T08 | PLANNED | [Decidir o padrão de estado global e de formulários](epics/E12-code-health/T08-decide-state-and-form-patterns.md) | — |
+| E12-T09 | PLANNED | [Migrar os caches da agenda e o rascunho de treino para a store aprovada](epics/E12-code-health/T09-migrate-client-caches-to-approved-store.md) | E12-T08 |
+| E12-T10 | PLANNED | [Migrar o formulário de atividade para o padrão aprovado](epics/E12-code-health/T10-migrate-activity-form-to-approved-pattern.md) | E12-T04, E12-T08 |
+| E12-T11 | PLANNED | [Endurecer as opções estritas do TypeScript](epics/E12-code-health/T11-tighten-typescript-strictness.md) | E12-T07 |
+| E12-T12 | PLANNED | [Criar testes E2E das jornadas críticas](epics/E12-code-health/T12-create-critical-e2e-tests.md) | E12-T02 |
+| E12-T13 | PLANNED | [Padronizar imports e estrutura de pastas das features](epics/E12-code-health/T13-standardize-imports-and-feature-folders.md) | E12-T09 |
 
 ## Regra de atualização
 

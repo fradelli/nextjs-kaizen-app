@@ -14,6 +14,8 @@ Entrada por área para encontrar o que existe, o que precisa de validação e o 
 | Alimentação | [Fundação e tela atual](../docs/plans/RECONCILIATION.md#alimentação) | [E07: consulta e registro](epics/E07-nutrition-execution/README.md) |
 | Idiomas | [Interface PT/EN e limites](../docs/plans/RECONCILIATION.md#internacionalização) | [Plano editorial](../docs/plans/i18n/I18N-PT-EN-PLAN.md) e [E09](epics/E09-future-evolution/README.md) |
 | Publicação | [Limites da evidência local](../docs/plans/RECONCILIATION.md#publicação) | [E08: preview, produção e operação](epics/E08-personal-release/README.md) |
+| Governança e agente | [Padrão documental vigente](../docs/DOCUMENTATION-STANDARD.md) | [E00-T12 a E00-T16: Claude, limpeza, documentação e CI](epics/E00-repository-governance/README.md) |
+| Saúde do código | Auditoria técnica de 2026-11-23, registrada nas tarefas | [E12: fronteiras, validação, estado e testes](epics/E12-code-health/README.md) |
 
 ## Pontos que precisam de definição
 
