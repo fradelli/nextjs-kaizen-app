@@ -43,11 +43,11 @@ Achados da auditoria de 2026-11-23 sobre `developer` (`364c71f`):
 
 ## Subtarefas
 
-- [ ] Corrigir o validador de i18n e cobrir com testes.
-- [ ] Remover as chaves órfãs.
-- [ ] Incluir i18n e formatação do Prisma no workflow.
-- [ ] Ajustar a cobertura e separar os ambientes de teste.
-- [ ] Decidir e aplicar a política de cache.
+- [x] Corrigir o validador de i18n e cobrir com testes.
+- [x] Remover as chaves órfãs.
+- [x] Incluir i18n e formatação do Prisma no workflow.
+- [x] Ajustar a cobertura e separar os ambientes de teste.
+- [x] Decidir e aplicar a política de cache.
 
 ## Validações
 
@@ -57,10 +57,18 @@ Achados da auditoria de 2026-11-23 sobre `developer` (`364c71f`):
 
 ## Critérios de aceite
 
-- [ ] Todo gate de `pnpm run ci` roda também no CI remoto.
-- [ ] O i18n detecta texto fixo na agenda e chaves sem uso.
-- [ ] A cobertura reportada considera todos os arquivos de `src/`.
+- [x] Todo gate de `pnpm run ci` roda também no CI remoto.
+- [x] O i18n detecta texto fixo na agenda e chaves sem uso.
+- [x] A cobertura reportada considera todos os arquivos de `src/`.
 
 ## Resultado
 
-Não iniciada.
+Concluída em 2026-11-23.
+
+- `scripts/validate-i18n.mjs` foi refeito em funções testáveis (`scripts/validate-i18n.test.mjs`, 5 testes, incluído em `pnpm test:ci-scripts`). Ignora entidades HTML e a marca (`kaizen`, `改善`), inspeciona `src/app`, `src/components` e `src/features/*/ui` (exceto a vitrine `foundations`) e acusa chaves sem referência. Um texto fixo temporário em `src/features/schedule/ui` fez o gate falhar.
+- 75 chaves sem uso removidas de `messages/en.json` e `messages/pt-BR.json`; restam 349 mensagens, todas referenciadas.
+- O job Quality passou a rodar `pnpm db:format:check` (script novo) e `pnpm i18n:check`; o `pnpm run ci` ganhou `db:format:check`. O schema em `prisma/models/` foi formatado, com mudança só de espaços (zero linhas diferentes com `git diff -w`).
+- `vitest.config.ts`: projetos `node` (domínio, aplicação, dados, `tests/` e `prisma/`) e `dom` (componentes e hooks de UI); `coverage.include` cobre todo `src/`. A suíte unitária caiu de 144 s para 55 s; `scripts/validate-data.test.mjs` deixou de rodar duas vezes (segue no `test:ci-scripts`).
+- Cobertura real sobre todo `src/`: 61,26% de linhas, 60,66% de funções, 57,57% de branches e 59,68% de statements. Os thresholds de 80% passaram a esse piso (61/60/57/59), como trava contra regressão. Lacuna conhecida: as camadas `data` e `app` só são exercitadas pela suíte de integração, que não mede cobertura.
+- Cache de dependências mantido desligado, com a decisão comentada em `.github/workflows/ci.yml`: a instalação leva de 10 a 14 s por job, em paralelo.
+- Validações locais: `pnpm i18n:check`, `pnpm test:coverage` (80 arquivos, 577 testes), `pnpm test:ci-scripts`, `pnpm lint`, `pnpm typecheck`, `pnpm structure:check`, `pnpm data:check`, `pnpm docs:check`, `pnpm db:validate`, `pnpm db:format:check`, `pnpm format:check` e `git diff --check`. Integração, build e audit ficaram para o CI.

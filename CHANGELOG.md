@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 — Gates de CI reforçados
+
+- O CI passa a rodar `pnpm i18n:check` e `pnpm db:format:check`; o validador de i18n ignora entidades HTML e a marca, cobre todas as superfícies de produto e acusa chaves sem uso. 75 chaves órfãs removidas.
+- Schema do Prisma formatado (só espaços). Vitest separado em projetos `node` e `dom`, com a suíte unitária de 144 s para 55 s.
+- A cobertura passa a considerar todo `src/` (cerca de 60%); os thresholds viram esse piso até a integração medir cobertura. Cache de dependências do CI mantido desligado por decisão registrada.
+
 ## 2026-11-23 — Claude Code como agente de desenvolvimento
 
 - Contratos de agente renomeados de `AGENTS.md` para `CLAUDE.md` na raiz e em `roadmap/`, `docs/`, `docs/migration/` e `data/`; o contrato raiz deixa de citar o Codex.
