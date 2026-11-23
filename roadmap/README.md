@@ -49,7 +49,6 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E00-T08 | DONE | [Consolidar documentação e contexto do Codex](epics/E00-repository-governance/T08-consolidate-documentation.md) | E00-T07 |
 | E00-T09 | DONE | [Padronizar a documentação existente](epics/E00-repository-governance/T09-standardize-documentation.md) | E00-T08 |
 | E00-T10 | DONE | [Criar a visualização local do roadmap](epics/E00-repository-governance/T10-create-local-roadmap-view.md) | E00-T09 |
-| E00-T11 | DONE | [Aplicar o design system à visualização do roadmap](epics/E00-repository-governance/T11-apply-design-system-to-roadmap-view.md) | E00-T10 |
 | E01-T01 | DONE        | [Congelar snapshot de origem](epics/E01-training-data-migration/T01-freeze-source-snapshot.md)                                                 | E00-T05                               |
 | E01-T02 | DONE        | [Migrar dados canônicos de treino](epics/E01-training-data-migration/T02-migrate-canonical-training-data.md)                                   | E01-T01                               |
 | E01-T03 | DONE        | [Migrar histórico de treino](epics/E01-training-data-migration/T03-migrate-training-history.md)                                                | E01-T02                               |

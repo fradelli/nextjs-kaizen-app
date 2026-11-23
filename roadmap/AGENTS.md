@@ -26,7 +26,7 @@ Uma tarefa selecionada `DONE` é checkpoint de retomada, não ordem para repetir
 
 ## Visualização
 
-`pnpm roadmap:view` gera os dados e o build da página (React com `@fradelli/ui`, em `roadmap/view/`) e imprime o caminho de `roadmap/view/dist/index.html`, local e fora do Git. A página só lê estas fontes; estados continuam mudando aqui, nos arquivos. Regere depois de alterar tarefas, estados ou documentos.
+`pnpm roadmap:view` gera `roadmap/view/data.js` (local, fora do Git) e imprime o caminho de `roadmap/view/index.html`. A página só lê estas fontes; estados continuam mudando aqui, nos arquivos. Regere depois de alterar tarefas, estados ou documentos.
 
 ## Validação
 
