@@ -24,6 +24,10 @@ Leia apenas a tarefa ativa. O README do épico e o índice global são necessár
 
 Uma tarefa selecionada `DONE` é checkpoint de retomada, não ordem para repetir implementação. A próxima ação identifica trabalho residual e limites. O diário operacional registra sessões com outra granularidade; não define status de tarefa de produto.
 
+## Visualização
+
+`pnpm roadmap:view` gera `roadmap/view/data.js` (local, fora do Git) e imprime o caminho de `roadmap/view/index.html`. A página só lê estas fontes; estados continuam mudando aqui, nos arquivos. Regere depois de alterar tarefas, estados ou documentos.
+
 ## Validação
 
 Confirme IDs únicos, dependências existentes, ausência de ciclos, links válidos, no máximo uma tarefa `IN_PROGRESS`, alinhamento do ponteiro ativo e checklists coerentes com tarefas concluídas. `pnpm docs:check` verifica seções, dependências iguais no frontmatter, no índice e na tabela do épico, cabeçalhos, catálogo e links.

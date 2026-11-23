@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-22 — Visualização local do roadmap
+
+- `pnpm roadmap:view` gera uma página local, sem servidor nem rede, com visão geral, épicos, matriz onda × status, kanban, tarefas e documentos navegáveis.
+- A página só lê `roadmap/` e `docs/`; ondas, pendências e prontidão são calculadas pelo gerador, com testes. Nenhum estado alterado.
+
 ## 2026-11-22 — Padronização da documentação existente
 
 - Todas as tarefas com as sete seções do modelo; ausências marcadas como não registradas, com a seção equivalente quando existe. Nenhuma seção renomeada ou movida.
