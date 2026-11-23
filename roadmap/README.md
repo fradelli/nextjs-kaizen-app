@@ -52,10 +52,10 @@ Somente este arquivo guarda o status canônico. Arquivos individuais não repete
 | E00-T10 | DONE | [Criar a visualização local do roadmap](epics/E00-repository-governance/T10-create-local-roadmap-view.md) | E00-T09 |
 | E00-T11 | DONE | [Aplicar o design system à visualização do roadmap](epics/E00-repository-governance/T11-apply-design-system-to-roadmap-view.md) | E00-T10 |
 | E00-T12 | DONE | [Migrar a governança do agente de Codex para Claude](epics/E00-repository-governance/T12-migrate-agent-governance-to-claude.md) | — |
-| E00-T13 | PLANNED | [Remover artefatos e arquivos sem uso do repositório](epics/E00-repository-governance/T13-remove-unused-repository-artifacts.md) | E00-T12 |
-| E00-T14 | PLANNED | [Analisar a documentação para uso pelo Claude](epics/E00-repository-governance/T14-analyze-documentation-for-claude.md) | E00-T12 |
+| E00-T13 | READY | [Remover artefatos e arquivos sem uso do repositório](epics/E00-repository-governance/T13-remove-unused-repository-artifacts.md) | E00-T12 |
+| E00-T14 | READY | [Analisar a documentação para uso pelo Claude](epics/E00-repository-governance/T14-analyze-documentation-for-claude.md) | E00-T12 |
 | E00-T15 | PLANNED | [Aplicar a reorganização documental aprovada](epics/E00-repository-governance/T15-apply-approved-documentation-reorganization.md) | E00-T14 |
-| E00-T16 | READY | [Fortalecer os gates de CI](epics/E00-repository-governance/T16-strengthen-ci-gates.md) | — |
+| E00-T16 | DONE | [Fortalecer os gates de CI](epics/E00-repository-governance/T16-strengthen-ci-gates.md) | — |
 | E01-T01 | DONE        | [Congelar snapshot de origem](epics/E01-training-data-migration/T01-freeze-source-snapshot.md)                                                 | E00-T05                               |
 | E01-T02 | DONE        | [Migrar dados canônicos de treino](epics/E01-training-data-migration/T02-migrate-canonical-training-data.md)                                   | E01-T01                               |
 | E01-T03 | DONE        | [Migrar histórico de treino](epics/E01-training-data-migration/T03-migrate-training-history.md)                                                | E01-T02                               |

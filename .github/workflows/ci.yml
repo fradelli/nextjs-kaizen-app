@@ -19,6 +19,10 @@ concurrency:
   group: ci-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+# Dependency cache stays disabled (package-manager-cache: false), decided in E00-T16:
+# installs take 10-14 s per job and jobs run in parallel, so a cache would save about
+# 10 s of wall time. A fresh frozen install avoids reusing a store across PR branches
+# and keeps the private @fradelli tarballs out of the Actions cache.
 env:
   NODE_VERSION: 24.20.0
   PNPM_VERSION: 11.25.0
@@ -78,10 +82,14 @@ jobs:
         run: pnpm format:check
       - name: Validate Prisma schema
         run: pnpm db:validate
+      - name: Check Prisma schema formatting
+        run: pnpm db:format:check
       - name: Lint
         run: pnpm lint
       - name: Validate component structure
         run: pnpm structure:check
+      - name: Validate translations
+        run: pnpm i18n:check
       - name: Typecheck
         run: pnpm typecheck
 

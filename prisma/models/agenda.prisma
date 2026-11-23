@@ -17,7 +17,7 @@ model AgendaTag {
 }
 
 model TodoList {
-  systemKey   String? @map("system_key")
+  systemKey   String?                @map("system_key")
   id          String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   workspaceId String                 @map("workspace_id") @db.Uuid
   revision    Int                    @default(0)
@@ -37,7 +37,7 @@ model TodoList {
 }
 
 model Todo {
-  history TodoRevision[]
+  history          TodoRevision[]
   id               String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   workspaceId      String                 @map("workspace_id") @db.Uuid
   revision         Int                    @default(0)
@@ -80,24 +80,24 @@ model TodoPlacementVersion {
 }
 
 model AgendaActivity {
-  colorKey         String?           @map("color_key")
-  history AgendaActivityRevision[]
-  id               String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspaceId      String            @map("workspace_id") @db.Uuid
-  revision         Int               @default(0)
-  createdAt        DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt        DateTime          @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  workspace        Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  colorKey         String?                  @map("color_key")
+  history          AgendaActivityRevision[]
+  id               String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId      String                   @map("workspace_id") @db.Uuid
+  revision         Int                      @default(0)
+  createdAt        DateTime                 @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime                 @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  workspace        Workspace                @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
   title            String
-  tagId            String?           @map("tag_id") @db.Uuid
-  parentActivityId String?           @map("parent_activity_id") @db.Uuid
-  startsAt         DateTime?         @map("starts_at") @db.Timestamptz(6)
-  endsAt           DateTime?         @map("ends_at") @db.Timestamptz(6)
-  scheduledDate    DateTime?         @map("scheduled_date") @db.Date
-  removedAt        DateTime?         @map("removed_at") @db.Timestamptz(6)
-  tag              AgendaTag?        @relation(fields: [workspaceId, tagId], references: [workspaceId, id], onDelete: Restrict)
-  parent           AgendaActivity?   @relation("AgendaParent", fields: [workspaceId, parentActivityId], references: [workspaceId, id], onDelete: Restrict)
-  children         AgendaActivity[]  @relation("AgendaParent")
+  tagId            String?                  @map("tag_id") @db.Uuid
+  parentActivityId String?                  @map("parent_activity_id") @db.Uuid
+  startsAt         DateTime?                @map("starts_at") @db.Timestamptz(6)
+  endsAt           DateTime?                @map("ends_at") @db.Timestamptz(6)
+  scheduledDate    DateTime?                @map("scheduled_date") @db.Date
+  removedAt        DateTime?                @map("removed_at") @db.Timestamptz(6)
+  tag              AgendaTag?               @relation(fields: [workspaceId, tagId], references: [workspaceId, id], onDelete: Restrict)
+  parent           AgendaActivity?          @relation("AgendaParent", fields: [workspaceId, parentActivityId], references: [workspaceId, id], onDelete: Restrict)
+  children         AgendaActivity[]         @relation("AgendaParent")
   reservations     TodoReservation[]
 
   @@unique([workspaceId, id])
@@ -107,23 +107,23 @@ model AgendaActivity {
 }
 
 model TodoReservation {
-  colorKey String? @map("color_key")
-  history TodoReservationRevision[]
-  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspaceId        String               @map("workspace_id") @db.Uuid
-  revision           Int                  @default(0)
-  createdAt          DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime             @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  workspace          Workspace            @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
-  todoId             String               @map("todo_id") @db.Uuid
-  placementVersionId String               @map("placement_version_id") @db.Uuid
-  parentActivityId   String?              @map("parent_activity_id") @db.Uuid
-  startsAt           DateTime             @map("starts_at") @db.Timestamptz(6)
-  endsAt             DateTime             @map("ends_at") @db.Timestamptz(6)
-  removedAt          DateTime?            @map("removed_at") @db.Timestamptz(6)
-  todo               Todo                 @relation(fields: [workspaceId, todoId], references: [workspaceId, id], onDelete: Restrict)
-  placement          TodoPlacementVersion @relation(fields: [workspaceId, todoId, placementVersionId], references: [workspaceId, todoId, id], onDelete: Restrict)
-  parent             AgendaActivity?      @relation(fields: [workspaceId, parentActivityId], references: [workspaceId, id], onDelete: Restrict)
+  colorKey           String?                   @map("color_key")
+  history            TodoReservationRevision[]
+  id                 String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId        String                    @map("workspace_id") @db.Uuid
+  revision           Int                       @default(0)
+  createdAt          DateTime                  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime                  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  workspace          Workspace                 @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  todoId             String                    @map("todo_id") @db.Uuid
+  placementVersionId String                    @map("placement_version_id") @db.Uuid
+  parentActivityId   String?                   @map("parent_activity_id") @db.Uuid
+  startsAt           DateTime                  @map("starts_at") @db.Timestamptz(6)
+  endsAt             DateTime                  @map("ends_at") @db.Timestamptz(6)
+  removedAt          DateTime?                 @map("removed_at") @db.Timestamptz(6)
+  todo               Todo                      @relation(fields: [workspaceId, todoId], references: [workspaceId, id], onDelete: Restrict)
+  placement          TodoPlacementVersion      @relation(fields: [workspaceId, todoId, placementVersionId], references: [workspaceId, todoId, id], onDelete: Restrict)
+  parent             AgendaActivity?           @relation(fields: [workspaceId, parentActivityId], references: [workspaceId, id], onDelete: Restrict)
 
   @@unique([workspaceId, id])
   @@index([workspaceId, todoId, startsAt, id])
@@ -132,48 +132,52 @@ model TodoReservation {
 }
 
 model AgendaActivityRevision {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspaceId String @map("workspace_id") @db.Uuid
-  entityId String @map("entity_id") @db.Uuid
-  revision Int
-  recordedAt DateTime @default(now()) @map("recorded_at") @db.Timestamptz(6)
-  snapshot Json
-  entity AgendaActivity @relation(fields: [workspaceId, entityId], references: [workspaceId, id], onDelete: Restrict)
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String         @map("workspace_id") @db.Uuid
+  entityId    String         @map("entity_id") @db.Uuid
+  revision    Int
+  recordedAt  DateTime       @default(now()) @map("recorded_at") @db.Timestamptz(6)
+  snapshot    Json
+  entity      AgendaActivity @relation(fields: [workspaceId, entityId], references: [workspaceId, id], onDelete: Restrict)
+
   @@unique([workspaceId, entityId, revision])
   @@map("agenda_activity_revision")
 }
 
 model TodoRevision {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspaceId String @map("workspace_id") @db.Uuid
-  entityId String @map("entity_id") @db.Uuid
-  revision Int
-  recordedAt DateTime @default(now()) @map("recorded_at") @db.Timestamptz(6)
-  snapshot Json
-  entity Todo @relation(fields: [workspaceId, entityId], references: [workspaceId, id], onDelete: Restrict)
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String   @map("workspace_id") @db.Uuid
+  entityId    String   @map("entity_id") @db.Uuid
+  revision    Int
+  recordedAt  DateTime @default(now()) @map("recorded_at") @db.Timestamptz(6)
+  snapshot    Json
+  entity      Todo     @relation(fields: [workspaceId, entityId], references: [workspaceId, id], onDelete: Restrict)
+
   @@unique([workspaceId, entityId, revision])
   @@map("todo_revision")
 }
 
 model TodoReservationRevision {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  workspaceId String @map("workspace_id") @db.Uuid
-  entityId String @map("entity_id") @db.Uuid
-  revision Int
-  recordedAt DateTime @default(now()) @map("recorded_at") @db.Timestamptz(6)
-  snapshot Json
-  entity TodoReservation @relation(fields: [workspaceId, entityId], references: [workspaceId, id], onDelete: Restrict)
+  id          String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workspaceId String          @map("workspace_id") @db.Uuid
+  entityId    String          @map("entity_id") @db.Uuid
+  revision    Int
+  recordedAt  DateTime        @default(now()) @map("recorded_at") @db.Timestamptz(6)
+  snapshot    Json
+  entity      TodoReservation @relation(fields: [workspaceId, entityId], references: [workspaceId, id], onDelete: Restrict)
+
   @@unique([workspaceId, entityId, revision])
   @@map("todo_reservation_revision")
 }
 
 model AgendaMutationReceipt {
-  workspaceId String @map("workspace_id") @db.Uuid
-  operationId String @map("operation_id") @db.Uuid
-  commandHash String @map("command_hash")
-  result Json
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+  workspaceId String    @map("workspace_id") @db.Uuid
+  operationId String    @map("operation_id") @db.Uuid
+  commandHash String    @map("command_hash")
+  result      Json
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Restrict)
+
   @@id([workspaceId, operationId])
   @@map("agenda_mutation_receipt")
 }

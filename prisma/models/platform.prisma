@@ -23,17 +23,16 @@ enum LogicalEnvironment {
 }
 
 model Workspace {
-  agendaMutationReceipts AgendaMutationReceipt[]
-  agendaAgendaTag AgendaTag[]
-  agendaTodoList TodoList[]
-  agendaTodo Todo[]
+  agendaMutationReceipts     AgendaMutationReceipt[]
+  agendaAgendaTag            AgendaTag[]
+  agendaTodoList             TodoList[]
+  agendaTodo                 Todo[]
   agendaTodoPlacementVersion TodoPlacementVersion[]
-  agendaAgendaActivity AgendaActivity[]
-  agendaTodoReservation TodoReservation[]
+  agendaAgendaActivity       AgendaActivity[]
+  agendaTodoReservation      TodoReservation[]
 
-
-  workoutPlans WorkoutPlan[]
-  equipmentGroups EquipmentGroup[]
+  workoutPlans                                WorkoutPlan[]
+  equipmentGroups                             EquipmentGroup[]
   id                                          String                              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt                                   DateTime                            @default(now()) @map("created_at") @db.Timestamptz(6)
   pairingRateLimit_workspace                  PairingRateLimit[]                  @relation("PairingRateLimit_workspace")
