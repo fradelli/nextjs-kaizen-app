@@ -2,9 +2,9 @@
 
 - Navegação em `docs/README.md`; organização e modelos em `docs/DOCUMENTATION-STANDARD.md`. Atualize o catálogo e os índices de assunto ao criar ou mover documentos.
 - Planos ficam em `docs/plans/<assunto>/`, evidências em `docs/evidence/` e material substituído em `docs/history/`. Arquivar não significa concluir as pendências descritas no documento.
-- Mantenha o status canônico somente no roadmap. Cabeçalhos de plano identificam tipo, área e tarefas relacionadas; não invente vínculos nem copie status para vários índices.
+- Keep task status only in the playbook roadmap (`fradelli/playbook: projects/kaizen/README.md`). Plan headers name the type, area, and related tasks; do not invent links or copy status into several indexes.
 
-- Escreva em português do Brasil e mantenha links relativos válidos.
+- Write new text in English (KZ-E00-T18 translates the existing documents) and keep relative links valid.
 - Leia somente o documento listado na tarefa e a seção necessária; use `rg` antes de abrir arquivos extensos.
 - Decisões aprovadas são alteradas por nova decisão explícita, nunca silenciosamente.
 - Evite repetir regras: mantenha uma fonte normativa e use links nas demais páginas.

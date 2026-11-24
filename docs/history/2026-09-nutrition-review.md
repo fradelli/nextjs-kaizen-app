@@ -2,7 +2,7 @@
 
 - **Tipo:** Histórico.
 - **Área:** Alimentação.
-- **Tarefas relacionadas:** [E02-T03](../../roadmap/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md), [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md).
+- **Tarefas relacionadas:** [E02-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md), [E02-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md).
 
 ## Status
 

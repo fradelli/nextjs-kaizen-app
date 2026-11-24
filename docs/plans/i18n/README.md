@@ -6,6 +6,6 @@ Leia somente o plano e as seções necessários. Etapas históricas e propostas 
 
 | Documento | Tarefas citadas diretamente |
 | --- | --- |
-| [Plano de internacionalização — português e inglês](I18N-PT-EN-PLAN.md) | [E09-T09](../../../roadmap/epics/E09-future-evolution/T09-localize-current-interface.md) |
+| [Plano de internacionalização — português e inglês](I18N-PT-EN-PLAN.md) | [E09-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E09-future-evolution/T09-localize-current-interface.md) |
 
-[Todos os planos](../README.md) · [Status das tarefas](../../../roadmap/README.md)
+[Todos os planos](../README.md) · [Status das tarefas](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md)

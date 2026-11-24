@@ -2,7 +2,7 @@
 
 - **Tipo:** Evidência.
 - **Área:** Design system.
-- **Tarefas relacionadas:** [E10-T02](../../../roadmap/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md)
+- **Tarefas relacionadas:** [E10-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md)
 
 ## Resultado
 

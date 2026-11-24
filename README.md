@@ -57,8 +57,8 @@ planejados devem ter início e fim no mesmo dia, com fim posterior ao início.
 Não há upload de planos pela interface: importação e ativação são operações
 locais de manutenção. O dia segue o fuso `America/Sao_Paulo`.
 
-O [roadmap](roadmap/README.md) distingue entregas, validações e planejamento.
-A [tarefa selecionada](roadmap/ACTIVE.md) informa a próxima ação; uma proposta
+O [roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md) distingue entregas, validações e planejamento.
+A [tarefa selecionada](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md) informa a próxima ação; uma proposta
 documentada não significa que o recurso já esteja disponível.
 
 ## Acesso e privacidade
@@ -229,7 +229,6 @@ comando de validação do projeto; `pnpm ci` é reservado à instalação congel
 | `prisma/`             | Modelo do banco e migrations.                                          |
 | `scripts/` e `tests/` | Operação, verificações e cenários de teste.                            |
 | `docs/`               | Produto, arquitetura, decisões e guias.                                |
-| `roadmap/`            | Tarefas, dependências e estado das entregas.                           |
 | `templates/`          | Modelos de entrada usados pelos guias de atualização dos planos.       |
 | `vendor/braces/`      | Código versionado de uma correção de dependência; deve ser preservado. |
 
@@ -253,8 +252,8 @@ Comece pelo [índice da documentação](docs/README.md), consulte os [planos por
 
 | Quero entender…                           | Onde consultar                                                                         |
 | ----------------------------------------- | -------------------------------------------------------------------------------------- |
-| Qual é a próxima pendência                | [Tarefa selecionada](roadmap/ACTIVE.md)                                                |
-| O que foi entregue e o que está planejado | [Roadmap](roadmap/README.md)                                                           |
+| Qual é a próxima pendência                | [Tarefa selecionada](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md)                                                |
+| O que foi entregue e o que está planejado | [Roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md)                                                           |
 | Como o produto deve funcionar             | [Escopo e jornadas do P0](docs/product/P0.md)                                          |
 | Como a aplicação é organizada             | [Arquitetura alvo](docs/architecture/TARGET-ARCHITECTURE.md)                           |
 | Como os dados públicos são tratados       | [Política do repositório público](docs/decisions/PUBLIC-REPOSITORY-AND-DATA-POLICY.md) |

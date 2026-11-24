@@ -2,7 +2,7 @@
 
 - **Tipo:** Decisão.
 - **Área:** Dados.
-- **Tarefas relacionadas:** [E03-T02](../../roadmap/epics/E03-product-and-architecture/T02-define-source-of-truth-transition.md), [E03-T03](../../roadmap/epics/E03-product-and-architecture/T03-define-privacy-and-operations.md), [E05-T05](../../roadmap/epics/E05-database-and-import/T05-validate-backup-and-restore.md).
+- **Tarefas relacionadas:** [E03-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E03-product-and-architecture/T02-define-source-of-truth-transition.md), [E03-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E03-product-and-architecture/T03-define-privacy-and-operations.md), [E05-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E05-database-and-import/T05-validate-backup-and-restore.md).
 
 ## Status
 

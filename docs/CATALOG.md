@@ -1,6 +1,6 @@
 # Catálogo documental
 
-Navegação por finalidade. Este catálogo não replica estados de tarefas; consulte o [roadmap](../roadmap/README.md). Mantenha os links ao criar ou mover documentos. As sessões individuais permanecem no [índice do diário](worklog/index.md).
+Navegação por finalidade. Este catálogo não replica estados de tarefas; consulte o [roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md). Mantenha os links ao criar ou mover documentos. As sessões individuais permanecem no [índice do diário](worklog/index.md).
 
 ## Entrada e padrão
 
@@ -157,4 +157,4 @@ Navegação por finalidade. Este catálogo não replica estados de tarefas; cons
 | --- | --- |
 | [Reconciliação da agenda](plans/agenda/RECONCILIATION.md) | `docs/plans/agenda/RECONCILIATION.md` |
 | [Reconciliação dos planos do Kaizen](plans/RECONCILIATION.md) | `docs/plans/RECONCILIATION.md` |
-| [Visão geral do planejamento](../roadmap/OVERVIEW.md) | `roadmap/OVERVIEW.md` |
+| [Visão geral do planejamento](https://github.com/fradelli/playbook/blob/main/projects/kaizen/OVERVIEW.md) | `fradelli/playbook: projects/kaizen/OVERVIEW.md` |

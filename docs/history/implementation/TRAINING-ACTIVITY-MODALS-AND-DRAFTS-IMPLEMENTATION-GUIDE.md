@@ -2,7 +2,7 @@
 
 - **Tipo:** Histórico.
 - **Área:** Implementação histórica.
-- **Tarefas relacionadas:** [E06-T25](../../../roadmap/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md)
+- **Tarefas relacionadas:** [E06-T25](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md)
 
 > Planejamento histórico E06-T25. Leia somente a seção necessária, incluindo diferenças implementadas na seção 17. “Ler tudo” referia-se à execução original, não à manutenção corrente. Composição atual no [guia](../../product/telas/guia-de-estilo.md).
 

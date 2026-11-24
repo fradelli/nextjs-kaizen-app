@@ -1,198 +1,211 @@
 import assert from "node:assert/strict";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, test } from "node:test";
+import { describe, test } from "node:test";
 
-import { validateGovernance } from "./validate-governance.mjs";
+import {
+  loadPlaybookIndex,
+  parsePlaybookIndex,
+  validateGovernance,
+} from "./validate-governance.mjs";
 
-let repositoryRoot;
+const playbookIndex = `## Tasks
 
-const validBody = `## Resumo
+| ID | Status | Task | Depends on |
+| --- | --- | --- | --- |
+| KZ-E04-T05 | IN_PROGRESS | [Configure minimal CI](epics/E04/T05.md) | — |
+| KZ-E05-T06 | CANCELLED | [Implement personal access](epics/E05/T06.md) | KZ-E05-T05 |
+`;
+const tasks = parsePlaybookIndex(playbookIndex);
 
-Entrega a validação.
+const validBody = `## Summary
 
-## Problema
+Delivers the check.
 
-O gate ainda não existe.
+## Problem
 
-## Causa raiz
+The gate does not exist.
 
-A automação ainda não foi criada.
+## Root cause
 
-## Alterações
+The automation was never created.
 
-- adiciona o gate
+## Changes
 
-## Arquivos adicionados ou atualizados
+- add the gate
+
+## Files added or updated
 
 - \`scripts/validate-governance.mjs\`
 
-## Impacto
+## Impact
 
-### Corrigido
+### Fixed
 
-- valida PRs
+- validates pull requests
 
-### Não alterado
+### Not changed
 
-- não faz deploy
+- no deploy
 
-## Validação
+## Validation
 
-- [x] governança
+- [x] governance
 
-## Observações
+## Notes
 
-- Tarefa principal: \`E04-T05\`
+- Main task: \`KZ-E04-T05\`
 `;
-
-function createRepositoryFixture() {
-  repositoryRoot = join(
-    tmpdir(),
-    `kaizen-governance-${process.pid}-${Date.now()}-${Math.random()}`,
-  );
-  mkdirSync(join(repositoryRoot, "roadmap", "epics", "E04"), {
-    recursive: true,
-  });
-  writeFileSync(
-    join(repositoryRoot, "roadmap", "epics", "E04", "T05.md"),
-    "---\nid: E04-T05\nepic: E04\ndepends_on: []\n---\n",
-  );
-  writeFileSync(
-    join(repositoryRoot, "roadmap", "README.md"),
-    "| ID | Status | Tarefa | Dependências |\n| --- | --- | --- | --- |\n| E04-T05 | IN_PROGRESS | CI | nenhuma |\n",
-  );
-  writeFileSync(
-    join(repositoryRoot, "roadmap", "ACTIVE.md"),
-    "- **Tarefa:** E04-T05 — Configurar CI mínimo\n- **Status:** IN_PROGRESS\n",
-  );
-}
 
 function taskPullRequest(overrides = {}) {
   return {
     pull_request: {
       base: { ref: "developer" },
       body: validBody,
-      head: { ref: "claude/E04-T05-configure-minimal-ci" },
-      title: "[E04-T05] ci(workflow): configurar CI mínimo",
+      head: { ref: "claude/KZ-E04-T05-configure-minimal-ci" },
+      title: "[KZ-E04-T05] ci(workflow): configure minimal CI",
       user: { login: "maintainer" },
       ...overrides,
     },
   };
 }
 
-beforeEach(createRepositoryFixture);
+function validate(event) {
+  return validateGovernance({ event, tasks });
+}
 
-afterEach(() => {
-  rmSync(repositoryRoot, { force: true, recursive: true });
+describe("parsePlaybookIndex", () => {
+  test("reads KZ- task IDs and statuses from the tasks table", () => {
+    assert.deepEqual(
+      [...tasks],
+      [
+        ["KZ-E04-T05", "IN_PROGRESS"],
+        ["KZ-E05-T06", "CANCELLED"],
+      ],
+    );
+  });
+});
+
+describe("loadPlaybookIndex", () => {
+  test("reads a local index from PLAYBOOK_INDEX_PATH", async () => {
+    const directory = mkdtempSync(join(tmpdir(), "kaizen-governance-"));
+    const path = join(directory, "README.md");
+
+    try {
+      writeFileSync(path, playbookIndex);
+      const loaded = await loadPlaybookIndex({ PLAYBOOK_INDEX_PATH: path });
+
+      assert.equal(loaded.get("KZ-E04-T05"), "IN_PROGRESS");
+    } finally {
+      rmSync(directory, { force: true, recursive: true });
+    }
+  });
 });
 
 describe("validateGovernance", () => {
-  test("aceita PR de tarefa válida", () => {
-    assert.deepEqual(validateGovernance({ event: taskPullRequest(), repositoryRoot }), []);
+  test("accepts a valid task pull request", () => {
+    assert.deepEqual(validate(taskPullRequest()), []);
   });
 
-  test("rejeita branch de tarefa com prefixo diferente de claude", () => {
+  test("rejects branches without the claude/KZ- prefix", () => {
     for (const ref of [
-      "codex/E04-T05-configure-minimal-ci",
-      "feature/E04-T05-configure-minimal-ci",
+      "codex/KZ-E04-T05-configure-minimal-ci",
+      "claude/E04-T05-configure-minimal-ci",
+      "feature/KZ-E04-T05-configure-minimal-ci",
     ]) {
-      const errors = validateGovernance({
-        event: taskPullRequest({ head: { ref } }),
-        repositoryRoot,
-      });
+      const errors = validate(taskPullRequest({ head: { ref } }));
 
-      assert.ok(errors.some((error) => error.includes("claude/E00-T01-descricao-curta")));
+      assert.ok(errors.some((error) => error.includes("claude/KZ-E00-T00-short-description")));
     }
   });
 
-  test("rejeita divergência entre branch e título", () => {
-    const errors = validateGovernance({
-      event: taskPullRequest({
-        title: "[E04-T06] ci(workflow): configurar CI mínimo",
+  test("rejects the legacy title format without the KZ- prefix", () => {
+    const errors = validate(
+      taskPullRequest({ title: "[E04-T05] ci(workflow): configure minimal CI" }),
+    );
+
+    assert.ok(errors.some((error) => error.includes("[KZ-E00-T00] type(scope): summary")));
+  });
+
+  test("rejects a mismatch between branch and title and an unknown task", () => {
+    const errors = validate(
+      taskPullRequest({ title: "[KZ-E04-T06] ci(workflow): configure minimal CI" }),
+    );
+
+    assert.ok(errors.some((error) => error.includes("Task ID differs")));
+    assert.ok(errors.some((error) => error.includes("KZ-E04-T06 is not in the playbook index")));
+  });
+
+  test("rejects a cancelled task", () => {
+    const errors = validate(
+      taskPullRequest({
+        body: validBody.replace("KZ-E04-T05", "KZ-E05-T06"),
+        head: { ref: "claude/KZ-E05-T06-personal-access" },
+        title: "[KZ-E05-T06] feat(auth): add personal access",
       }),
-      repositoryRoot,
-    });
+    );
 
-    assert.ok(errors.some((error) => error.includes("ID divergente")));
-    assert.ok(errors.some((error) => error.includes("Tarefa inexistente")));
+    assert.ok(errors.some((error) => error.includes("KZ-E05-T06 is CANCELLED")));
   });
 
-  test("rejeita seção obrigatória ausente", () => {
-    const errors = validateGovernance({
-      event: taskPullRequest({ body: validBody.replace("## Problema", "Problema") }),
-      repositoryRoot,
-    });
+  test("rejects a missing required section", () => {
+    const errors = validate(taskPullRequest({ body: validBody.replace("## Problem", "Problem") }));
 
-    assert.ok(errors.some((error) => error.includes("## Problema")));
+    assert.ok(errors.some((error) => error.includes("## Problem")));
   });
 
-  test("aceita promoção válida com merge commit", () => {
+  test("rejects template placeholders", () => {
+    const errors = validate(
+      taskPullRequest({
+        body: validBody.replace("- add the gate", "- replace with the real changes"),
+      }),
+    );
+
+    assert.ok(errors.some((error) => error.includes("placeholder")));
+  });
+
+  test("accepts a valid promotion with a merge commit", () => {
     const body = validBody
+      .replace("- add the gate", "- Source commit: `0123456789abcdef0123456789abcdef01234567`")
       .replace(
-        "- adiciona o gate",
-        "- Commit de origem: `0123456789abcdef0123456789abcdef01234567`",
-      )
-      .replace(
-        "- Tarefa principal: `E04-T05`",
-        "- Tarefa principal: `E04-T05`\n- Método de merge: merge commit; nunca squash em promoção",
+        "- Main task: `KZ-E04-T05`",
+        "- Main task: `KZ-E04-T05`\n- Merge method: merge commit; never squash in a promotion",
       );
     const event = taskPullRequest({
       base: { ref: "staging" },
       body,
       head: { ref: "developer" },
-      title: "[E04-T05] chore(release): promover developer para staging",
+      title: "[KZ-E04-T05] chore(release): promote developer to staging",
     });
 
-    assert.deepEqual(validateGovernance({ event, repositoryRoot }), []);
+    assert.deepEqual(validate(event), []);
   });
 
-  test("rejeita salto de developer para master", () => {
-    const event = taskPullRequest({
-      base: { ref: "master" },
-      head: { ref: "developer" },
-      title: "[E04-T05] chore(release): promover developer para master",
-    });
-    const errors = validateGovernance({ event, repositoryRoot });
-
-    assert.ok(errors.some((error) => error.includes("Direção de promoção inválida")));
-  });
-
-  test("aceita Dependabot somente na developer", () => {
-    const event = taskPullRequest({
-      body: "",
-      head: { ref: "dependabot/npm_and_yarn/react-20" },
-      title: "build(deps): bump react from 19 to 20",
-      user: { login: "dependabot[bot]" },
-    });
-
-    assert.deepEqual(validateGovernance({ event, repositoryRoot }), []);
-  });
-
-  test("rejeita Dependabot em branch de promoção", () => {
-    const event = taskPullRequest({
-      base: { ref: "staging" },
-      body: "",
-      head: { ref: "dependabot/npm_and_yarn/react-20" },
-      title: "build(deps): bump react from 19 to 20",
-      user: { login: "dependabot[bot]" },
-    });
-    const errors = validateGovernance({ event, repositoryRoot });
-
-    assert.ok(errors.some((error) => error.includes("só pode abrir PR para developer")));
-  });
-
-  test("rejeita dependência inexistente no roadmap", () => {
-    writeFileSync(
-      join(repositoryRoot, "roadmap", "epics", "E04", "T05.md"),
-      "---\nid: E04-T05\nepic: E04\ndepends_on: [E04-T99]\n---\n",
+  test("rejects a jump from developer to master", () => {
+    const errors = validate(
+      taskPullRequest({
+        base: { ref: "master" },
+        head: { ref: "developer" },
+        title: "[KZ-E04-T05] chore(release): promote developer to master",
+      }),
     );
-    const errors = validateGovernance({
-      event: taskPullRequest(),
-      repositoryRoot,
-    });
 
-    assert.ok(errors.some((error) => error.includes("E04-T05 -> E04-T99")));
+    assert.ok(errors.some((error) => error.includes("Invalid promotion direction")));
+  });
+
+  test("accepts Dependabot only against developer", () => {
+    const dependabot = {
+      body: "",
+      head: { ref: "dependabot/npm_and_yarn/react-20" },
+      title: "build(deps): bump react from 19 to 20",
+      user: { login: "dependabot[bot]" },
+    };
+
+    assert.deepEqual(validate(taskPullRequest(dependabot)), []);
+
+    const errors = validate(taskPullRequest({ ...dependabot, base: { ref: "staging" } }));
+
+    assert.ok(errors.some((error) => error.includes("only against developer")));
   });
 });

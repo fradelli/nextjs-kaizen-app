@@ -2,14 +2,14 @@
 
 - **Tipo:** Plano.
 - **Área:** Treino.
-- **Tarefas relacionadas:** [E06-T26](../../../roadmap/epics/E06-training-execution/T26-set-execution.md)
+- **Tarefas relacionadas:** [E06-T26](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T26-set-execution.md)
 
 > Reconciliação de 21/11/2026: Checkpoints de outubro e decisões de novembro coexistem; consultar a entrega posterior antes de repetir etapas. [Escopo e evidências](../RECONCILIATION.md#treino).
 
 > Registro da decisão aprovada em 13/11/2026: [contagem por medidas](#contagem-por-medidas--13112026).
 > Ela substitui a exigência histórica de ✓ para contar a série. A implementação e validação eram pendentes naquele checkpoint; a entrega posterior está registrada em [Ajustes do executor Mira](../design-system/AJUSTES-DO-EXECUTOR-MIRA.md). A migração da barra, isoladamente, não altera esse contrato.
 
-> A proposta original foi posteriormente autorizada e implementada em [E06-T26](../../../roadmap/epics/E06-training-execution/T26-set-execution.md). A abertura abaixo registra o checkpoint da pesquisa. Pendências explícitas não se tornam aprovadas por esta nota; conferir resultado e código.
+> A proposta original foi posteriormente autorizada e implementada em [E06-T26](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T26-set-execution.md). A abertura abaixo registra o checkpoint da pesquisa. Pendências explícitas não se tornam aprovadas por esta nota; conferir resultado e código.
 
 ## Estado e limites
 
@@ -17,7 +17,7 @@ Proposta em revisão em 29/10/2026. Não autoriza implementação nem altera dec
 
 Base local: `codex/E10-T08-today-navigation`, commit `cb16868` da PR #74. Ajustes de navegação E10-T08 permanecem sem commit e devem ser preservados. A referência remota não foi reconfirmada por indisponibilidade de DNS na investigação inicial. Nenhum commit, push, PR, merge, dependência ou alteração do DS faz parte desta etapa.
 
-Entradas normativas: [arquitetura](../../architecture/TARGET-ARCHITECTURE.md), [adoção do DS](../../decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md), [tarefa ativa](../../../roadmap/ACTIVE.md), [E06-T07](../../../roadmap/epics/E06-training-execution/T07-show-previous-set-performance.md) e [E06-T08](../../../roadmap/epics/E06-training-execution/T08-require-applicable-fields-before-next-set.md). O PDF e as capturas permanecem externos ao repositório; não copiar seus arquivos para o projeto público.
+Entradas normativas: [arquitetura](../../architecture/TARGET-ARCHITECTURE.md), [adoção do DS](../../decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md), [tarefa ativa](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md), [E06-T07](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T07-show-previous-set-performance.md) e [E06-T08](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T08-require-applicable-fields-before-next-set.md). O PDF e as capturas permanecem externos ao repositório; não copiar seus arquivos para o projeto público.
 
 ## Evidência das referências
 

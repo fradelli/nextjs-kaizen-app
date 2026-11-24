@@ -2,7 +2,7 @@
 
 - **Tipo:** Decisão.
 - **Área:** Governança.
-- **Tarefas relacionadas:** [E00-T01](../../roadmap/epics/E00-repository-governance/T01-initialize-repository-and-branches.md), [E04-T05](../../roadmap/epics/E04-nextjs-foundation/T05-configure-minimal-ci.md), [E08-T01](../../roadmap/epics/E08-personal-release/T01-deploy-preview.md), [E08-T03](../../roadmap/epics/E08-personal-release/T03-prepare-production.md).
+- **Tarefas relacionadas:** [E00-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E00-repository-governance/T01-initialize-repository-and-branches.md), [E04-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E04-nextjs-foundation/T05-configure-minimal-ci.md), [E08-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E08-personal-release/T01-deploy-preview.md), [E08-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E08-personal-release/T03-prepare-production.md).
 
 ## Status
 

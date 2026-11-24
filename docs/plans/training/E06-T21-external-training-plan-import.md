@@ -2,7 +2,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Treino.
-- **Tarefas relacionadas:** [E06-T21](../../../roadmap/epics/E06-training-execution/T21-design-external-training-plan-import.md)
+- **Tarefas relacionadas:** [E06-T21](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T21-design-external-training-plan-import.md)
 
 > Reconciliação de 21/11/2026: Importação externa tem escopo distinto da autoria de planos e do importador Git. [Escopo e evidências](../RECONCILIATION.md#treino).
 

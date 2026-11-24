@@ -4,7 +4,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md).
+- **Tarefas relacionadas:** [E11-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T05-link-common-activities.md).
 
 **Checkpoint histórico de 17/11/2026, anterior à entrega da interface:** complementa o [roteiro geral](AGENDA-ROTEIRO-DE-IMPLEMENTACAO.md). A tela semanal e o editor de treino existem. A nova Server Action está em src/app/workout/schedule-actions.ts. Naquele checkpoint, os painéis de to-dos e os cards de reservas ainda precisavam ser implementados. O estado posterior está registrado abaixo e em desempenho e organização.
 

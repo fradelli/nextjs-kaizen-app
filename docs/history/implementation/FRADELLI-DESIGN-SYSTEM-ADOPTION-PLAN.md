@@ -2,7 +2,7 @@
 
 - **Tipo:** Histórico.
 - **Área:** Implementação histórica.
-- **Tarefas relacionadas:** [E10-T02](../../../roadmap/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md), [E10-T01](../../../roadmap/epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md)
+- **Tarefas relacionadas:** [E10-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md), [E10-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md)
 
 > Diagnóstico histórico de 27–28/10/2026. Vidro/Phosphor e referências de linha descrevem essa base; novas mudanças seguem o [guia Mira](../../product/telas/guia-de-estilo.md). Preserve fontes e capturas.
 
@@ -35,7 +35,7 @@ na base auditada, não um inventário de defeitos ainda abertos.
 ### 2.1 Fontes consultadas
 
 - [Instruções do Kaizen](../../../CLAUDE.md), [instruções de documentação](../../CLAUDE.md),
-  [tarefa ativa](../../../roadmap/ACTIVE.md) e [E06-T25](../../../roadmap/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md).
+  [tarefa ativa](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md) e [E06-T25](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T25-activity-editor-modals-and-drafts.md).
 - [Arquitetura e ownership](../../architecture/TARGET-ARCHITECTURE.md),
   [adoção do DS](../../decisions/SHARED-DESIGN-SYSTEM-ADOPTION.md), manifests, lockfiles,
   CSS público instalado e componentes efetivamente consumidos.

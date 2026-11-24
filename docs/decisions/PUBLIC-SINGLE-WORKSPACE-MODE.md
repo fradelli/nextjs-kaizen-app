@@ -2,7 +2,7 @@
 
 - **Tipo:** Decisão.
 - **Área:** Acesso.
-- **Tarefas relacionadas:** [E05-T06](../../roadmap/epics/E05-database-and-import/T06-implement-personal-access.md), [E06-T01](../../roadmap/epics/E06-training-execution/T01-project-active-training-plan.md), [E07-T01](../../roadmap/epics/E07-nutrition-execution/T01-project-active-nutrition-plan.md), [E05-T05](../../roadmap/epics/E05-database-and-import/T05-validate-backup-and-restore.md), [E08-T02](../../roadmap/epics/E08-personal-release/T02-protect-access.md).
+- **Tarefas relacionadas:** [E05-T06](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E05-database-and-import/T06-implement-personal-access.md), [E06-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T01-project-active-training-plan.md), [E07-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E07-nutrition-execution/T01-project-active-nutrition-plan.md), [E05-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E05-database-and-import/T05-validate-backup-and-restore.md), [E08-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E08-personal-release/T02-protect-access.md).
 
 ## Status
 

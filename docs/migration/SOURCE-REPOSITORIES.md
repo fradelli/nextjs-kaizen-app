@@ -2,7 +2,7 @@
 
 - **Tipo:** Migração.
 - **Área:** Migração.
-- **Tarefas relacionadas:** [E01-T01](../../roadmap/epics/E01-training-data-migration/T01-freeze-source-snapshot.md), [E02-T02](../../roadmap/epics/E02-nutrition-data-migration/T02-preserve-original-diet.md), [E02-T03](../../roadmap/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md), [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E00-T05](../../roadmap/epics/E00-repository-governance/T05-register-legacy-provenance.md).
+- **Tarefas relacionadas:** [E01-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E01-training-data-migration/T01-freeze-source-snapshot.md), [E02-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T02-preserve-original-diet.md), [E02-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md), [E02-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E00-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E00-repository-governance/T05-register-legacy-provenance.md).
 
 ## Snapshot de treino
 
