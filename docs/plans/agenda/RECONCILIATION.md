@@ -3,9 +3,9 @@
 - **Tipo:** Planejamento e inventário de evidências.
 - **Área:** Agenda.
 - **Referência:** revisão documental em 21/11/2026; base integrada `27536ef` (PR #86), reorganização documental `b0fe6e9`.
-- **Tarefas relacionadas:** [E11 — Evolução da agenda](../../../roadmap/epics/E11-schedule-evolution/README.md).
+- **Tarefas relacionadas:** [E11 — Evolução da agenda](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/README.md).
 
-Este mapa liga planos, código existente e trabalho restante. O [roadmap](../../../roadmap/README.md) é a fonte dos estados. A leitura de código não equivale a teste executado; nenhuma funcionalidade foi implementada nesta reconciliação.
+Este mapa liga planos, código existente e trabalho restante. O [roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md) é a fonte dos estados. A leitura de código não equivale a teste executado; nenhuma funcionalidade foi implementada nesta reconciliação.
 
 ## O que existe e o que falta
 
@@ -31,7 +31,7 @@ E11-T06 a E11-T08 são refinamentos documentais independentes. Não autorizam de
 
 ## Fronteiras com o backlog existente
 
-- A seleção de trabalho em [ACTIVE](../../../roadmap/ACTIVE.md) permanece E10-T09. Registrar E11 não inicia outra tarefa.
+- A seleção de trabalho em [ACTIVE](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md) permanece E10-T09. Registrar E11 não inicia outra tarefa.
 - E06-T23 tem implementação registrada e jornada manual pendente; E06-T14 ainda depende de verificação física de teclado/área segura. Não encerrar por inferência a partir de código integrado.
 - E06-T22, E06-T24 e E06-T26 documentam evolução de treino. Consultar seus resultados antes de repetir entregas. O escopo antigo de timer de E06-T10 exige comparação própria com essas entregas; não foi encerrado nesta revisão.
 - O plano de Meu Dia reúne também navegação, treino e revisão visual. Seus vínculos com E11 cobrem somente o recorte de agenda. Autoria de planos de treino, catálogo, dieta e migração Mira conservam seus planos e tarefas.

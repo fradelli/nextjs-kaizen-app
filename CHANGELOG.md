@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-24 — Roadmap moved to the playbook (KZ-E00-T17)
+
+- `roadmap/`, the local roadmap view, `scripts/build-roadmap-view*`, and the unused `vite` dev dependency were removed. The roadmap lives in [`fradelli/playbook: projects/kaizen/`](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md); the view returns there with PB-E03-T01.
+- The governance check accepts `[KZ-E00-T00] type(scope): summary` titles and `claude/KZ-...` branches, validates the ID against the public playbook index, and reads English pull request sections. PR templates follow the playbook standard.
+- `docs:check` is split into `docs:catalog` and `docs:links`; task rules moved to the playbook `roadmap:check`.
+- 224 links from `docs/`, `README.md`, and this changelog now point to the playbook. `CLAUDE.md` is in English with a `Playbook` section, and `AGENTS.md` points to it.
+
 ## 2026-11-23 — Gates de CI reforçados
 
 - O CI passa a rodar `pnpm i18n:check` e `pnpm db:format:check`; o validador de i18n ignora entidades HTML e a marca, cobre todas as superfícies de produto e acusa chaves sem uso. 75 chaves órfãs removidas.
@@ -11,7 +18,7 @@
 - Contratos de agente renomeados de `AGENTS.md` para `CLAUDE.md` na raiz e em `roadmap/`, `docs/`, `docs/migration/` e `data/`; o contrato raiz deixa de citar o Codex.
 - O validador de governança aceita somente branches `claude/<ID>-descricao`; padrão de PR e decisão de branching atualizados.
 - Instalações locais de outros agentes (`.agents/`, `.windsurf/`, `skills-lock.json`) removidas; skills do Prisma ficam em `.claude/skills/`, fora do Git.
-- Auditoria técnica registrada como E00-T12 a E00-T16 e no épico [E12](roadmap/epics/E12-code-health/README.md).
+- Auditoria técnica registrada como E00-T12 a E00-T16 e no épico [E12](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E12-code-health/README.md).
 
 ## 2026-11-22 — Visualização do roadmap com o design system
 
@@ -32,7 +39,7 @@
 
 ## 2026-11-21 — Visão geral e reconciliação dos demais planos
 
-- [Visão geral por área](roadmap/OVERVIEW.md) e [reconciliação](docs/plans/RECONCILIATION.md) distinguem entregas registradas, validações residuais e trabalho futuro.
+- [Visão geral por área](https://github.com/fradelli/playbook/blob/main/projects/kaizen/OVERVIEW.md) e [reconciliação](docs/plans/RECONCILIATION.md) distinguem entregas registradas, validações residuais e trabalho futuro.
 - Treino, catálogo, Mira, alimentação, idiomas e publicação ligados às fontes existentes; lacunas de tarefas e divergências documentais explícitas. Nenhum estado, dependência ou código de aplicação alterado nesta etapa.
 
 ## 2026-11-21 — Reconciliação dos planos da agenda

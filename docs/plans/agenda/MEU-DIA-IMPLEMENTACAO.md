@@ -4,7 +4,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md), [E11-T08](../../../roadmap/epics/E11-schedule-evolution/T08-define-overlap-presentation.md).
+- **Tarefas relacionadas:** [E11-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T06](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md), [E11-T08](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T08-define-overlap-presentation.md).
 
 > Diagnóstico e fases da base anterior. Consulta semanal, grade, retomada e sobreposição têm entregas posteriores no [diário](../../worklog/index.md) e nas [telas](../../product/telas/README.md). `/treino` abaixo é histórico; rota atual `/workout`. Fases restantes não estão concluídas por esta nota.
 
@@ -16,7 +16,7 @@ Preparado para iniciar em entregas pequenas. As referências aprovadas são [Meu
 - [Página do dia — fonte histórica](https://github.com/fradelli/nextjs-kaizen-app/blob/f3c5170d80362cd4005e5600f3b5fa8826c4beea/src/app/treino/page.tsx) resolve uma data e consulta um dia de treino. [Consulta atual](../../../src/features/training/application/get-training-day.ts) chama a materialização da agenda antes de ler. Carregar a semana repetindo essa operação poderia gravar ocorrências apenas pela visita.
 - A rota local `src/app/treino/atividade/[occurrenceKey]/page.tsx` procura pelo ID da atividade na data e aceita uma sessão de preparação como motivo para abrir o detalhe. É preciso resolver também ocorrências projetadas e restringir a entrada ao treino estruturado. Preservar acesso direto e recarga.
 - O [componente de atividade](../../../src/features/training/ui/components/training-day-page/components/training-activity-card/training-activity-card.tsx) já coordena séries, controles, cronômetro e descanso. O redesenho interno é visual. Retomar a partir da agenda e abrir sobre a página são entregas de integração separadas.
-- A tarefa apontada em [ACTIVE](../../../roadmap/ACTIVE.md) está concluída. Existem alterações locais de navegação, card, testes e traduções. Antes de codificar, comparar a árvore com a base da nova tarefa e aproveitar o trabalho em andamento. A arquitetura de referência para as tarefas é [TARGET-ARCHITECTURE](../../architecture/TARGET-ARCHITECTURE.md).
+- A tarefa apontada em [ACTIVE](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md) está concluída. Existem alterações locais de navegação, card, testes e traduções. Antes de codificar, comparar a árvore com a base da nova tarefa e aproveitar o trabalho em andamento. A arquitetura de referência para as tarefas é [TARGET-ARCHITECTURE](../../architecture/TARGET-ARCHITECTURE.md).
 
 ## 1. Tema e navegação responsiva
 

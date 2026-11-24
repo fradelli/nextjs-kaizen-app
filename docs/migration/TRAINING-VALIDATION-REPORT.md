@@ -2,7 +2,7 @@
 
 - **Tipo:** Migração.
 - **Área:** Treino.
-- **Tarefas relacionadas:** [E02-T01](../../roadmap/epics/E02-nutrition-data-migration/T01-inventory-nutrition-inputs.md).
+- **Tarefas relacionadas:** [E02-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T01-inventory-nutrition-inputs.md).
 
 ## Resultado
 

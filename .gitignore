@@ -20,11 +20,6 @@ pnpm-debug.log*
 .claude/skills/
 .claude/settings.local.json
 
-# Dados gerados da visualização local do roadmap (contêm o caminho local do repositório).
-/roadmap/view/public/data.js
-/roadmap/view/dist/
-/roadmap/view/.vite-cache/
-
 # Artefatos locais de diagnóstico
 /.tmp/
 /.tmp-*.log

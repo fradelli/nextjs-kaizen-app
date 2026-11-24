@@ -6,9 +6,9 @@ Este é o ponto de entrada da documentação. Escolha o assunto antes de abrir d
 
 | Pergunta | Fonte |
 | --- | --- |
-| Como navegar pelo planejamento por área? | [Visão geral do Kaizen](../roadmap/OVERVIEW.md) e [reconciliação dos planos](plans/RECONCILIATION.md) |
-| O que falta e o que foi concluído? | [Roadmap](../roadmap/README.md): único status canônico das tarefas |
-| Qual trabalho foi selecionado? | [Retomada](../roadmap/ACTIVE.md): tarefa selecionada e contexto, não uma fila automática |
+| Como navegar pelo planejamento por área? | [Visão geral do Kaizen](https://github.com/fradelli/playbook/blob/main/projects/kaizen/OVERVIEW.md) e [reconciliação dos planos](plans/RECONCILIATION.md) |
+| O que falta e o que foi concluído? | [Roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md): único status canônico das tarefas |
+| Qual trabalho foi selecionado? | [Retomada](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md): tarefa selecionada e contexto, não uma fila automática |
 | Como o produto deve funcionar? | [P0](product/P0.md) e [telas](product/telas/README.md) |
 | Qual é o plano de uma mudança? | [Planos por assunto](plans/README.md) |
 | Como organizar o código? | [Arquitetura](architecture/TARGET-ARCHITECTURE.md) |
@@ -41,9 +41,8 @@ docs/
   worklog/         sessões de trabalho, não tarefas de produto
   templates/       modelos documentais
   implementation/  índice de entrada mantido por compatibilidade
-roadmap/
-  epics/           tarefas e critérios de aceite com IDs estáveis
-  templates/       modelos de tarefa e épico
 ```
+
+The roadmap (tasks, dependencies, and status) lives in the playbook: [`fradelli/playbook: projects/kaizen/`](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md).
 
 O [registro da reorganização](REORGANIZATION-2026-11.md) contém o mapa de caminhos e os limites desta mudança. A [revisão anterior](documentation-review.md) permanece como evidência histórica.

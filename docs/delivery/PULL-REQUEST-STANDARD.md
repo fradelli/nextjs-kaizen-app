@@ -1,79 +1,37 @@
-# Padrão de pull request
+# Pull request standard
 
-- **Tipo:** Guia.
-- **Área:** Governança.
-- **Tarefas relacionadas:** Vínculo formal não identificado; não inferir status de tarefa.
+- **Type:** Guide.
+- **Area:** Governance.
+- **Related tasks:** [KZ-E00-T17](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E00-repository-governance/T17-point-repository-to-playbook.md).
 
-## Objetivo
+Kaizen follows the playbook [pull request standard](https://github.com/fradelli/playbook/blob/main/standards/general/pull-requests.md) for titles, branches, commits, body sections, and merge methods. This page lists only what Kaizen adds. The executable contract is `scripts/validate-governance.mjs`, which runs in the `Governance` CI job.
 
-Manter PRs curtas, rastreáveis pelo roadmap e verificáveis sem depender de Jira. O formato deriva do Sandicts, substituindo `KAN-123` pelo ID local da tarefa e removendo campos corporativos que não existem no Kaizen.
+## Task IDs
 
-## Título
+- Titles and branches use `KZ-` IDs: `[KZ-E00-T17] docs(governance): point the repository to the playbook` on `claude/KZ-E00-T17-point-repository-to-playbook`.
+- The ID must exist in the public [Kaizen index](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md) and must not be `CANCELLED`. CI reads the index from GitHub; locally, set `PLAYBOOK_INDEX_PATH` to the clone.
+- The body declares the same ID under `Notes` as ``- Main task: `KZ-E00-T17` ``.
+- Legacy formats (`[E00-T01]`, `codex/` branches) are rejected; they stay only in history.
 
-Formato obrigatório:
+## Direction and merge
 
-```text
-[E00-T01] tipo(escopo): resumo curto
-```
-
-Exemplos:
-
-```text
-[E00-T06] docs(delivery): definir padrão de PR e CI/CD
-[E04-T01] feat(app): criar aplicação Next.js
-[E08-T05] chore(release): promover staging para master
-```
-
-Regras:
-
-- o ID deve existir em `roadmap/README.md` e ser a tarefa principal;
-- tipos permitidos: `feat`, `fix`, `docs`, `refactor`, `test`, `ci`, `chore`, `build`, `perf` e `style`;
-- escopo usa letras minúsculas, números e hífen;
-- não existe prefixo `NO-JIRA`: toda entrega deve possuir uma tarefa local;
-- quando uma PR abranger itens relacionados, somente o principal vai no título; os demais ficam em `Observações`.
-
-## Branch
-
-Formato obrigatório para branches temporárias:
-
-```text
-claude/E00-T01-descricao-curta
-```
-
-O validador aceita somente `claude` em branches de tarefa desde a E00-T12; branches `codex/` anteriores permanecem apenas no histórico. O slug usa kebab-case minúsculo. Ampliar prefixos ou tipos exige mudança própria no contrato.
-
-## Descrição
-
-Use `.github/pull_request_template.md` e preserve esta ordem:
-
-1. `Resumo`
-2. `Problema`
-3. `Causa raiz`
-4. `Alterações`
-5. `Arquivos adicionados ou atualizados`
-6. `Impacto`
-7. `Validação`
-8. `Observações`
-
-Preencha todas as seções com evidências da PR. Não deixe placeholders, não marque checks não executados e registre explicitamente qualquer validação não aplicável.
-
-## Direção e merge
-
-| Destino | Origem aceita | Método |
+| Base | Accepted head | Method |
 | --- | --- | --- |
-| `developer` | branch temporária válida | squash |
+| `developer` | valid task branch, or a `dependabot/` branch with a `build(deps)` title | squash |
 | `staging` | `developer` | merge commit |
 | `master` | `staging` | merge commit |
 
-Branches protegidas não retornam para `developer`. Promoções usam o template especializado e registram SHA de origem, ambiente, evidência e rollback.
+Protected branches never flow back to `developer`.
 
-Contrato executável: `scripts/validate-governance.mjs`. Este guia reflete o comportamento implementado; `hotfix` e `revert` não são tipos aceitos atualmente.
+## Promotions
 
-## Validação proporcional
+- Use `.github/PULL_REQUEST_TEMPLATE/release-promotion.md`.
+- Title: `[KZ-E00-T00] chore(release): promote developer to staging` or `promote staging to master`.
+- The body declares ``- Source commit: `<full SHA>` `` and `- Merge method: merge commit; never squash in a promotion`, plus the environment, preview evidence, and rollback.
 
-- Documentação: links, IDs, dependências, dados indevidos e `git diff --check`.
-- Aplicação: lint, typecheck, testes, build e audit de dependências.
-- Dados ou banco: validações da aplicação mais schema, IDs, importação idempotente e migrations.
-- Publicação: CI completo do SHA promovido mais smoke test do ambiente.
+## Validation commands
 
-O corpo da PR deve diferenciar claramente o que mudou, o que não mudou e os checks que ainda não existem na fase atual.
+- Documentation: `pnpm docs:check` and `git diff --check`.
+- Application: `pnpm run ci`.
+- Data or database: `pnpm run ci`, plus `pnpm data:check`, idempotent import, and migration checks.
+- Release: the full CI of the promoted SHA plus a smoke test of the environment.

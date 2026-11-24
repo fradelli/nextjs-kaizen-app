@@ -2,7 +2,7 @@
 
 - **Tipo:** Evidência.
 - **Área:** Internacionalização.
-- **Tarefas relacionadas:** [E09-T09](../../../roadmap/epics/E09-future-evolution/T09-localize-current-interface.md)
+- **Tarefas relacionadas:** [E09-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E09-future-evolution/T09-localize-current-interface.md)
 
 Implementada em 29/10/2026, com autorização para antecipar a interface em relação ao roadmap anterior. A tradução do catálogo de exercícios será integrada ao catálogo novo em desenvolvimento.
 

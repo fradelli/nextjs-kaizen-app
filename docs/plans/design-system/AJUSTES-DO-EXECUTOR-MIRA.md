@@ -2,7 +2,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Design system.
-- **Tarefas relacionadas:** [E10-T09](../../../roadmap/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md)
+- **Tarefas relacionadas:** [E10-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md)
 
 > Reconciliação de 21/11/2026: A verificação de 14/11 cobre o pacote descrito naquele checkpoint; a próxima rodada proposta e o candidato atual exigem avaliação própria. [Escopo e evidências](../RECONCILIATION.md#design-system).
 
@@ -10,7 +10,7 @@ Plano para o agente implementador. A implementação foi autorizada pelo proprie
 
 ## Entradas e decisões aprovadas
 
-Ler os contratos de agente dos dois repositórios (`CLAUDE.md` no Kaizen; `AGENTS.md` no design system), a [tarefa ativa](../../../roadmap/ACTIVE.md), o [guia visual](../../product/telas/guia-de-estilo.md) e as [decisões recentes do executor](../training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md#cabeçalho-do-executor--layout-aprovado-em-13112026). As decisões de novembro sobre contagem prevalecem sobre o histórico de outubro. Componentes, variantes, estados, tokens e movimento vêm de receitas Mira exportadas pelo design system. Composição da tela, textos e regras de treino pertencem ao Kaizen.
+Ler os contratos de agente dos dois repositórios (`CLAUDE.md` no Kaizen; `AGENTS.md` no design system), a [tarefa ativa](https://github.com/fradelli/playbook/blob/main/projects/kaizen/ACTIVE.md), o [guia visual](../../product/telas/guia-de-estilo.md) e as [decisões recentes do executor](../training/TRAINING-SET-EXECUTION-AND-HISTORY-PLAN.md#cabeçalho-do-executor--layout-aprovado-em-13112026). As decisões de novembro sobre contagem prevalecem sobre o histórico de outubro. Componentes, variantes, estados, tokens e movimento vêm de receitas Mira exportadas pelo design system. Composição da tela, textos e regras de treino pertencem ao Kaizen.
 
 Decisões aprovadas em 13/11/2026. Aquecimentos são excluídos do numerador, denominador e volume do resumo. Carga unilateral é por lado. Uma série de 10 kg com 8 repetições à esquerda e 10 à direita soma 180 kg. A implementação do pacote foi autorizada. Preservar a interpretação de registros antigos.
 

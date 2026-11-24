@@ -1,53 +1,54 @@
 <!--
-Título obrigatório: [E00-T01] tipo(escopo): resumo curto
-Preserve os títulos e a ordem das seções. Substitua todos os exemplos.
-Promoções: .github/PULL_REQUEST_TEMPLATE/release-promotion.md
+Title: [KZ-E00-T00] <type>(<scope>): <short summary>
+Standard: https://github.com/fradelli/playbook/blob/main/standards/general/pull-requests.md
+Keep the headings and their order. Replace every example.
+Promotions: .github/PULL_REQUEST_TEMPLATE/release-promotion.md
 -->
 
-## Resumo
+## Summary
 
-Descreva o que esta PR entrega e seu limite.
+Describe what this pull request delivers and where it stops.
 
-## Problema
+## Problem
 
-Explique a necessidade ou lacuna atendida.
+Explain the need or gap it addresses.
 
-## Causa raiz
+## Root cause
 
-Explique por que o repositório precisava desta mudança.
+Explain why the repository needed this change.
 
-## Alterações
+## Changes
 
-- substitua pelos itens reais
+- replace with the real changes
 
-## Arquivos adicionados ou atualizados
+## Files added or updated
 
-- `substitua/pelo/caminho-real`
+- `replace/with/real/path`
 
-## Impacto
+## Impact
 
-### Corrigido
+### Fixed
 
-- substitua pelo resultado real
+- replace with the real result
 
-### Não alterado
+### Not changed
 
-- substitua pelo que permaneceu fora do escopo
+- replace with what stayed out of scope
 
-## Validação
+## Validation
 
-- [ ] governança (`Governance`)
-- [ ] qualidade (`Quality`)
-- [ ] testes (`Test`)
-- [ ] integridade dos dados (`Data integrity`)
+- [ ] governance (`Governance`)
+- [ ] quality (`Quality`)
+- [ ] tests (`Test`)
+- [ ] data integrity (`Data integrity`)
 - [ ] build (`Build`)
-- [ ] auditoria de dependências (`Dependency audit`)
-- [ ] revisão semântica conforme `docs/architecture/TARGET-ARCHITECTURE.md`
-- [ ] validação manual concluída
+- [ ] dependency audit (`Dependency audit`)
+- [ ] semantic review against `docs/architecture/TARGET-ARCHITECTURE.md`
+- [ ] manual validation done
 
-## Observações
+## Notes
 
-- Tarefa principal: `E00-T01`
-- Tarefas relacionadas: nenhuma
-- Limitações ou checks não aplicáveis: nenhuma
-- Limpeza da branch após merge: habilitada
+- Main task: `KZ-E00-T00`
+- Related tasks: none
+- Limitations or checks not applicable: none
+- Branch cleanup after merge: enabled

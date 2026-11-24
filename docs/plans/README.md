@@ -1,8 +1,8 @@
 # Planos por assunto
 
-Planos registram solução, sequência e decisões pendentes. Sua presença não comprova aprovação nem implementação. Status de tarefas permanece no [roadmap](../../roadmap/README.md). Use o [modelo de plano](../templates/PLAN.md).
+Planos registram solução, sequência e decisões pendentes. Sua presença não comprova aprovação nem implementação. Status de tarefas permanece no [roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md). Use o [modelo de plano](../templates/PLAN.md).
 
-Comece pela [reconciliação geral](RECONCILIATION.md) ou pela [visão geral do projeto](../../roadmap/OVERVIEW.md).
+Comece pela [reconciliação geral](RECONCILIATION.md) ou pela [visão geral do projeto](https://github.com/fradelli/playbook/blob/main/projects/kaizen/OVERVIEW.md).
 
 | Assunto | Entrada |
 | --- | --- |

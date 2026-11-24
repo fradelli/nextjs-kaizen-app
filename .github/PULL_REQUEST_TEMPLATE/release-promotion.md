@@ -1,64 +1,64 @@
 <!--
-Títulos obrigatórios:
-- [E00-T01] chore(release): promover developer para staging
-- [E00-T01] chore(release): promover staging para master
-Substitua todos os valores SUBSTITUIR_ANTES_DA_PR.
+Required titles:
+- [KZ-E00-T00] chore(release): promote developer to staging
+- [KZ-E00-T00] chore(release): promote staging to master
+Replace every REPLACE_BEFORE_PR value.
 -->
 
-## Resumo
+## Summary
 
-Promove a versão aprovada de `SUBSTITUIR_ANTES_DA_PR_ORIGEM` para `SUBSTITUIR_ANTES_DA_PR_DESTINO`.
+Promotes the approved version from `REPLACE_BEFORE_PR_SOURCE` to `REPLACE_BEFORE_PR_TARGET`.
 
-## Problema
+## Problem
 
-O próximo ambiente deve receber um intervalo imutável de commits somente após a validação completa da origem.
+The next environment must receive an immutable range of commits only after the source is fully validated.
 
-## Causa raiz
+## Root cause
 
-A branch de origem contém a versão aprovada que ainda não existe no ambiente de destino.
+The source branch holds the approved version that does not exist in the target environment yet.
 
-## Alterações
+## Changes
 
-- Tipo da release: `SUBSTITUIR_ANTES_DA_PR`
-- Caminho da promoção: `SUBSTITUIR_ANTES_DA_PR`
-- Commit de origem: `SUBSTITUIR_ANTES_DA_PR_SHA_COMPLETO`
-- Ambiente de destino: `SUBSTITUIR_ANTES_DA_PR`
-- Tarefas incluídas: `SUBSTITUIR_ANTES_DA_PR`
+- Release type: `REPLACE_BEFORE_PR`
+- Promotion path: `REPLACE_BEFORE_PR`
+- Source commit: `REPLACE_BEFORE_PR_FULL_SHA`
+- Target environment: `REPLACE_BEFORE_PR`
+- Included tasks: `REPLACE_BEFORE_PR`
 
-## Arquivos adicionados ou atualizados
+## Files added or updated
 
-- Intervalo comparado: `SUBSTITUIR_ANTES_DA_PR`
-- Nenhum arquivo é alterado exclusivamente pela promoção; o estado exato da origem é promovido.
+- Compared range: `REPLACE_BEFORE_PR`
+- No file changes only because of the promotion; the exact source state is promoted.
 
-## Impacto
+## Impact
 
-### Corrigido
+### Fixed
 
-- Entrega o commit aprovado ao próximo ambiente.
-- Preserva a ordem `developer -> staging -> master`.
+- Delivers the approved commit to the next environment.
+- Keeps the order `developer -> staging -> master`.
 
-### Não alterado
+### Not changed
 
-- Não existe commit direto na branch de destino.
-- O deploy só inicia depois do merge e do CI pós-merge.
+- No direct commit on the target branch.
+- Deployment starts only after the merge and the post-merge CI.
 
-## Validação
+## Validation
 
-- [ ] governança (`Governance`)
-- [ ] qualidade (`Quality`)
-- [ ] testes (`Test`)
-- [ ] integridade dos dados (`Data integrity`)
+- [ ] governance (`Governance`)
+- [ ] quality (`Quality`)
+- [ ] tests (`Test`)
+- [ ] data integrity (`Data integrity`)
 - [ ] build (`Build`)
-- [ ] auditoria de dependências (`Dependency audit`)
-- [ ] validação manual concluída
+- [ ] dependency audit (`Dependency audit`)
+- [ ] manual validation done
 
-## Observações
+## Notes
 
-- Tarefa principal: `E00-T01`
-- Tarefas relacionadas: `SUBSTITUIR_ANTES_DA_PR_OU_NENHUMA`
-- Rollback: `SUBSTITUIR_ANTES_DA_PR`
-- Deployment de preview: `SUBSTITUIR_ANTES_DA_PR_OU_NAO_APLICAVEL`
-- Evidência do preview: `SUBSTITUIR_ANTES_DA_PR_OU_NAO_APLICAVEL`
-- Método de merge: merge commit; nunca squash em promoção
-- Limitações ou checks não aplicáveis: `SUBSTITUIR_ANTES_DA_PR_OU_NENHUMA`
-- Limpeza da branch após merge: não aplicável às branches protegidas
+- Main task: `KZ-E00-T00`
+- Related tasks: `REPLACE_BEFORE_PR_OR_NONE`
+- Rollback: `REPLACE_BEFORE_PR`
+- Preview deployment: `REPLACE_BEFORE_PR_OR_NOT_APPLICABLE`
+- Preview evidence: `REPLACE_BEFORE_PR_OR_NOT_APPLICABLE`
+- Merge method: merge commit; never squash in a promotion
+- Limitations or checks not applicable: `REPLACE_BEFORE_PR_OR_NONE`
+- Branch cleanup after merge: not applicable to protected branches

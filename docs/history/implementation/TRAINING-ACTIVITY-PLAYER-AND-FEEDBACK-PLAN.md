@@ -2,7 +2,7 @@
 
 - **Tipo:** Histórico.
 - **Área:** Implementação histórica.
-- **Tarefas relacionadas:** [E10-T02](../../../roadmap/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md), [E10-T01](../../../roadmap/epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md)
+- **Tarefas relacionadas:** [E10-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T02-activity-player-and-completion-modal.md), [E10-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T01-implement-portfolio-visual-alignment.md)
 
 > Especificação histórica E10-T02. Aparência no [guia](../../product/telas/guia-de-estilo.md), comportamento recente em [execução](../../product/telas/execucao.md). Não reaplicar patches por linhas antigas.
 

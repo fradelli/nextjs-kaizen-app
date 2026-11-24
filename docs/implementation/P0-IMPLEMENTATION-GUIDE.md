@@ -12,7 +12,7 @@ A organização geral está no [índice documental](../README.md). Os [planos po
 | --- | --- | --- |
 | Produto | [P0](../product/P0.md), [telas](../product/telas/README.md) | Regras e experiência; distinguir futuro |
 | Código | [Arquitetura](../architecture/TARGET-ARCHITECTURE.md) | Seção de semântica, boundaries, React ou Prisma |
-| Fundação E04 | [Tarefas](../../roadmap/epics/E04-nextjs-foundation/README.md) | Resultados históricos; não recriar scaffold |
+| Fundação E04 | [Tarefas](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E04-nextjs-foundation/README.md) | Resultados históricos; não recriar scaffold |
 | Persistência | [E05](../operations/E05.md) | Seção operacional necessária |
 | Treino inicial | [E06](../history/implementation/E06.md) | Histórico; comportamento atual nas telas/tarefas |
 | Alimentação | [E07](../plans/nutrition/E07.md) | Futuro; interface ainda placeholder |
@@ -24,7 +24,7 @@ A organização geral está no [índice documental](../README.md). Os [planos po
 
 ## Estado e manutenção
 
-Status no [roadmap](../../roadmap/README.md); versões em package/lockfile/configuração do runtime. Não copiar pins históricos. Git/JSON define planos e banco guarda operação, conforme [transição](../decisions/DATA-SOURCE-TRANSITION.md). Acesso [público com workspace único](../decisions/PUBLIC-SINGLE-WORKSPACE-MODE.md); pareamento antigo não está ativo.
+Status no [roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md); versões em package/lockfile/configuração do runtime. Não copiar pins históricos. Git/JSON define planos e banco guarda operação, conforme [transição](../decisions/DATA-SOURCE-TRANSITION.md). Acesso [público com workspace único](../decisions/PUBLIC-SINGLE-WORKSPACE-MODE.md); pareamento antigo não está ativo.
 
 Planos concluídos preservam evidências, não autorizam repetir implementação. Mudança estrutural exige decisão substituta explícita. Pacotes consolidados têm [origens preservadas](../documentation-review.md#consolidações-e-origens).
 

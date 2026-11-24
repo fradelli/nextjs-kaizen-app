@@ -2,7 +2,7 @@
 
 - **Tipo:** Operação.
 - **Área:** Banco de dados.
-- **Tarefas relacionadas:** [E08-T03](../../roadmap/epics/E08-personal-release/T03-prepare-production.md), [E08-T04](../../roadmap/epics/E08-personal-release/T04-validate-operations-and-rollback.md).
+- **Tarefas relacionadas:** [E08-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E08-personal-release/T03-prepare-production.md), [E08-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E08-personal-release/T04-validate-operations-and-rollback.md).
 
 ## Finalidade
 

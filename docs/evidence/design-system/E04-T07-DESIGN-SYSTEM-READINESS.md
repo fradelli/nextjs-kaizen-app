@@ -2,7 +2,7 @@
 
 - **Tipo:** Evidência.
 - **Área:** Design system.
-- **Tarefas relacionadas:** [E04-T08](../../../roadmap/epics/E04-nextjs-foundation/T08-integrate-versioned-design-system.md), [E04-T07](../../../roadmap/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md)
+- **Tarefas relacionadas:** [E04-T08](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E04-nextjs-foundation/T08-integrate-versioned-design-system.md), [E04-T07](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md)
 
 ## Estado da avaliação
 

@@ -2,7 +2,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Design system.
-- **Tarefas relacionadas:** [E10-T09](../../../roadmap/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md)
+- **Tarefas relacionadas:** [E10-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md)
 
 > Reconciliação de 21/11/2026: Entrega local do executor não encerra adoção integral nem comprova publicação do design system. [Escopo e evidências](../RECONCILIATION.md#design-system).
 
@@ -11,7 +11,7 @@ o [guia de estilo](../../product/telas/guia-de-estilo.md) continua sendo a fonte
 visual e o [inventário](../../product/telas/componentes-shadcn.md) registra a adoção.
 Não comprova aceite visual, conclusão de tarefas ou publicação.
 
-Execução registrada em [E10-T09](../../../roadmap/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md).
+Execução registrada em [E10-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md).
 A preparação local e o primeiro formulário já têm evidências no inventário;
 o diagnóstico abaixo preserva o estado anterior à aplicação da migration e à
 troca do candidato. Não repetir essas etapas sem conferir o checkpoint atual.
@@ -29,7 +29,7 @@ avançar por lotes sem alegar que o catálogo inteiro já foi entregue.
 
 ## Entradas e responsabilidades
 
-- `CLAUDE.md` e `roadmap/ACTIVE.md`: estado de retomada e preservação do trabalho.
+- `CLAUDE.md` and `fradelli/playbook: projects/kaizen/ACTIVE.md`: resumption state and preservation of the work.
 - `docs/architecture/TARGET-ARCHITECTURE.md`: Semântica e legibilidade do código,
   Boundaries, Organização dos componentes React, Server Components e Client Components.
 - `docs/product/telas/guia-de-estilo.md`: decisões visuais vigentes.

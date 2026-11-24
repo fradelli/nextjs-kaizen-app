@@ -2,7 +2,7 @@
 
 - **Tipo:** Evidência.
 - **Área:** Documentação.
-- **Tarefas relacionadas:** [E06-T21](../roadmap/epics/E06-training-execution/T21-design-external-training-plan-import.md), [E04-T07](../roadmap/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md).
+- **Tarefas relacionadas:** [E06-T21](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E06-training-execution/T21-design-external-training-plan-import.md), [E04-T07](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E04-nextjs-foundation/T07-validate-design-system-readiness.md).
 
 ## Escopo e preservação
 

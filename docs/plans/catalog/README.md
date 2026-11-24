@@ -8,4 +8,4 @@ Leia somente o plano e as seções necessários. Etapas históricas e propostas 
 | --- | --- |
 | [Catálogo de equipamentos e exercícios](CATALOG-IMPORT-PLAN.md) | Vínculo formal não identificado |
 
-[Todos os planos](../README.md) · [Status das tarefas](../../../roadmap/README.md)
+[Todos os planos](../README.md) · [Status das tarefas](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md)

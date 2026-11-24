@@ -2,7 +2,7 @@
 
 - **Tipo:** Migração.
 - **Área:** Alimentação.
-- **Tarefas relacionadas:** [E02-T02](../../roadmap/epics/E02-nutrition-data-migration/T02-preserve-original-diet.md), [E02-T06](../../roadmap/epics/E02-nutrition-data-migration/T06-validate-nutrition-foundation.md), [E03-T01](../../roadmap/epics/E03-product-and-architecture/T01-define-p0-journeys.md), [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E02-T03](../../roadmap/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md).
+- **Tarefas relacionadas:** [E02-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T02-preserve-original-diet.md), [E02-T06](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T06-validate-nutrition-foundation.md), [E03-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E03-product-and-architecture/T01-define-p0-journeys.md), [E02-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E02-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T03-review-nutrition-plan.md).
 
 ## Resultado corrigido
 

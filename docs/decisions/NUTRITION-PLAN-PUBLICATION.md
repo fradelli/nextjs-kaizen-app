@@ -2,7 +2,7 @@
 
 - **Tipo:** Decisão.
 - **Área:** Alimentação.
-- **Tarefas relacionadas:** [E02-T04](../../roadmap/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E02-T05](../../roadmap/epics/E02-nutrition-data-migration/T05-create-nutrition-contracts.md).
+- **Tarefas relacionadas:** [E02-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T04-structure-nutrition-plan.md), [E02-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E02-nutrition-data-migration/T05-create-nutrition-contracts.md).
 
 ## Status
 

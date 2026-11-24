@@ -2,13 +2,13 @@
 
 - **Tipo:** Evidência.
 - **Área:** Documentação.
-- **Tarefas relacionadas:** [E00-T09](../../../roadmap/epics/E00-repository-governance/T09-standardize-documentation.md).
+- **Tarefas relacionadas:** [E00-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E00-repository-governance/T09-standardize-documentation.md).
 
 ## Base e procedimento
 
 Base: `66326d6` (E00-T08), em 22/11/2026. A padronização só acrescentou conteúdo: nenhuma seção foi renomeada, nenhum arquivo foi movido e nenhum corpo foi reescrito.
 
-1. **Tarefas.** Cada seção do [modelo](../../../roadmap/templates/TASK-TEMPLATE.md) ausente foi inserida logo depois da seção do modelo que a antecede, com o texto “Não registrado na versão original desta tarefa.”. Quando a tarefa já tinha uma seção própria com o mesmo papel, o texto cita essa seção (por exemplo, «Aceite e resultado»). Seções próprias continuam onde estavam.
+1. **Tarefas.** Cada seção do [modelo](https://github.com/fradelli/playbook/blob/main/CLAUDE.md) ausente foi inserida logo depois da seção do modelo que a antecede, com o texto “Não registrado na versão original desta tarefa.”. Quando a tarefa já tinha uma seção própria com o mesmo papel, o texto cita essa seção (por exemplo, «Aceite e resultado»). Seções próprias continuam onde estavam.
 2. **Dependências.**
    - As condições que não são tarefas passaram para o campo `external` do frontmatter: “dieta fornecida” (E02-T02) e “decisões aprovadas” (E02-T04).
    - As tabelas de ordem dos épicos receberam os IDs que faltavam em relação ao `depends_on`:
@@ -27,7 +27,7 @@ Base: `66326d6` (E00-T08), em 22/11/2026. A padronização só acrescentou conte
 | Dependências | Frontmatter, índice do roadmap e tabelas dos épicos iguais para as 105 tarefas | `pnpm docs:check` |
 | Cabeçalhos | 43 documentos completados; todos os documentos de conteúdo têm Tipo, Área e Tarefas relacionadas | `pnpm docs:check` |
 | Catálogo e links | Todos os documentos no catálogo; nenhum link local quebrado | `pnpm docs:check` |
-| Estados | Nenhum estado alterado; E10-T09 continua a única `IN_PROGRESS` e a tarefa selecionada | [roadmap](../../../roadmap/README.md) |
+| Estados | Nenhum estado alterado; E10-T09 continua a única `IN_PROGRESS` e a tarefa selecionada | [roadmap](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md) |
 
 ## Limitações e pendências
 

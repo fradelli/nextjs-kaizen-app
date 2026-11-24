@@ -2,11 +2,13 @@
 
 - **Tipo:** Decisão.
 - **Área:** Governança.
-- **Tarefas relacionadas:** [E00-T01](../../roadmap/epics/E00-repository-governance/T01-initialize-repository-and-branches.md).
+- **Tarefas relacionadas:** [E00-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E00-repository-governance/T01-initialize-repository-and-branches.md).
 
 > Esclarecimento operacional aprovado em 12/11/2026: o prefixo genérico abaixo registra a decisão original. A governança implementada aceita somente `codex/<ID>-descricao-curta`; veja o [padrão de PR](../delivery/PULL-REQUEST-STANDARD.md). Direções e métodos de merge permanecem válidos.
 
 > Atualização aprovada em 23/11/2026 (E00-T12): com a adoção exclusiva do Claude Code, a governança passa a aceitar somente `claude/<ID>-descricao-curta`. Branches `codex/` já integradas permanecem como histórico. Direções e métodos de merge seguem inalterados.
+
+> Update approved on 2026-11-24 (KZ-E00-T17): task IDs come from the playbook, so branches follow `claude/KZ-<ID>-short-description` and titles `[KZ-<ID>] type(scope): summary`. Directions and merge methods are unchanged.
 
 ## Status
 

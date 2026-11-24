@@ -4,7 +4,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Agenda.
-- **Tarefas relacionadas:** [E11-T01](../../../roadmap/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](../../../roadmap/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](../../../roadmap/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](../../../roadmap/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](../../../roadmap/epics/E11-schedule-evolution/T05-link-common-activities.md), [E11-T06](../../../roadmap/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md).
+- **Tarefas relacionadas:** [E11-T01](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T01-validate-integrated-schedule.md), [E11-T02](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T02-prototype-calendar-interactions.md), [E11-T03](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T03-persist-calendar-interactions.md), [E11-T04](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T04-edit-individual-reservations.md), [E11-T05](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T05-link-common-activities.md), [E11-T06](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E11-schedule-evolution/T06-define-calendar-extension-rules.md).
 
 Registro de 20/11/2026. Direção técnica: `@dnd-kit/react` na grade própria, com Pointer Events para seleção de intervalos e redimensionamento. O primeiro incremento e sua POC são descritos abaixo; funcionalidades e critérios ainda não executados permanecem pendentes.
 

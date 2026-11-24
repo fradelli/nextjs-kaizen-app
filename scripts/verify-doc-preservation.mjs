@@ -3,11 +3,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// Confere que uma reorganização documental não perdeu texto: toda linha não vazia
-// de cada Markdown na base continua existindo no mesmo arquivo da árvore atual.
-// Substituições intencionais ficam declaradas num JSON com { file, old, new }.
+// Checks that a documentation reorganization lost no text: every non-empty line of
+// each Markdown file in the base still exists in the same file of the current tree.
+// Intentional replacements are declared in a JSON file with { file, old, new }.
+// The roadmap moved to fradelli/playbook in KZ-E00-T17 and is no longer in scope.
 
-const scopes = ["docs", "roadmap", "CLAUDE.md", "README.md", "CHANGELOG.md"];
+const scopes = ["docs", "CLAUDE.md", "README.md", "CHANGELOG.md"];
 
 function git(repositoryRoot, args) {
   return execFileSync("git", args, {
@@ -45,7 +46,7 @@ export function verifyDocPreservation({ base, repositoryRoot = process.cwd(), re
     const current = resolve(repositoryRoot, file);
 
     if (!existsSync(current)) {
-      errors.push(`Arquivo removido ou movido: ${file}.`);
+      errors.push(`File removed or moved: ${file}.`);
       continue;
     }
 
@@ -67,7 +68,7 @@ export function verifyDocPreservation({ base, repositoryRoot = process.cwd(), re
         continue;
       }
 
-      errors.push(`${file}: linha ausente (${missing}x): ${line}`);
+      errors.push(`${file}: missing line (${missing}x): ${line}`);
     }
   }
 
@@ -80,7 +81,7 @@ function run() {
   const base = baseIndex > -1 ? process.argv[baseIndex + 1] : undefined;
 
   if (!base) {
-    throw new Error("Informe a base: --base <ref> [--replacements <arquivo.json>].");
+    throw new Error("Pass the base: --base <ref> [--replacements <file.json>].");
   }
 
   const replacements =
@@ -89,7 +90,7 @@ function run() {
 
   if (errors.length > 0) {
     for (const error of errors) {
-      console.error(`[Preservação] ${error}`);
+      console.error(`[Preservation] ${error}`);
     }
 
     process.exitCode = 1;
@@ -97,7 +98,7 @@ function run() {
   }
 
   console.log(
-    `Preservação confirmada: ${files} arquivos e ${lines} linhas de ${base} presentes; ${replacements.length} substituições declaradas.`,
+    `Preservation confirmed: ${files} files and ${lines} lines from ${base} present; ${replacements.length} declared replacements.`,
   );
 }
 

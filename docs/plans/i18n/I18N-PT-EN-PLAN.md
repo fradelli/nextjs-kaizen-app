@@ -2,7 +2,7 @@
 
 - **Tipo:** Plano.
 - **Área:** Internacionalização.
-- **Tarefas relacionadas:** [E09-T09](../../../roadmap/epics/E09-future-evolution/T09-localize-current-interface.md)
+- **Tarefas relacionadas:** [E09-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E09-future-evolution/T09-localize-current-interface.md)
 
 > Reconciliação de 21/11/2026: A entrega da interface não encerra tradução editorial ou política de idioma do repositório. [Escopo e evidências](../RECONCILIATION.md#internacionalização).
 
@@ -124,7 +124,7 @@ Os caminhos novos abaixo são propostas; caminhos existentes foram identificados
 
 | Ordem | Ação e caminho | Mudança, dependência e verificação |
 |---|---|---|
-| 1 | Editar `roadmap/epics/E09-future-evolution/T05-design-i18n-and-english-policy.md` | Reconciliar dois idiomas e detecção com o pedido atual; separar política documental. Rever dependências sem marcar como concluído o spike pendente. |
+| 1 | Editar `fradelli/playbook: projects/kaizen/epics/E09-future-evolution/T05-design-i18n-and-english-policy.md` | Reconciliar dois idiomas e detecção com o pedido atual; separar política documental. Rever dependências sem marcar como concluído o spike pendente. |
 | 2 | Criar `src/i18n/locale.ts` e `src/i18n/locale.test.ts` | Contrato de locales e negociação pura; verificar variantes, prioridades, entradas inválidas e fallback. |
 | 3 | Editar `package.json`, `pnpm-lock.yaml`, `next.config.ts`; criar `src/i18n/request.ts` | Instalar versão compatível e integrar configuração por requisição; validar build e fronteira servidor/cliente. |
 | 4 | Criar `messages/en.json`, `messages/pt-BR.json` | Catálogos completos do primeiro fluxo; testar pluralização, interpolação e paridade. |

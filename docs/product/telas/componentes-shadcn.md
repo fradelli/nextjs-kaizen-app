@@ -2,7 +2,7 @@
 
 - **Tipo:** Produto.
 - **Área:** Design system.
-- **Tarefas relacionadas:** [E10-T09](../../../roadmap/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md).
+- **Tarefas relacionadas:** [E10-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md).
 
 O pacote consumido atualmente está registrado no manifesto e no lockfile em
 `vendor/fradelli-ui-mira-executor-verified.tgz`. Os nomes de outras prévias
