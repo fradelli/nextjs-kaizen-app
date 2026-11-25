@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Unused repository artifacts removed (KZ-E00-T13)
+
+- Removed `.azul-engai/` (external tool configuration), the duplicate `.node-version` (`.nvmrc` stays), four `@fradelli/ui` tarballs in `vendor/` that `package.json` no longer uses, `scripts/test-i18n-http.mjs` (outside `package.json` and CI), and the 16, 32, and 48 px favicons left over from the removed roadmap view.
+- `.gitignore` covers `/.tmp-*/` and `/.azul-engai/`.
+
 ## 2026-11-24 — Roadmap moved to the playbook (KZ-E00-T17)
 
 - `roadmap/`, the local roadmap view, `scripts/build-roadmap-view*`, and the unused `vite` dev dependency were removed. The roadmap lives in [`fradelli/playbook: projects/kaizen/`](https://github.com/fradelli/playbook/blob/main/projects/kaizen/README.md); the view returns there with PB-E03-T01.

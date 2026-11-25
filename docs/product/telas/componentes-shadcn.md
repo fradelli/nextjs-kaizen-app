@@ -4,8 +4,8 @@
 - **Área:** Design system.
 - **Tarefas relacionadas:** [E10-T09](https://github.com/fradelli/playbook/blob/main/projects/kaizen/epics/E10-portfolio-visual-alignment/T09-complete-mira-adoption.md).
 
-O pacote consumido atualmente está registrado no manifesto e no lockfile em
-`vendor/fradelli-ui-mira-executor-verified.tgz`. Os nomes de outras prévias
+The package in use is recorded in the manifest and the lockfile as
+`vendor/fradelli-ui-mira-table-progress.tgz`. Os nomes de outras prévias
 abaixo identificam etapas históricas da migração.
 
 

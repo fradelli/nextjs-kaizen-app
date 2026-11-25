@@ -49,6 +49,6 @@ Evidências executadas:
 - Seis requisições ao servidor de produção local confirmaram HTML, metadados e conteúdo em inglês/português, fallback para francês e override válido por cookie. As requisições alternaram idiomas para detectar compartilhamento indevido de resposta.
 - O primeiro teste completo concorrente ao build excedeu o tempo no carregamento de snapshots Git. A repetição com dois workers passou integralmente; nenhum timeout foi ampliado.
 
-Para repetir a verificação HTTP, iniciar a versão compilada na porta 3100 e executar `node scripts/test-i18n-http.mjs`. O teste usa alimentação e data inválida de treino, dispensando mutações e conexão ao banco. Essa evidência não substitui uma jornada manual com o catálogo novo.
+A verificação HTTP usou `scripts/test-i18n-http.mjs` contra a versão compilada na porta 3100. The script ran outside CI and was removed in KZ-E00-T13; it remains in Git history (`ed89d0a`). O teste usa alimentação e data inválida de treino, dispensando mutações e conexão ao banco. Essa evidência não substitui uma jornada manual com o catálogo novo.
 
 Não houve migration, reimportação de planos ou alteração de dados persistidos nesta entrega. Rollback da interface consiste em reverter a integração e os consumidores de tradução em conjunto; o banco não exige rollback.
